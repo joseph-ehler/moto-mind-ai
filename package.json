@@ -28,6 +28,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",
+    "@types/formidable": "^3.4.5",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.19.17",
@@ -39,6 +40,7 @@
     "autoprefixer": "^10.4.21",
     "date-fns": "^2.30.0",
     "eslint": "^8.57.1",
+    "formidable": "^3.5.4",
     "jest": "^29.7.0",
     "jest-environment-node": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
@@ -51,6 +53,7 @@
     "react-dom": "^18.3.1",
     "stripe": "^14.25.0",
     "tailwindcss": "^3.4.17",
+    "tesseract.js": "^4.1.4",
     "ts-jest": "^29.4.4",
     "typescript": "^5.9.2",
     "uuid": "^9.0.1",
