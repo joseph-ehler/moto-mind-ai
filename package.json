@@ -7,15 +7,17 @@
     "dev": "next dev -p 3005",
     "build": "next build",
     "start": "next start -p 3005",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
     "test": "jest",
-    "test:isolation": "jest tests/isolation --verbose",
-    "test:integration": "jest tests/integration",
     "test:watch": "jest --watch",
-    "migrate": "node scripts/migrate.js",
-    "migrate:rollback": "node scripts/migrate.js --rollback",
-    "seed:test": "node scripts/seed-test-data.js",
-    "type-check": "tsc --noEmit"
+    "test:isolation": "jest tests/isolation",
+    "test:integration": "jest tests/integration",
+    "db:migrate": "node -r ts-node/register scripts/run-migrations.ts",
+    "db:seed": "node -r ts-node/register scripts/seed.ts",
+    "db:seed:smartphone": "node -r ts-node/register scripts/seed-smartphone.ts",
+    "demo:reset": "npm run db:seed:smartphone",
+    "demo:full": "npm run db:migrate && npm run db:seed:smartphone && npm run dev"
   },
   "keywords": [
     "fleet",
@@ -55,6 +57,7 @@
     "tailwindcss": "^3.4.17",
     "tesseract.js": "^4.1.4",
     "ts-jest": "^29.4.4",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "uuid": "^9.0.1",
     "zod": "^3.25.76"

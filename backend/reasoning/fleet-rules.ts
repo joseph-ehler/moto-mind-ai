@@ -31,87 +31,34 @@ export interface VehicleMetrics {
 export function evaluateRules(metrics: VehicleMetrics): RuleResult[] {
   const results: RuleResult[] = []
   
-  // Critical brake wear rule
-  if (metrics.brake_wear_pct && metrics.brake_wear_pct >= 85) {
-    results.push({
-      type: 'brake_wear',
-      severity: 'crit',
-      hit: true,
-      reason: `Brake pad wear ${metrics.brake_wear_pct}% exceeds safety threshold`,
-      evidence: {
-        metric: 'brake_wear_pct',
-        value: metrics.brake_wear_pct,
-        threshold: 85,
-        period: 'current'
-      }
-    })
-  } else if (metrics.brake_wear_pct && metrics.brake_wear_pct >= 70) {
-    results.push({
-      type: 'brake_wear',
-      severity: 'warn',
-      hit: true,
-      reason: `Brake pad wear ${metrics.brake_wear_pct}% approaching replacement threshold`,
-      evidence: {
-        metric: 'brake_wear_pct',
-        value: metrics.brake_wear_pct,
-        threshold: 70,
-        period: 'current'
-      }
-    })
+  // Get vehicle baseline for comparison (from vehicles table)
+  const baselineMpg = 12.5 // This should come from vehicle.baseline_fuel_mpg
+  
+  // Rule 1: Fuel Efficiency Decline (CRITICAL for smartphone demo)
+  if (metrics.fuel_efficiency_mpg && baselineMpg) {
+    const mpgDrop = baselineMpg - metrics.fuel_efficiency_mpg
+    const percentDrop = (mpgDrop / baselineMpg) * 100
+    
+    if (percentDrop >= 15) {
+      results.push({
+        type: 'fuel_efficiency',
+        severity: percentDrop >= 25 ? 'crit' : 'warn',
+        hit: true,
+        reason: `Fuel efficiency down ${percentDrop.toFixed(1)}% from baseline - significant decline detected`,
+        evidence: {
+          metric: 'fuel_efficiency_mpg',
+          value: metrics.fuel_efficiency_mpg,
+          threshold: baselineMpg * 0.85, // 15% drop threshold
+          period: 'recent'
+        }
+      })
+    }
   }
   
-  // Fuel efficiency rule
-  if (metrics.fuel_efficiency_mpg && metrics.fuel_efficiency_mpg < 8) {
-    results.push({
-      type: 'fuel_efficiency',
-      severity: 'warn',
-      hit: true,
-      reason: `Fuel efficiency ${metrics.fuel_efficiency_mpg} MPG is below fleet average`,
-      evidence: {
-        metric: 'fuel_efficiency_mpg',
-        value: metrics.fuel_efficiency_mpg,
-        threshold: 8,
-        period: 'last_30_days'
-      }
-    })
-  }
-  
-  // Harsh events rule
-  if (metrics.harsh_events && metrics.harsh_events >= 3) {
-    results.push({
-      type: 'harsh_events',
-      severity: metrics.harsh_events >= 5 ? 'crit' : 'warn',
-      hit: true,
-      reason: `${metrics.harsh_events} harsh events detected - driver behavior concern`,
-      evidence: {
-        metric: 'harsh_events',
-        value: metrics.harsh_events,
-        threshold: 3,
-        period: 'last_7_days'
-      }
-    })
-  }
-  
-  // Excessive idle time rule
-  if (metrics.idle_minutes && metrics.idle_minutes >= 120) {
-    results.push({
-      type: 'idle_time',
-      severity: 'warn',
-      hit: true,
-      reason: `Excessive idle time ${metrics.idle_minutes} minutes - fuel waste concern`,
-      evidence: {
-        metric: 'idle_minutes',
-        value: metrics.idle_minutes,
-        threshold: 120,
-        period: 'daily'
-      }
-    })
-  }
-  
-  // Maintenance overdue rule
+  // Rule 2: Maintenance Overdue (HIGH IMPACT)
   if (metrics.last_service_date) {
     const daysSinceService = Math.floor(
-      (Date.now() - metrics.last_service_date.getTime()) / (1000 * 60 * 60 * 24)
+      (Date.now() - new Date(metrics.last_service_date).getTime()) / (1000 * 60 * 60 * 24)
     )
     
     if (daysSinceService >= 90) {
@@ -119,7 +66,7 @@ export function evaluateRules(metrics: VehicleMetrics): RuleResult[] {
         type: 'maintenance_overdue',
         severity: daysSinceService >= 120 ? 'crit' : 'warn',
         hit: true,
-        reason: `Maintenance overdue by ${daysSinceService} days`,
+        reason: `Maintenance overdue by ${daysSinceService} days - service interval exceeded`,
         evidence: {
           metric: 'days_since_service',
           value: daysSinceService,
@@ -130,13 +77,61 @@ export function evaluateRules(metrics: VehicleMetrics): RuleResult[] {
     }
   }
   
-  // If no rules hit, add an info result
-  if (results.length === 0) {
+  // Rule 3: Harsh Events Pattern (BEHAVIOR INDICATOR)
+  if (metrics.harsh_events && metrics.harsh_events >= 3) {
     results.push({
-      type: 'brake_wear', // Default type for info
+      type: 'harsh_events',
+      severity: metrics.harsh_events >= 5 ? 'crit' : 'warn',
+      hit: true,
+      reason: `${metrics.harsh_events} harsh braking events - indicates brake wear and driving patterns`,
+      evidence: {
+        metric: 'harsh_events',
+        value: metrics.harsh_events,
+        threshold: 3,
+        period: 'recent'
+      }
+    })
+  }
+  
+  // Rule 4: Low Fuel Efficiency Absolute (BASELINE CHECK)
+  if (metrics.fuel_efficiency_mpg && metrics.fuel_efficiency_mpg < 8) {
+    results.push({
+      type: 'fuel_efficiency',
+      severity: 'warn',
+      hit: true,
+      reason: `Fuel efficiency ${metrics.fuel_efficiency_mpg} MPG below acceptable range`,
+      evidence: {
+        metric: 'fuel_efficiency_mpg',
+        value: metrics.fuel_efficiency_mpg,
+        threshold: 8,
+        period: 'current'
+      }
+    })
+  }
+  
+  // Rule 5: Data Quality Warning (SMARTPHONE SPECIFIC)
+  if (metrics.data_completeness_pct < 60) {
+    results.push({
+      type: 'maintenance_overdue', // Use existing type
+      severity: 'info',
+      hit: true,
+      reason: `Limited data available - add more photos for better insights`,
+      evidence: {
+        metric: 'data_completeness_pct',
+        value: metrics.data_completeness_pct,
+        threshold: 60,
+        period: 'current'
+      }
+    })
+  }
+  
+  // If no critical rules hit but we have some data, provide positive feedback
+  if (results.length === 0 && metrics.data_completeness_pct >= 60) {
+    results.push({
+      type: 'fuel_efficiency',
       severity: 'info',
       hit: false,
-      reason: 'No critical issues detected - vehicle operating within normal parameters',
+      reason: 'Vehicle operating within normal parameters - no issues detected',
       evidence: {
         metric: 'overall_status',
         value: 'healthy',
