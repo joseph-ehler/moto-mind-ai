@@ -7,6 +7,9 @@ import { evaluateRules, getMostSevereRule, getVehicleStatus } from '../../backen
 import { generateExplanationWithLLM } from '../../backend/llm-client'
 import { FleetErrors, getErrorStatusCode } from '../../backend/error-types'
 import { usageTracker } from '../../backend/usage-tracker'
+import { calculateDataQuality, isSufficientForExplanation } from '../../backend/reasoning/data-quality'
+import { recomputeDailyMetricsForVehicle } from '../../backend/metrics/worker'
+import { recordExplanationMetrics } from '../api/metrics'
 import jwt from 'jsonwebtoken'
 
 interface ExplanationRequest {
@@ -65,14 +68,24 @@ export default async function handler(
     const { vehicleId, question }: ExplanationRequest = req.body
     if (!vehicleId || !question) {
       const error = FleetErrors.validationError('request', 'vehicleId and question are required')
-      return res.status(getErrorStatusCode(error.category)).json(error.toJSON())
+      return res.status(getErrorStatusCode(error.category)).json({
+        error: error.userMessage,
+        suggestion: error.suggestion
+      })
     }
 
     // Execute the core explanation loop
     const result = await withTenantTransaction(
       { tenantId: auth.tenantId, userId: auth.userId },
       async (client) => {
-        // 1. Get latest vehicle metrics from database
+        // 1. Ensure metrics are up-to-date by recomputing from manual events
+        try {
+          await recomputeDailyMetricsForVehicle(auth.tenantId, vehicleId)
+        } catch (error) {
+          console.warn('Failed to recompute metrics, using existing data:', error)
+        }
+
+        // 2. Get latest vehicle metrics from database
         const metricsQuery = await client.query(`
           SELECT 
             vehicle_id,
@@ -83,8 +96,10 @@ export default async function handler(
             miles_driven,
             data_completeness_pct,
             source_latency_sec,
+            sensor_presence,
             metric_date,
-            last_service_date
+            last_service_date,
+            created_at
           FROM vehicle_metrics 
           WHERE vehicle_id = $1 
           ORDER BY metric_date DESC 
@@ -92,17 +107,32 @@ export default async function handler(
         `, [vehicleId])
 
         if (metricsQuery.rows.length === 0) {
-          throw FleetErrors.insufficientData(vehicleId, ['recent metrics'])
+          const error = FleetErrors.insufficientData(vehicleId, ['recent metrics'])
+          return { 
+            error: error.userMessage, 
+            suggestion: 'Add an odometer photo and fuel receipt to get started' 
+          }
         }
 
         const metrics = metricsQuery.rows[0]
+
+        // 3. Calculate data quality and check if sufficient for explanation
+        const dataQuality = calculateDataQuality(metrics)
+        
+        if (!isSufficientForExplanation(dataQuality)) {
+          return {
+            error: 'Insufficient data for reliable explanation',
+            suggestion: dataQuality.recommendations[0] || 'Add more vehicle data',
+            dataQuality
+          }
+        }
 
         // 2. Evaluate deterministic fleet rules
         const ruleResults = evaluateRules(metrics)
         const mostSevereRule = getMostSevereRule(ruleResults)
         const vehicleStatus = getVehicleStatus(ruleResults)
 
-        // 3. Generate LLM explanation with Zod validation
+        // 4. Generate LLM explanation with Zod validation
         const vehicleQuery = await client.query(
           'SELECT label FROM vehicles WHERE id = $1',
           [vehicleId]
@@ -116,7 +146,7 @@ export default async function handler(
           vehicleLabel
         })
 
-        // 4. Persist explanation and audit trail
+        // 5. Persist explanation and audit trail
         const explanationInsert = await client.query(`
           INSERT INTO explanations (
             tenant_id, vehicle_id, question, reasoning, confidence, 
@@ -131,13 +161,13 @@ export default async function handler(
           JSON.stringify(llmResponse.reasoning),
           llmResponse.confidence,
           JSON.stringify(ruleResults.filter(r => r.hit).map(r => r.type)),
-          metrics.data_completeness_pct,
+          dataQuality.completeness,
           auth.userId
         ])
 
         const explanation = explanationInsert.rows[0]
 
-        // 5. Create audit log entry
+        // 6. Create audit log entry
         await client.query(`
           INSERT INTO audit_logs (
             tenant_id, explanation_id, vehicle_id, event_type, 
@@ -152,10 +182,7 @@ export default async function handler(
           JSON.stringify({
             question,
             ruleResults: ruleResults.filter(r => r.hit),
-            dataQuality: {
-              completeness: metrics.data_completeness_pct,
-              latency: metrics.source_latency_sec
-            },
+            dataQuality,
             llmFallbackUsed: llmResponse.fallbackUsed,
             tokensUsed: llmResponse.tokensUsed
           })
@@ -164,7 +191,8 @@ export default async function handler(
         return {
           explanation,
           metrics,
-          llmResponse
+          llmResponse,
+          dataQuality
         }
       }
     )
@@ -204,11 +232,17 @@ export default async function handler(
 
     if (error instanceof Error && error.name === 'FleetError') {
       const fleetError = error as any
-      return res.status(getErrorStatusCode(fleetError.category)).json(fleetError.toJSON())
+      return res.status(getErrorStatusCode(fleetError.category)).json({
+        error: fleetError.userMessage,
+        suggestion: fleetError.suggestion
+      })
     }
 
     // Generic system error
     const systemError = FleetErrors.systemError('explanation generation')
-    return res.status(getErrorStatusCode(systemError.category)).json(systemError.toJSON())
+    return res.status(getErrorStatusCode(systemError.category)).json({
+      error: systemError.userMessage,
+      suggestion: systemError.suggestion
+    })
   }
 }

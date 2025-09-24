@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, jest } from '@jest/globals'
 import { TieredCircuitBreaker } from '../../backend/circuit-breaker'
 
 describe('TieredCircuitBreaker', () => {
-  let circuitBreaker: TieredCircuitBreaker
+  let circuitBreaker: TieredCircuitBreaker;
   
   beforeEach(() => {
     circuitBreaker = new TieredCircuitBreaker()
