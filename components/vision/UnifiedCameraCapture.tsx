@@ -82,7 +82,13 @@ export function UnifiedCameraCapture({
   
   React.useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+      const mobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      console.log('📱 Device detection:', { 
+        mobile, 
+        width: window.innerWidth, 
+        userAgent: navigator.userAgent 
+      })
+      setIsMobile(mobile)
     }
     checkMobile()
     window.addEventListener('resize', checkMobile)
@@ -460,6 +466,11 @@ export function UnifiedCameraCapture({
         </div>
       )
     }
+
+    // Log video mirroring state
+    React.useEffect(() => {
+      console.log('🎥 Video transform:', isMobile ? 'none (mobile)' : 'scaleX(-1) (desktop)')
+    }, [isMobile])
 
     return (
       <div className="fixed inset-0 z-50 bg-black">
