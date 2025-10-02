@@ -166,7 +166,18 @@ export function UnifiedCameraCapture({
       }
       
       console.log('📹 Requesting camera access with constraints:', constraints)
+      console.log('📹 isMobile:', isMobile, '(should use environment camera)')
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
+      
+      // Debug: Check which camera was actually granted
+      const videoTrack = stream.getVideoTracks()[0]
+      const settings = videoTrack.getSettings()
+      console.log('📹 Camera granted:', {
+        facingMode: settings.facingMode,
+        width: settings.width,
+        height: settings.height
+      })
+      console.log('🚨 CAMERA FACING:', settings.facingMode === 'user' ? '⚠️ FRONT CAMERA (WRONG!)' : '✅ BACK CAMERA (CORRECT)')
       
       // Track this stream for cleanup
       streamRef.current = stream
