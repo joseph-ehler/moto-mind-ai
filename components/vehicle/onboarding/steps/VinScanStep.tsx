@@ -413,7 +413,6 @@ export function VinScanStep({ onVINConfirmed, onError }: VinScanStepProps) {
               muted
               className="w-full max-h-[400px] object-cover rounded-none"
               style={{ 
-                transform: 'scaleX(-1)', // Mirror for front-facing camera
                 minHeight: '320px'
               }}
             />
