@@ -15,7 +15,10 @@ const openai = new OpenAI({
 export const config = {
   api: {
     bodyParser: false,
+    responseLimit: false,
+    externalResolver: true,
   },
+  maxDuration: 60, // Vercel: Allow up to 60 seconds
 }
 
 // VIN validation regex (17 characters, no I, O, Q)
