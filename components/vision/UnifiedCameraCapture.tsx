@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 
 // Types for different capture scenarios
 export type CaptureType = 'document' | 'vin' | 'license_plate' | 'odometer' | 'receipt' | 'dashboard_snapshot'
+export type CaptureState = 'idle' | 'choice' | 'camera' | 'processing' | 'success' | 'error'
 
 export type FrameGuideType = 
   | 'document-frame'      // Large rectangular for documents
@@ -62,11 +63,10 @@ export function UnifiedCameraCapture({
   autoStartCamera = false
 }: UnifiedCameraCaptureProps) {
   // State management
-  const [currentState, setCurrentState] = React.useState<'choice' | 'camera' | 'processing'>(
-    autoStartCamera ? 'camera' : 'choice'
-  )
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [currentState, setCurrentState] = React.useState<CaptureState>('idle')
+  const [capturedData, setCapturedData] = React.useState<any>(null)
   const [error, setError] = React.useState<string | null>(null)
+  const [isProcessing, setIsProcessing] = React.useState(false)
   
   // Refs for camera and canvas
   const videoRef = React.useRef<HTMLVideoElement>(null)
@@ -77,7 +77,7 @@ export function UnifiedCameraCapture({
   const userRequestedCamera = React.useRef<boolean>(false)
   const allStreams = React.useRef<MediaStream[]>([])
   
-  // Device detection
+  // Detect if mobile (back camera = no mirror) or desktop (front camera = mirror)
   const [isMobile, setIsMobile] = React.useState(false)
   
   React.useEffect(() => {
@@ -205,11 +205,17 @@ export function UnifiedCameraCapture({
       canvas.width = video.videoWidth
       canvas.height = video.videoHeight
       
-      // Flip the canvas horizontally to un-mirror the video (since video preview is mirrored)
-      context.save()
-      context.scale(-1, 1)
-      context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height)
-      context.restore()
+      // Mirror logic: Desktop (front camera) needs to flip, Mobile (back camera) does not
+      if (!isMobile) {
+        // Desktop: flip the captured image to match mirrored preview
+        context.save()
+        context.scale(-1, 1)
+        context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height)
+        context.restore()
+      } else {
+        // Mobile: capture as-is (no mirroring needed for back camera)
+        context.drawImage(video, 0, 0, canvas.width, canvas.height)
+      }
       
       // Convert to blob
       canvas.toBlob(async (blob) => {
@@ -463,7 +469,7 @@ export function UnifiedCameraCapture({
           playsInline
           muted
           className="w-full h-full object-cover"
-          style={{ transform: 'scaleX(-1)' }}
+          style={{ transform: isMobile ? 'none' : 'scaleX(-1)' }}
         />
         
         <canvas
