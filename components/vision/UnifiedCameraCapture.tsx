@@ -205,8 +205,11 @@ export function UnifiedCameraCapture({
       canvas.width = video.videoWidth
       canvas.height = video.videoHeight
       
-      // Draw current video frame to canvas
-      context.drawImage(video, 0, 0, canvas.width, canvas.height)
+      // Flip the canvas horizontally to un-mirror the video (since video preview is mirrored)
+      context.save()
+      context.scale(-1, 1)
+      context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height)
+      context.restore()
       
       // Convert to blob
       canvas.toBlob(async (blob) => {
@@ -460,6 +463,7 @@ export function UnifiedCameraCapture({
           playsInline
           muted
           className="w-full h-full object-cover"
+          style={{ transform: 'scaleX(-1)' }}
         />
         
         <canvas
