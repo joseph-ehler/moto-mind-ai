@@ -1,19 +1,37 @@
 // MotoMindAI: Migration Runner Script
 // Runs database migrations in correct order
 
+import { config } from 'dotenv'
 import { Pool } from 'pg'
 import { promises as fs } from 'fs'
 import path from 'path'
+
+// Load environment variables
+config()
+
+console.log('🔌 Connecting to database:', process.env.DATABASE_URL?.replace(/:[^:@]*@/, ':****@'))
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/motomind_dev'
 })
 
 const migrations = [
+  '000_base_schema.sql',
   '001_rls_policies.sql',
   '002_indexes_constraints.sql', 
   '003_usage_tracking.sql',
-  '004_smartphone_ingestion.sql'
+  '004_smartphone_ingestion.sql',
+  '006_vehicle_photos.sql',
+  // '007_supabase_storage_policies.sql', // Skip - requires special permissions
+  '008_vehicle_onboarding_fields.sql',
+  '009_vehicle_images_minimal.sql',
+  '010_vehicle_images_policies.sql',
+  '011_fix_vehicle_images_table.sql',
+  '020_events_stream.sql',
+  '021_reminders_dedupe.sql',
+  '022_garage_default_column.sql',
+  '029_fix_schema_migrations.sql',
+  '030_vehicle_display_name.sql'
 ]
 
 async function runMigrations() {

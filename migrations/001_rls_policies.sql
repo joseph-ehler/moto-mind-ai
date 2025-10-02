@@ -1,7 +1,7 @@
--- MotoMindAI: Row-Level Security Policies
+-- MotoMindAI: Row-Level Security Policies (Base Tables)
 -- Prevents cross-tenant data access and writes
 
--- Enable RLS on all tenant-scoped tables
+-- Enable RLS on base tenant-scoped tables
 ALTER TABLE tenants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vehicles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vehicle_metrics ENABLE ROW LEVEL SECURITY;
@@ -66,17 +66,3 @@ CREATE POLICY provider_integrations_tenant_insert ON provider_integrations
 CREATE POLICY provider_integrations_tenant_update ON provider_integrations
   FOR UPDATE USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
             WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
-
--- Usage counters policies
-CREATE POLICY usage_counters_tenant_select ON usage_counters
-  FOR SELECT USING (tenant_id = current_setting('app.tenant_id', true)::uuid);
-
-CREATE POLICY usage_counters_tenant_insert ON usage_counters
-  FOR INSERT WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
-
-CREATE POLICY usage_counters_tenant_update ON usage_counters
-  FOR UPDATE USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
-            WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
-
--- Enable RLS on usage_counters
-ALTER TABLE usage_counters ENABLE ROW LEVEL SECURITY;

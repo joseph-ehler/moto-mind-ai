@@ -1,0 +1,64 @@
+{
+  "image_file": "2013-Honda-Accord-EX-instrument-cluster.jpg",
+  "vehicle_info": {
+    "make": "Honda",
+    "model": "Accord EX",
+    "year": 2013
+  },
+  "ground_truth": {
+    "odometer": {
+      "value": 920,
+      "unit": "miles",
+      "visible": true,
+      "confidence": "high",
+      "notes": "Digital display shows 000920 miles in center cluster"
+    },
+    "fuel_level": {
+      "type": "eighths",
+      "value": 8,
+      "display_text": "Full",
+      "visible": true,
+      "confidence": "high",
+      "notes": "Fuel needle pointing to F (Full) position on right gauge"
+    },
+    "coolant_temp": {
+      "status": "normal",
+      "gauge_position": "center",
+      "visible": true,
+      "confidence": "medium",
+      "notes": "Small gauge on left side, needle in normal range"
+    },
+    "outside_temp": {
+      "value": 5,
+      "unit": "F",
+      "visible": true,
+      "confidence": "high",
+      "notes": "Digital display shows 5°F in center cluster"
+    },
+    "warning_lights": {
+      "lights": ["OIL_PRESSURE", "CHECK_ENGINE"],
+      "visible": true,
+      "confidence": "high",
+      "notes": "Multiple warning lights visible on left gauge including oil and engine symbols"
+    },
+    "oil_life": {
+      "percent": null,
+      "visible": false,
+      "confidence": "n/a",
+      "notes": "Oil life not displayed in this dashboard view"
+    }
+  },
+  "image_quality": {
+    "lighting": "excellent",
+    "angle": "straight",
+    "resolution": "high",
+    "clarity": "excellent",
+    "overall_quality": "A"
+  },
+  "labeling_metadata": {
+    "labeled_by": "expert_analysis",
+    "labeled_date": "2025-09-30",
+    "review_status": "complete",
+    "notes": "High-quality Honda Accord dashboard with clear analog/digital hybrid cluster"
+  }
+}

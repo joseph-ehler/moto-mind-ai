@@ -1,0 +1,64 @@
+{
+  "image_file": "dashboard-audi-audi-a4-a9ed58-1024.jpg",
+  "vehicle_info": {
+    "make": "Audi",
+    "model": "A4",
+    "year": null
+  },
+  "ground_truth": {
+    "odometer": {
+      "value": 106655,
+      "unit": "km",
+      "visible": true,
+      "confidence": "high",
+      "notes": "Digital odometer clearly visible showing 106655 km in center display"
+    },
+    "fuel_level": {
+      "type": "quarters",
+      "value": 1,
+      "display_text": "1/4 full",
+      "visible": true,
+      "confidence": "high",
+      "notes": "Analog fuel gauge showing approximately 1/4 tank"
+    },
+    "coolant_temp": {
+      "status": "normal",
+      "gauge_position": "center",
+      "visible": true,
+      "confidence": "medium",
+      "notes": "Temperature gauge visible on left, in normal operating range"
+    },
+    "outside_temp": {
+      "value": 18,
+      "unit": "C",
+      "visible": true,
+      "confidence": "high",
+      "notes": "Outside temperature displayed as 18°C"
+    },
+    "warning_lights": {
+      "lights": ["SEATBELT", "OTHER"],
+      "visible": true,
+      "confidence": "high",
+      "notes": "Multiple warning lights visible in center display including seatbelt warning"
+    },
+    "oil_life": {
+      "percent": null,
+      "visible": false,
+      "confidence": "n/a",
+      "notes": "Oil life percentage not visible in this view"
+    }
+  },
+  "image_quality": {
+    "lighting": "good",
+    "angle": "straight",
+    "resolution": "medium",
+    "clarity": "good",
+    "overall_quality": "B"
+  },
+  "labeling_metadata": {
+    "labeled_by": "expert_analysis",
+    "labeled_date": "2025-09-30",
+    "review_status": "complete",
+    "notes": "Audi A4 dashboard with km odometer and warning light - good test case for unit conversion"
+  }
+}

@@ -1,35 +1,29 @@
-# MotoMindAI: Fleet Intelligence You Can Explain
+{{ ... }}
 
 ## The Problem
 Fleet managers get alerts but can't explain WHY to DOT inspectors.
 
 ## The Solution
-"Why did Truck 47 get flagged?" → "Brake pad wear 87% + route inefficiency 12% above baseline"
+"Why did Truck 47 get flagged?" → "Brake pad wear 87% +# MotoMind AI
 
-## MVP Scope
-- Connect to Samsara API
-- Explain vehicle alerts with reasoning
-- Generate audit-ready reports
-- One killer loop: Question → Analysis → Explainable Answer
+🚗 **Intelligent Vehicle Management Platform**
 
-## Quick Start
-```bash
-npm install
-cp .env.example .env  # Add your Samsara API key
-npm run dev
-```
+A modern, AI-powered vehicle management system that transforms smartphone technology into comprehensive fleet insights and maintenance tracking.
 
-Visit http://localhost:3005 and ask about your fleet.
+## ✨ Features
 
-## Architecture
-```
-Samsara API → Data Normalizer → Rule Engine → LLM Explainer → Audit Logger → UI
-```
+### 🔧 Core Functionality
+- **Vehicle Onboarding** - VIN scanning and automatic vehicle data enrichment
+- **Photo Management** - Multi-image system with categorization and primary image selection
+- **Smart Dashboard** - Beautiful garage view with responsive grid layouts
+- **Receipt Processing** - OCR-powered fuel receipt capture and analysis
 
-## Current Status
-🚧 **Production Development** - Building enterprise-grade fleet intelligence
+### 🤖 AI-Powered Insights
+- **Intelligent Explanations** - AI-driven vehicle performance analysis
+- **Maintenance Predictions** - Proactive maintenance recommendations
+- **Fleet Analytics** - Comprehensive vehicle metrics and reporting
 
-## Production Features
+## 🚀 Quick Start
 - ✅ Multi-tenant architecture (solo users + fleets)
 - ✅ Row-level security with tenant isolation
 - ✅ Circuit breakers for API resilience

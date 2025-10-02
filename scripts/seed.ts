@@ -1,11 +1,15 @@
 // MotoMindAI: Seed Data Script
 // Creates test tenants, vehicles, and metrics for development
 
+import { config } from 'dotenv'
 import { Pool } from 'pg'
 import { v4 as uuidv4 } from 'uuid'
 
+// Load environment variables
+config()
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/motomind_dev'
+  connectionString: process.env.DATABASE_URL
 })
 
 interface SeedTenant {
@@ -18,7 +22,7 @@ interface SeedTenant {
 interface SeedVehicle {
   id: string
   tenantId: string
-  label: string
+  display_name: string
   make: string
   model: string
   vin?: string
@@ -129,7 +133,7 @@ async function seedDatabase() {
           model = EXCLUDED.model,
           vin = EXCLUDED.vin,
           updated_at = now()
-      `, [vehicle.id, vehicle.tenantId, vehicle.label, vehicle.make, vehicle.model, vehicle.vin])
+      `, [vehicle.id, vehicle.tenantId, vehicle.display_name, vehicle.make, vehicle.model, vehicle.vin])
     }
     
     // Create vehicle metrics with realistic data that triggers rules

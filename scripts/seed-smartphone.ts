@@ -1,8 +1,12 @@
 // MotoMindAI: Smartphone Data Seed Script
 // Creates realistic manual events and uploads for testing
 
+import { config } from 'dotenv'
 import { Pool } from 'pg'
 import { v4 as uuidv4 } from 'uuid'
+
+// Load environment variables
+config()
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/motomind_dev'

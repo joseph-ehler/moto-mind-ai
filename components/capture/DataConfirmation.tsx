@@ -2,6 +2,7 @@
 // User verification and editing of OCR-extracted data
 
 import { useState } from 'react'
+import { PDFExportButton, ShareablePDFLink } from '../ui/PDFExportButton'
 
 interface DataConfirmationProps {
   kind: 'odometer_reading' | 'fuel_purchase' | 'maintenance' | 'issue_report'
@@ -69,18 +70,17 @@ export function DataConfirmation({
     setIsSubmitting(true)
     
     try {
-      // Submit to manual events API
-      const response = await fetch('/api/manual-events', {
+      // Submit to Supabase database (working version)
+      const response = await fetch('/api/supabase-save-working', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           vehicleId,
-          sourceUploadId: uploadId,
+          uploadId,
           eventType: kind,
-          payload: formData,
-          confidence: formData.ocr_confidence || 80,
+          data: formData,
           verifiedByUser: true
         })
       })
@@ -367,6 +367,20 @@ export function DataConfirmation({
           </p>
 
           {renderForm()}
+
+          {/* PDF Export Options */}
+          <div className="flex items-center justify-center space-x-3 mt-4 pt-4 border-t border-gray-100">
+            <PDFExportButton 
+              vehicleId={vehicleId}
+              question={`${getTitle()} Analysis`}
+              className="text-sm"
+            />
+            <ShareablePDFLink 
+              vehicleId={vehicleId}
+              question={`${getTitle()} Report`}
+              className="text-sm"
+            />
+          </div>
 
           <div className="flex space-x-3 mt-6">
             <button

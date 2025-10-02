@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Garage Navigation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-link { display: block; margin: 10px 0; padding: 10px; background: #f0f0f0; text-decoration: none; color: #333; }
+        .test-link:hover { background: #e0e0e0; }
+    </style>
+</head>
+<body>
+    <h1>Garage Navigation Test</h1>
+    <p>Click these links to test garage navigation:</p>
+    
+    <a href="http://localhost:3005/garages" class="test-link">
+        📋 Garage List Page (/garages)
+    </a>
+    
+    <a href="http://localhost:3005/garages/709a1a50-1409-4224-b8ad-0f3b004bd365" class="test-link">
+        🏠 Garage Details - Starke (/garages/709a1a50-1409-4224-b8ad-0f3b004bd365)
+    </a>
+    
+    <a href="http://localhost:3005/garages/550e8400-e29b-41d4-a716-446655440003" class="test-link">
+        🏠 Garage Details - Demo (/garages/550e8400-e29b-41d4-a716-446655440003)
+    </a>
+    
+    <a href="http://localhost:3005/garages/new" class="test-link">
+        ➕ New Garage (/garages/new)
+    </a>
+    
+    <a href="http://localhost:3005/fleet" class="test-link">
+        🚗 Fleet Page (/fleet)
+    </a>
+
+    <h2>Navigation Features Added:</h2>
+    <ul>
+        <li>✅ Entire garage card is now clickable</li>
+        <li>✅ Uses Next.js router instead of window.location</li>
+        <li>✅ Edit button navigates to garage details</li>
+        <li>✅ Manage button navigates to garage details</li>
+        <li>✅ Event propagation handled properly</li>
+        <li>✅ Cursor pointer indicates clickable cards</li>
+    </ul>
+
+    <h2>How to Test:</h2>
+    <ol>
+        <li>Go to the Garage List Page</li>
+        <li>Click anywhere on a garage card</li>
+        <li>Should navigate to garage details page</li>
+        <li>Try the Edit and Manage buttons</li>
+        <li>Check that vehicles are displayed in garage details</li>
+    </ol>
+</body>
+</html>

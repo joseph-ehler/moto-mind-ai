@@ -1,0 +1,87 @@
+{
+  "timestamp": "2025-09-26T00:36:13.319Z",
+  "analysis_summary": {
+    "total_vehicles": 5,
+    "safe_consolidation": 5,
+    "zero_data_loss": true,
+    "recommended_strategy": "Automatic consolidation using display_name as canonical field"
+  },
+  "migration_phases": [
+    {
+      "phase": "Phase 1: Pre-Migration Validation",
+      "description": "Verify current state and create backup validation",
+      "sql_commands": [
+        "-- Verify no data loss scenarios exist",
+        "SELECT COUNT(*) as vehicles_with_conflicts FROM vehicles WHERE label != display_name OR (nickname IS NOT NULL AND nickname != display_name);",
+        "",
+        "-- Create backup of current naming state",
+        "CREATE TABLE IF NOT EXISTS vehicles_naming_backup AS SELECT id, label, nickname, display_name, created_at FROM vehicles;"
+      ],
+      "validation_queries": [
+        "SELECT COUNT(*) FROM vehicles_naming_backup;",
+        "SELECT COUNT(*) FROM vehicles WHERE label IS DISTINCT FROM display_name;"
+      ],
+      "rollback_commands": [
+        "DROP TABLE IF EXISTS vehicles_naming_backup;"
+      ],
+      "risk_level": "LOW"
+    },
+    {
+      "phase": "Phase 2: Update Application Code",
+      "description": "Update all application code to use display_name exclusively",
+      "sql_commands": [
+        "-- No SQL changes in this phase",
+        "-- This phase involves updating TypeScript interfaces and components"
+      ],
+      "validation_queries": [
+        "-- Verify APIs still work",
+        "SELECT id, display_name FROM vehicles LIMIT 3;"
+      ],
+      "rollback_commands": [
+        "-- Revert application code changes if needed"
+      ],
+      "risk_level": "LOW"
+    },
+    {
+      "phase": "Phase 3: Remove Redundant Columns (Safe)",
+      "description": "Drop label and nickname columns after confirming no usage",
+      "sql_commands": [
+        "-- Add comment to mark columns as deprecated",
+        "COMMENT ON COLUMN vehicles.label IS 'DEPRECATED: Use display_name instead. Will be removed in next release.';",
+        "COMMENT ON COLUMN vehicles.nickname IS 'DEPRECATED: Use display_name instead. Will be removed in next release.';",
+        "",
+        "-- After 7-14 days of monitoring, drop the columns",
+        "-- ALTER TABLE vehicles DROP COLUMN label;",
+        "-- ALTER TABLE vehicles DROP COLUMN nickname;"
+      ],
+      "validation_queries": [
+        "SELECT column_name, is_nullable FROM information_schema.columns WHERE table_name = 'vehicles' AND column_name IN ('label', 'nickname', 'display_name');"
+      ],
+      "rollback_commands": [
+        "-- Restore from backup if needed",
+        "UPDATE vehicles SET label = b.label, nickname = b.nickname FROM vehicles_naming_backup b WHERE vehicles.id = b.id;"
+      ],
+      "risk_level": "LOW"
+    }
+  ],
+  "pre_migration_checks": [
+    "Verify all vehicles have display_name populated",
+    "Confirm no data loss scenarios exist (label != display_name)",
+    "Check that all application code uses display_name",
+    "Ensure backup table is created successfully",
+    "Validate API endpoints return correct data"
+  ],
+  "post_migration_validation": [
+    "Verify all vehicles still accessible via API",
+    "Check that UI displays vehicle names correctly",
+    "Confirm no application errors in logs",
+    "Validate that display_name contains expected values",
+    "Test vehicle creation and updates work correctly"
+  ],
+  "user_impact_assessment": {
+    "api_changes_required": false,
+    "ui_changes_required": false,
+    "breaking_changes": false,
+    "user_visible_changes": false
+  }
+}
