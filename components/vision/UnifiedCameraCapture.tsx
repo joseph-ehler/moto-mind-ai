@@ -211,15 +211,15 @@ export function UnifiedCameraCapture({
       canvas.width = video.videoWidth
       canvas.height = video.videoHeight
       
-      // Mirror logic: Desktop (front camera) needs to flip, Mobile (back camera) does not
-      if (!isMobile) {
-        // Desktop: flip the captured image to match mirrored preview
+      // Mirror logic: Mobile preview is mirrored, so flip back when capturing
+      if (isMobile) {
+        // Mobile: flip the captured image to un-mirror the preview
         context.save()
         context.scale(-1, 1)
         context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height)
         context.restore()
       } else {
-        // Mobile: capture as-is (no mirroring needed for back camera)
+        // Desktop: capture as-is (no preview mirroring)
         context.drawImage(video, 0, 0, canvas.width, canvas.height)
       }
       
@@ -469,7 +469,7 @@ export function UnifiedCameraCapture({
 
     // Log video mirroring state
     React.useEffect(() => {
-      console.log('🎥 Video transform:', isMobile ? 'none (mobile)' : 'scaleX(-1) (desktop)')
+      console.log('🎥 Video transform:', isMobile ? 'scaleX(-1) [MIRRORED for mobile]' : 'none [normal for desktop]')
     }, [isMobile])
 
     return (
@@ -480,7 +480,7 @@ export function UnifiedCameraCapture({
           playsInline
           muted
           className="w-full h-full object-cover"
-          style={{ transform: isMobile ? 'none' : 'scaleX(-1)' }}
+          style={{ transform: isMobile ? 'scaleX(-1)' : 'none' }}
         />
         
         <canvas
