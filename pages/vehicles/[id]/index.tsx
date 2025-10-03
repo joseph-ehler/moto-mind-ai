@@ -166,17 +166,33 @@ export default function VehicleDetailPage() {
     try {
       setShowDocumentModal(false)
 
+      // Build proper event payload with top-level fields
+      const payload: any = {
+        type: event.type,
+        date: new Date().toISOString().split('T')[0],
+        payload: event
+      }
+
+      // Extract top-level fields for fuel events
+      if (event.type === 'fuel') {
+        payload.total_amount = event.total_amount || event.key_facts?.cost
+        payload.gallons = event.gallons || event.key_facts?.gallons
+        payload.vendor = event.station || event.key_facts?.station
+      }
+
+      // Extract top-level fields for service events
+      if (event.type === 'service') {
+        payload.total_amount = event.total_amount || event.key_facts?.cost
+        payload.vendor = event.vendor || event.key_facts?.vendor
+      }
+
       // Save the event to the database
       const response = await fetch(`/api/vehicles/${id}/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          type: event.type,
-          date: new Date().toISOString().split('T')[0],
-          payload: event
-        })
+        body: JSON.stringify(payload)
       })
 
       if (!response.ok) {
