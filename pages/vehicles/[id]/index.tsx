@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { NavigationCard } from '@/components/vehicle/NavigationCard'
 import { DashboardCaptureModal } from '@/components/vision/DashboardCaptureModal'
-import { SimplePhotoModal } from '@/components/capture/SimplePhotoModal'
+import { DocumentScannerModal } from '@/components/vision/DocumentScannerModal'
 import { OverflowMenu } from '@/components/vehicle/OverflowMenu'
 import { EditVehicleModal } from '@/components/vehicle/EditVehicleModal'
 import { useVehicleEvents, useVehicleStats } from '@/hooks/useVehicleEvents'
@@ -161,7 +161,44 @@ export default function VehicleDetailPage() {
   // Transform paginated events
   const events = paginatedEvents.map(transformDatabaseEvent)
 
-  // Helper function to handle event saving
+  // Helper function to handle document saving from DocumentScannerModal
+  const handleDocumentSave = async (event: any) => {
+    try {
+      setShowDocumentModal(false)
+
+      // Save the event to the database
+      const response = await fetch(`/api/vehicles/${id}/events`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          type: event.type,
+          date: new Date().toISOString().split('T')[0],
+          payload: event
+        })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error('API error:', errorData)
+        throw new Error(errorData.error?.message || 'Failed to save event')
+      }
+
+      const savedEvent = await response.json()
+      console.log('💾 Document saved to database:', savedEvent)
+
+      // Refresh data
+      await new Promise(resolve => setTimeout(resolve, 500))
+      await refreshEvents()
+      await refreshStats()
+    } catch (error) {
+      console.error('Error saving document:', error)
+      alert('Failed to save document. Please try again.')
+    }
+  }
+
+  // Helper function to handle event saving from DashboardCaptureModal
   const handleEventSave = async (eventData: any) => {
     try {
       // Close the modal first for better UX
@@ -798,12 +835,12 @@ export default function VehicleDetailPage() {
         mode="routine"
       />
 
-      <SimplePhotoModal
+      <DocumentScannerModal
         isOpen={showDocumentModal}
         onClose={() => setShowDocumentModal(false)}
-        onSaveEvent={handleEventSave}
-        captureType="document"
-        title="Scan Document"
+        onSave={handleDocumentSave}
+        vehicleId={id as string}
+        vehicleName={vehicle?.nickname || `${vehicle?.year} ${vehicle?.make} ${vehicle?.model}`}
       />
 
       {vehicle && (
