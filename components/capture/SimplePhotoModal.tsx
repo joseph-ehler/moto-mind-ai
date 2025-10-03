@@ -179,7 +179,7 @@ function SimplePhotoModal({
       // Call Vision API to extract essentials only
       const formData = new FormData()
       formData.append('image', imageBlob, `${captureType || 'document'}.jpg`)
-      formData.append('type', captureType || 'document') // Use configurable capture type
+      formData.append('document_type', captureType || 'document') // FIXED: Use correct field name
       formData.append('store_original', 'true') // Request to store original image
       
       const response = await fetch('/api/vision/process', {
@@ -365,7 +365,9 @@ function SimplePhotoModal({
         // LLM-ready compact data
         ...generateSummaryAndFacts('service', visionData),
         // Store ALL extracted data for transparency and LLM chat
-        raw_extraction: visionData,
+        raw_extraction: visionData || {},
+        // Add null-safe key_facts access
+        key_facts: generateSummaryAndFacts('service', visionData)?.key_facts || {},
         validation,
         processing_metadata: visionData.processing_metadata,
         quality_signals: {
@@ -377,7 +379,15 @@ function SimplePhotoModal({
       }
     }
     
-    if (visionData.type === 'fuel' || visionData.station_name || visionData.gallons) {
+    // Check for fuel receipt indicators (including raw text for misclassified receipts)
+    const hasFuelData = visionData.type === 'fuel' || visionData.type === 'fuel_receipt' ||
+                       visionData.station_name || visionData.gallons ||
+                       (visionData.raw_extraction?.extracted_text && 
+                        (visionData.raw_extraction.extracted_text.includes('FUEL') ||
+                         visionData.raw_extraction.extracted_text.includes('GAL') ||
+                         visionData.raw_extraction.extracted_text.includes('GALLONS')))
+    
+    if (hasFuelData) {
       return {
         type: 'fuel',
         captured_at: now,
@@ -388,7 +398,9 @@ function SimplePhotoModal({
         source_document_url: visionData.source_document_url,
         // LLM-ready compact data
         ...generateSummaryAndFacts('fuel', visionData),
-        raw_extraction: visionData,
+        raw_extraction: visionData || {},
+        // Add null-safe key_facts access
+        key_facts: generateSummaryAndFacts('fuel', visionData)?.key_facts || {},
         validation,
         processing_metadata: visionData.processing_metadata,
         quality_signals: {

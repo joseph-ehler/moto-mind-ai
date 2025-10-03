@@ -215,8 +215,13 @@ function inferDocumentType(data: any): DocumentType {
     return 'dashboard_snapshot'
   }
   
-  // Fuel receipt indicators
-  if (data.gallons || data.price_per_gallon || data.station_name) {
+  // Fuel receipt indicators - ENHANCED to check extracted text
+  const extractedText = data.extracted_text || ''
+  const hasFuelKeywords = extractedText.toUpperCase().includes('FUEL') || 
+                         extractedText.toUpperCase().includes('GALLON') ||
+                         extractedText.toUpperCase().includes('GAL ')
+  
+  if (data.gallons || data.price_per_gallon || data.station_name || hasFuelKeywords) {
     return 'fuel_receipt'
   }
   
