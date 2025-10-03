@@ -166,24 +166,31 @@ export default function VehicleDetailPage() {
     try {
       setShowDocumentModal(false)
 
-      // Build proper event payload with top-level fields
-      const payload: any = {
-        type: event.type,
-        date: new Date().toISOString().split('T')[0],
-        payload: event
+      // Import normalizer dynamically to avoid circular deps
+      const { normalizeDocumentData } = await import('@/lib/domain/document-normalizer')
+      
+      // Normalize vision data to canonical schema
+      const normalizedPayload = normalizeDocumentData(event)
+      
+      // Extract odometer for top-level (chronological queries only)
+      let odometerMiles: number | undefined
+      let eventDate: string = new Date().toISOString().split('T')[0]
+      
+      if (normalizedPayload.type === 'dashboard_snapshot') {
+        odometerMiles = (normalizedPayload.data as any).odometer_miles
+      } else if (normalizedPayload.type === 'service_invoice') {
+        odometerMiles = (normalizedPayload.data as any).odometer_reading || undefined
+        eventDate = (normalizedPayload.data as any).date || eventDate
+      } else if (normalizedPayload.type === 'fuel_receipt') {
+        eventDate = (normalizedPayload.data as any).date || eventDate
       }
 
-      // Extract top-level fields for fuel events
-      if (event.type === 'fuel') {
-        payload.total_amount = event.total_amount || event.key_facts?.total_amount
-        payload.gallons = event.gallons || event.key_facts?.gallons
-        payload.vendor = event.station || event.key_facts?.station_name
-      }
-
-      // Extract top-level fields for service events
-      if (event.type === 'service') {
-        payload.total_amount = event.total_amount || event.key_facts?.cost
-        payload.vendor = event.vendor || event.key_facts?.vendor
+      // Build database payload with canonical structure
+      const payload = {
+        type: normalizedPayload.type,
+        date: eventDate,
+        miles: odometerMiles, // Only for chronological validation
+        payload: normalizedPayload // Canonical schema in payload.data
       }
 
       // Save the event to the database

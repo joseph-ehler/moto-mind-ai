@@ -48,64 +48,65 @@ export function UnifiedEventDetail({ event, onImageClick }: UnifiedEventDetailPr
     // Type-specific fields FIRST (so fuel data shows before odometer)
     switch (event.type) {
       case 'dashboard_snapshot':
-        const keyFacts = event.payload?.key_facts
+        // Read from canonical payload.data (with fallback for old events)
+        const dashData = event.payload?.data || event.payload?.key_facts || {}
         
         // Fuel Level
-        if (keyFacts?.fuel_eighths !== null && keyFacts?.fuel_eighths !== undefined) {
-          fields.push({ label: 'Fuel Level', value: `${Math.round(keyFacts.fuel_eighths / 8 * 100)}%`, type: 'measurement' })
+        if (dashData.fuel_eighths !== null && dashData.fuel_eighths !== undefined) {
+          fields.push({ label: 'Fuel Level', value: `${Math.round(dashData.fuel_eighths / 8 * 100)}%`, type: 'measurement' })
         }
         
         // Coolant Temperature
-        if (keyFacts?.coolant_temp) {
+        if (dashData.coolant_temp) {
           const tempLabels: Record<string, string> = {
             'cold': 'Cold',
             'normal': 'Normal',
             'hot': 'Hot'
           }
-          fields.push({ label: 'Coolant Temp', value: tempLabels[keyFacts.coolant_temp] || keyFacts.coolant_temp, type: 'measurement' })
+          fields.push({ label: 'Coolant Temp', value: tempLabels[dashData.coolant_temp] || dashData.coolant_temp, type: 'measurement' })
         }
         
         // Outside Temperature
-        if (keyFacts?.outside_temp_value !== null && keyFacts?.outside_temp_value !== undefined) {
-          const unit = keyFacts.outside_temp_unit || 'F'
-          fields.push({ label: 'Outside Temp', value: `${keyFacts.outside_temp_value}°${unit}`, type: 'measurement' })
+        if (dashData.outside_temp_value !== null && dashData.outside_temp_value !== undefined) {
+          const unit = dashData.outside_temp_unit || 'F'
+          fields.push({ label: 'Outside Temp', value: `${dashData.outside_temp_value}°${unit}`, type: 'measurement' })
         }
         
         // Warning Lights Count
-        if (keyFacts?.warning_lights && keyFacts.warning_lights.length > 0) {
-          fields.push({ label: 'Warning Lights', value: keyFacts.warning_lights.length, type: 'text' })
+        if (dashData.warning_lights && dashData.warning_lights.length > 0) {
+          fields.push({ label: 'Warning Lights', value: dashData.warning_lights.length, type: 'text' })
         }
         
         // Oil Life (if present)
-        if (keyFacts?.oil_life_percent) {
-          fields.push({ label: 'Oil Life', value: `${keyFacts.oil_life_percent}%`, type: 'measurement' })
+        if (dashData.oil_life_percent) {
+          fields.push({ label: 'Oil Life', value: `${dashData.oil_life_percent}%`, type: 'measurement' })
         }
         
         // Trip Meters (if present)
-        if (keyFacts?.trip_a_miles) {
-          fields.push({ label: 'Trip A', value: `${keyFacts.trip_a_miles.toLocaleString()} mi`, type: 'measurement' })
+        if (dashData.trip_a_miles) {
+          fields.push({ label: 'Trip A', value: `${dashData.trip_a_miles.toLocaleString()} mi`, type: 'measurement' })
         }
-        if (keyFacts?.trip_b_miles) {
-          fields.push({ label: 'Trip B', value: `${keyFacts.trip_b_miles.toLocaleString()} mi`, type: 'measurement' })
+        if (dashData.trip_b_miles) {
+          fields.push({ label: 'Trip B', value: `${dashData.trip_b_miles.toLocaleString()} mi`, type: 'measurement' })
         }
         break
 
       case 'fuel':
-        // Fallback to payload data if top-level fields are null
-        const gallons = event.gallons || event.payload?.raw_extraction?.key_facts?.gallons
-        const station = event.vendor || event.payload?.raw_extraction?.key_facts?.station_name
-        const fuelAmount = event.total_amount || event.payload?.raw_extraction?.key_facts?.total_amount
-        const pricePerGal = event.payload?.raw_extraction?.key_facts?.price_per_gallon
+        // Read from canonical payload.data (with fallback for old events)
+        const fuelData = event.payload?.data || event.payload?.raw_extraction?.key_facts || {}
+        const gallons = fuelData.gallons
+        const station = fuelData.station_name
+        const fuelAmount = fuelData.total_amount
+        const pricePerGal = fuelData.price_per_gallon
+        const fuelType = fuelData.fuel_type
         
         if (station) fields.push({ label: 'Station', value: station, type: 'text' })
         if (gallons) fields.push({ label: 'Gallons', value: `${gallons} gal`, type: 'measurement' })
         if (fuelAmount) fields.push({ label: 'Total Amount', value: `$${fuelAmount.toFixed(2)}`, type: 'financial' })
         if (pricePerGal) {
           fields.push({ label: 'Price/Gallon', value: `$${pricePerGal.toFixed(3)}`, type: 'financial' })
-        } else if (gallons && fuelAmount) {
-          const calculated = (fuelAmount / gallons).toFixed(3)
-          fields.push({ label: 'Price/Gallon', value: `$${calculated}`, type: 'financial' })
         }
+        if (fuelType) fields.push({ label: 'Fuel Type', value: fuelType, type: 'text' })
         break
 
       case 'service':
