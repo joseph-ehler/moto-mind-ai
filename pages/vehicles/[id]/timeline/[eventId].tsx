@@ -105,7 +105,19 @@ export default function TimelineEventDetail() {
 
   // Get document image URL
   const getDocumentImageUrl = () => {
-    // Everything is an event - check payload.image_url first
+    // Check payload.raw_extraction.image_url first (most reliable)
+    if (event?.payload?.raw_extraction?.raw_extraction?.source_document_url) {
+      return event.payload.raw_extraction.raw_extraction.source_document_url
+    }
+    // Check payload.raw_extraction.image_url
+    if (event?.payload?.raw_extraction?.image_url) {
+      return event.payload.raw_extraction.image_url
+    }
+    // Check nested raw_extraction
+    if (event?.payload?.raw_extraction?.raw_extraction?.image_url) {
+      return event.payload.raw_extraction.raw_extraction.image_url
+    }
+    // Everything is an event - check payload.image_url
     if (event?.payload?.image_url) {
       return event.payload.image_url
     }
