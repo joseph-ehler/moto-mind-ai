@@ -175,9 +175,9 @@ export default function VehicleDetailPage() {
 
       // Extract top-level fields for fuel events
       if (event.type === 'fuel') {
-        payload.total_amount = event.total_amount || event.key_facts?.cost
+        payload.total_amount = event.total_amount || event.key_facts?.total_amount
         payload.gallons = event.gallons || event.key_facts?.gallons
-        payload.vendor = event.station || event.key_facts?.station
+        payload.vendor = event.station || event.key_facts?.station_name
       }
 
       // Extract top-level fields for service events
