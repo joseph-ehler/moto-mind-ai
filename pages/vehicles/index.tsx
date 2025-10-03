@@ -7,6 +7,7 @@ import { EditVehicleModal } from '@/components/vehicle/EditVehicleModal'
 import { DeleteVehicleDialog } from '@/components/vehicle/DeleteVehicleDialog'
 import { useVehicles } from '@/hooks/useVehicles'
 import { StandardCard, StandardCardContent } from '@/components/ui/StandardCard'
+import { PageHeader } from '@/components/ui/PageHeader'
 import { 
   Car, 
   Plus,
@@ -65,13 +66,10 @@ export default function Fleet() {
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-6xl mx-auto px-6 py-8">
           {/* Ro-style Header */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-              Hi, Joseph
-            </h1>
-            <p className="text-gray-600 mb-6">
-              Welcome back
-            </p>
+          <PageHeader 
+            title="Hi, Joseph"
+            subtitle="Welcome back"
+          />
 
             {/* Actual status updates like Ro */}
             <StandardCard className="mb-6">

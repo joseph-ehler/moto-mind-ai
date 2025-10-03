@@ -1,21 +1,10 @@
 'use client'
 
-import React from 'react'
-import {
-  Gauge,
-  Fuel,
-  Wrench,
-  FileText,
-  Clock,
-  AlertTriangle,
-  Shield,
-  CheckCircle,
-  Settings,
-  ChevronDown,
-  ChevronUp,
-  Activity
-} from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { ChevronDown, ChevronUp, Calendar, Clock, MapPin, ExternalLink, Fuel, Wrench, Car, AlertTriangle, FileText, DollarSign, Camera, Map, List, Filter } from 'lucide-react'
 import { UnifiedEventDetail } from './UnifiedEventDetail'
+import { SimpleEventsMap } from '../maps/SimpleEventsMap'
+import { SectionHeader } from '@/components/ui/PageHeader'
 
 // Enhanced event interface with validation, summaries, and processing metadata
 export interface TimelineEvent {
@@ -376,12 +365,14 @@ export function VehicleTimeline({ vehicleId, events, onEventDeleted, timelineFil
   return (
     <div className="space-y-8">
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">Vehicle Timeline</h2>
-          <div className="text-sm text-gray-500">
-            {events.length} event{events.length !== 1 ? 's' : ''}
-          </div>
-        </div>
+        <SectionHeader 
+          title="Vehicle Timeline"
+          action={
+            <div className="text-sm text-gray-500">
+              {events.length} event{events.length !== 1 ? 's' : ''}
+            </div>
+          }
+        />
         
         {onFilterChange && (
           <div className="flex items-center gap-2">

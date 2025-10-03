@@ -454,7 +454,7 @@ export default function VehicleSpecifications() {
                   </p>
                 </div>
               )}
-            </div>
+            </StandardCard>
 
             {/* Features */}
             <div className="mt-6 bg-white rounded-3xl border border-black/5 shadow-sm overflow-hidden">

@@ -1,21 +1,23 @@
 // Dynamic Garage Demo - Next-Level Adaptive Experience
 // This demonstrates the key concepts for context-aware, intelligent vehicle cards
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { Card, CardContent } from '@/components/ui/card'
+import React, { useState, useEffect } from 'react'
+import Head from 'next/head'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { VehicleRow } from '@/components/vehicle/VehicleRow'
+import { EditVehicleModal } from '@/components/vehicle/EditVehicleModal'
+import { DeleteVehicleDialog } from '@/components/vehicle/DeleteVehicleDialog'
+import { useVehicles } from '@/hooks/useVehicles'
+import { PageHeader } from '@/components/ui/PageHeader'
 import { 
-  Camera, 
-  Gauge, 
-  Fuel,
-  Settings,
-  Clock,
-  Zap,
-  AlertTriangle,
-  CheckCircle,
-  Plus
+  Car, 
+  Plus,
+  Filter,
+  Search,
+  SlidersHorizontal,
+  MoreHorizontal,
+  ArrowUpDown
 } from 'lucide-react'
 
 interface DynamicVehicle {
@@ -424,25 +426,20 @@ export default function DynamicGarageDemo() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
       {/* Smart Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            {title}
-          </h1>
-          <p className="text-lg text-slate-600">
-            {subtitle}
-          </p>
-          <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
-            <span>Current time: {timeContext}</span>
-            <span>•</span>
-            <span>Intelligent sorting active</span>
-          </div>
-        </div>
-        
-        <Button onClick={() => router.push('/vehicles/onboard')}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Vehicle
-        </Button>
+      <PageHeader 
+        title={title}
+        subtitle={subtitle}
+        action={
+          <Button onClick={() => router.push('/vehicles/onboard')}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Vehicle
+          </Button>
+        }
+      />
+      <div className="flex items-center gap-4 mb-6 text-sm text-slate-500">
+        <span>Current time: {timeContext}</span>
+        <span>•</span>
+        <span>Intelligent sorting active</span>
       </div>
       
       {/* Fluid Dynamic Grid */}
