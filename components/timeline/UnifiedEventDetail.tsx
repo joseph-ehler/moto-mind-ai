@@ -128,7 +128,7 @@ export function UnifiedEventDetail({ event, onImageClick }: UnifiedEventDetailPr
         break
     }
 
-    // Odometer - add at end so fuel/service data shows first
+    // Odometer - only show for events that actually have odometer data
     if (event.type === 'dashboard_snapshot' && event.payload?.key_facts?.odometer_original_value) {
       const originalValue = event.payload.key_facts.odometer_original_value
       const originalUnit = event.payload.key_facts.odometer_original_unit || 'mi'
@@ -148,8 +148,8 @@ export function UnifiedEventDetail({ event, onImageClick }: UnifiedEventDetailPr
         type: 'measurement',
         isOdometer: true
       })
-    } else if (event.miles) {
-      // Show odometer at end for all events
+    } else if (event.miles && event.type === 'odometer') {
+      // Only show odometer for explicit odometer events
       fields.push({ label: 'Odometer', value: `${event.miles.toLocaleString()} mi`, type: 'measurement' })
     }
 
