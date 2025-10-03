@@ -8,6 +8,7 @@ import { OverflowMenu } from '@/components/vehicle/OverflowMenu'
 import { EditVehicleModal } from '@/components/vehicle/EditVehicleModal'
 import { useVehicleEvents, useVehicleStats } from '@/hooks/useVehicleEvents'
 import { useScrollRestoration } from '@/hooks/useScrollRestoration'
+import { normalizeDocumentData } from '@/lib/domain/document-normalizer'
 import { 
   Car, 
   Calendar, 
@@ -166,9 +167,6 @@ export default function VehicleDetailPage() {
     try {
       setShowDocumentModal(false)
 
-      // Import normalizer dynamically to avoid circular deps
-      const { normalizeDocumentData } = await import('@/lib/domain/document-normalizer')
-      
       // Normalize vision data to canonical schema
       const normalizedPayload = normalizeDocumentData(event)
       
