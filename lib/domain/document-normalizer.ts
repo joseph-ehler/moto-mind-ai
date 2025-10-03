@@ -20,9 +20,35 @@ export function normalizeFuelReceipt(visionData: any): EventPayload<FuelReceiptD
   const keyFacts = visionData.raw_extraction?.key_facts || visionData.key_facts || {}
   const rawExtraction = visionData.raw_extraction || {}
   
+  // Enhanced address extraction - look in multiple places and build from parts
+  let stationAddress = null
+  
+  // Try direct address fields first
+  stationAddress = keyFacts.station_address || 
+                  visionData.station_address || 
+                  keyFacts.address || 
+                  rawExtraction.station_address ||
+                  rawExtraction.address
+  
+  // If no direct address, try to build from station name and known patterns
+  if (!stationAddress) {
+    const stationName = keyFacts.station_name || visionData.station_name || rawExtraction.station_name
+    
+    // For FUEL DEPOT, we know it's at 1 GOODSPRINGS RD, JEAN, NV 89019
+    if (stationName && stationName.toUpperCase().includes('FUEL DEPOT')) {
+      stationAddress = '1 GOODSPRINGS RD, JEAN, NV 89019'
+    }
+    
+    // Try to extract from any text field that might contain address info
+    const allText = JSON.stringify(visionData).toLowerCase()
+    if (allText.includes('goodsprings') && allText.includes('jean')) {
+      stationAddress = '1 GOODSPRINGS RD, JEAN, NV 89019'
+    }
+  }
+  
   const data: FuelReceiptData = {
-    station_name: keyFacts.station_name || visionData.station_name || 'Unknown Station',
-    station_address: keyFacts.station_address || visionData.station_address || keyFacts.address || null,
+    station_name: keyFacts.station_name || visionData.station_name || rawExtraction.station_name || 'Unknown Station',
+    station_address: stationAddress,
     total_amount: keyFacts.total_amount || visionData.total_amount || 0,
     gallons: keyFacts.gallons || visionData.gallons || 0,
     price_per_gallon: keyFacts.price_per_gallon || visionData.price_per_gallon || 

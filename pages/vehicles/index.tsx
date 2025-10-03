@@ -6,6 +6,7 @@ import { VehicleRow } from '@/components/vehicle/VehicleRow'
 import { EditVehicleModal } from '@/components/vehicle/EditVehicleModal'
 import { DeleteVehicleDialog } from '@/components/vehicle/DeleteVehicleDialog'
 import { useVehicles } from '@/hooks/useVehicles'
+import { StandardCard, StandardCardContent } from '@/components/ui/StandardCard'
 import { 
   Car, 
   Plus,
@@ -73,7 +74,7 @@ export default function Fleet() {
             </p>
 
             {/* Actual status updates like Ro */}
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-6">
+            <StandardCard className="mb-6">
               {vehicles.length > 0 ? (
                 <div className="p-6">
                   <div className="flex items-center gap-3 mb-4">
@@ -105,7 +106,7 @@ export default function Fleet() {
                   </Link>
                 </div>
               )}
-            </div>
+            </StandardCard>
           </div>
 
           {/* Filters (Roman: Simple pills) */}

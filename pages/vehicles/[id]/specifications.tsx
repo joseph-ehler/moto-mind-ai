@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
-import { ArrowLeft, Car, Edit } from 'lucide-react'
-import SetMaintenanceIntervalModal from '@/components/SetMaintenanceIntervalModal'
+import { ArrowLeft, Car, ChevronDown, ChevronUp, ExternalLink, Zap, Star, AlertTriangle, CheckCircle, Clock, User, Calendar, Wrench, Fuel, Gauge, Shield, Settings, Info, HelpCircle } from 'lucide-react'
+import Link from 'next/link'
+import { StandardCard, StandardCardHeader, StandardCardContent } from '@/components/ui/StandardCard'
 import { SpecsQualityBanner } from '@/components/vehicle/SpecsQualityBanner'
 import { SourceBadge, SourceLegend } from '@/components/vehicle/SourceBadge'
 import { calculateSpecsQuality } from '@/lib/utils/spec-quality'
 import { EditSpecCategoryModal } from '@/components/vehicle/EditSpecCategoryModal'
 import { sortSpecCategories, getCategoryFields, getCategoryLabel } from '@/lib/utils/spec-ordering'
-
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 interface Vehicle {
@@ -279,7 +280,7 @@ export default function VehicleSpecifications() {
           totalFields={qualityAssessment.totalFields}
         />
 
-        <div className="bg-white rounded-3xl border border-black/5 shadow-sm overflow-hidden">
+        <StandardCard variant="premium">
           {basicSpecs.map((spec: any, index: number) => (
             <div
               key={spec.label}
@@ -292,7 +293,7 @@ export default function VehicleSpecifications() {
               <span className="text-base font-semibold text-black">{spec.value}</span>
             </div>
           ))}
-        </div>
+        </StandardCard>
 
         {/* Enhanced Specifications */}
         {nhtsaSpecs.length > 0 && (

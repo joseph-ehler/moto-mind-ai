@@ -130,7 +130,7 @@ export function useVehicles(filters: VehicleFilters = {}) {
   }
   
   return {
-    vehicles: data?.vehicles || [], // API returns { "vehicles": [...] }
+    vehicles: data?.data || [], // API returns { "data": [...] }
     count: data?.count || 0,
     hasMore: data?.hasMore || false,
     isLoading,

@@ -6,6 +6,7 @@ import { UnifiedEventDetail } from '@/components/timeline/UnifiedEventDetail'
 import { ImageViewerModal } from '@/components/timeline/ImageViewerModal'
 import { EditEventModal } from '@/components/events/EditEventModal'
 import { SingleEventMap } from '@/components/maps/SingleEventMap'
+import { EventDebugCard } from '@/components/timeline/EventDebugCard'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 
@@ -269,6 +270,9 @@ export default function TimelineEventDetail() {
 
         {/* Location Map - only show if event has geocoded location */}
         <SingleEventMap event={event} />
+
+        {/* Debug Information Card */}
+        <EventDebugCard event={event} />
 
       </div>
 
