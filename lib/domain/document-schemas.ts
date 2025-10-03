@@ -11,6 +11,7 @@
 // ============================================================================
 export interface FuelReceiptData {
   station_name: string
+  station_address: string | null // Full address for location intelligence
   total_amount: number
   gallons: number
   price_per_gallon: number
@@ -45,6 +46,8 @@ export interface DashboardSnapshotData {
 // ============================================================================
 export interface ServiceInvoiceData {
   vendor_name: string
+  vendor_address: string | null // Full address for location intelligence
+  vendor_phone: string | null // Contact information
   total_amount: number
   service_description: string | null
   date: string // YYYY-MM-DD

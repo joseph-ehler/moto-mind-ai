@@ -22,6 +22,7 @@ export function normalizeFuelReceipt(visionData: any): EventPayload<FuelReceiptD
   
   const data: FuelReceiptData = {
     station_name: keyFacts.station_name || visionData.station_name || 'Unknown Station',
+    station_address: keyFacts.station_address || visionData.station_address || keyFacts.address || null,
     total_amount: keyFacts.total_amount || visionData.total_amount || 0,
     gallons: keyFacts.gallons || visionData.gallons || 0,
     price_per_gallon: keyFacts.price_per_gallon || visionData.price_per_gallon || 
@@ -90,6 +91,8 @@ export function normalizeServiceInvoice(visionData: any): EventPayload<ServiceIn
   
   const data: ServiceInvoiceData = {
     vendor_name: keyFacts.vendor_name || visionData.vendor_name || visionData.shop_name || 'Unknown Vendor',
+    vendor_address: keyFacts.vendor_address || visionData.vendor_address || keyFacts.address || null,
+    vendor_phone: keyFacts.vendor_phone || visionData.vendor_phone || keyFacts.phone || null,
     total_amount: keyFacts.total_amount || visionData.total_amount || keyFacts.cost || 0,
     service_description: keyFacts.service_description || visionData.service_description || null,
     date: keyFacts.date || visionData.date || new Date().toISOString().split('T')[0],
