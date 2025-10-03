@@ -9,6 +9,7 @@ import { EditVehicleModal } from '@/components/vehicle/EditVehicleModal'
 import { useVehicleEvents, useVehicleStats } from '@/hooks/useVehicleEvents'
 import { useScrollRestoration } from '@/hooks/useScrollRestoration'
 import { normalizeDocumentData } from '@/lib/domain/document-normalizer'
+import { geocodeAddress } from '@/lib/geocoding/geocode'
 import { 
   Car, 
   Calendar, 
@@ -183,6 +184,31 @@ export default function VehicleDetailPage() {
         eventDate = (normalizedPayload.data as any).date || eventDate
       }
 
+      // Geocode address if present
+      let geocodedLat: number | undefined
+      let geocodedLng: number | undefined
+      let geocodedAddress: string | undefined
+      
+      const addressToGeocode = (normalizedPayload.data as any).vendor_address || 
+                              (normalizedPayload.data as any).station_address ||
+                              (normalizedPayload.data as any).company_address
+
+      if (addressToGeocode) {
+        console.log('🗺️ Geocoding address:', addressToGeocode)
+        try {
+          const coords = await geocodeAddress(addressToGeocode)
+          if (coords) {
+            geocodedLat = coords.lat
+            geocodedLng = coords.lng
+            geocodedAddress = coords.formatted_address
+            console.log('✅ Geocoded:', coords)
+          }
+        } catch (error) {
+          console.error('❌ Geocoding failed:', error)
+          // Continue without geocoding - not a critical failure
+        }
+      }
+
       // Map document types to database event types
       const eventTypeMap: Record<string, string> = {
         'fuel_receipt': 'fuel',
@@ -195,7 +221,11 @@ export default function VehicleDetailPage() {
         type: eventTypeMap[normalizedPayload.type] || normalizedPayload.type,
         date: eventDate,
         miles: odometerMiles, // Only for chronological validation
-        payload: normalizedPayload // Canonical schema in payload.data
+        payload: normalizedPayload, // Canonical schema in payload.data
+        geocoded_lat: geocodedLat,
+        geocoded_lng: geocodedLng,
+        geocoded_address: geocodedAddress,
+        geocoded_at: geocodedLat ? new Date().toISOString() : null
       }
 
       // Save the event to the database
