@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Head from 'next/head'
 import { StandardCard, StandardCardHeader, StandardCardContent } from '@/components/ui/StandardCard'
 import { PageHeader, SectionHeader } from '@/components/ui/PageHeader'
 import { Stack } from '@/components/ui/Stack'
 import { Button } from '@/components/ui/button'
-import { Plus, Settings, Car, Fuel, Wrench, Activity, CheckCircle } from 'lucide-react'
+import { BaseModal, ModalHeader, ModalContent, ModalFooter } from '@/components/modals/BaseModal'
+import { SimpleFormModal } from '@/components/modals/SimpleFormModal'
+import { AlertModal } from '@/components/modals/AlertModal'
+import { Plus, Settings, Car, Fuel, Wrench, Activity, CheckCircle, AlertTriangle, Info, X } from 'lucide-react'
 
 export default function DesignSystemShowcase() {
+  // Modal state management
+  const [showBaseModal, setShowBaseModal] = useState(false)
+  const [showFormModal, setShowFormModal] = useState(false)
+  const [showAlertModal, setShowAlertModal] = useState(false)
+  const [showIconModal, setShowIconModal] = useState(false)
+
   return (
     <>
       <Head>
@@ -250,7 +259,76 @@ export default function DesignSystemShowcase() {
               </StandardCardContent>
             </StandardCard>
 
-            {/* Test 5: Component Status */}
+            {/* Test 5: Modal System */}
+            <StandardCard>
+              <StandardCardHeader 
+                title="Modal System Test" 
+                subtitle="Testing our standardized modal components"
+              />
+              <StandardCardContent>
+                <Stack spacing="md">
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    
+                    {/* BaseModal Test */}
+                    <Button 
+                      onClick={() => setShowBaseModal(true)}
+                      variant="outline"
+                      className="h-20 flex-col"
+                    >
+                      <Settings className="w-5 h-5 mb-2" />
+                      <span className="text-sm">BaseModal</span>
+                    </Button>
+
+                    {/* Form Modal Test */}
+                    <Button 
+                      onClick={() => setShowFormModal(true)}
+                      variant="outline"
+                      className="h-20 flex-col"
+                    >
+                      <Plus className="w-5 h-5 mb-2" />
+                      <span className="text-sm">Form Modal</span>
+                    </Button>
+
+                    {/* Alert Modal Test */}
+                    <Button 
+                      onClick={() => setShowAlertModal(true)}
+                      variant="outline"
+                      className="h-20 flex-col"
+                    >
+                      <AlertTriangle className="w-5 h-5 mb-2" />
+                      <span className="text-sm">Alert Modal</span>
+                    </Button>
+
+                    {/* Icon Modal Test */}
+                    <Button 
+                      onClick={() => setShowIconModal(true)}
+                      variant="outline"
+                      className="h-20 flex-col"
+                    >
+                      <Info className="w-5 h-5 mb-2" />
+                      <span className="text-sm">Icon Modal</span>
+                    </Button>
+
+                  </div>
+
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <SectionHeader title="Modal Features" />
+                    <Stack spacing="sm">
+                      <div className="text-sm text-gray-600">• Consistent backdrop blur and overlay</div>
+                      <div className="text-sm text-gray-600">• Responsive sizing (sm, md, lg, xl, full)</div>
+                      <div className="text-sm text-gray-600">• ESC key and overlay click to close</div>
+                      <div className="text-sm text-gray-600">• Body scroll lock when open</div>
+                      <div className="text-sm text-gray-600">• Smooth animations (fade + zoom)</div>
+                      <div className="text-sm text-gray-600">• Standardized header, content, footer</div>
+                    </Stack>
+                  </div>
+
+                </Stack>
+              </StandardCardContent>
+            </StandardCard>
+
+            {/* Test 6: Component Status */}
             <StandardCard>
               <StandardCardHeader 
                 title="Design System Status" 
@@ -263,11 +341,11 @@ export default function DesignSystemShowcase() {
                     <SectionHeader title="✅ Working Components" />
                     <Stack spacing="sm">
                       <div className="text-sm text-gray-600">• StandardCard (standard + premium)</div>
-                      <div className="text-sm text-gray-600">• StandardCardHeader</div>
-                      <div className="text-sm text-gray-600">• StandardCardContent</div>
-                      <div className="text-sm text-gray-600">• PageHeader</div>
-                      <div className="text-sm text-gray-600">• SectionHeader</div>
+                      <div className="text-sm text-gray-600">• StandardCardHeader & Content</div>
+                      <div className="text-sm text-gray-600">• PageHeader & SectionHeader</div>
                       <div className="text-sm text-gray-600">• Stack (spacing utility)</div>
+                      <div className="text-sm text-gray-600">• BaseModal & variants</div>
+                      <div className="text-sm text-gray-600">• ModalHeader, Content, Footer</div>
                     </Stack>
                   </div>
 
@@ -277,7 +355,7 @@ export default function DesignSystemShowcase() {
                       <div className="text-sm text-gray-600">• VehicleTimeline.tsx ✅</div>
                       <div className="text-sm text-gray-600">• PhotosCard.tsx ✅</div>
                       <div className="text-sm text-gray-600">• vehicles/dynamic-demo.tsx ✅</div>
-                      <div className="text-sm text-gray-600">• Modal headers 🔄</div>
+                      <div className="text-sm text-gray-600">• Modal system ✅</div>
                       <div className="text-sm text-gray-600">• SmartCard headers 🔄</div>
                       <div className="text-sm text-gray-600">• 15+ more components 📝</div>
                     </Stack>
@@ -291,6 +369,147 @@ export default function DesignSystemShowcase() {
 
         </div>
       </div>
+
+      {/* Modal Examples */}
+      
+      {/* BaseModal Example */}
+      <BaseModal
+        isOpen={showBaseModal}
+        onClose={() => setShowBaseModal(false)}
+        title="BaseModal Example"
+        description="This is our foundation modal component"
+        size="md"
+      >
+        <ModalHeader
+          title="BaseModal Example"
+          description="This demonstrates our standardized modal header"
+          onClose={() => setShowBaseModal(false)}
+        />
+        <ModalContent>
+          <Stack spacing="md">
+            <p className="text-gray-600">
+              This is the BaseModal component that provides consistent styling, animations, and behavior across all modals.
+            </p>
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <SectionHeader title="Features" />
+              <Stack spacing="sm">
+                <div className="text-sm text-gray-600">• Backdrop blur overlay</div>
+                <div className="text-sm text-gray-600">• ESC key support</div>
+                <div className="text-sm text-gray-600">• Click outside to close</div>
+                <div className="text-sm text-gray-600">• Body scroll lock</div>
+                <div className="text-sm text-gray-600">• Smooth animations</div>
+              </Stack>
+            </div>
+          </Stack>
+        </ModalContent>
+        <ModalFooter>
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setShowBaseModal(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setShowBaseModal(false)}>
+              Got it
+            </Button>
+          </div>
+        </ModalFooter>
+      </BaseModal>
+
+      {/* Form Modal Example */}
+      <SimpleFormModal
+        isOpen={showFormModal}
+        onClose={() => setShowFormModal(false)}
+        onSubmit={(e) => {
+          e.preventDefault()
+          setShowFormModal(false)
+        }}
+        title="Form Modal Example"
+        description="Standardized form modal with validation"
+        submitLabel="Save Changes"
+        size="lg"
+      >
+        <Stack spacing="md">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Vehicle Name
+            </label>
+            <input
+              type="text"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter vehicle name"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Description
+            </label>
+            <textarea
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter description"
+            />
+          </div>
+        </Stack>
+      </SimpleFormModal>
+
+      {/* Alert Modal Example */}
+      <AlertModal
+        isOpen={showAlertModal}
+        onClose={() => setShowAlertModal(false)}
+        onConfirm={() => setShowAlertModal(false)}
+        title="Delete Vehicle"
+        description="Are you sure you want to delete this vehicle? This action cannot be undone."
+        icon={<AlertTriangle className="w-6 h-6 text-red-600" />}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+      />
+
+      {/* Icon Modal Example */}
+      <BaseModal
+        isOpen={showIconModal}
+        onClose={() => setShowIconModal(false)}
+        title="Modal with Icon"
+        size="md"
+      >
+        <ModalHeader
+          title="Modal with Icon"
+          description="This modal demonstrates icon integration"
+          icon={<Car className="w-6 h-6 text-blue-600" />}
+          onClose={() => setShowIconModal(false)}
+        />
+        <ModalContent>
+          <Stack spacing="md">
+            <p className="text-gray-600">
+              Modal headers can include icons for better visual hierarchy and context.
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 bg-blue-50 rounded-lg text-center">
+                <Car className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                <div className="text-sm font-medium">Vehicle</div>
+              </div>
+              <div className="p-4 bg-green-50 rounded-lg text-center">
+                <Fuel className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                <div className="text-sm font-medium">Fuel</div>
+              </div>
+              <div className="p-4 bg-orange-50 rounded-lg text-center">
+                <Wrench className="w-8 h-8 text-orange-600 mx-auto mb-2" />
+                <div className="text-sm font-medium">Service</div>
+              </div>
+              <div className="p-4 bg-purple-50 rounded-lg text-center">
+                <Activity className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                <div className="text-sm font-medium">Activity</div>
+              </div>
+            </div>
+          </Stack>
+        </ModalContent>
+        <ModalFooter>
+          <div className="flex justify-end">
+            <Button onClick={() => setShowIconModal(false)}>
+              Close
+            </Button>
+          </div>
+        </ModalFooter>
+      </BaseModal>
+
     </>
   )
 }
