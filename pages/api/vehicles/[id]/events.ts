@@ -128,9 +128,16 @@ async function handleCreateEvent(
             miles_inferred: true,
             inferred_from_date: currentMileage.date
           }
-        } else if (eventData.type === 'fuel') {
-          throw new ValidationError('Miles required for fuel events')
+        } else if (eventData.type === 'fuel' && currentMileage?.miles) {
+          // Infer miles for fuel events (fuel receipts rarely have odometer readings)
+          eventData.miles = currentMileage.miles
+          eventData.payload = {
+            ...eventData.payload,
+            miles_inferred: true,
+            inferred_from_date: currentMileage.date
+          }
         }
+        // If no current mileage exists, allow fuel/maintenance events without miles
       }
     }
 
