@@ -1,7 +1,7 @@
 /**
- * Geocoding Service
+ * Geocoding Service - FREE VERSION
  * 
- * Converts addresses to coordinates using Mapbox Geocoding API
+ * Uses OpenStreetMap Nominatim API (completely free, no API key needed!)
  */
 
 export interface GeocodedLocation {
@@ -11,7 +11,7 @@ export interface GeocodedLocation {
 }
 
 /**
- * Geocode an address to coordinates
+ * Geocode an address to coordinates using free OpenStreetMap API
  * 
  * @param address - Full address string
  * @returns Coordinates or null if geocoding fails
@@ -21,20 +21,14 @@ export async function geocodeAddress(address: string): Promise<GeocodedLocation 
     return null
   }
 
-  const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
-
-  if (!token) {
-    console.warn('NEXT_PUBLIC_MAPBOX_TOKEN not configured - geocoding disabled')
-    return null
-  }
-
   try {
+    // Use OpenStreetMap Nominatim API - completely free!
     const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${token}&limit=1`,
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(address)}`,
       {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'User-Agent': 'MotoMindAI/1.0'
         }
       }
     )
@@ -46,14 +40,13 @@ export async function geocodeAddress(address: string): Promise<GeocodedLocation 
 
     const data = await response.json()
 
-    if (data.features && data.features.length > 0) {
-      const feature = data.features[0]
-      const [lng, lat] = feature.center
+    if (data && data.length > 0) {
+      const result = data[0]
 
       return {
-        lat,
-        lng,
-        formatted_address: feature.place_name
+        lat: parseFloat(result.lat),
+        lng: parseFloat(result.lon),
+        formatted_address: result.display_name
       }
     }
 

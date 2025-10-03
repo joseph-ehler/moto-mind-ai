@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { VehicleTimeline } from '@/components/timeline/VehicleTimeline'
-import { ArrowLeft, Car } from 'lucide-react'
+import { SimpleEventsMap } from '@/components/maps/SimpleEventsMap'
+import { ArrowLeft, Car, Calendar, MapPin } from 'lucide-react'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -20,6 +21,7 @@ export default function VehicleTimelinePage() {
   const [vehicle, setVehicle] = useState<Vehicle | null>(null)
   const [loading, setLoading] = useState(true)
   const [timelineFilter, setTimelineFilter] = useState<string>('all')
+  const [view, setView] = useState<'timeline' | 'map'>('timeline')
 
   // Fetch events from real API
   const { data: eventsData, error: eventsError, mutate: mutateEvents } = useSWR(
@@ -107,6 +109,26 @@ export default function VehicleTimelinePage() {
     return event.type === timelineFilter
   })
 
+  // Transform events for map display
+  const eventLocations = events
+    .filter((event: any) => event.geocoded_lat && event.geocoded_lng)
+    .map((event: any) => ({
+      id: event.id,
+      type: event.type,
+      date: event.date || event.created_at,
+      vendor: event.payload?.data?.vendor_name || 
+              event.payload?.data?.station_name || 
+              event.payload?.data?.company_name || 
+              'Unknown Vendor',
+      address: event.geocoded_address || 
+               event.payload?.data?.vendor_address || 
+               event.payload?.data?.station_address || 
+               'Address not available',
+      lat: event.geocoded_lat,
+      lng: event.geocoded_lng,
+      total_amount: event.payload?.data?.total_amount
+    }))
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50">
@@ -143,30 +165,69 @@ export default function VehicleTimelinePage() {
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="bg-white border-b border-black/5 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center gap-4">
-          <button 
-            onClick={() => router.back()}
-            className="w-10 h-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <div>
-            <h1 className="text-xl font-semibold text-slate-900">Recent Activity</h1>
-            <p className="text-sm text-slate-600">{displayName}</p>
+        <div className="max-w-3xl mx-auto px-6 py-4">
+          <div className="flex items-center gap-4 mb-4">
+            <button 
+              onClick={() => router.back()}
+              className="w-10 h-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-xl font-semibold text-slate-900">
+                {view === 'timeline' ? 'Recent Activity' : 'Location Map'}
+              </h1>
+              <p className="text-sm text-slate-600">{displayName}</p>
+            </div>
+          </div>
+          
+          {/* Tab Switcher */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setView('timeline')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                view === 'timeline'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <Calendar className="w-4 h-4" />
+              Timeline
+            </button>
+            <button
+              onClick={() => setView('map')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                view === 'map'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <MapPin className="w-4 h-4" />
+              Map
+              {eventLocations.length > 0 && (
+                <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
+                  {eventLocations.length}
+                </span>
+              )}
+            </button>
           </div>
         </div>
       </header>
 
-      {/* Timeline Content */}
+      {/* Content */}
       <main className="max-w-3xl mx-auto px-6 py-8">
-        <VehicleTimeline
-          vehicleId={vehicle.id}
-          events={filteredEvents}
-          onEventDeleted={mutateEvents}
-          timelineFilter={timelineFilter}
-          onFilterChange={setTimelineFilter}
-          onEventClick={(eventId) => router.push(`/vehicles/${vehicle.id}/timeline/${eventId}`)}
-        />
+        {view === 'timeline' ? (
+          <VehicleTimeline
+            vehicleId={vehicle.id}
+            events={filteredEvents}
+            onEventDeleted={mutateEvents}
+            timelineFilter={timelineFilter}
+            onFilterChange={setTimelineFilter}
+            onEventClick={(eventId) => router.push(`/vehicles/${vehicle.id}/timeline/${eventId}`)}
+          />
+        ) : (
+          <SimpleEventsMap events={eventLocations} height="70vh" />
+        )}
       </main>
     </div>
   )
