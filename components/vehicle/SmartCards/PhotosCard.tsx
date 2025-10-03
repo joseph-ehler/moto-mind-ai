@@ -1,7 +1,8 @@
 'use client'
 
 import React from 'react'
-import { Plus } from 'lucide-react'
+import { Camera, Plus } from 'lucide-react'
+import { SectionHeader } from '@/components/ui/PageHeader'
 
 interface Photo {
   id: string
@@ -19,7 +20,7 @@ interface PhotosCardProps {
 export function PhotosCard({ recentPhotos, onAddPhoto }: PhotosCardProps) {
   return (
     <div className="bg-white rounded-3xl border border-black/5 p-8 shadow-sm">
-      <h2 className="text-xl font-semibold text-black mb-6">Photos</h2>
+      <SectionHeader title="Photos" />
       
       {/* Horizontal scrolling photo gallery */}
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-2 px-2">
