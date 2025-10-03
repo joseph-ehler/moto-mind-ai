@@ -45,34 +45,7 @@ export function UnifiedEventDetail({ event, onImageClick }: UnifiedEventDetailPr
   const getKeyFields = (): Array<{ label: string; value: any; type?: 'financial' | 'measurement' | 'text'; isOdometer?: boolean }> => {
     const fields: Array<{ label: string; value: any; type?: 'financial' | 'measurement' | 'text'; isOdometer?: boolean }> = []
 
-    // Odometer - use original value with unit toggle for dashboard snapshots
-    if (event.type === 'dashboard_snapshot' && event.payload?.key_facts?.odometer_original_value) {
-      const originalValue = event.payload.key_facts.odometer_original_value
-      const originalUnit = event.payload.key_facts.odometer_original_unit || 'mi'
-      
-      let displayValue: number
-      if (displayUnit === originalUnit) {
-        displayValue = originalValue
-      } else if (displayUnit === 'km' && originalUnit === 'mi') {
-        displayValue = Math.round(originalValue * 1.609)
-      } else {
-        displayValue = Math.round(originalValue / 1.609)
-      }
-      
-      fields.push({ 
-        label: 'Odometer', 
-        value: `${displayValue.toLocaleString()} ${displayUnit}`, 
-        type: 'measurement',
-        isOdometer: true
-      })
-    } else if (event.miles) {
-      // Fallback for non-dashboard events
-      fields.push({ label: 'Odometer', value: `${event.miles.toLocaleString()} mi`, type: 'measurement' })
-    }
-    
-    if (event.total_amount) fields.push({ label: 'Total Amount', value: `$${event.total_amount.toFixed(2)}`, type: 'financial' })
-
-    // Type-specific fields
+    // Type-specific fields FIRST (so fuel data shows before odometer)
     switch (event.type) {
       case 'dashboard_snapshot':
         const keyFacts = event.payload?.key_facts
@@ -118,11 +91,20 @@ export function UnifiedEventDetail({ event, onImageClick }: UnifiedEventDetailPr
         break
 
       case 'fuel':
-        if (event.gallons) fields.push({ label: 'Gallons', value: `${event.gallons} gal`, type: 'measurement' })
-        if (event.station) fields.push({ label: 'Station', value: event.station, type: 'text' })
-        if (event.gallons && event.total_amount) {
-          const pricePerGallon = (event.total_amount / event.gallons).toFixed(3)
-          fields.push({ label: 'Price/Gallon', value: `$${pricePerGallon}`, type: 'financial' })
+        // Fallback to payload data if top-level fields are null
+        const gallons = event.gallons || event.payload?.raw_extraction?.key_facts?.gallons
+        const station = event.vendor || event.payload?.raw_extraction?.key_facts?.station_name
+        const fuelAmount = event.total_amount || event.payload?.raw_extraction?.key_facts?.total_amount
+        const pricePerGal = event.payload?.raw_extraction?.key_facts?.price_per_gallon
+        
+        if (station) fields.push({ label: 'Station', value: station, type: 'text' })
+        if (gallons) fields.push({ label: 'Gallons', value: `${gallons} gal`, type: 'measurement' })
+        if (fuelAmount) fields.push({ label: 'Total Amount', value: `$${fuelAmount.toFixed(2)}`, type: 'financial' })
+        if (pricePerGal) {
+          fields.push({ label: 'Price/Gallon', value: `$${pricePerGal.toFixed(3)}`, type: 'financial' })
+        } else if (gallons && fuelAmount) {
+          const calculated = (fuelAmount / gallons).toFixed(3)
+          fields.push({ label: 'Price/Gallon', value: `$${calculated}`, type: 'financial' })
         }
         break
 
@@ -144,6 +126,31 @@ export function UnifiedEventDetail({ event, onImageClick }: UnifiedEventDetailPr
         if (event.payload?.result) fields.push({ label: 'Result', value: event.payload.result, type: 'text' })
         if (event.payload?.certificate_number) fields.push({ label: 'Certificate', value: event.payload.certificate_number, type: 'text' })
         break
+    }
+
+    // Odometer - add at end so fuel/service data shows first
+    if (event.type === 'dashboard_snapshot' && event.payload?.key_facts?.odometer_original_value) {
+      const originalValue = event.payload.key_facts.odometer_original_value
+      const originalUnit = event.payload.key_facts.odometer_original_unit || 'mi'
+      
+      let displayValue: number
+      if (displayUnit === originalUnit) {
+        displayValue = originalValue
+      } else if (displayUnit === 'km' && originalUnit === 'mi') {
+        displayValue = Math.round(originalValue * 1.609)
+      } else {
+        displayValue = Math.round(originalValue / 1.609)
+      }
+      
+      fields.push({ 
+        label: 'Odometer', 
+        value: `${displayValue.toLocaleString()} ${displayUnit}`, 
+        type: 'measurement',
+        isOdometer: true
+      })
+    } else if (event.miles) {
+      // Show odometer at end for all events
+      fields.push({ label: 'Odometer', value: `${event.miles.toLocaleString()} mi`, type: 'measurement' })
     }
 
     return fields
