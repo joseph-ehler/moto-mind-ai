@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
-import { ArrowLeft, Car, ChevronDown, ChevronUp, ExternalLink, Zap, Star, AlertTriangle, CheckCircle, Clock, User, Calendar, Wrench, Fuel, Gauge, Shield, Settings, Info, HelpCircle } from 'lucide-react'
+import { ArrowLeft, Car, ChevronDown, ChevronUp, ExternalLink, Zap, Star, AlertTriangle, CheckCircle, Clock, User, Calendar, Wrench, Fuel, Gauge, Shield, Settings, Info, HelpCircle, Edit } from 'lucide-react'
 import Link from 'next/link'
 import { StandardCard, StandardCardHeader, StandardCardContent } from '@/components/ui/StandardCard'
 import { SpecsQualityBanner } from '@/components/vehicle/SpecsQualityBanner'
 import { SourceBadge, SourceLegend } from '@/components/vehicle/SourceBadge'
 import { calculateSpecsQuality } from '@/lib/utils/spec-quality'
 import { EditSpecCategoryModal } from '@/components/vehicle/EditSpecCategoryModal'
+import SetMaintenanceIntervalModal from '@/components/SetMaintenanceIntervalModal'
 import { sortSpecCategories, getCategoryFields, getCategoryLabel } from '@/lib/utils/spec-ordering'
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -299,7 +300,7 @@ export default function VehicleSpecifications() {
         {nhtsaSpecs.length > 0 && (
           <>
             {/* Engine Performance */}
-            <div className="mt-6 bg-white rounded-3xl border border-black/5 shadow-sm overflow-hidden">
+            <StandardCard variant="premium" className="mt-6">
               <div className="px-8 py-4 border-b border-black/5 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-black">Engine Performance</h3>
                 <button
@@ -342,10 +343,10 @@ export default function VehicleSpecifications() {
                   </p>
                 </div>
               )}
-            </div>
+            </StandardCard>
 
             {/* Fuel Economy */}
-            <div className="mt-6 bg-white rounded-3xl border border-black/5 shadow-sm overflow-hidden">
+            <StandardCard variant="premium" className="mt-6">
               <div className="px-8 py-4 border-b border-black/5 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-black">Fuel Economy</h3>
                 <button
@@ -399,10 +400,10 @@ export default function VehicleSpecifications() {
                   </p>
                 </div>
               )}
-            </div>
+            </StandardCard>
 
             {/* Dimensions */}
-            <div className="mt-6 bg-white rounded-3xl border border-black/5 shadow-sm overflow-hidden">
+            <StandardCard variant="premium" className="mt-6">
               <div className="px-8 py-4 border-b border-black/5 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-black">Dimensions</h3>
                 <button
