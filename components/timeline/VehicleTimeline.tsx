@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { ChevronDown, ChevronUp, Calendar, Clock, MapPin, ExternalLink, Fuel, Wrench, Car, AlertTriangle, FileText, DollarSign, Camera, Map, List, Filter } from 'lucide-react'
+import { ChevronDown, ChevronUp, Calendar, Clock, MapPin, ExternalLink, Fuel, Wrench, Car, AlertTriangle, FileText, DollarSign, Camera, Map, List, Filter, Activity, Gauge, Settings, CheckCircle, Shield } from 'lucide-react'
 import { UnifiedEventDetail } from './UnifiedEventDetail'
 import { SimpleEventsMap } from '../maps/SimpleEventsMap'
 import { SectionHeader } from '@/components/ui/PageHeader'
