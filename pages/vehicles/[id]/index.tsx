@@ -183,9 +183,16 @@ export default function VehicleDetailPage() {
         eventDate = (normalizedPayload.data as any).date || eventDate
       }
 
+      // Map document types to database event types
+      const eventTypeMap: Record<string, string> = {
+        'fuel_receipt': 'fuel',
+        'service_invoice': 'service',
+        'dashboard_snapshot': 'dashboard_snapshot'
+      }
+      
       // Build database payload with canonical structure
       const payload = {
-        type: normalizedPayload.type,
+        type: eventTypeMap[normalizedPayload.type] || normalizedPayload.type,
         date: eventDate,
         miles: odometerMiles, // Only for chronological validation
         payload: normalizedPayload // Canonical schema in payload.data
