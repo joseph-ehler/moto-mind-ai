@@ -6,15 +6,22 @@ import { Stack } from '@/components/ui/Stack'
 import { Button } from '@/components/ui/button'
 import { BaseModal, ModalHeader, ModalContent, ModalFooter } from '@/components/modals/BaseModal'
 import { SimpleFormModal } from '@/components/modals/SimpleFormModal'
+import { BlockFormModal } from '@/components/modals/BlockFormModal'
+import { FullWidthModal } from '@/components/modals/FullWidthModal'
+import { StepperModal } from '@/components/modals/StepperModal'
 import { AlertModal } from '@/components/modals/AlertModal'
-import { Plus, Settings, Car, Fuel, Wrench, Activity, CheckCircle, AlertTriangle, Info, X } from 'lucide-react'
+import { Plus, Settings, Car, Fuel, Wrench, Activity, CheckCircle, AlertTriangle, Info, X, FileText, Upload, ChevronRight } from 'lucide-react'
 
 export default function DesignSystemShowcase() {
   // Modal state management
   const [showBaseModal, setShowBaseModal] = useState(false)
   const [showFormModal, setShowFormModal] = useState(false)
+  const [showBlockModal, setShowBlockModal] = useState(false)
+  const [showFullWidthModal, setShowFullWidthModal] = useState(false)
+  const [showStepperModal, setShowStepperModal] = useState(false)
   const [showAlertModal, setShowAlertModal] = useState(false)
   const [showIconModal, setShowIconModal] = useState(false)
+  const [currentStep, setCurrentStep] = useState('step1')
 
   return (
     <>
@@ -268,7 +275,7 @@ export default function DesignSystemShowcase() {
               <StandardCardContent>
                 <Stack spacing="md">
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
                     
                     {/* BaseModal Test */}
                     <Button 
@@ -277,17 +284,47 @@ export default function DesignSystemShowcase() {
                       className="h-20 flex-col"
                     >
                       <Settings className="w-5 h-5 mb-2" />
-                      <span className="text-sm">BaseModal</span>
+                      <span className="text-xs">BaseModal</span>
                     </Button>
 
-                    {/* Form Modal Test */}
+                    {/* Simple Form Modal Test */}
                     <Button 
                       onClick={() => setShowFormModal(true)}
                       variant="outline"
                       className="h-20 flex-col"
                     >
                       <Plus className="w-5 h-5 mb-2" />
-                      <span className="text-sm">Form Modal</span>
+                      <span className="text-xs">Simple Form</span>
+                    </Button>
+
+                    {/* Block Form Modal Test */}
+                    <Button 
+                      onClick={() => setShowBlockModal(true)}
+                      variant="outline"
+                      className="h-20 flex-col"
+                    >
+                      <FileText className="w-5 h-5 mb-2" />
+                      <span className="text-xs">Block Form</span>
+                    </Button>
+
+                    {/* Full Width Modal Test */}
+                    <Button 
+                      onClick={() => setShowFullWidthModal(true)}
+                      variant="outline"
+                      className="h-20 flex-col"
+                    >
+                      <Upload className="w-5 h-5 mb-2" />
+                      <span className="text-xs">Full Width</span>
+                    </Button>
+
+                    {/* Stepper Modal Test */}
+                    <Button 
+                      onClick={() => setShowStepperModal(true)}
+                      variant="outline"
+                      className="h-20 flex-col"
+                    >
+                      <ChevronRight className="w-5 h-5 mb-2" />
+                      <span className="text-xs">Stepper</span>
                     </Button>
 
                     {/* Alert Modal Test */}
@@ -297,7 +334,7 @@ export default function DesignSystemShowcase() {
                       className="h-20 flex-col"
                     >
                       <AlertTriangle className="w-5 h-5 mb-2" />
-                      <span className="text-sm">Alert Modal</span>
+                      <span className="text-xs">Alert</span>
                     </Button>
 
                     {/* Icon Modal Test */}
@@ -307,7 +344,7 @@ export default function DesignSystemShowcase() {
                       className="h-20 flex-col"
                     >
                       <Info className="w-5 h-5 mb-2" />
-                      <span className="text-sm">Icon Modal</span>
+                      <span className="text-xs">With Icon</span>
                     </Button>
 
                   </div>
@@ -450,6 +487,228 @@ export default function DesignSystemShowcase() {
           </div>
         </Stack>
       </SimpleFormModal>
+
+      {/* Block Form Modal Example */}
+      <BlockFormModal
+        isOpen={showBlockModal}
+        onClose={() => setShowBlockModal(false)}
+        onSubmit={(e) => {
+          e.preventDefault()
+          setShowBlockModal(false)
+        }}
+        title="Block Form Modal"
+        description="Form with organized sections and dividers"
+        submitLabel="Save Vehicle"
+        size="lg"
+        sections={[
+          {
+            id: 'basic',
+            title: 'Basic Information',
+            description: 'Essential vehicle details',
+            content: (
+              <Stack spacing="md">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Vehicle Name
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter vehicle name"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Year
+                    </label>
+                    <input
+                      type="number"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="2023"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Make
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Toyota"
+                    />
+                  </div>
+                </div>
+              </Stack>
+            )
+          },
+          {
+            id: 'details',
+            title: 'Additional Details',
+            description: 'Optional vehicle information',
+            content: (
+              <Stack spacing="md">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    VIN
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter VIN number"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Notes
+                  </label>
+                  <textarea
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Additional notes"
+                  />
+                </div>
+              </Stack>
+            )
+          }
+        ]}
+      />
+
+      {/* Full Width Modal Example */}
+      <FullWidthModal
+        isOpen={showFullWidthModal}
+        onClose={() => setShowFullWidthModal(false)}
+        onSubmit={(e) => {
+          e.preventDefault()
+          setShowFullWidthModal(false)
+        }}
+        title="Full Width Modal"
+        description="Wide modal for rich content and media"
+        submitLabel="Process Upload"
+        size="xl"
+        secondaryAction={{
+          label: "Save Draft",
+          onClick: () => console.log("Save draft")
+        }}
+      >
+        <Stack spacing="lg">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+              <SectionHeader title="Upload Area" />
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 mb-2">Drop files here or click to upload</p>
+                <p className="text-sm text-gray-500">Supports JPG, PNG, PDF up to 10MB</p>
+              </div>
+            </div>
+            <div>
+              <SectionHeader title="Preview" />
+              <div className="bg-gray-100 rounded-lg p-8 text-center">
+                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600">File preview will appear here</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <SectionHeader title="Processing Options" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 border rounded-lg">
+                <CheckCircle className="w-6 h-6 text-green-600 mb-2" />
+                <div className="font-medium">Auto Extract</div>
+                <div className="text-sm text-gray-600">Automatically extract data</div>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <Activity className="w-6 h-6 text-blue-600 mb-2" />
+                <div className="font-medium">Smart Analysis</div>
+                <div className="text-sm text-gray-600">AI-powered analysis</div>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <Settings className="w-6 h-6 text-gray-600 mb-2" />
+                <div className="font-medium">Manual Review</div>
+                <div className="text-sm text-gray-600">Review before saving</div>
+              </div>
+            </div>
+          </div>
+        </Stack>
+      </FullWidthModal>
+
+      {/* Stepper Modal Example */}
+      <StepperModal
+        isOpen={showStepperModal}
+        onClose={() => setShowStepperModal(false)}
+        title="Vehicle Setup Wizard"
+        description="Step-by-step vehicle configuration"
+        size="lg"
+        currentStepId={currentStep}
+        onStepChange={setCurrentStep}
+        onStepComplete={(stepId) => {
+          if (stepId === 'step1') setCurrentStep('step2')
+          else if (stepId === 'step2') setCurrentStep('step3')
+          else if (stepId === 'step3') setShowStepperModal(false)
+        }}
+        steps={[
+          {
+            id: 'step1',
+            title: 'Basic Information',
+            content: (
+              <Stack spacing="md">
+                <p className="text-gray-600">Enter your vehicle's basic information to get started.</p>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Vehicle Name
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="My Car"
+                  />
+                </div>
+              </Stack>
+            ),
+            canProceed: true,
+            ctaLabel: 'Continue'
+          },
+          {
+            id: 'step2',
+            title: 'Vehicle Details',
+            content: (
+              <Stack spacing="md">
+                <p className="text-gray-600">Add specific details about your vehicle.</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+                    <input type="number" className="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="2023" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Make</label>
+                    <input type="text" className="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Toyota" />
+                  </div>
+                </div>
+              </Stack>
+            ),
+            canProceed: true,
+            ctaLabel: 'Next Step'
+          },
+          {
+            id: 'step3',
+            title: 'Confirmation',
+            content: (
+              <Stack spacing="md">
+                <p className="text-gray-600">Review your vehicle information and complete setup.</p>
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="font-medium">Vehicle Summary</div>
+                  <div className="text-sm text-gray-600 mt-1">
+                    Your vehicle has been configured and is ready to use.
+                  </div>
+                </div>
+              </Stack>
+            ),
+            canProceed: true,
+            ctaLabel: 'Complete Setup',
+            isCompleted: true
+          }
+        ]}
+      />
 
       {/* Alert Modal Example */}
       <AlertModal
