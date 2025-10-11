@@ -33,8 +33,18 @@ const envSchema = z.object({
 
 type Env = z.infer<typeof envSchema>
 
+// Check if running in browser
+const isBrowser = typeof window !== 'undefined'
+
 // Validate environment variables at startup
 function validateEnv(): Env {
+  // Skip validation in browser (env vars are server-side only)
+  if (isBrowser) {
+    // Return empty object cast as Env for browser context
+    // The actual env validation happens server-side
+    return {} as Env
+  }
+  
   try {
     const env = envSchema.parse(process.env)
     console.log('✅ Environment validation passed')
@@ -46,7 +56,13 @@ function validateEnv(): Env {
         console.error(`  - ${err.path.join('.')}: ${err.message}`)
       })
     }
-    process.exit(1)
+    
+    // Only exit if running in Node.js (not browser)
+    if (typeof process !== 'undefined' && process.exit) {
+      process.exit(1)
+    } else {
+      throw new Error('Environment validation failed')
+    }
   }
 }
 
