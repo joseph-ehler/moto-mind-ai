@@ -310,6 +310,8 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
   /**
    * Process captured photos through vision API to extract fuel data
    * Phase 1B: Batch processing with cross-validation and fraud detection
+   * 
+   * FIX: Process in smaller batches to avoid Vercel's 4.5MB payload limit
    */
   const processPhotosWithVision = async (photos: CapturedPhoto[]) => {
     console.log('🟢🟢🟢 processPhotosWithVision ENTERED! 🟢🟢🟢')
@@ -331,41 +333,64 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
       console.log('🔍 Starting batch vision processing for', photosToProcess.length, 'photos')
       console.log('📸 Photos to process:', photosToProcess.map(p => ({ stepId: p.stepId, hasFile: !!p.file })))
       
-      // Create FormData with all photos
-      const formData = new FormData()
-      formData.append('vehicle_id', vehicleId)
-      formData.append('event_type', eventType)
+      // FIX: Split photos into batches of 2 to avoid 4.5MB Vercel limit
+      const BATCH_SIZE = 2
+      const batches: CapturedPhoto[][] = []
       
-      // Add each photo with its step ID as the field name
-      for (const photo of photosToProcess) {
-        formData.append(photo.stepId, photo.file)
+      for (let i = 0; i < photosToProcess.length; i += BATCH_SIZE) {
+        batches.push(photosToProcess.slice(i, i + BATCH_SIZE))
       }
       
-      console.log('📤 Sending', photosToProcess.length, 'photos to vision API...')
+      console.log(`📦 Split into ${batches.length} batches of ${BATCH_SIZE} photos each`)
       
-      // Call batch processing API
-      console.log('   Making fetch request to /api/vision/process-batch...')
-      const response = await fetch('/api/vision/process-batch', {
-        method: 'POST',
-        body: formData
-      })
-      console.log('   Response received, status:', response.status)
+      // Process each batch and collect results
+      const allResults: any[] = []
       
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('❌ API returned error:', response.status, errorText)
-        throw new Error(`Batch processing failed: ${response.status}`)
+      for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+        const batch = batches[batchIndex]
+        console.log(`📤 Processing batch ${batchIndex + 1}/${batches.length} (${batch.length} photos)...`)
+        
+        // Create FormData for this batch
+        const formData = new FormData()
+        formData.append('vehicle_id', vehicleId)
+        formData.append('event_type', eventType)
+        
+        // Add photos from this batch
+        for (const photo of batch) {
+          formData.append(photo.stepId, photo.file)
+        }
+        
+        // Call batch processing API
+        const response = await fetch('/api/vision/process-batch', {
+          method: 'POST',
+          body: formData
+        })
+        
+        console.log(`   Batch ${batchIndex + 1} response: ${response.status}`)
+        
+        if (!response.ok) {
+          const errorText = await response.text()
+          console.error(`❌ Batch ${batchIndex + 1} failed:`, response.status, errorText)
+          throw new Error(`Batch ${batchIndex + 1} processing failed: ${response.status}`)
+        }
+        
+        const result = await response.json()
+        
+        if (!result.success) {
+          throw new Error(result.error || `Batch ${batchIndex + 1} processing failed`)
+        }
+        
+        console.log(`✅ Batch ${batchIndex + 1} complete`)
+        allResults.push(result)
       }
       
-      console.log('   Parsing JSON response...')
-      const result = await response.json()
-      console.log('   JSON parsed successfully!')
+      console.log('✅ All batches processed successfully!')
       
-      if (!result.success) {
-        throw new Error(result.error || 'Batch processing failed')
-      }
+      // Merge results from all batches
+      const result = mergeBatchResults(allResults)
+      console.log('📊 Merged result:', result)
       
-      console.log('✅ Batch vision processing complete:', result)
+      console.log('✅ Batch vision processing complete')
       console.log('📊 Raw data received:', result.data)
       console.log('📊 Individual results:', result.individualResults)
       
@@ -436,6 +461,88 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
     } finally {
       setIsProcessingVision(false)
     }
+  }
+
+  /**
+   * Merge results from multiple batch API calls into a single result
+   */
+  const mergeBatchResults = (results: any[]) => {
+    if (results.length === 0) {
+      throw new Error('No batch results to merge')
+    }
+    
+    if (results.length === 1) {
+      return results[0] // No merging needed
+    }
+    
+    // Merge all data, confidence, validations, warnings, and individualResults
+    const merged = {
+      success: true,
+      data: {
+        total_amount: null,
+        gallons: null,
+        price_per_gallon: null,
+        station_name: null,
+        date: null,
+        miles: null,
+        fuel_level: null,
+        fuel_grade: null,
+        products: [],
+        transaction_time: null,
+        station_address: null,
+        pump_number: null,
+        payment_method: null,
+        transaction_id: null,
+        auth_code: null,
+        invoice_number: null,
+        receipt_metadata: {}
+      },
+      confidence: {
+        overall: 0,
+        receipt: 0,
+        odometer: 0,
+        gauge: 0,
+        additives: 0
+      },
+      validations: [] as any[],
+      warnings: [] as string[],
+      individualResults: [] as any[]
+    }
+    
+    // Merge data from all batches (last wins for most fields)
+    for (const result of results) {
+      if (!result.success) continue
+      
+      // Merge data (overwrite with non-null values)
+      Object.keys(result.data).forEach((key: string) => {
+        if (key === 'products') {
+          // Append products arrays
+          merged.data.products = [...merged.data.products, ...(result.data.products || [])] as any
+        } else if (result.data[key] !== null && result.data[key] !== undefined) {
+          (merged.data as any)[key] = result.data[key]
+        }
+      })
+      
+      // Merge confidence (max values)
+      Object.keys(result.confidence).forEach((key: string) => {
+        (merged.confidence as any)[key] = Math.max((merged.confidence as any)[key] || 0, result.confidence[key] || 0)
+      })
+      
+      // Append validations
+      merged.validations.push(...(result.validations || []))
+      
+      // Append warnings (deduplicate)
+      for (const warning of (result.warnings || [])) {
+        if (!merged.warnings.includes(warning)) {
+          merged.warnings.push(warning)
+        }
+      }
+      
+      // Append individual results
+      merged.individualResults.push(...(result.individualResults || []))
+    }
+    
+    return merged
   }
 
   /**
