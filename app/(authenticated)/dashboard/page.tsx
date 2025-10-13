@@ -153,7 +153,7 @@ export default function HomePage() {
                 </Stack>
 
                 <button 
-                  onClick={() => router.push('/garage')}
+                  onClick={() => router.push('/vehicles')}
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors self-start"
                 >
                   View all vehicles
@@ -179,12 +179,12 @@ export default function HomePage() {
                 <QuickActionCard
                   icon={<Wrench className="w-5 h-5" />}
                   label="Service history"
-                  onClick={() => router.push('/garage')}
+                  onClick={() => router.push('/vehicles')}
                 />
                 <QuickActionCard
                   icon={<FileText className="w-5 h-5" />}
                   label="Documents"
-                  onClick={() => router.push('/garage')}
+                  onClick={() => router.push('/vehicles')}
                 />
               </div>
             </Stack>

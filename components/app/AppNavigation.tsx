@@ -36,7 +36,7 @@ const NAV_ITEMS: NavItem[] = [
   {
     id: 'vehicles',
     label: 'Vehicles',
-    href: '/garage',
+    href: '/vehicles',
     icon: <Car className="w-4 h-4" />
   },
   {
@@ -85,14 +85,7 @@ export function AppNavigation() {
     if (href === '/dashboard') {
       return pathname === '/dashboard' || pathname === '/'
     }
-    // Special case: /events/ pages belong to Vehicles section
-    if (href === '/garage' && pathname?.startsWith('/events/')) {
-      return true
-    }
-    // Special case: /vehicles/ pages also belong to Vehicles section
-    if (href === '/garage' && pathname?.startsWith('/vehicles/')) {
-      return true
-    }
+    // All vehicle routes naturally match /vehicles prefix
     return pathname?.startsWith(href)
   }
 
@@ -193,14 +186,7 @@ function MobileBottomNav({
     if (href === '/dashboard') {
       return pathname === '/dashboard' || pathname === '/'
     }
-    // Special case: /events/ pages belong to Vehicles section
-    if (href === '/garage' && pathname?.startsWith('/events/')) {
-      return true
-    }
-    // Special case: /vehicles/ pages also belong to Vehicles section
-    if (href === '/garage' && pathname?.startsWith('/vehicles/')) {
-      return true
-    }
+    // All vehicle routes naturally match /vehicles prefix
     return pathname?.startsWith(href)
   }
 
@@ -220,11 +206,11 @@ function MobileBottomNav({
 
         {/* Vehicles */}
         <button
-          onClick={() => router.push('/garage')}
+          onClick={() => router.push('/vehicles')}
           className="flex flex-col items-center justify-center flex-1 gap-1"
         >
-          <Car className={`w-6 h-6 ${isActive('/garage') ? 'text-black' : 'text-gray-600'}`} />
-          <span className={`text-xs font-medium ${isActive('/garage') ? 'text-black' : 'text-gray-600'}`}>
+          <Car className={`w-6 h-6 ${isActive('/vehicles') ? 'text-black' : 'text-gray-600'}`} />
+          <span className={`text-xs font-medium ${isActive('/vehicles') ? 'text-black' : 'text-gray-600'}`}>
             Vehicles
           </span>
         </button>

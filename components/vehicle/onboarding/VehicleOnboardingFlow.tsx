@@ -203,7 +203,7 @@ export function VehicleOnboardingFlow({ onComplete, onCancel }: VehicleOnboardin
     timezone?: string
   }) => {
     try {
-      const response = await fetch('/api/garages', {
+      const response = await fetch('/api/vehicless', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

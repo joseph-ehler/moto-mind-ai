@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { garageEvents } from '@/utils/garageSync'
+import { garageEvents } from '@/utils/vehiclesSync'
 import { useEffect } from 'react'
 
 export interface Garage {
@@ -24,7 +24,7 @@ const fetcher = async (url: string): Promise<{ garages: Garage[] }> => {
 }
 
 export function useGarages() {
-  const { data, error, mutate, isLoading } = useSWR('/api/garages', fetcher, {
+  const { data, error, mutate, isLoading } = useSWR('/api/vehicless', fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
     dedupingInterval: 30000, // 30 seconds
@@ -64,7 +64,7 @@ const singleGarageFetcher = async (url: string): Promise<{ garage: Garage }> => 
 
 export function useGarage(id: string) {
   const { data, error, mutate, isLoading } = useSWR(
-    id ? `/api/garages/${id}` : null,
+    id ? `/api/vehicless/${id}` : null,
     singleGarageFetcher,
     {
       revalidateOnFocus: false,

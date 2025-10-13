@@ -85,7 +85,7 @@ export function EditVehicleModal({ vehicle, isOpen, onClose, onSuccess }: EditVe
   useEffect(() => {
     const loadGarages = async () => {
       try {
-        const response = await fetch('/api/garages')
+        const response = await fetch('/api/vehicless')
         if (response.ok) {
           const data = await response.json()
           setGarages(data.garages || [])
@@ -152,7 +152,7 @@ export function EditVehicleModal({ vehicle, isOpen, onClose, onSuccess }: EditVe
 
     setCreatingGarage(true)
     try {
-      const response = await fetch('/api/garages', {
+      const response = await fetch('/api/vehicless', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

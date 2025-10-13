@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getGarages, createGarage } from '@/lib/services/garages'
-import { garageQuerySchema, createGarageRequestSchema } from '@/lib/validation/garages'
+import { getGarages, createGarage } from '@/lib/services/vehicless'
+import { garageQuerySchema, createGarageRequestSchema } from '@/lib/validation/vehicless'
 import { handleApiError } from '@/lib/utils/errors'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

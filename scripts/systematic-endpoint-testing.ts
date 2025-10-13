@@ -40,7 +40,7 @@ const endpoints: EndpointTest[] = [
     }
   },
   {
-    endpoint: '/api/garages',
+    endpoint: '/api/vehicless',
     expectedStatus: 200,
     testDescription: 'Garages API (check for cache issues)'
   }

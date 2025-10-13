@@ -6,11 +6,11 @@ export default function OnboardPage() {
   const router = useRouter()
 
   const handleComplete = (vehicleId: string) => {
-    router.push(`/garage`)
+    router.push(`/vehicles`)
   }
 
   const handleCancel = () => {
-    router.push('/garage')
+    router.push('/vehicles')
   }
 
   return (

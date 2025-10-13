@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { createClient } from '@supabase/supabase-js'
-import { garageIdSchema } from '@/lib/validation/garages'
+import { garageIdSchema } from '@/lib/validation/vehicless'
 import { handleApiError, ValidationError, DatabaseError } from '@/lib/utils/errors'
 
 const supabase = createClient(

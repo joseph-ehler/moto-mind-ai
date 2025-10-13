@@ -104,7 +104,7 @@ export function VehicleHeaderV2({ vehicle, onExport, onSettings, onPhotoUpload, 
             <Flex align="center" justify="between" className="h-14 sm:h-16">
               {/* Left: Back Button */}
               <button
-                onClick={() => router.push('/garage')}
+                onClick={() => router.push('/vehicles')}
                 className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
@@ -153,7 +153,7 @@ export function VehicleHeaderV2({ vehicle, onExport, onSettings, onPhotoUpload, 
             {/* Back Button & Actions */}
             <div className="flex items-center justify-between">
               <button
-                onClick={() => router.push('/garage')}
+                onClick={() => router.push('/vehicles')}
                 className="flex items-center gap-2 text-sm font-medium text-white/70 hover:text-white transition-all duration-200 bg-transparent hover:bg-white/10 px-3 py-2 rounded-xl group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />

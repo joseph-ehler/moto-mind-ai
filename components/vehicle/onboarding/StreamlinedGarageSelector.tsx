@@ -51,7 +51,7 @@ export function StreamlinedGarageSelector({
 
   const loadGarages = async () => {
     try {
-      const response = await fetch('/api/garages')
+      const response = await fetch('/api/vehicless')
       if (response.ok) {
         const data = await response.json()
         const garageList = data.garages || []

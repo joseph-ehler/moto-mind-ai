@@ -124,7 +124,7 @@ async function runFinalSystemAssessment() {
     { endpoint: '/api/health-optimized', description: 'Optimized health check' },
     { endpoint: '/api/vehicles', description: 'Vehicles list (original)' },
     { endpoint: '/api/vehicles-optimized', description: 'Vehicles list (optimized)' },
-    { endpoint: '/api/garages', description: 'Garages list' },
+    { endpoint: '/api/vehicless', description: 'Garages list' },
     { endpoint: '/api/notifications', description: 'Notifications' },
     { endpoint: '/api/reminders', description: 'Reminders (schema fixed)' },
     { endpoint: '/api/reminders-simple', description: 'Simple reminders (in-memory)' }

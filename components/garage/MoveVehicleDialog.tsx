@@ -44,7 +44,7 @@ export function MoveVehicleDialog({
 
   const fetchGarages = async () => {
     try {
-      const response = await fetch('/api/garages')
+      const response = await fetch('/api/vehicless')
       const data = await response.json()
       const allGarages = data.garages || []
       

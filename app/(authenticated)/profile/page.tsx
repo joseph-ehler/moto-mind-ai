@@ -46,7 +46,7 @@ export default function ProfilePage() {
       icon: <Car className="w-5 h-5" />,
       label: "My vehicles",
       description: "Manage your vehicles",
-      onClick: () => router.push('/garage')
+      onClick: () => router.push('/vehicles')
     },
     {
       icon: <Bell className="w-5 h-5" />,

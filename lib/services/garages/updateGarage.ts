@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { DatabaseError, NotFoundError, ConflictError } from '@/lib/utils/errors'
-import type { UpdateGarageRequest } from '@/lib/validation/garages'
+import type { UpdateGarageRequest } from '@/lib/validation/vehicless'
 import type { Garage } from './getGarages'
 
 const supabase = createClient(
