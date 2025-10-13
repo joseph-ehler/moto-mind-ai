@@ -1,19 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { createClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 import { handleApiError, ValidationError, DatabaseError } from '../../../lib/utils/errors'
 import { withTenantIsolation } from '../../../lib/middleware/tenant-context'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
 
 // Lean onboarding schema - just the essentials
 const onboardSchema = z.object({
@@ -42,8 +30,9 @@ async function onboardHandler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    // Get tenant ID from middleware
+    // Get tenant ID and supabase client from middleware
     const tenantId = (req as any).tenantId || '550e8400-e29b-41d4-a716-446655440000'
+    const supabase = (req as any).supabase
     
     // Validate request body
     const data = onboardSchema.parse(req.body)
