@@ -42,25 +42,33 @@ async function extractTenantId(req?: NextApiRequest): Promise<string | null> {
   try {
     console.log('🔍 Looking for auth token in cookies:', Object.keys(req.cookies || {}))
     
-    // Extract auth token from cookies - Supabase uses different cookie names
+    // Extract auth token from cookies - Supabase uses chunked cookies for large JWTs
     const authHeader = req.headers.authorization
     
-    // Try all possible Supabase cookie names
+    // Supabase splits large cookies into chunks (.0, .1, .2, etc.)
     const supabaseProject = process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0] || ''
-    const possibleCookies = [
-      `sb-${supabaseProject}-auth-token`,
-      'sb-access-token',
-      'supabase-auth-token',
-      'sb-auth-token'
-    ]
+    const baseCookieName = `sb-${supabaseProject}-auth-token`
     
+    // Collect all chunks
     let authCookie = null
-    for (const cookieName of possibleCookies) {
-      if (req.cookies[cookieName]) {
-        authCookie = req.cookies[cookieName]
-        console.log('✅ Found auth cookie:', cookieName)
-        break
-      }
+    const chunks: string[] = []
+    let chunkIndex = 0
+    
+    // Try to find chunked cookies
+    while (req.cookies[`${baseCookieName}.${chunkIndex}`]) {
+      const chunk = req.cookies[`${baseCookieName}.${chunkIndex}`]
+      if (chunk) chunks.push(chunk)
+      chunkIndex++
+    }
+    
+    if (chunks.length > 0) {
+      // Combine all chunks
+      authCookie = chunks.join('')
+      console.log(`✅ Found ${chunks.length} auth cookie chunks, combined into token`)
+    } else if (req.cookies[baseCookieName]) {
+      // Try non-chunked cookie
+      authCookie = req.cookies[baseCookieName]
+      console.log('✅ Found auth cookie:', baseCookieName)
     }
     
     if (!authHeader && !authCookie) {
