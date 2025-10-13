@@ -24,7 +24,7 @@ import {
   Overline,
   ResponsiveText,
   TypographyShowcase
-} from '@/components/design-system/Typography'
+} from '@/components/design-system/primitives/Typography'
 import { Type, Smartphone, Monitor, Eye, Accessibility } from 'lucide-react'
 
 export default function TypographySystemPage() {

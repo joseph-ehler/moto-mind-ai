@@ -18,7 +18,7 @@ import {
   SidebarLayout,
   DashboardLayout,
   HeroLayout
-} from '@/components/design-system/Layout'
+} from '@/components/design-system/primitives/Layout'
 import { Card, MetricCard, Button, Heading, Text } from '@/components/design-system'
 import { 
   Layout, 
