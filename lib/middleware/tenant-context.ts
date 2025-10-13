@@ -62,13 +62,19 @@ async function extractTenantId(req?: NextApiRequest): Promise<string | null> {
     }
     
     if (chunks.length > 0) {
-      // Combine all chunks - they form a JSON session object
-      const combinedJson = chunks.join('')
+      // Combine all chunks - they form a base64-encoded JSON session object
+      let combinedString = chunks.join('')
       console.log(`✅ Found ${chunks.length} auth cookie chunks`)
       
       try {
+        // Decode base64 if needed
+        if (combinedString.startsWith('base64-')) {
+          combinedString = Buffer.from(combinedString.substring(7), 'base64').toString('utf-8')
+          console.log('✅ Decoded base64 session')
+        }
+        
         // Parse the JSON session object
-        const session = JSON.parse(combinedJson)
+        const session = JSON.parse(combinedString)
         authCookie = session.access_token
         console.log('✅ Extracted access_token from session JSON')
       } catch (err) {
