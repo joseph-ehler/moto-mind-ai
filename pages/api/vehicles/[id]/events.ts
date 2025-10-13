@@ -1,20 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { createClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 import { handleApiError, ValidationError, DatabaseError } from '@/lib/utils/errors'
 import { visionMetrics } from '@/lib/monitoring/vision-metrics'
 import { databaseVisionMetrics } from '@/lib/monitoring/database-metrics'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
 
 // Event validation schema
 const eventSchema = z.object({
@@ -34,19 +23,19 @@ const vehicleIdSchema = z.object({
   id: z.string().uuid('Invalid vehicle ID format')
 })
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Mock tenant ID for development
-    const tenantId = '550e8400-e29b-41d4-a716-446655440000'
+    const tenantId = (req as any).tenantId
+    const supabase = (req as any).supabase
 
     // Validate vehicle ID
     const { id: vehicleId } = vehicleIdSchema.parse(req.query)
 
     switch (req.method) {
       case 'POST':
-        return handleCreateEvent(req, res, tenantId, vehicleId)
+        return handleCreateEvent(req, res, tenantId, vehicleId, supabase)
       case 'GET':
-        return handleGetEvents(req, res, tenantId, vehicleId)
+        return handleGetEvents(req, res, tenantId, vehicleId, supabase)
       default:
         return res.status(405).json({ error: 'Method not allowed' })
     }
@@ -56,11 +45,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
+export default withTenantIsolation(handler)
+
 async function handleCreateEvent(
   req: NextApiRequest, 
   res: NextApiResponse, 
   tenantId: string, 
-  vehicleId: string
+  vehicleId: string,
+  supabase: any
 ) {
   try {
     console.log('📝 Events API - Raw request body:', JSON.stringify(req.body, null, 2))
@@ -212,7 +204,8 @@ async function handleGetEvents(
   req: NextApiRequest, 
   res: NextApiResponse, 
   tenantId: string, 
-  vehicleId: string
+  vehicleId: string,
+  supabase: any
 ) {
   try {
     // Parse query parameters
