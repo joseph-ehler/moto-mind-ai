@@ -19,16 +19,11 @@ export async function createTenantAwareSupabaseClient(req?: NextApiRequest) {
     }
   )
 
-  // Set tenant context for RLS policies
-  // In production, extract tenant_id from JWT token or session
+  // Extract tenant_id from JWT token or session
   const tenantId = await extractTenantId(req) || DEMO_TENANT_ID
 
-  // Set the tenant context for this database session
-  await supabase.rpc('set_config', {
-    setting_name: 'app.tenant_id',
-    setting_value: tenantId,
-    is_local: true
-  })
+  // Note: We don't use RLS with set_config because we explicitly set tenant_id in all queries
+  // This approach is simpler and more reliable than PostgreSQL session variables
 
   return { supabase, tenantId }
 }
@@ -123,7 +118,7 @@ async function extractTenantId(req?: NextApiRequest): Promise<string | null> {
   }
 }
 
-// Helper to create RLS-aware database client
+// Helper to create tenant-aware database client
 export async function withTenantContext<T>(
   req: NextApiRequest,
   operation: (supabase: any, tenantId: string) => Promise<T>
@@ -131,14 +126,8 @@ export async function withTenantContext<T>(
   const { supabase, tenantId } = await createTenantAwareSupabaseClient(req)
   
   try {
-    // Set tenant context
-    await supabase.rpc('set_config', {
-      setting_name: 'app.tenant_id', 
-      setting_value: tenantId,
-      is_local: true
-    })
-    
     // Execute the operation with tenant-aware client
+    // Tenant isolation is handled by explicitly setting tenant_id in queries
     return await operation(supabase, tenantId)
     
   } catch (error) {
@@ -151,17 +140,11 @@ export async function withTenantContext<T>(
 export function withTenantIsolation(handler: any) {
   return async (req: NextApiRequest, res: any) => {
     try {
-      // Create tenant-aware client
+      // Create tenant-aware client and extract tenant ID
       const { supabase, tenantId } = await createTenantAwareSupabaseClient(req)
       
-      // Set tenant context
-      await supabase.rpc('set_config', {
-        setting_name: 'app.tenant_id',
-        setting_value: tenantId, 
-        is_local: true
-      })
-      
       // Add to request object for handler access
+      // Tenant isolation is handled by explicitly setting tenant_id in all queries
       ;(req as any).supabase = supabase
       ;(req as any).tenantId = tenantId
       
