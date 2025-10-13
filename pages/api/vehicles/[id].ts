@@ -2,37 +2,15 @@
 // Handles operations on specific vehicles by ID
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { createClient } from '@supabase/supabase-js'
+import { withTenantIsolation } from '../../../lib/middleware/tenant-context'
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error('Missing Supabase environment variables')
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
-  }
-})
-
-// Mock auth for development
-function mockAuth(req: NextApiRequest) {
-  return {
-    tenantId: '550e8400-e29b-41d4-a716-446655440000', // Demo tenant UUID
-    userId: '550e8400-e29b-41d4-a716-446655440001',   // Demo user UUID
-  }
-}
-
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
-    const auth = mockAuth(req)
+    const tenantId = (req as any).tenantId
+    const supabase = (req as any).supabase
     const { id } = req.query
 
     if (!id || typeof id !== 'string') {
@@ -41,11 +19,11 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET':
-        return await handleGetVehicle(req, res, auth, id)
+        return await handleGetVehicle(supabase, res, tenantId, id)
       case 'DELETE':
-        return await handleArchiveVehicle(req, res, auth, id)
+        return await handleArchiveVehicle(supabase, res, tenantId, id)
       case 'PATCH':
-        return await handleRestoreVehicle(req, res, auth, id)
+        return await handleRestoreVehicle(supabase, res, tenantId, id, req)
       default:
         return res.status(405).json({ error: 'Method not allowed' })
     }
@@ -59,9 +37,9 @@ export default async function handler(
 }
 
 async function handleGetVehicle(
-  req: NextApiRequest,
+  supabase: any,
   res: NextApiResponse,
-  auth: { tenantId: string; userId: string },
+  tenantId: string,
   id: string
 ) {
   try {
@@ -94,7 +72,7 @@ async function handleGetVehicle(
         )
       `)
       .eq('id', id)
-      .eq('tenant_id', auth.tenantId)
+      .eq('tenant_id', tenantId)
       .single()
 
     if (error) {
@@ -135,9 +113,9 @@ async function handleGetVehicle(
 }
 
 async function handleArchiveVehicle(
-  req: NextApiRequest,
+  supabase: any,
   res: NextApiResponse,
-  auth: { tenantId: string; userId: string },
+  tenantId: string,
   id: string
 ) {
   try {
@@ -146,7 +124,7 @@ async function handleArchiveVehicle(
       .from('vehicles')
       .select('id, tenant_id, nickname, make, model, deleted_at')
       .eq('id', id)
-      .eq('tenant_id', auth.tenantId)
+      .eq('tenant_id', tenantId)
       .single()
 
     if (checkError) {
@@ -167,7 +145,7 @@ async function handleArchiveVehicle(
         deleted_at: new Date().toISOString()
       })
       .eq('id', id)
-      .eq('tenant_id', auth.tenantId)
+      .eq('tenant_id', tenantId)
       .select()
       .single()
 
@@ -189,10 +167,11 @@ async function handleArchiveVehicle(
 }
 
 async function handleRestoreVehicle(
-  req: NextApiRequest,
+  supabase: any,
   res: NextApiResponse,
-  auth: { tenantId: string; userId: string },
-  id: string
+  tenantId: string,
+  id: string,
+  req: NextApiRequest
 ) {
   try {
     // Handle hero image update
@@ -203,7 +182,7 @@ async function handleRestoreVehicle(
           hero_image_url: req.body.hero_image_url
         })
         .eq('id', id)
-        .eq('tenant_id', auth.tenantId)
+        .eq('tenant_id', tenantId)
         .select()
         .single()
 
@@ -224,7 +203,7 @@ async function handleRestoreVehicle(
       .from('vehicles')
       .select('id, tenant_id, nickname, make, model, deleted_at')
       .eq('id', id)
-      .eq('tenant_id', auth.tenantId)
+      .eq('tenant_id', tenantId)
       .single()
 
     if (checkError) {
@@ -245,7 +224,7 @@ async function handleRestoreVehicle(
         deleted_at: null
       })
       .eq('id', id)
-      .eq('tenant_id', auth.tenantId)
+      .eq('tenant_id', tenantId)
       .select()
       .single()
 
@@ -265,3 +244,5 @@ async function handleRestoreVehicle(
     return res.status(500).json({ error: 'Failed to restore vehicle' })
   }
 }
+
+export default withTenantIsolation(handler)
