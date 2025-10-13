@@ -1,0 +1,14 @@
+<svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="#2563eb" rx="180"/>
+  
+  <!-- MM Text -->
+  <text 
+    x="512" 
+    y="580" 
+    font-family="Arial, Helvetica, sans-serif" 
+    font-size="480" 
+    font-weight="bold" 
+    fill="#ffffff" 
+    text-anchor="middle">MM</text>
+</svg>
