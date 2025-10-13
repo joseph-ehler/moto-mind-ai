@@ -46,8 +46,6 @@ const CACHE_CONFIG = {
 
 // Files to pre-cache on install
 const PRECACHE_URLS = [
-  '/',
-  '/offline',
   '/manifest.json',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png'

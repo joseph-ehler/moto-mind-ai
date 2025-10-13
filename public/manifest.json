@@ -63,84 +63,9 @@
     }
   ],
   
-  "screenshots": [
-    {
-      "src": "/screenshots/capture-flow.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Smart photo capture with quality checks"
-    },
-    {
-      "src": "/screenshots/timeline-view.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Complete vehicle history timeline"
-    },
-    {
-      "src": "/screenshots/ai-chat.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "AI assistant with vehicle context"
-    }
-  ],
+  "screenshots": [],
   
-  "shortcuts": [
-    {
-      "name": "Log Fuel",
-      "short_name": "Fuel",
-      "description": "Quickly log a fuel fill-up",
-      "url": "/capture?type=fuel",
-      "icons": [
-        {
-          "src": "/icons/shortcut-fuel.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Log Maintenance",
-      "short_name": "Service",
-      "description": "Record vehicle maintenance",
-      "url": "/capture?type=maintenance",
-      "icons": [
-        {
-          "src": "/icons/shortcut-maintenance.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "AI Chat",
-      "short_name": "Chat",
-      "description": "Ask your AI assistant",
-      "url": "/chat",
-      "icons": [
-        {
-          "src": "/icons/shortcut-chat.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Timeline",
-      "short_name": "History",
-      "description": "View vehicle history",
-      "url": "/timeline",
-      "icons": [
-        {
-          "src": "/icons/shortcut-timeline.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    }
-  ],
+  "shortcuts": [],
   
   "related_applications": [],
   "prefer_related_applications": false,
