@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import { ClientProviders } from './client-providers'
 import { PWAManifestInjector } from '@/components/PWAManifestInjector'
+import { SupabaseAuthProvider } from '@/components/auth/SupabaseAuthProvider'
 import '../styles/globals.css'
 import '../styles/gradients.css'
 
@@ -43,10 +44,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <PWAManifestInjector />
-        <ClientProviders>
-          {children}
-        </ClientProviders>
+        <SupabaseAuthProvider>
+          <PWAManifestInjector />
+          <ClientProviders>
+            {children}
+          </ClientProviders>
+        </SupabaseAuthProvider>
       </body>
     </html>
   )

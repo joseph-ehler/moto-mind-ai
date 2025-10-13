@@ -1,18 +1,25 @@
 // Navigation - Exactly like Ro's clean top nav
-import React from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useAuth } from '@/components/auth/SupabaseAuthProvider'
 import { 
   Home, 
   Car, 
   MessageCircle, 
   Settings,
   User,
-  Bell
+  Bell,
+  LogOut,
+  ChevronDown
 } from 'lucide-react'
 
 export function Navigation() {
   const router = useRouter()
+  const { user, signOut: handleSignOut } = useAuth()
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
   
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
@@ -63,11 +70,64 @@ export function Navigation() {
               <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400"></span>
             </button>
             
-            {/* Profile */}
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                <User className="w-4 h-4 text-gray-600" />
-              </div>
+            {/* Profile Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                  <User className="w-4 h-4 text-gray-600" />
+                </div>
+                {user?.email && (
+                  <span className="text-sm text-gray-700 hidden md:block">
+                    {user.email.split('@')[0]}
+                  </span>
+                )}
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              </button>
+
+              {/* Dropdown Menu */}
+              {showProfileMenu && (
+                <>
+                  {/* Backdrop */}
+                  <div 
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowProfileMenu(false)}
+                  />
+                  
+                  {/* Menu */}
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
+                    {user?.email && (
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {user.user_metadata?.name || 'User'}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {user.email}
+                        </p>
+                      </div>
+                    )}
+                    
+                    <Link
+                      href="/account"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      <Settings className="w-4 h-4 mr-2" />
+                      Account Settings
+                    </Link>
+                    
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
