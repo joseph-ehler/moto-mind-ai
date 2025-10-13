@@ -34,6 +34,29 @@ async function onboardHandler(req: NextApiRequest, res: NextApiResponse) {
     const tenantId = (req as any).tenantId || '550e8400-e29b-41d4-a716-446655440000'
     const supabase = (req as any).supabase
     
+    // Ensure tenant exists (create if first-time user)
+    const { error: tenantCheckError } = await supabase
+      .from('tenants')
+      .select('id')
+      .eq('id', tenantId)
+      .single()
+    
+    if (tenantCheckError) {
+      // Create tenant record
+      const { error: tenantCreateError } = await supabase
+        .from('tenants')
+        .insert({ id: tenantId, name: 'My Account' })
+        .select()
+        .single()
+      
+      if (tenantCreateError && tenantCreateError.code !== '23505') {
+        // Ignore duplicate key errors (23505), fail on other errors
+        console.error('Failed to create tenant:', tenantCreateError)
+      } else {
+        console.log('✅ Created tenant record:', tenantId)
+      }
+    }
+    
     // Validate request body
     const data = onboardSchema.parse(req.body)
     
