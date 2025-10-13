@@ -37,8 +37,8 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
       setUser(session?.user ?? null)
       setLoading(false)
       
-      // Refresh the page to sync server state
-      router.refresh()
+      // Don't refresh - causes infinite loop!
+      // router.refresh()
     })
 
     return () => subscription.unsubscribe()
