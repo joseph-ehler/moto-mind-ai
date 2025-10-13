@@ -62,9 +62,19 @@ async function extractTenantId(req?: NextApiRequest): Promise<string | null> {
     }
     
     if (chunks.length > 0) {
-      // Combine all chunks
-      authCookie = chunks.join('')
-      console.log(`✅ Found ${chunks.length} auth cookie chunks, combined into token`)
+      // Combine all chunks - they form a JSON session object
+      const combinedJson = chunks.join('')
+      console.log(`✅ Found ${chunks.length} auth cookie chunks`)
+      
+      try {
+        // Parse the JSON session object
+        const session = JSON.parse(combinedJson)
+        authCookie = session.access_token
+        console.log('✅ Extracted access_token from session JSON')
+      } catch (err) {
+        console.error('❌ Failed to parse session JSON:', err)
+        return DEMO_TENANT_ID
+      }
     } else if (req.cookies[baseCookieName]) {
       // Try non-chunked cookie
       authCookie = req.cookies[baseCookieName]
