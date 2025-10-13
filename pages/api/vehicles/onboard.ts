@@ -49,7 +49,11 @@ async function onboardHandler(req: NextApiRequest, res: NextApiResponse) {
       console.log('🔍 Decoding VIN for onboarding:', data.vin)
       
       try {
-        const decodeResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005'}/api/decode-vin`, {
+        const baseUrl = process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}` 
+          : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005'
+        
+        const decodeResponse = await fetch(`${baseUrl}/api/decode-vin`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ vin: data.vin })
@@ -111,16 +115,20 @@ async function onboardHandler(req: NextApiRequest, res: NextApiResponse) {
     // Get or create default garage
     let garageId = data.garage_id
     if (!garageId) {
-      const { data: defaultGarage, error: garageError } = await supabase
+      // Try to find existing garage first
+      const { data: garages, error: garageError } = await supabase
         .from('garages')
         .select('id')
         .eq('tenant_id', tenantId)
         .is('deleted_at', null)
         .limit(1)
-        .single()
 
-      if (garageError || !defaultGarage) {
-        // Create default garage
+      if (!garageError && garages && garages.length > 0) {
+        // Use existing garage
+        garageId = garages[0].id
+        console.log('✅ Using existing garage:', garageId)
+      } else {
+        // Create new garage
         const { data: newGarage, error: createGarageError } = await supabase
           .from('garages')
           .insert({
@@ -129,14 +137,30 @@ async function onboardHandler(req: NextApiRequest, res: NextApiResponse) {
             address: null
           })
           .select('id')
-          .single()
+          .maybeSingle()
 
-        if (createGarageError || !newGarage) {
+        if (createGarageError) {
+          console.error('Garage creation error:', createGarageError)
+          // If conflict (409), try to fetch again - might have been created by another request
+          const { data: retryGarages } = await supabase
+            .from('garages')
+            .select('id')
+            .eq('tenant_id', tenantId)
+            .is('deleted_at', null)
+            .limit(1)
+          
+          if (retryGarages && retryGarages.length > 0) {
+            garageId = retryGarages[0].id
+            console.log('✅ Using garage after conflict:', garageId)
+          } else {
+            throw new DatabaseError('Failed to create default garage')
+          }
+        } else if (newGarage) {
+          garageId = newGarage.id
+          console.log('✅ Created new garage:', garageId)
+        } else {
           throw new DatabaseError('Failed to create default garage')
         }
-        garageId = newGarage.id
-      } else {
-        garageId = defaultGarage.id
       }
     }
 
