@@ -46,31 +46,66 @@ export const DOCUMENT_SCHEMAS: Record<DocumentType, DocumentSchema> = {
 
   fuel_receipt: {
     fields: {
+      // Core fuel data
       station_name: 'string|null',
+      station_address: 'string|null',
       total_amount: 'number|null',
       gallons: 'number|null',
       price_per_gallon: 'number|null',
       fuel_type: 'string|null',
       date: 'YYYY-MM-DD|null',
       time: 'HH:MM|null',
-      payment_method: 'string|null',
       pump_number: 'string|null',
+      
+      // Payment details
+      payment_method: 'string|null',
+      card_last_four: 'string|null',
+      entry_method: 'string|null',
+      
+      // Transaction identifiers (fraud detection)
+      transaction_id: 'string|null',
+      invoice_number: 'string|null',
+      auth_code: 'string|null',
+      
+      // Merchant details
+      site_id: 'string|null',
+      trace_id: 'string|null',
+      merchant_id: 'string|null',
+      
+      // Credit card transaction codes (optional advanced)
+      aid: 'string|null',
+      tvr: 'string|null',
+      iad: 'string|null',
+      tsi: 'string|null',
+      arc: 'string|null',
+      
       confidence: 'number 0-1'
     },
     rules: [
-      'Extract station name from header (Shell, Exxon, etc.)',
+      'Extract station name from header (Murphy USA, Shell, Exxon, etc.)',
+      'Extract full station address if visible on receipt',
       'Parse amounts as numbers (remove $ and commas)',
       'Extract gallons and calculate price per gallon if not shown',
-      'Identify fuel type (Regular, Premium, Diesel, etc.)',
+      'Identify fuel type/grade (Regular, Premium, Diesel, SUPERUN, etc.)',
       'Convert dates to YYYY-MM-DD format',
-      'Note payment method (Cash, Credit, Debit)',
+      'Extract time in HH:MM format',
+      'Note payment method (Mastercard, Visa, Cash, etc.) and last 4 digits',
+      'Extract pump number if shown',
+      'CRITICAL: Extract transaction ID (Tran #, Trans #, Transaction #) - used for duplicate detection',
+      'Extract invoice/receipt number - used for expense reconciliation',
+      'Extract auth/authorization code - used for dispute resolution',
+      'Extract site ID, trace ID, merchant ID if visible - useful for fraud detection',
+      'Note entry method (L=chip, S=swipe, C=contactless)',
+      'Credit card codes (AID, TVR, etc.) are optional - only extract if clearly visible',
       'Return null for fields not clearly visible'
     ],
     extractionFocus: [
-      'Pay attention to station name, date, total amount',
-      'Look for gallons, price per gallon',
-      'Note payment method and transaction details',
-      'Extract any vehicle or pump information'
+      'PRIMARY: station name, address, date, time, total amount',
+      'IMPORTANT: gallons, price per gallon, fuel type, pump number',
+      'CRITICAL: transaction ID (prevents duplicate uploads)',
+      'USEFUL: payment method, auth code, invoice number',
+      'OPTIONAL: site/trace/merchant IDs, credit card codes',
+      'Look for transaction identifiers prominently displayed at bottom of receipt'
     ]
   },
 
@@ -228,6 +263,150 @@ export const DOCUMENT_SCHEMAS: Record<DocumentType, DocumentSchema> = {
       'For analog, read to nearest mile',
       'Extract trip meter readings if visible',
       'Return null if reading is unclear or obscured'
+    ],
+    extractionFocus: [
+      'Look for the main odometer reading (usually 5-6 digits)',
+      'Distinguish from trip meters (smaller, resettable)',
+      'Read ALL digits including leading zeros',
+      'Note if units are in km or miles'
+    ]
+  },
+
+  fuel_gauge: {
+    fields: {
+      fuel_level: 'number|null',
+      percentage: 'number|null',
+      bars_filled: 'number|null',
+      total_bars: 'number|null',
+      indicator_position: '"empty"|"quarter"|"half"|"three_quarters"|"full"',
+      low_fuel_warning: 'boolean',
+      confidence: 'number 0-1'
+    },
+    rules: [
+      '═══════════════════════════════════════════════════════════════',
+      'STEP 1: IDENTIFY GAUGE TYPE',
+      '═══════════════════════════════════════════════════════════════',
+      'TYPE A - ANALOG NEEDLE: Physical or digital needle/pointer on circular or arc gauge',
+      'TYPE B - BAR/SEGMENT: Discrete blocks/segments that fill from E to F',
+      'TYPE C - DIGITAL NUMERIC: Displays exact number like "50%", "1/2", or fraction',
+      '',
+      '═══════════════════════════════════════════════════════════════',
+      'TYPE A: ANALOG NEEDLE GAUGES',
+      '═══════════════════════════════════════════════════════════════',
+      'NEEDLE APPEARANCE - The needle can be ANY of these:',
+      '  • Red needle (most common)',
+      '  • White/silver needle',
+      '  • Orange needle',
+      '  • Blue needle',
+      '  • Illuminated/glowing needle (backlit)',
+      '  • Non-illuminated dark needle',
+      '  • Thin pointer line on digital display',
+      'NEEDLE IDENTIFICATION: Look for ANY line/pointer that extends from center pivot to gauge markings',
+      'IGNORE gauge background color/lighting - focus on the POINTER itself',
+      '',
+      'GAUGE ORIENTATION - Two common layouts:',
+      'HORIZONTAL: E on LEFT, F on RIGHT (needle sweeps left→right)',
+      '  • E typically at 7-8 o\'clock, F at 4-5 o\'clock',
+      'VERTICAL: E at BOTTOM, F at TOP (needle sweeps bottom→top)',
+      '  • E at 6 o\'clock (bottom), F at 12 o\'clock (top)',
+      '',
+      'READING STEPS:',
+      '1. Locate E and F markers to determine orientation',
+      '2. Find the needle (any color, lit or unlit)',
+      '3. Trace needle from pivot CENTER to the TIP',
+      '4. See where TIP points on the gauge scale',
+      '5. Calculate percentage based on position between E and F',
+      '',
+      'PERCENTAGE RULES:',
+      'Needle at F = 90-100% FULL',
+      'Needle at 3/4 mark = 70-80%',
+      'Needle at 1/2 mark = 45-55%',
+      'Needle at 1/4 mark = 20-30%',
+      'Needle at E = 0-10% EMPTY',
+      '',
+      '═══════════════════════════════════════════════════════════════',
+      'TYPE B: BAR/SEGMENT GAUGES',
+      '═══════════════════════════════════════════════════════════════',
+      'APPEARANCE: Discrete blocks/bars that light up or fill in',
+      'Example: E [■][■][■][□][□][□][□][□] F  (3 out of 8 filled)',
+      '',
+      'BAR ORIENTATION:',
+      'HORIZONTAL: E on left, F on right - bars fill left to right',
+      'VERTICAL: E at bottom, F at top - bars fill bottom to top',
+      '',
+      'COUNTING RULES:',
+      '1. Count TOTAL number of segments/blocks (filled + empty)',
+      '2. Count FILLED/LIT segments only',
+      '3. Calculate: (filled_segments ÷ total_segments) × 100 = percentage',
+      '4. Example: 6 filled out of 8 total = (6÷8)×100 = 75%',
+      '',
+      'FILLED SEGMENT IDENTIFICATION:',
+      '  • Illuminated/bright segments',
+      '  • Colored segments (vs dark/empty)',
+      '  • Solid blocks vs outline-only blocks',
+      '',
+      '═══════════════════════════════════════════════════════════════',
+      'TYPE C: DIGITAL NUMERIC DISPLAYS',
+      '═══════════════════════════════════════════════════════════════',
+      'Simply read the displayed value:',
+      '  • "75%" → fuel_level: 75',
+      '  • "1/2" → fuel_level: 50',
+      '  • "3/4" → fuel_level: 75',
+      '  • "FULL" → fuel_level: 100',
+      '  • "LOW" → fuel_level: 10',
+      '',
+      '═══════════════════════════════════════════════════════════════',
+      'COMMON ISSUES & ACCURACY CHECKS',
+      '═══════════════════════════════════════════════════════════════',
+      '⚠️ CRITICAL: If needle appears to point to F, verify it is 90-100%, NOT 50%!',
+      '⚠️ If needle is hard to see, look for shadow, outline, or slight color difference',
+      '⚠️ For bar gauges, count carefully - partial fill of last segment = round down',
+      '⚠️ Low fuel warning light (orange) usually means <10-15% fuel remaining',
+      '',
+      'CONFIDENCE SCORING:',
+      'High (0.9): Clear needle position or exact digital reading',
+      'Medium (0.7): Needle visible but position ambiguous',
+      'Low (0.5): Gauge partially obscured or needle unclear',
+      'Return null if gauge completely unreadable'
+    ],
+    extractionFocus: [
+      'Identify gauge type first: analog needle, bar segments, or digital',
+      'For analog: Locate E and F markers, determine needle sweep direction',
+      'Trace needle from base to tip - where does the tip point?',
+      'If needle points to F, gauge is FULL (90-100%)',
+      'If needle points to E, gauge is EMPTY (0-10%)',
+      'Check for low fuel warning light (usually orange fuel pump icon)',
+      'Verify percentage makes sense: needle near F should be 80-100%, not 50%'
+    ]
+  },
+
+  product_label: {
+    fields: {
+      brand: 'string|null',
+      product_name: 'string|null',
+      product_type: 'string|null',
+      size: 'string|null',
+      quantity: 'string|null',
+      purpose: 'string|null',
+      ingredients: '[string]|null',
+      warnings: '[string]|null',
+      confidence: 'number 0-1'
+    },
+    rules: [
+      'Extract brand name prominently displayed on label',
+      'Get product name/title (main purpose)',
+      'Identify product type (additive, treatment, cleaner, etc.)',
+      'Extract size/quantity (20 FL OZ, 16 oz, etc.)',
+      'Note primary purpose or use case',
+      'List key ingredients if visible',
+      'Extract warnings or cautions',
+      'Return null for fields not clearly visible'
+    ],
+    extractionFocus: [
+      'Focus on brand name and product name',
+      'Look for size/quantity information',
+      'Identify product type and purpose',
+      'Note any key features or benefits listed'
     ]
   },
 

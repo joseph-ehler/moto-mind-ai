@@ -1,17 +1,19 @@
 import { createClient } from '@supabase/supabase-js'
-import { env } from '../config/env'
 
-// Client-side Supabase client (anon key)
-export const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
+/**
+ * Client-side Supabase client (anon key)
+ * 
+ * Safe to use in browser/client components.
+ * Uses Next.js public env vars for client-side access.
+ */
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-// Server-side Supabase client (service role key)
-export const supabaseAdmin = createClient(
-  env.SUPABASE_URL, 
-  env.SUPABASE_SERVICE_ROLE_KEY,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Missing Supabase environment variables. ' +
+    'Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to your .env.local file.'
+  )
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)

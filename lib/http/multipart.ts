@@ -43,10 +43,13 @@ export async function parseMultipart(req: NextApiRequest): Promise<ParsedMultipa
       }
       
       // Normalize files
+      // IMPORTANT: Keep arrays for fields with multiple files (e.g., multiple additives)
       const normalizedFiles: Record<string, any> = {}
       for (const [key, value] of Object.entries(files)) {
         if (Array.isArray(value)) {
-          normalizedFiles[key] = value[0]
+          // If multiple files with same key, keep as array (for additives)
+          // If only one file in array, unwrap it for backwards compatibility
+          normalizedFiles[key] = value.length > 1 ? value : value[0]
         } else {
           normalizedFiles[key] = value
         }

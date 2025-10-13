@@ -1,0 +1,15 @@
+{
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "JSXAttribute[name.name='className'][value.value=/bg-(primary|secondary|destructive|muted|accent|card|popover)/]",
+        "message": "❌ FORBIDDEN: Do not use bg-* classes directly. Use <ColoredBox> or variants (<PrimaryBox>, <DestructiveBox>, etc.) instead. Manual bg classes ALWAYS fail accessibility. See lib/design-system/COLOR_RULES.md"
+      },
+      {
+        "selector": "TemplateLiteral:has(TemplateElement[value.raw=/bg-(primary|secondary|destructive|muted|accent|card|popover)/])",
+        "message": "❌ FORBIDDEN: Do not use bg-* classes directly. Use <ColoredBox> or variants instead. Manual bg classes ALWAYS fail accessibility."
+      }
+    ]
+  }
+}

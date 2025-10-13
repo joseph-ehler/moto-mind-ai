@@ -1,0 +1,4412 @@
+{
+  "totalFiles": 140,
+  "byType": {
+    "schema": 105,
+    "seeds": 21,
+    "cleanup": 10
+  },
+  "features": {
+    "vehicle": 127,
+    "analytics": 25,
+    "fuel": 38,
+    "garage": 35,
+    "emissions": 26,
+    "vision": 61,
+    "maintenance": 52,
+    "user": 76,
+    "location": 27,
+    "ai-chat": 32,
+    "notification": 29
+  },
+  "dependencies": [
+    {
+      "file": "000_base_schema.sql",
+      "dependsOn": "004_smartphone_ingestion.sql",
+      "table": "manual"
+    },
+    {
+      "file": "001_rls_policies.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "001_rls_policies.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "001_rls_policies.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicle_metrics"
+    },
+    {
+      "file": "001_rls_policies.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "explanations"
+    },
+    {
+      "file": "001_rls_policies.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "audit_logs"
+    },
+    {
+      "file": "001_rls_policies.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "provider_integrations"
+    },
+    {
+      "file": "001_rls_policies.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "002_indexes_constraints.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicle_metrics"
+    },
+    {
+      "file": "002_indexes_constraints.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "explanations"
+    },
+    {
+      "file": "002_indexes_constraints.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "002_indexes_constraints.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "002_indexes_constraints.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "memberships"
+    },
+    {
+      "file": "002_indexes_constraints.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "provider_integrations"
+    },
+    {
+      "file": "add_vin_and_garages.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "add_vin_and_garages.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "add_vin_and_garages.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "users"
+    },
+    {
+      "file": "add_vin_and_garages.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "memberships"
+    },
+    {
+      "file": "add_vin_and_garages.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "005_canonical_vehicle_images.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "005_canonical_vehicle_images.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "memberships"
+    },
+    {
+      "file": "006_vehicle_photos.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "setup-supabase-storage-simple.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicle"
+    },
+    {
+      "file": "008_vehicle_onboarding_fields.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "008_vehicle_onboarding_fields.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "008_vehicle_onboarding_fields.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "vin"
+    },
+    {
+      "file": "008_vehicle_onboarding_fields.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "009_vehicle_images_table.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "009_vehicle_images_table.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "009_vehicle_images_table.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "images"
+    },
+    {
+      "file": "009_vehicle_images_table.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicle"
+    },
+    {
+      "file": "009_vehicle_images_table.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "memberships"
+    },
+    {
+      "file": "009_vehicle_images_simple.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "009_vehicle_images_minimal.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "011_fix_vehicle_images_table.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "010_garage_performance_indexes.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "020_events_stream.sql",
+      "dependsOn": "004_smartphone_ingestion.sql",
+      "table": "event"
+    },
+    {
+      "file": "021_reminders_dedupe.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "021_reminders_dedupe.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "022_garage_default_column.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "030_vehicle_display_name.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "030_vehicle_display_name.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "vin"
+    },
+    {
+      "file": "manual-migration-sql.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "db-console-paste.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "db-console-paste.sql",
+      "dependsOn": "003_usage_tracking.sql",
+      "table": "if"
+    },
+    {
+      "file": "db-console-paste.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "031_security_fix_tenant_isolation.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "031_security_fix_tenant_isolation.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "031_security_fix_tenant_isolation.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "031_security_fix_tenant_isolation.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "manual-security-migration.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "manual-security-migration.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "manual-security-migration.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "manual-security-migration.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "week2-consolidation-migration.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "direct-consolidation-migration.sql",
+      "dependsOn": "week2-consolidation-migration.sql",
+      "table": "vehicles_naming_backup"
+    },
+    {
+      "file": "direct-consolidation-migration.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "phase3-final-cleanup.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "phase3-final-cleanup.sql",
+      "dependsOn": "week2-consolidation-migration.sql",
+      "table": "vehicles_naming_backup"
+    },
+    {
+      "file": "week4-comprehensive-consolidation.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "week4-comprehensive-consolidation.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "week4-comprehensive-consolidation.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "week4-comprehensive-consolidation.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "complete-consolidation-migration.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "complete-consolidation-migration.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "complete-consolidation-migration.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "complete-consolidation-migration.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "complete-consolidation-migration.sql",
+      "dependsOn": "week2-consolidation-migration.sql",
+      "table": "vehicles_naming_backup"
+    },
+    {
+      "file": "gold-standard-optimization.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "audit_log"
+    },
+    {
+      "file": "gold-standard-optimization.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "gold-standard-optimization.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "gold-standard-optimization.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "gold-standard-optimization.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "in"
+    },
+    {
+      "file": "gold-standard-optimization.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "red-team-fixes.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "red-team-fixes.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "red-team-fixes.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "audit_log"
+    },
+    {
+      "file": "immediate-critical-fixes.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "immediate-critical-fixes.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "immediate-critical-fixes-corrected.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "immediate-critical-fixes-corrected.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "critical-fixes-execution.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "critical-fixes-execution.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "critical-fixes-execution.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "critical-fixes-execution.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "critical-fixes-execution.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "critical-fixes-execution.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "audit_log"
+    },
+    {
+      "file": "final-audit-consolidation.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "audit_log"
+    },
+    {
+      "file": "final-audit-consolidation.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "audit_logs"
+    },
+    {
+      "file": "performance-optimization.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "audit_log"
+    },
+    {
+      "file": "fix-duplicate-audit-tables.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "audit_logs"
+    },
+    {
+      "file": "fix-duplicate-audit-tables.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "audit_log"
+    },
+    {
+      "file": "fix-orphaned-vehicles.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "fix-orphaned-vehicles.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "fix-orphaned-vehicles.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "create-consolidated-health-function.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "create-consolidated-health-function.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "fix-reminders-schema.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "010_odometer_readings.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "010_odometer_readings.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "010_odometer_readings.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicle"
+    },
+    {
+      "file": "010_odometer_readings.sql",
+      "dependsOn": "011_jurisdiction_system.sql",
+      "table": "the"
+    },
+    {
+      "file": "011_fuel_logs.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "012_odometer_readings.sql",
+      "dependsOn": "010_odometer_readings.sql",
+      "table": "odometer_readings"
+    },
+    {
+      "file": "012_odometer_readings.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "013_service_records.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "nuclear-rebuild-minimal-schema.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "nuclear-rebuild-minimal-schema.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "users"
+    },
+    {
+      "file": "nuclear-rebuild-minimal-schema.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "nuclear-rebuild-minimal-schema.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "nuclear-rebuild-minimal-schema.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "nuclear-rebuild-minimal-schema.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "nuclear-rebuild-minimal-schema.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-schema.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-schema.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "users"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-schema.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-schema.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-schema.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-schema.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-schema.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-schema.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-schema.sql",
+      "dependsOn": "013_service_records.sql",
+      "table": "service"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-fixed.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-fixed.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "users"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-fixed.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-fixed.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-fixed.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-fixed.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-schema.sql",
+      "table": "vehicle_events_2025"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-fixed.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-fixed.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "nuclear-rebuild-enterprise-fixed.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "users"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-fixed.sql",
+      "table": "vehicle_events_2024"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-schema.sql",
+      "table": "vehicle_events_2025"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-fixed.sql",
+      "table": "vehicle_events_2026"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-fixed.sql",
+      "table": "vehicle_events_2027"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "012_reminders_table.sql",
+      "table": "reminders"
+    },
+    {
+      "file": "000-nuclear-rebuild-elite-complete.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "001-nuclear-rebuild-elite-supabase.sql",
+      "dependsOn": "011_jurisdiction_system.sql",
+      "table": "of"
+    },
+    {
+      "file": "001-nuclear-rebuild-elite-supabase.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "001-nuclear-rebuild-elite-supabase.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-schema.sql",
+      "table": "to"
+    },
+    {
+      "file": "001-nuclear-rebuild-elite-supabase.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "001-nuclear-rebuild-elite-supabase.sql",
+      "dependsOn": "011_jurisdiction_system.sql",
+      "table": "profiles"
+    },
+    {
+      "file": "FORCE-DROP-CRUFT-TABLES.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "CRITICAL-SCHEMA-FIXES.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "CRITICAL-SCHEMA-FIXES.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-schema.sql",
+      "table": "to"
+    },
+    {
+      "file": "CORRECTED-SCHEMA-FIXES.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "CORRECTED-SCHEMA-FIXES.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "CORRECTED-SCHEMA-FIXES.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "CORRECTED-SCHEMA-FIXES.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-schema.sql",
+      "table": "to"
+    },
+    {
+      "file": "FIX-VEHICLE-EVENTS-RLS.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "FIX-TRIGGER-FUNCTION.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "ENABLE-EVENT-EDITING.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "ENHANCE-EVENT-STORAGE.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "ENHANCE-EVENT-STORAGE.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "MOCK-EVENTS-1HGBH41JXMN109186.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "MOCK-EVENTS-1HGBH41JXMN109186.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "CORRECTED-MOCK-EVENTS-1HGBH41JXMN109186.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "CORRECTED-MOCK-EVENTS-1HGBH41JXMN109186.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "FIX-VALIDATION-FUNCTION.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "PRODUCTION-READY-MOCK-EVENTS.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "PRODUCTION-READY-MOCK-EVENTS.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "PRODUCTION-READY-MOCK-EVENTS.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "NUCLEAR-FIX-VALIDATION.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "DISABLE-ALL-TRIGGERS-INSERT-DATA.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "BYPASS-VALIDATION-INSERT-DATA.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "FINAL-WORKING-INSERT.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "ADD-COMPUTED-COLUMNS.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "RICH-MOCK-DATA-PROPER-SCHEMA.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "ADD-DISPLAY-FIELDS-MIGRATION.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "ADD-DISPLAY-FIELDS-MIGRATION.sql",
+      "dependsOn": "011_jurisdiction_system.sql",
+      "table": "the"
+    },
+    {
+      "file": "ADD-DISPLAY-FIELDS-MIGRATION.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "ADD-DISPLAY-FIELDS-MIGRATION.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "CORRECTED-DISPLAY-FIELDS-MIGRATION.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "CORRECTED-DISPLAY-FIELDS-MIGRATION.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "MINIMAL-FK-FIX.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "FINAL-CORRECTED-MIGRATION.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "FINAL-CORRECTED-MIGRATION.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "WORKING-DISPLAY-FIELDS-MIGRATION.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "WORKING-DISPLAY-FIELDS-MIGRATION.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "CORRECTED-COMPLETE-RECOVERY.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "CORRECTED-COMPLETE-RECOVERY.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "CORRECTED-COMPLETE-RECOVERY.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "COMPLETE-DATABASE-FOUNDATION.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "COMPLETE-DATABASE-FOUNDATION.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "COMPLETE-DATABASE-FOUNDATION.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "COMPLETE-DATABASE-FOUNDATION.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "FIXED-NO-FK-ERRORS.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "FIXED-NO-FK-ERRORS.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "FIXED-NO-FK-ERRORS.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "FIXED-NO-FK-ERRORS.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "ADD-MISSING-COLUMNS.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "ADD-MISSING-COLUMNS.sql",
+      "dependsOn": "011_jurisdiction_system.sql",
+      "table": "the"
+    },
+    {
+      "file": "SUPABASE_SCHEMA_SETUP.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "SUPABASE_SCHEMA_SETUP.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "SUPABASE_SCHEMA_SETUP.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "tenants"
+    },
+    {
+      "file": "ADD_GARAGE_ID_COLUMN.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "ADD_GARAGE_ID_COLUMN.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "existing"
+    },
+    {
+      "file": "ADD_MISSING_VEHICLE_COLUMNS.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "add-dashboard-snapshot-columns.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "030_vision_metrics_tables.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-schema.sql",
+      "table": "0"
+    },
+    {
+      "file": "20240930_add_tenant_to_vehicle_images.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "20240930_add_tenant_to_vehicle_images.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "images"
+    },
+    {
+      "file": "20240930_add_tenant_to_vehicle_images.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "20240930_create_vehicle_images_table.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "20240930_add_hero_image_to_vehicles.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "20240930_add_ai_metadata_to_images.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "20240930_add_ai_metadata_to_images.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "image"
+    },
+    {
+      "file": "20240930_add_extended_ai_metadata.sql",
+      "dependsOn": "005_canonical_vehicle_images.sql",
+      "table": "vehicle_images"
+    },
+    {
+      "file": "20241001_link_photos_to_events.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "20241001_add_notes_to_events.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "20241001_vehicle_spec_enhancements.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "20241001_add_maintenance_categories.sql",
+      "dependsOn": "20241001_vehicle_spec_enhancements.sql",
+      "table": "vehicle_spec_enhancements"
+    },
+    {
+      "file": "20241001_add_maintenance_categories.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-fixed.sql",
+      "table": "6"
+    },
+    {
+      "file": "20241001030000_user_maintenance_preferences.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "20241001030000_user_maintenance_preferences.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "user"
+    },
+    {
+      "file": "20241001_garage_management_enhancements.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "20241001_garage_management_enhancements.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garage"
+    },
+    {
+      "file": "20241001_garage_management_enhancements.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicle"
+    },
+    {
+      "file": "20241001_garage_management_enhancements.sql",
+      "dependsOn": "013_service_records.sql",
+      "table": "or"
+    },
+    {
+      "file": "20241001_garage_management_enhancements.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "20241001_garage_management_enhancements.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "20241001_add_geographic_columns_to_garages.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "20241002_graceful_garage_deletion.sql",
+      "dependsOn": "add_vin_and_garages.sql",
+      "table": "garages"
+    },
+    {
+      "file": "20241002_graceful_garage_deletion.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "20241002_graceful_garage_deletion.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "existing"
+    },
+    {
+      "file": "20241002_fix_event_audit_trail.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "20241002_fix_event_audit_trail.sql",
+      "dependsOn": "003_usage_tracking.sql",
+      "table": "if"
+    },
+    {
+      "file": "20241002_fix_event_audit_trail.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "20241002_add_edit_changes_column.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "20241002_add_edit_history_column.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "20241002_migrate_existing_edits_to_history.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "public"
+    },
+    {
+      "file": "008_add_geocoding_columns.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "20250109010000_add_conversation_threads.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_threads"
+    },
+    {
+      "file": "20250109010000_add_conversation_threads.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_messages"
+    },
+    {
+      "file": "20250109010000_add_conversation_threads.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "thread"
+    },
+    {
+      "file": "20250109010000_add_conversation_threads.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "threads"
+    },
+    {
+      "file": "APPLY_THIS_SQL.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_threads"
+    },
+    {
+      "file": "APPLY_THIS_SQL.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_messages"
+    },
+    {
+      "file": "APPLY_THIS_SQL.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "thread"
+    },
+    {
+      "file": "APPLY_THIS_SQL.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "threads"
+    },
+    {
+      "file": "DISABLE_RLS_FOR_DEV.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_threads"
+    },
+    {
+      "file": "DISABLE_RLS_FOR_DEV.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_messages"
+    },
+    {
+      "file": "RUN_THIS_NOW.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_threads"
+    },
+    {
+      "file": "RUN_THIS_NOW.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_messages"
+    },
+    {
+      "file": "FIX_MESSAGE_COUNTS.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_threads"
+    },
+    {
+      "file": "FIX_MESSAGE_COUNTS.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "thread"
+    },
+    {
+      "file": "FIX_MESSAGE_COUNTS.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_messages"
+    },
+    {
+      "file": "ADD_ACTIONS_COLUMN.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_messages"
+    },
+    {
+      "file": "add-ai-vehicle-context-columns.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_messages"
+    },
+    {
+      "file": "add-ai-vehicle-context-columns.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_threads"
+    },
+    {
+      "file": "add-ai-vehicle-context-columns.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "006_current_mileage_computed.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "006_current_mileage_computed.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicle"
+    },
+    {
+      "file": "006_current_mileage_computed.sql",
+      "dependsOn": "003_usage_tracking.sql",
+      "table": "if"
+    },
+    {
+      "file": "006_current_mileage_computed.sql",
+      "dependsOn": "013_service_records.sql",
+      "table": "or"
+    },
+    {
+      "file": "006_current_mileage_computed.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "006_current_mileage_computed.sql",
+      "dependsOn": "004_smartphone_ingestion.sql",
+      "table": "events"
+    },
+    {
+      "file": "007_conversation_threads_archived.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_threads"
+    },
+    {
+      "file": "007_conversation_threads_archived.sql",
+      "dependsOn": "001-nuclear-rebuild-elite-supabase.sql",
+      "table": "existing"
+    },
+    {
+      "file": "20250109180000_add_message_metadata.sql",
+      "dependsOn": "add_conversation_threads.sql",
+      "table": "conversation_messages"
+    },
+    {
+      "file": "032_location_corrections.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "007_weather_data.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "007_add_deletion_columns.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "debug-vehicle-issue.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "debug-vehicle-issue.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicles"
+    },
+    {
+      "file": "debug-vehicle-issue.sql",
+      "dependsOn": "011_jurisdiction_system.sql",
+      "table": "the"
+    },
+    {
+      "file": "20250113_add_capture_metadata.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "20250113_add_capture_metadata.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-fixed.sql",
+      "table": "6"
+    },
+    {
+      "file": "20250113_add_multi_photo_events.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "20250113_add_multi_photo_events.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "20250113_add_capture_sessions.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "20250113_diagnose_vehicle_events.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "20250113_fix_vehicle_events_pk.sql",
+      "dependsOn": "ADD-DISPLAY-FIELDS-MIGRATION.sql",
+      "table": "vehicle_event_audit_logs"
+    },
+    {
+      "file": "20250113_fix_vehicle_events_pk.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "20250113_verify_storage_bucket.sql",
+      "dependsOn": "011_jurisdiction_system.sql",
+      "table": "files"
+    },
+    {
+      "file": "20250113_verify_storage_bucket.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-schema.sql",
+      "table": "to"
+    },
+    {
+      "file": "20250113_add_performance_indexes.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "20250113_add_performance_indexes.sql",
+      "dependsOn": "20250113_add_capture_metadata.sql",
+      "table": "photo_metadata"
+    },
+    {
+      "file": "20250113_add_performance_indexes.sql",
+      "dependsOn": "20250113_add_capture_sessions.sql",
+      "table": "capture_sessions"
+    },
+    {
+      "file": "20250113_add_performance_indexes.sql",
+      "dependsOn": "20250113_add_multi_photo_events.sql",
+      "table": "event_photos"
+    },
+    {
+      "file": "20250113_fix_capture_sessions_rls.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "20250113_fix_vehicle_events_rls.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "20250113_fix_storage_rls.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicle"
+    },
+    {
+      "file": "20250113_fix_storage_rls_for_anon.sql",
+      "dependsOn": "nuclear-rebuild-enterprise-schema.sql",
+      "table": "to"
+    },
+    {
+      "file": "20250113_fix_storage_rls_for_anon.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "vehicle"
+    },
+    {
+      "file": "20250113_fix_metadata_tables_rls.sql",
+      "dependsOn": "000_base_schema.sql",
+      "table": "on"
+    },
+    {
+      "file": "20250113_add_vision_fields.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "20250113_add_vision_fields.sql",
+      "dependsOn": "030_vision_metrics_tables.sql",
+      "table": "vision"
+    },
+    {
+      "file": "20250113_add_complete_fuel_data.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "20250113_add_extended_receipt_data.sql",
+      "dependsOn": "020_events_stream.sql",
+      "table": "vehicle_events"
+    },
+    {
+      "file": "20250113_add_extended_receipt_data.sql",
+      "dependsOn": "011_fuel_logs.sql",
+      "table": "fuel"
+    }
+  ],
+  "conflicts": [
+    {
+      "table": "on",
+      "files": [
+        "000_base_schema.sql",
+        "add_vin_and_garages.sql"
+      ]
+    },
+    {
+      "table": "on",
+      "files": [
+        "add_vin_and_garages.sql",
+        "005_canonical_vehicle_images.sql"
+      ]
+    },
+    {
+      "table": "garages",
+      "files": [
+        "add_vin_and_garages.sql",
+        "008_vehicle_onboarding_fields.sql"
+      ]
+    },
+    {
+      "table": "vehicle_images",
+      "files": [
+        "005_canonical_vehicle_images.sql",
+        "009_vehicle_images_table.sql"
+      ]
+    },
+    {
+      "table": "vehicle_images",
+      "files": [
+        "009_vehicle_images_table.sql",
+        "009_vehicle_images_simple.sql"
+      ]
+    },
+    {
+      "table": "vehicle_images",
+      "files": [
+        "009_vehicle_images_simple.sql",
+        "009_vehicle_images_minimal.sql"
+      ]
+    },
+    {
+      "table": "vehicle_images",
+      "files": [
+        "009_vehicle_images_minimal.sql",
+        "011_fix_vehicle_images_table.sql"
+      ]
+    },
+    {
+      "table": "reminders",
+      "files": [
+        "012_reminders_table.sql",
+        "021_reminders_dedupe.sql"
+      ]
+    },
+    {
+      "table": "vehicles",
+      "files": [
+        "000_base_schema.sql",
+        "week2-consolidation-migration.sql"
+      ]
+    },
+    {
+      "table": "vehicles_naming_backup",
+      "files": [
+        "week2-consolidation-migration.sql",
+        "direct-consolidation-migration.sql"
+      ]
+    },
+    {
+      "table": "vehicles",
+      "files": [
+        "week2-consolidation-migration.sql",
+        "direct-consolidation-migration.sql"
+      ]
+    },
+    {
+      "table": "odometer_readings",
+      "files": [
+        "010_odometer_readings.sql",
+        "012_odometer_readings.sql"
+      ]
+    },
+    {
+      "table": "tenants",
+      "files": [
+        "000_base_schema.sql",
+        "nuclear-rebuild-minimal-schema.sql"
+      ]
+    },
+    {
+      "table": "users",
+      "files": [
+        "000_base_schema.sql",
+        "nuclear-rebuild-minimal-schema.sql"
+      ]
+    },
+    {
+      "table": "garages",
+      "files": [
+        "008_vehicle_onboarding_fields.sql",
+        "nuclear-rebuild-minimal-schema.sql"
+      ]
+    },
+    {
+      "table": "vehicles",
+      "files": [
+        "direct-consolidation-migration.sql",
+        "nuclear-rebuild-minimal-schema.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events",
+      "files": [
+        "020_events_stream.sql",
+        "nuclear-rebuild-minimal-schema.sql"
+      ]
+    },
+    {
+      "table": "vehicle_images",
+      "files": [
+        "011_fix_vehicle_images_table.sql",
+        "nuclear-rebuild-minimal-schema.sql"
+      ]
+    },
+    {
+      "table": "reminders",
+      "files": [
+        "021_reminders_dedupe.sql",
+        "nuclear-rebuild-minimal-schema.sql"
+      ]
+    },
+    {
+      "table": "tenants",
+      "files": [
+        "nuclear-rebuild-minimal-schema.sql",
+        "nuclear-rebuild-enterprise-schema.sql"
+      ]
+    },
+    {
+      "table": "users",
+      "files": [
+        "nuclear-rebuild-minimal-schema.sql",
+        "nuclear-rebuild-enterprise-schema.sql"
+      ]
+    },
+    {
+      "table": "garages",
+      "files": [
+        "nuclear-rebuild-minimal-schema.sql",
+        "nuclear-rebuild-enterprise-schema.sql"
+      ]
+    },
+    {
+      "table": "vehicles",
+      "files": [
+        "nuclear-rebuild-minimal-schema.sql",
+        "nuclear-rebuild-enterprise-schema.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events",
+      "files": [
+        "nuclear-rebuild-minimal-schema.sql",
+        "nuclear-rebuild-enterprise-schema.sql"
+      ]
+    },
+    {
+      "table": "vehicle_images",
+      "files": [
+        "nuclear-rebuild-minimal-schema.sql",
+        "nuclear-rebuild-enterprise-schema.sql"
+      ]
+    },
+    {
+      "table": "reminders",
+      "files": [
+        "nuclear-rebuild-minimal-schema.sql",
+        "nuclear-rebuild-enterprise-schema.sql"
+      ]
+    },
+    {
+      "table": "on",
+      "files": [
+        "005_canonical_vehicle_images.sql",
+        "nuclear-rebuild-enterprise-schema.sql"
+      ]
+    },
+    {
+      "table": "tenants",
+      "files": [
+        "nuclear-rebuild-enterprise-schema.sql",
+        "nuclear-rebuild-enterprise-fixed.sql"
+      ]
+    },
+    {
+      "table": "users",
+      "files": [
+        "nuclear-rebuild-enterprise-schema.sql",
+        "nuclear-rebuild-enterprise-fixed.sql"
+      ]
+    },
+    {
+      "table": "garages",
+      "files": [
+        "nuclear-rebuild-enterprise-schema.sql",
+        "nuclear-rebuild-enterprise-fixed.sql"
+      ]
+    },
+    {
+      "table": "vehicles",
+      "files": [
+        "nuclear-rebuild-enterprise-schema.sql",
+        "nuclear-rebuild-enterprise-fixed.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events",
+      "files": [
+        "nuclear-rebuild-enterprise-schema.sql",
+        "nuclear-rebuild-enterprise-fixed.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events_2025",
+      "files": [
+        "nuclear-rebuild-enterprise-schema.sql",
+        "nuclear-rebuild-enterprise-fixed.sql"
+      ]
+    },
+    {
+      "table": "vehicle_images",
+      "files": [
+        "nuclear-rebuild-enterprise-schema.sql",
+        "nuclear-rebuild-enterprise-fixed.sql"
+      ]
+    },
+    {
+      "table": "reminders",
+      "files": [
+        "nuclear-rebuild-enterprise-schema.sql",
+        "nuclear-rebuild-enterprise-fixed.sql"
+      ]
+    },
+    {
+      "table": "on",
+      "files": [
+        "nuclear-rebuild-enterprise-schema.sql",
+        "nuclear-rebuild-enterprise-fixed.sql"
+      ]
+    },
+    {
+      "table": "tenants",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "users",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "garages",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "vehicles",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events_2024",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events_2025",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events_2026",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events_2027",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "vehicle_images",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "reminders",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "on",
+      "files": [
+        "nuclear-rebuild-enterprise-fixed.sql",
+        "000-nuclear-rebuild-elite-complete.sql"
+      ]
+    },
+    {
+      "table": "on",
+      "files": [
+        "000-nuclear-rebuild-elite-complete.sql",
+        "001-nuclear-rebuild-elite-supabase.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events",
+      "files": [
+        "000-nuclear-rebuild-elite-complete.sql",
+        "001-nuclear-rebuild-elite-supabase.sql"
+      ]
+    },
+    {
+      "table": "public",
+      "files": [
+        "001-nuclear-rebuild-elite-supabase.sql",
+        "CRITICAL-SCHEMA-FIXES.sql"
+      ]
+    },
+    {
+      "table": "public",
+      "files": [
+        "CRITICAL-SCHEMA-FIXES.sql",
+        "CORRECTED-SCHEMA-FIXES.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events",
+      "files": [
+        "001-nuclear-rebuild-elite-supabase.sql",
+        "CORRECTED-SCHEMA-FIXES.sql"
+      ]
+    },
+    {
+      "table": "on",
+      "files": [
+        "001-nuclear-rebuild-elite-supabase.sql",
+        "CORRECTED-SCHEMA-FIXES.sql"
+      ]
+    },
+    {
+      "table": "public",
+      "files": [
+        "CORRECTED-SCHEMA-FIXES.sql",
+        "CORRECTED-DISPLAY-FIELDS-MIGRATION.sql"
+      ]
+    },
+    {
+      "table": "public",
+      "files": [
+        "CORRECTED-DISPLAY-FIELDS-MIGRATION.sql",
+        "MINIMAL-FK-FIX.sql"
+      ]
+    },
+    {
+      "table": "public",
+      "files": [
+        "MINIMAL-FK-FIX.sql",
+        "FINAL-CORRECTED-MIGRATION.sql"
+      ]
+    },
+    {
+      "table": "public",
+      "files": [
+        "FINAL-CORRECTED-MIGRATION.sql",
+        "WORKING-DISPLAY-FIELDS-MIGRATION.sql"
+      ]
+    },
+    {
+      "table": "public",
+      "files": [
+        "WORKING-DISPLAY-FIELDS-MIGRATION.sql",
+        "CORRECTED-COMPLETE-RECOVERY.sql"
+      ]
+    },
+    {
+      "table": "public",
+      "files": [
+        "CORRECTED-COMPLETE-RECOVERY.sql",
+        "COMPLETE-DATABASE-FOUNDATION.sql"
+      ]
+    },
+    {
+      "table": "tenants",
+      "files": [
+        "000-nuclear-rebuild-elite-complete.sql",
+        "COMPLETE-DATABASE-FOUNDATION.sql"
+      ]
+    },
+    {
+      "table": "vehicles",
+      "files": [
+        "000-nuclear-rebuild-elite-complete.sql",
+        "COMPLETE-DATABASE-FOUNDATION.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events",
+      "files": [
+        "CORRECTED-SCHEMA-FIXES.sql",
+        "COMPLETE-DATABASE-FOUNDATION.sql"
+      ]
+    },
+    {
+      "table": "public",
+      "files": [
+        "COMPLETE-DATABASE-FOUNDATION.sql",
+        "FIXED-NO-FK-ERRORS.sql"
+      ]
+    },
+    {
+      "table": "tenants",
+      "files": [
+        "COMPLETE-DATABASE-FOUNDATION.sql",
+        "FIXED-NO-FK-ERRORS.sql"
+      ]
+    },
+    {
+      "table": "vehicles",
+      "files": [
+        "COMPLETE-DATABASE-FOUNDATION.sql",
+        "FIXED-NO-FK-ERRORS.sql"
+      ]
+    },
+    {
+      "table": "vehicle_events",
+      "files": [
+        "COMPLETE-DATABASE-FOUNDATION.sql",
+        "FIXED-NO-FK-ERRORS.sql"
+      ]
+    },
+    {
+      "table": "garages",
+      "files": [
+        "000-nuclear-rebuild-elite-complete.sql",
+        "SUPABASE_SCHEMA_SETUP.sql"
+      ]
+    },
+    {
+      "table": "vehicle_images",
+      "files": [
+        "000-nuclear-rebuild-elite-complete.sql",
+        "20240930_create_vehicle_images_table.sql"
+      ]
+    },
+    {
+      "table": "conversation_threads",
+      "files": [
+        "add_conversation_threads.sql",
+        "20250109010000_add_conversation_threads.sql"
+      ]
+    },
+    {
+      "table": "conversation_messages",
+      "files": [
+        "add_conversation_threads.sql",
+        "20250109010000_add_conversation_threads.sql"
+      ]
+    },
+    {
+      "table": "thread",
+      "files": [
+        "add_conversation_threads.sql",
+        "20250109010000_add_conversation_threads.sql"
+      ]
+    },
+    {
+      "table": "threads",
+      "files": [
+        "add_conversation_threads.sql",
+        "20250109010000_add_conversation_threads.sql"
+      ]
+    },
+    {
+      "table": "conversation_threads",
+      "files": [
+        "20250109010000_add_conversation_threads.sql",
+        "APPLY_THIS_SQL.sql"
+      ]
+    },
+    {
+      "table": "conversation_messages",
+      "files": [
+        "20250109010000_add_conversation_threads.sql",
+        "APPLY_THIS_SQL.sql"
+      ]
+    },
+    {
+      "table": "thread",
+      "files": [
+        "20250109010000_add_conversation_threads.sql",
+        "APPLY_THIS_SQL.sql"
+      ]
+    },
+    {
+      "table": "threads",
+      "files": [
+        "20250109010000_add_conversation_threads.sql",
+        "APPLY_THIS_SQL.sql"
+      ]
+    },
+    {
+      "table": "on",
+      "files": [
+        "CORRECTED-SCHEMA-FIXES.sql",
+        "032_location_corrections.sql"
+      ]
+    },
+    {
+      "table": "on",
+      "files": [
+        "032_location_corrections.sql",
+        "20250113_add_capture_sessions.sql"
+      ]
+    }
+  ],
+  "chronologicalOrder": [
+    {
+      "number": 1,
+      "fileName": "001_rls_policies_old.sql",
+      "date": "2025-09-24T02:16:56.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 7,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "analytics"
+      ]
+    },
+    {
+      "number": 2,
+      "fileName": "002_indexes_constraints_old.sql",
+      "date": "2025-09-24T02:30:10.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 7,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "vehicle",
+        "garage",
+        "analytics"
+      ]
+    },
+    {
+      "number": 3,
+      "fileName": "003_usage_tracking.sql",
+      "date": "2025-09-24T02:30:45.338Z",
+      "changes": {
+        "creates": 2,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vehicle",
+        "emissions"
+      ]
+    },
+    {
+      "number": 4,
+      "fileName": "004_smartphone_ingestion.sql",
+      "date": "2025-09-24T02:56:01.037Z",
+      "changes": {
+        "creates": 2,
+        "alters": 3,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "user",
+        "analytics",
+        "emissions"
+      ]
+    },
+    {
+      "number": 5,
+      "fileName": "000_base_schema.sql",
+      "date": "2025-09-24T03:30:39.840Z",
+      "changes": {
+        "creates": 8,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "analytics"
+      ]
+    },
+    {
+      "number": 6,
+      "fileName": "001_rls_policies.sql",
+      "date": "2025-09-24T03:31:51.232Z",
+      "changes": {
+        "creates": 0,
+        "alters": 6,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "analytics"
+      ]
+    },
+    {
+      "number": 7,
+      "fileName": "002_indexes_constraints.sql",
+      "date": "2025-09-24T03:33:03.567Z",
+      "changes": {
+        "creates": 0,
+        "alters": 6,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "vehicle",
+        "garage",
+        "analytics"
+      ]
+    },
+    {
+      "number": 8,
+      "fileName": "add_vin_and_garages.sql",
+      "date": "2025-09-24T05:22:44.771Z",
+      "changes": {
+        "creates": 3,
+        "alters": 3,
+        "drops": 0,
+        "inserts": 4
+      },
+      "features": [
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "location",
+        "analytics"
+      ]
+    },
+    {
+      "number": 9,
+      "fileName": "005_canonical_vehicle_images.sql",
+      "date": "2025-09-24T18:03:37.000Z",
+      "changes": {
+        "creates": 3,
+        "alters": 3,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "vehicle",
+        "garage",
+        "user",
+        "analytics"
+      ]
+    },
+    {
+      "number": 10,
+      "fileName": "006_vehicle_photos.sql",
+      "date": "2025-09-24T19:59:58.337Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 11,
+      "fileName": "007_supabase_storage_policies.sql",
+      "date": "2025-09-24T20:08:13.230Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 12,
+      "fileName": "setup-supabase-storage-simple.sql",
+      "date": "2025-09-24T20:08:27.150Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 13,
+      "fileName": "008_vehicle_onboarding_fields.sql",
+      "date": "2025-09-25T03:07:24.683Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vision",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "location"
+      ]
+    },
+    {
+      "number": 14,
+      "fileName": "009_vehicle_images_table.sql",
+      "date": "2025-09-25T03:14:27.689Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "maintenance",
+        "vehicle",
+        "user",
+        "location"
+      ]
+    },
+    {
+      "number": 15,
+      "fileName": "009_vehicle_images_simple.sql",
+      "date": "2025-09-25T03:14:47.000Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "maintenance",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 16,
+      "fileName": "009_vehicle_images_minimal.sql",
+      "date": "2025-09-25T03:15:09.000Z",
+      "changes": {
+        "creates": 1,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 17,
+      "fileName": "010_vehicle_images_policies.sql",
+      "date": "2025-09-25T03:32:47.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "maintenance",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 18,
+      "fileName": "011_fix_vehicle_images_table.sql",
+      "date": "2025-09-25T03:34:13.744Z",
+      "changes": {
+        "creates": 1,
+        "alters": 3,
+        "drops": 1,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "maintenance",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 19,
+      "fileName": "010_garage_performance_indexes.sql",
+      "date": "2025-09-25T12:13:12.640Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "garage"
+      ]
+    },
+    {
+      "number": 20,
+      "fileName": "011_jurisdiction_system.sql",
+      "date": "2025-09-25T12:23:21.750Z",
+      "changes": {
+        "creates": 3,
+        "alters": 3,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "ai-chat",
+        "vehicle",
+        "garage",
+        "user",
+        "location",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 21,
+      "fileName": "012_reminders_table.sql",
+      "date": "2025-09-25T14:38:22.906Z",
+      "changes": {
+        "creates": 1,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 22,
+      "fileName": "020_events_stream.sql",
+      "date": "2025-09-25T15:48:30.891Z",
+      "changes": {
+        "creates": 1,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "emissions"
+      ]
+    },
+    {
+      "number": 23,
+      "fileName": "021_reminders_dedupe.sql",
+      "date": "2025-09-25T19:44:28.154Z",
+      "changes": {
+        "creates": 1,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "maintenance",
+        "vehicle",
+        "user",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 24,
+      "fileName": "022_garage_default_column.sql",
+      "date": "2025-09-25T19:52:16.572Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "garage"
+      ]
+    },
+    {
+      "number": 25,
+      "fileName": "030_vehicle_display_name.sql",
+      "date": "2025-09-25T23:24:50.308Z",
+      "changes": {
+        "creates": 0,
+        "alters": 5,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle"
+      ]
+    },
+    {
+      "number": 26,
+      "fileName": "029_fix_schema_migrations.sql",
+      "date": "2025-09-25T23:32:46.214Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": []
+    },
+    {
+      "number": 27,
+      "fileName": "manual-migration-sql.sql",
+      "date": "2025-09-25T23:35:11.705Z",
+      "changes": {
+        "creates": 0,
+        "alters": 7,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle"
+      ]
+    },
+    {
+      "number": 28,
+      "fileName": "db-console-paste.sql",
+      "date": "2025-09-25T23:37:31.381Z",
+      "changes": {
+        "creates": 0,
+        "alters": 3,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "ai-chat",
+        "vehicle",
+        "garage"
+      ]
+    },
+    {
+      "number": 29,
+      "fileName": "031_security_fix_tenant_isolation.sql",
+      "date": "2025-09-26T00:15:25.950Z",
+      "changes": {
+        "creates": 0,
+        "alters": 18,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "notification"
+      ]
+    },
+    {
+      "number": 30,
+      "fileName": "manual-security-migration.sql",
+      "date": "2025-09-26T00:17:46.888Z",
+      "changes": {
+        "creates": 0,
+        "alters": 14,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "vehicle",
+        "user",
+        "notification"
+      ]
+    },
+    {
+      "number": 31,
+      "fileName": "week2-consolidation-migration.sql",
+      "date": "2025-09-26T00:36:13.321Z",
+      "changes": {
+        "creates": 1,
+        "alters": 0,
+        "drops": 2,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 32,
+      "fileName": "direct-consolidation-migration.sql",
+      "date": "2025-09-26T00:39:51.418Z",
+      "changes": {
+        "creates": 1,
+        "alters": 2,
+        "drops": 2,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 33,
+      "fileName": "phase3-final-cleanup.sql",
+      "date": "2025-09-26T00:48:12.526Z",
+      "changes": {
+        "creates": 0,
+        "alters": 2,
+        "drops": 1,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 34,
+      "fileName": "week4-comprehensive-consolidation.sql",
+      "date": "2025-09-26T00:49:58.979Z",
+      "changes": {
+        "creates": 0,
+        "alters": 7,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "vehicle",
+        "garage",
+        "notification"
+      ]
+    },
+    {
+      "number": 35,
+      "fileName": "complete-consolidation-migration.sql",
+      "date": "2025-09-26T00:51:33.757Z",
+      "changes": {
+        "creates": 0,
+        "alters": 9,
+        "drops": 1,
+        "inserts": 1
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "vehicle",
+        "garage",
+        "notification"
+      ]
+    },
+    {
+      "number": 36,
+      "fileName": "gold-standard-optimization.sql",
+      "date": "2025-09-26T01:03:00.787Z",
+      "changes": {
+        "creates": 1,
+        "alters": 3,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "analytics",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 37,
+      "fileName": "red-team-fixes.sql",
+      "date": "2025-09-26T01:10:22.417Z",
+      "changes": {
+        "creates": 0,
+        "alters": 4,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "garage",
+        "user",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 38,
+      "fileName": "immediate-critical-fixes.sql",
+      "date": "2025-09-26T01:13:44.744Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "vehicle",
+        "garage",
+        "user",
+        "notification"
+      ]
+    },
+    {
+      "number": 39,
+      "fileName": "immediate-critical-fixes-corrected.sql",
+      "date": "2025-09-26T01:15:55.301Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "vehicle",
+        "garage",
+        "user",
+        "notification"
+      ]
+    },
+    {
+      "number": 40,
+      "fileName": "critical-fixes-execution.sql",
+      "date": "2025-09-26T01:19:10.572Z",
+      "changes": {
+        "creates": 0,
+        "alters": 13,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "vehicle",
+        "garage",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 41,
+      "fileName": "final-audit-consolidation.sql",
+      "date": "2025-09-26T01:24:25.192Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "garage",
+        "analytics",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 42,
+      "fileName": "performance-optimization.sql",
+      "date": "2025-09-26T01:26:53.933Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "analytics",
+        "notification"
+      ]
+    },
+    {
+      "number": 43,
+      "fileName": "final-gold-standard-execution.sql",
+      "date": "2025-09-26T01:37:52.066Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "analytics",
+        "notification"
+      ]
+    },
+    {
+      "number": 44,
+      "fileName": "fix-duplicate-audit-tables.sql",
+      "date": "2025-09-26T01:44:46.920Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 1,
+        "inserts": 1
+      },
+      "features": [
+        "ai-chat",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 45,
+      "fileName": "fix-orphaned-vehicles.sql",
+      "date": "2025-09-26T01:45:48.669Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "ai-chat",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "emissions"
+      ]
+    },
+    {
+      "number": 46,
+      "fileName": "create-consolidated-health-function.sql",
+      "date": "2025-09-26T01:58:11.259Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vehicle",
+        "garage",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 47,
+      "fileName": "fix-reminders-schema.sql",
+      "date": "2025-09-26T02:19:33.357Z",
+      "changes": {
+        "creates": 0,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vehicle",
+        "notification"
+      ]
+    },
+    {
+      "number": 48,
+      "fileName": "010_odometer_readings.sql",
+      "date": "2025-09-27T00:06:18.072Z",
+      "changes": {
+        "creates": 1,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "user",
+        "location",
+        "emissions"
+      ]
+    },
+    {
+      "number": 49,
+      "fileName": "011_fuel_logs.sql",
+      "date": "2025-09-27T01:42:59.648Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "vehicle",
+        "user",
+        "location",
+        "emissions"
+      ]
+    },
+    {
+      "number": 50,
+      "fileName": "012_odometer_readings.sql",
+      "date": "2025-09-27T01:57:20.294Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "vehicle",
+        "user",
+        "location",
+        "emissions"
+      ]
+    },
+    {
+      "number": 51,
+      "fileName": "013_service_records.sql",
+      "date": "2025-09-27T02:01:00.168Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "maintenance",
+        "vehicle",
+        "user",
+        "emissions"
+      ]
+    },
+    {
+      "number": 52,
+      "fileName": "schema-audit.sql",
+      "date": "2025-09-27T11:54:10.819Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "user"
+      ]
+    },
+    {
+      "number": 53,
+      "fileName": "nuclear-rebuild-minimal-schema.sql",
+      "date": "2025-09-27T12:10:27.199Z",
+      "changes": {
+        "creates": 7,
+        "alters": 7,
+        "drops": 0,
+        "inserts": 3
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "location",
+        "analytics",
+        "notification"
+      ]
+    },
+    {
+      "number": 54,
+      "fileName": "nuclear-rebuild-enterprise-schema.sql",
+      "date": "2025-09-27T12:14:39.211Z",
+      "changes": {
+        "creates": 9,
+        "alters": 10,
+        "drops": 0,
+        "inserts": 3
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "location",
+        "notification"
+      ]
+    },
+    {
+      "number": 55,
+      "fileName": "nuclear-rebuild-enterprise-fixed.sql",
+      "date": "2025-09-27T12:19:21.160Z",
+      "changes": {
+        "creates": 12,
+        "alters": 7,
+        "drops": 0,
+        "inserts": 3
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "location",
+        "notification"
+      ]
+    },
+    {
+      "number": 56,
+      "fileName": "000-nuclear-rebuild-elite-complete.sql",
+      "date": "2025-09-27T12:31:48.076Z",
+      "changes": {
+        "creates": 12,
+        "alters": 7,
+        "drops": 0,
+        "inserts": 3
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "location",
+        "notification"
+      ]
+    },
+    {
+      "number": 57,
+      "fileName": "001-nuclear-rebuild-elite-supabase.sql",
+      "date": "2025-09-27T13:02:41.996Z",
+      "changes": {
+        "creates": 11,
+        "alters": 7,
+        "drops": 7,
+        "inserts": 2
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "location",
+        "analytics",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 58,
+      "fileName": "FORCE-DROP-CRUFT-TABLES.sql",
+      "date": "2025-09-27T13:25:49.027Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 19,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "user",
+        "analytics"
+      ]
+    },
+    {
+      "number": 59,
+      "fileName": "CRITICAL-SCHEMA-FIXES.sql",
+      "date": "2025-09-27T14:12:12.076Z",
+      "changes": {
+        "creates": 5,
+        "alters": 1,
+        "drops": 1,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "notification"
+      ]
+    },
+    {
+      "number": 60,
+      "fileName": "CORRECTED-SCHEMA-FIXES.sql",
+      "date": "2025-09-27T14:14:52.000Z",
+      "changes": {
+        "creates": 7,
+        "alters": 1,
+        "drops": 1,
+        "inserts": 2
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "garage",
+        "user",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 61,
+      "fileName": "FIX-VEHICLE-EVENTS-RLS.sql",
+      "date": "2025-09-27T15:18:47.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 7,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "maintenance",
+        "vehicle",
+        "user",
+        "emissions"
+      ]
+    },
+    {
+      "number": 62,
+      "fileName": "FIX-TRIGGER-FUNCTION.sql",
+      "date": "2025-09-27T15:21:49.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vehicle",
+        "emissions"
+      ]
+    },
+    {
+      "number": 63,
+      "fileName": "ENABLE-EVENT-EDITING.sql",
+      "date": "2025-09-27T22:16:50.942Z",
+      "changes": {
+        "creates": 0,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 64,
+      "fileName": "ENHANCE-EVENT-STORAGE.sql",
+      "date": "2025-09-27T23:17:07.493Z",
+      "changes": {
+        "creates": 0,
+        "alters": 10,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "maintenance",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 65,
+      "fileName": "MOCK-EVENTS-1HGBH41JXMN109186.sql",
+      "date": "2025-09-28T02:00:33.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 8
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "location"
+      ]
+    },
+    {
+      "number": 66,
+      "fileName": "CORRECTED-MOCK-EVENTS-1HGBH41JXMN109186.sql",
+      "date": "2025-09-28T02:01:31.005Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 8
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "location"
+      ]
+    },
+    {
+      "number": 67,
+      "fileName": "FIX-VALIDATION-FUNCTION.sql",
+      "date": "2025-09-28T02:05:49.909Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 68,
+      "fileName": "PRODUCTION-READY-MOCK-EVENTS.sql",
+      "date": "2025-09-28T02:08:42.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 8
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "location"
+      ]
+    },
+    {
+      "number": 69,
+      "fileName": "NUCLEAR-FIX-VALIDATION.sql",
+      "date": "2025-09-28T02:10:21.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "notification",
+        "emissions"
+      ]
+    },
+    {
+      "number": 70,
+      "fileName": "DISABLE-ALL-TRIGGERS-INSERT-DATA.sql",
+      "date": "2025-09-28T02:12:59.733Z",
+      "changes": {
+        "creates": 0,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 8
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "location"
+      ]
+    },
+    {
+      "number": 71,
+      "fileName": "BYPASS-VALIDATION-INSERT-DATA.sql",
+      "date": "2025-09-28T02:14:43.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 8
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "location"
+      ]
+    },
+    {
+      "number": 72,
+      "fileName": "FINAL-WORKING-INSERT.sql",
+      "date": "2025-09-28T02:19:55.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "location"
+      ]
+    },
+    {
+      "number": 73,
+      "fileName": "ADD-COMPUTED-COLUMNS.sql",
+      "date": "2025-09-28T02:22:02.828Z",
+      "changes": {
+        "creates": 0,
+        "alters": 8,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle"
+      ]
+    },
+    {
+      "number": 74,
+      "fileName": "RICH-MOCK-DATA-PROPER-SCHEMA.sql",
+      "date": "2025-09-28T02:31:11.595Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "user",
+        "location",
+        "analytics"
+      ]
+    },
+    {
+      "number": 75,
+      "fileName": "ADD-DISPLAY-FIELDS-MIGRATION.sql",
+      "date": "2025-09-28T22:49:56.787Z",
+      "changes": {
+        "creates": 1,
+        "alters": 5,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 76,
+      "fileName": "CORRECTED-DISPLAY-FIELDS-MIGRATION.sql",
+      "date": "2025-09-28T22:52:14.000Z",
+      "changes": {
+        "creates": 1,
+        "alters": 8,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 77,
+      "fileName": "MINIMAL-FK-FIX.sql",
+      "date": "2025-09-28T22:55:30.000Z",
+      "changes": {
+        "creates": 1,
+        "alters": 8,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 78,
+      "fileName": "FINAL-CORRECTED-MIGRATION.sql",
+      "date": "2025-09-28T22:56:26.000Z",
+      "changes": {
+        "creates": 1,
+        "alters": 6,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 79,
+      "fileName": "DIAGNOSE-PARTITIONED-TABLE.sql",
+      "date": "2025-09-28T22:57:24.409Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle"
+      ]
+    },
+    {
+      "number": 80,
+      "fileName": "WORKING-DISPLAY-FIELDS-MIGRATION.sql",
+      "date": "2025-09-28T23:04:22.000Z",
+      "changes": {
+        "creates": 1,
+        "alters": 4,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 81,
+      "fileName": "CORRECTED-COMPLETE-RECOVERY.sql",
+      "date": "2025-09-28T23:12:52.595Z",
+      "changes": {
+        "creates": 1,
+        "alters": 4,
+        "drops": 0,
+        "inserts": 4
+      },
+      "features": [
+        "ai-chat",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 82,
+      "fileName": "COMPLETE-DATABASE-FOUNDATION.sql",
+      "date": "2025-09-28T23:15:46.000Z",
+      "changes": {
+        "creates": 5,
+        "alters": 8,
+        "drops": 0,
+        "inserts": 4
+      },
+      "features": [
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 83,
+      "fileName": "FIXED-NO-FK-ERRORS.sql",
+      "date": "2025-09-28T23:17:58.000Z",
+      "changes": {
+        "creates": 5,
+        "alters": 5,
+        "drops": 0,
+        "inserts": 4
+      },
+      "features": [
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "user",
+        "emissions"
+      ]
+    },
+    {
+      "number": 84,
+      "fileName": "ADD-MISSING-COLUMNS.sql",
+      "date": "2025-09-28T23:24:02.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 85,
+      "fileName": "SUPABASE_SCHEMA_SETUP.sql",
+      "date": "2025-09-29T02:17:53.041Z",
+      "changes": {
+        "creates": 2,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 2
+      },
+      "features": [
+        "vehicle",
+        "garage",
+        "analytics"
+      ]
+    },
+    {
+      "number": 86,
+      "fileName": "ADD_GARAGE_ID_COLUMN.sql",
+      "date": "2025-09-29T02:19:10.993Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "garage",
+        "analytics"
+      ]
+    },
+    {
+      "number": 87,
+      "fileName": "ADD_MISSING_VEHICLE_COLUMNS.sql",
+      "date": "2025-09-29T02:20:12.778Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "maintenance",
+        "vehicle",
+        "analytics"
+      ]
+    },
+    {
+      "number": 88,
+      "fileName": "add-dashboard-snapshot-columns.sql",
+      "date": "2025-09-29T13:33:51.881Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "vehicle",
+        "analytics"
+      ]
+    },
+    {
+      "number": 89,
+      "fileName": "030_vision_metrics_tables.sql",
+      "date": "2025-09-30T01:06:06.241Z",
+      "changes": {
+        "creates": 2,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "analytics"
+      ]
+    },
+    {
+      "number": 90,
+      "fileName": "20240930_add_events_pagination_index.sql",
+      "date": "2025-09-30T14:25:31.303Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle"
+      ]
+    },
+    {
+      "number": 91,
+      "fileName": "20240930_add_tenant_to_vehicle_images.sql",
+      "date": "2025-09-30T17:02:09.634Z",
+      "changes": {
+        "creates": 0,
+        "alters": 3,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 92,
+      "fileName": "20240930_create_vehicle_images_table.sql",
+      "date": "2025-09-30T17:02:38.061Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "maintenance",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 93,
+      "fileName": "20240930_add_hero_image_to_vehicles.sql",
+      "date": "2025-09-30T17:17:17.541Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 94,
+      "fileName": "20240930_add_ai_metadata_to_images.sql",
+      "date": "2025-09-30T17:39:55.622Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 95,
+      "fileName": "20240930_add_extended_ai_metadata.sql",
+      "date": "2025-09-30T21:38:00.549Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "maintenance",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 96,
+      "fileName": "20241001_link_photos_to_events.sql",
+      "date": "2025-09-30T23:12:41.381Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 97,
+      "fileName": "20241001_add_notes_to_events.sql",
+      "date": "2025-09-30T23:38:46.041Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 98,
+      "fileName": "20241001_vehicle_spec_enhancements.sql",
+      "date": "2025-10-01T02:38:04.584Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 99,
+      "fileName": "20241001_add_maintenance_categories.sql",
+      "date": "2025-10-01T02:51:28.840Z",
+      "changes": {
+        "creates": 0,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "maintenance",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 100,
+      "fileName": "20241001030000_user_maintenance_preferences.sql",
+      "date": "2025-10-01T03:29:15.314Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "maintenance",
+        "vehicle",
+        "user",
+        "notification"
+      ]
+    },
+    {
+      "number": 101,
+      "fileName": "20241001_garage_management_enhancements.sql",
+      "date": "2025-10-01T21:45:30.031Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vehicle",
+        "garage",
+        "location"
+      ]
+    },
+    {
+      "number": 102,
+      "fileName": "20241001_add_geographic_columns_to_garages.sql",
+      "date": "2025-10-01T22:00:07.289Z",
+      "changes": {
+        "creates": 0,
+        "alters": 6,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "garage",
+        "location"
+      ]
+    },
+    {
+      "number": 103,
+      "fileName": "20241002_graceful_garage_deletion.sql",
+      "date": "2025-10-01T22:49:56.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vehicle",
+        "garage",
+        "user",
+        "notification"
+      ]
+    },
+    {
+      "number": 104,
+      "fileName": "20241002_fix_event_audit_trail.sql",
+      "date": "2025-10-02T00:09:30.167Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 105,
+      "fileName": "20241002_add_edit_changes_column.sql",
+      "date": "2025-10-02T00:16:42.067Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle"
+      ]
+    },
+    {
+      "number": 106,
+      "fileName": "20241002_add_edit_history_column.sql",
+      "date": "2025-10-02T00:23:49.181Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 107,
+      "fileName": "20241002_migrate_existing_edits_to_history.sql",
+      "date": "2025-10-02T00:29:55.304Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle"
+      ]
+    },
+    {
+      "number": 108,
+      "fileName": "008_add_geocoding_columns.sql",
+      "date": "2025-10-03T02:26:14.002Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "maintenance",
+        "vehicle",
+        "location"
+      ]
+    },
+    {
+      "number": 109,
+      "fileName": "add_conversation_threads.sql",
+      "date": "2025-10-09T04:14:33.275Z",
+      "changes": {
+        "creates": 2,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 110,
+      "fileName": "20250109010000_add_conversation_threads.sql",
+      "date": "2025-10-09T05:18:15.827Z",
+      "changes": {
+        "creates": 2,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 111,
+      "fileName": "APPLY_THIS_SQL.sql",
+      "date": "2025-10-09T05:23:14.000Z",
+      "changes": {
+        "creates": 2,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 112,
+      "fileName": "FIX_RLS_POLICY.sql",
+      "date": "2025-10-09T05:30:13.570Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "maintenance",
+        "user"
+      ]
+    },
+    {
+      "number": 113,
+      "fileName": "DISABLE_RLS_FOR_DEV.sql",
+      "date": "2025-10-09T05:30:24.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 4,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "user",
+        "emissions"
+      ]
+    },
+    {
+      "number": 114,
+      "fileName": "RUN_THIS_NOW.sql",
+      "date": "2025-10-09T05:31:34.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 3,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "user"
+      ]
+    },
+    {
+      "number": 115,
+      "fileName": "FIX_MESSAGE_COUNTS.sql",
+      "date": "2025-10-09T05:35:07.806Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "user"
+      ]
+    },
+    {
+      "number": 116,
+      "fileName": "ADD_ACTIONS_COLUMN.sql",
+      "date": "2025-10-09T05:53:11.000Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat"
+      ]
+    },
+    {
+      "number": 117,
+      "fileName": "add-ai-vehicle-context-columns.sql",
+      "date": "2025-10-09T16:11:50.122Z",
+      "changes": {
+        "creates": 0,
+        "alters": 5,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "maintenance",
+        "vehicle",
+        "user",
+        "analytics",
+        "emissions"
+      ]
+    },
+    {
+      "number": 118,
+      "fileName": "006_current_mileage_computed.sql",
+      "date": "2025-10-09T20:59:56.994Z",
+      "changes": {
+        "creates": 0,
+        "alters": 3,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "emissions"
+      ]
+    },
+    {
+      "number": 119,
+      "fileName": "007_conversation_threads_archived.sql",
+      "date": "2025-10-09T21:06:24.111Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 120,
+      "fileName": "20250109180000_add_message_metadata.sql",
+      "date": "2025-10-09T22:10:20.018Z",
+      "changes": {
+        "creates": 0,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "ai-chat",
+        "vision",
+        "notification"
+      ]
+    },
+    {
+      "number": 121,
+      "fileName": "032_location_corrections.sql",
+      "date": "2025-10-11T17:00:52.471Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "user",
+        "location",
+        "analytics"
+      ]
+    },
+    {
+      "number": 122,
+      "fileName": "007_weather_data.sql",
+      "date": "2025-10-11T23:01:44.377Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 123,
+      "fileName": "007_add_deletion_columns.sql",
+      "date": "2025-10-12T00:27:56.495Z",
+      "changes": {
+        "creates": 0,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 124,
+      "fileName": "debug-vehicle-issue.sql",
+      "date": "2025-10-12T02:17:00.180Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle"
+      ]
+    },
+    {
+      "number": 125,
+      "fileName": "20250113_add_capture_metadata.sql",
+      "date": "2025-10-13T03:37:15.843Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "user",
+        "location"
+      ]
+    },
+    {
+      "number": 126,
+      "fileName": "20250113_add_multi_photo_events.sql",
+      "date": "2025-10-13T03:40:47.199Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 127,
+      "fileName": "20250113_add_capture_sessions.sql",
+      "date": "2025-10-13T03:40:56.382Z",
+      "changes": {
+        "creates": 1,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "maintenance",
+        "vehicle",
+        "user",
+        "location",
+        "analytics"
+      ]
+    },
+    {
+      "number": 128,
+      "fileName": "20250113_diagnose_vehicle_events.sql",
+      "date": "2025-10-13T03:43:52.343Z",
+      "changes": {
+        "creates": 0,
+        "alters": 1,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle"
+      ]
+    },
+    {
+      "number": 129,
+      "fileName": "20250113_fix_vehicle_events_pk.sql",
+      "date": "2025-10-13T03:45:47.994Z",
+      "changes": {
+        "creates": 0,
+        "alters": 4,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 130,
+      "fileName": "20250113_verify_storage_bucket.sql",
+      "date": "2025-10-13T03:53:55.356Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 1
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 131,
+      "fileName": "20250113_add_performance_indexes.sql",
+      "date": "2025-10-13T03:59:35.570Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "maintenance",
+        "vehicle",
+        "user",
+        "location",
+        "analytics"
+      ]
+    },
+    {
+      "number": 132,
+      "fileName": "20250113_fix_capture_sessions_rls.sql",
+      "date": "2025-10-13T04:53:29.433Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "user"
+      ]
+    },
+    {
+      "number": 133,
+      "fileName": "20250113_fix_vehicle_events_rls.sql",
+      "date": "2025-10-13T05:07:59.611Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 134,
+      "fileName": "20250113_fix_storage_rls.sql",
+      "date": "2025-10-13T05:12:38.656Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 135,
+      "fileName": "20250113_make_bucket_public.sql",
+      "date": "2025-10-13T05:13:45.523Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle"
+      ]
+    },
+    {
+      "number": 136,
+      "fileName": "20250113_fix_storage_rls_for_anon.sql",
+      "date": "2025-10-13T05:14:09.969Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 137,
+      "fileName": "20250113_fix_metadata_tables_rls.sql",
+      "date": "2025-10-13T05:22:13.284Z",
+      "changes": {
+        "creates": 0,
+        "alters": 0,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision"
+      ]
+    },
+    {
+      "number": 138,
+      "fileName": "20250113_add_vision_fields.sql",
+      "date": "2025-10-13T05:54:39.624Z",
+      "changes": {
+        "creates": 0,
+        "alters": 2,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "vehicle",
+        "user"
+      ]
+    },
+    {
+      "number": 139,
+      "fileName": "20250113_add_complete_fuel_data.sql",
+      "date": "2025-10-13T06:01:35.298Z",
+      "changes": {
+        "creates": 0,
+        "alters": 6,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "vision",
+        "fuel",
+        "vehicle"
+      ]
+    },
+    {
+      "number": 140,
+      "fileName": "20250113_add_extended_receipt_data.sql",
+      "date": "2025-10-13T06:06:23.609Z",
+      "changes": {
+        "creates": 0,
+        "alters": 8,
+        "drops": 0,
+        "inserts": 0
+      },
+      "features": [
+        "fuel",
+        "vehicle",
+        "user",
+        "location"
+      ]
+    }
+  ]
+}

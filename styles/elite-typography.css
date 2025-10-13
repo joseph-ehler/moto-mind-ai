@@ -1,0 +1,442 @@
+/**
+ * Elite Typography CSS
+ * 
+ * World-class typography features:
+ * - Variable fonts with dynamic scaling
+ * - Advanced OpenType features
+ * - Reading modes and accessibility
+ * - Performance optimizations
+ */
+
+/* ============================================================================
+   VARIABLE FONTS SETUP
+   ============================================================================ */
+
+/* Import variable fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* Variable font base class */
+.font-variable {
+  font-family: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  font-optical-sizing: auto;
+  font-variation-settings: normal;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+}
+
+/* Dynamic weight scaling utilities */
+.font-weight-dynamic-display {
+  font-variation-settings: "wght" var(--dynamic-weight-display, 700);
+}
+
+.font-weight-dynamic-heading {
+  font-variation-settings: "wght" var(--dynamic-weight-heading, 600);
+}
+
+.font-weight-dynamic-body {
+  font-variation-settings: "wght" var(--dynamic-weight-body, 400);
+}
+
+/* Width variations */
+.font-width-condensed {
+  font-variation-settings: "wdth" 87.5;
+}
+
+.font-width-normal {
+  font-variation-settings: "wdth" 100;
+}
+
+.font-width-extended {
+  font-variation-settings: "wdth" 112.5;
+}
+
+/* ============================================================================
+   ADVANCED OPENTYPE FEATURES
+   ============================================================================ */
+
+/* Contextual typography classes */
+.typography-code {
+  font-feature-settings: "tnum" 1, "zero" 1, "ss02" 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.025em;
+}
+
+.typography-data {
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.typography-emphasis {
+  font-feature-settings: "swsh" 1, "calt" 1;
+  font-style: italic;
+}
+
+.typography-small-caps {
+  font-feature-settings: "smcp" 1, "c2sc" 1;
+  letter-spacing: 0.05em;
+}
+
+/* Advanced ligatures */
+.typography-ligatures-all {
+  font-feature-settings: "liga" 1, "clig" 1, "dlig" 1, "hlig" 1;
+}
+
+.typography-ligatures-contextual {
+  font-feature-settings: "clig" 1, "calt" 1;
+}
+
+/* Stylistic alternates */
+.typography-stylistic-01 { font-feature-settings: "ss01" 1; }
+.typography-stylistic-02 { font-feature-settings: "ss02" 1; }
+.typography-stylistic-03 { font-feature-settings: "ss03" 1; }
+
+/* ============================================================================
+   READING MODES
+   ============================================================================ */
+
+/* Focus mode */
+.reading-mode-focus {
+  --bg-color: #fefefe;
+  --text-color: #2d3748;
+  --accent-color: #4a5568;
+  
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  max-width: 60ch;
+}
+
+/* Dyslexia-friendly mode */
+.reading-mode-dyslexia {
+  --bg-color: #fdf6e3;
+  --text-color: #5c4317;
+  --accent-color: #b58900;
+  
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'OpenDyslexic', 'Comic Sans MS', Arial, sans-serif;
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  word-spacing: 0.16em;
+  font-weight: 500;
+  max-width: 55ch;
+}
+
+/* High contrast mode */
+.reading-mode-high-contrast {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --accent-color: #ffff00;
+  
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  letter-spacing: 0.025em;
+  font-weight: 600;
+  max-width: 65ch;
+}
+
+/* Dark optimized mode */
+.reading-mode-dark {
+  --bg-color: #0f1419;
+  --text-color: #e6e6e6;
+  --accent-color: #39bae6;
+  
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.65;
+  letter-spacing: 0.015em;
+  font-weight: 350;
+  max-width: 65ch;
+}
+
+/* ============================================================================
+   ADAPTIVE TYPOGRAPHY
+   ============================================================================ */
+
+/* Content type optimizations */
+.content-type-article {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.6;
+  max-width: 65ch;
+}
+
+.content-type-technical {
+  font-size: clamp(0.9375rem, 1.25vw, 1rem);
+  line-height: 1.5;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  max-width: 80ch;
+}
+
+.content-type-marketing {
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  line-height: 1.4;
+  font-weight: 500;
+  max-width: 55ch;
+}
+
+.content-type-legal {
+  font-size: clamp(0.9375rem, 1.25vw, 1rem);
+  line-height: 1.7;
+  max-width: 70ch;
+}
+
+/* Reading difficulty optimizations */
+.difficulty-simple {
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  line-height: 1.8;
+  letter-spacing: 0.025em;
+  max-width: 50ch;
+}
+
+.difficulty-complex {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.7;
+  max-width: 60ch;
+}
+
+.difficulty-complex p + p {
+  margin-top: 2em;
+}
+
+/* Reading pattern optimizations */
+.reading-pattern-quick-scan {
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  line-height: 1.5;
+  font-weight: 500;
+  max-width: 55ch;
+}
+
+.reading-pattern-deep-read {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.7;
+  font-weight: 400;
+  max-width: 65ch;
+}
+
+/* ============================================================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================================================ */
+
+/* Font loading optimization */
+.font-display-swap {
+  font-display: swap;
+}
+
+.font-display-optional {
+  font-display: optional;
+}
+
+/* Render optimization */
+.text-rendering-optimized {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* GPU acceleration for text animations */
+.text-gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Prevent layout shift during font loading */
+.font-loading-stable {
+  font-size-adjust: 0.5;
+}
+
+/* ============================================================================
+   RESPONSIVE VARIABLE FONTS
+   ============================================================================ */
+
+/* Responsive weight scaling */
+@media (max-width: 640px) {
+  .font-weight-responsive {
+    font-variation-settings: "wght" 450; /* Slightly heavier on mobile */
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .font-weight-responsive {
+    font-variation-settings: "wght" 400;
+  }
+}
+
+@media (min-width: 1025px) {
+  .font-weight-responsive {
+    font-variation-settings: "wght" 350; /* Lighter on desktop */
+  }
+}
+
+/* Container-based variable fonts */
+@container (max-width: 400px) {
+  .font-container-responsive {
+    font-variation-settings: "wght" 500, "wdth" 90;
+  }
+}
+
+@container (min-width: 401px) and (max-width: 600px) {
+  .font-container-responsive {
+    font-variation-settings: "wght" 400, "wdth" 100;
+  }
+}
+
+@container (min-width: 601px) {
+  .font-container-responsive {
+    font-variation-settings: "wght" 350, "wdth" 105;
+  }
+}
+
+/* ============================================================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================================================ */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .font-variable {
+    font-variation-settings: "wght" 600; /* Heavier weight for better contrast */
+  }
+  
+  .reading-mode-focus,
+  .reading-mode-dyslexia {
+    background-color: #ffffff;
+    color: #000000;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .font-variable {
+    font-variation-settings: normal;
+    transition: none;
+  }
+  
+  .text-animate {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Prefers reduced data */
+@media (prefers-reduced-data: reduce) {
+  .font-variable {
+    font-family: system-ui, sans-serif; /* Fallback to system fonts */
+  }
+}
+
+/* ============================================================================
+   DARK MODE OPTIMIZATIONS
+   ============================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  .font-variable {
+    font-variation-settings: "wght" 350; /* Lighter weight for dark backgrounds */
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .reading-mode-focus {
+    --bg-color: #1a202c;
+    --text-color: #e2e8f0;
+    --accent-color: #63b3ed;
+  }
+}
+
+/* ============================================================================
+   PRINT OPTIMIZATIONS
+   ============================================================================ */
+
+@media print {
+  .font-variable {
+    font-family: serif; /* Better for print */
+    font-variation-settings: "wght" 400;
+    color: #000000 !important;
+    background: transparent !important;
+  }
+  
+  .reading-mode-focus,
+  .reading-mode-dyslexia,
+  .reading-mode-high-contrast,
+  .reading-mode-dark {
+    background: transparent !important;
+    color: #000000 !important;
+  }
+  
+  /* Optimize font sizes for print */
+  .content-type-article { font-size: 12pt; }
+  .content-type-technical { font-size: 10pt; }
+  .content-type-marketing { font-size: 14pt; }
+  .content-type-legal { font-size: 11pt; }
+}
+
+/* ============================================================================
+   ANIMATION UTILITIES
+   ============================================================================ */
+
+/* Smooth font weight transitions */
+.font-weight-transition {
+  transition: font-variation-settings 0.3s ease;
+}
+
+/* Text reveal animations */
+@keyframes text-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.text-reveal {
+  animation: text-reveal 0.6s ease-out;
+}
+
+/* Gradient text effects */
+.text-gradient-animated {
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+/* Quick access to reading modes */
+.mode-focus { @apply reading-mode-focus; }
+.mode-dyslexia { @apply reading-mode-dyslexia; }
+.mode-high-contrast { @apply reading-mode-high-contrast; }
+.mode-dark { @apply reading-mode-dark; }
+
+/* Content type shortcuts */
+.type-article { @apply content-type-article; }
+.type-technical { @apply content-type-technical; }
+.type-marketing { @apply content-type-marketing; }
+.type-legal { @apply content-type-legal; }
+
+/* Performance shortcuts */
+.perf-optimized {
+  @apply text-rendering-optimized font-display-swap;
+}
+
+/* Responsive typography shortcuts */
+.text-fluid-sm { font-size: clamp(0.875rem, 1vw, 1rem); }
+.text-fluid-base { font-size: clamp(1rem, 1.5vw, 1.125rem); }
+.text-fluid-lg { font-size: clamp(1.125rem, 2vw, 1.25rem); }
+.text-fluid-xl { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
+.text-fluid-2xl { font-size: clamp(1.5rem, 3vw, 2rem); }
+.text-fluid-3xl { font-size: clamp(1.875rem, 4vw, 2.5rem); }

@@ -1,0 +1,711 @@
+'use client'
+
+/**
+ * Vehicle Details Page - Ro-Inspired Immersive Design
+ * 
+ * Long-form, scannable layout with:
+ * - Immersive hero with overlay stats
+ * - AI chat integration
+ * - Contextual alert cards
+ * - Visual storytelling sections
+ * - Progressive disclosure (minimal accordions)
+ */
+
+import React, { useState } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import { Container, Section, Stack, Card, Heading, Text, Flex, Grid, Button, Modal, Input } from '@/components/design-system'
+import { DestructiveBox, MutedBox, AccentBox } from '@/components/design-system'
+import { 
+  Car, 
+  ArrowLeft,
+  Calendar,
+  Gauge,
+  Wrench,
+  FileText,
+  AlertTriangle,
+  ChevronRight,
+  ChevronDown,
+  ShieldCheck,
+  Clock,
+  MessageSquare,
+  Camera,
+  Edit3,
+  Send,
+  Plus,
+  Download,
+  Upload,
+  Share2,
+  Trash2,
+  DollarSign,
+  TrendingDown,
+  TrendingUp,
+  Activity,
+  CheckCircle2,
+  Image,
+  Sparkles,
+  Droplet,
+  Battery,
+  Wind,
+  Zap,
+  Info,
+  Settings,
+  MoreHorizontal,
+  StickyNote
+} from 'lucide-react'
+import { AppNavigation } from '@/components/app/AppNavigation'
+
+export default function VehicleDetailsPage() {
+  const params = useParams()
+  const router = useRouter()
+  const vehicleId = (params?.id as string) || '123'
+  const [showActionsModal, setShowActionsModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [showOverflowMenu, setShowOverflowMenu] = useState(false)
+  const [chatInput, setChatInput] = useState('')
+  const [expandedSection, setExpandedSection] = useState<string | null>('maintenance')
+  const [activeTab, setActiveTab] = useState<'documents' | 'photos' | 'notes' | 'specs'>('documents')
+  const [showFABMenu, setShowFABMenu] = useState(false)
+  
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text)
+    // In production, show a toast notification
+    console.log(`Copied ${label}: ${text}`)
+  }
+
+  // Mock vehicle data - replace with real data from API
+  const vehicle = {
+    id: vehicleId,
+    year: 2015,
+    make: 'Honda',
+    model: 'Accord',
+    trim: 'EX-L',
+    nickname: 'Daily Driver',
+    vin: '1HGCR2F3XFA123456',
+    license_plate: 'ABC-1234',
+    current_mileage: 85234,
+    garage_name: 'Main Garage',
+    hero_image_url: null,
+    color: 'Silver'
+  }
+
+  const displayName = `${vehicle.year} ${vehicle.make} ${vehicle.model}${vehicle.trim ? ` ${vehicle.trim}` : ''}`
+  
+  const handlePhotoUpload = () => {
+    // Trigger file input click
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'image/*'
+    input.onchange = (e: any) => {
+      const file = e.target?.files?.[0]
+      if (file) {
+        // In production, upload to server/storage
+        console.log('Selected file:', file)
+        // TODO: Upload file and update vehicle.hero_image_url
+      }
+    }
+    input.click()
+  }
+
+  const handleManagePhotos = () => {
+    // In production, open photo gallery modal or navigate to photo management page
+    console.log('Manage photos')
+  }
+
+  // Mock data
+  const alerts = [
+    { icon: <AlertTriangle className="w-5 h-5 text-orange-600" />, title: "Oil change due", description: "Due in 200 miles", time: "2 days ago" },
+    { icon: <Clock className="w-5 h-5 text-blue-600" />, title: "Registration expiring", description: "Expires in 85 days", time: "1 week ago" }
+  ]
+
+  const serviceHistory = [
+    { id: "1", date: "Sep 15, 2024", type: "Oil Change", cost: 45, mileage: 85034 },
+    { id: "2", date: "Jul 10, 2024", type: "Brake Service", cost: 380, mileage: 82150 },
+    { id: "3", date: "May 5, 2024", type: "Tire Rotation", cost: 25, mileage: 79800 }
+  ]
+
+  const recentChats = [
+    { id: "1", title: "What's the recommended oil type?", time: "2 days ago" },
+    { id: "2", title: "When should I replace brake pads?", time: "1 week ago" }
+  ]
+
+  const chatSuggestions = [
+    "What maintenance is due soon?",
+    "Show me service history",
+    "Explain the check engine light",
+    "What's my vehicle worth?"
+  ]
+
+  const allActions = [
+    { icon: <Wrench className="w-5 h-5" />, label: "Log Service", action: () => console.log('Log service') },
+    { icon: <Gauge className="w-5 h-5" />, label: "Update Mileage", action: () => console.log('Update mileage') },
+    { icon: <FileText className="w-5 h-5" />, label: "View Documents", action: () => console.log('Documents') },
+    { icon: <Upload className="w-5 h-5" />, label: "Upload Document", action: () => console.log('Upload') },
+    { icon: <Calendar className="w-5 h-5" />, label: "Schedule Maintenance", action: () => console.log('Schedule') },
+    { icon: <Info className="w-5 h-5" />, label: "View Specifications", action: () => router.push(`/vehicles/${vehicleId}/specs`) },
+    { icon: <Camera className="w-5 h-5" />, label: "Add Photo", action: () => console.log('Add photo') },
+    { icon: <Edit3 className="w-5 h-5" />, label: "Edit Vehicle Info", action: () => console.log('Edit') },
+    { icon: <Download className="w-5 h-5" />, label: "Export Report", action: () => console.log('Export') },
+    { icon: <Share2 className="w-5 h-5" />, label: "Share Vehicle", action: () => console.log('Share') },
+    { icon: <Settings className="w-5 h-5" />, label: "Vehicle Settings", action: () => console.log('Settings') },
+    { icon: <Trash2 className="w-5 h-5" />, label: "Remove Vehicle", action: () => console.log('Remove'), destructive: true }
+  ]
+
+  const handleSendMessage = () => {
+    if (chatInput.trim()) {
+      router.push(`/vehicles/${vehicleId}/chat?message=${encodeURIComponent(chatInput)}`)
+    }
+  }
+
+  const quickActions = [
+    { icon: <Wrench className="w-5 h-5" />, label: "Log service", action: () => console.log('Log service') },
+    { icon: <Gauge className="w-5 h-5" />, label: "Update mileage", action: () => console.log('Update mileage') },
+    { icon: <FileText className="w-5 h-5" />, label: "Add document", action: () => console.log('Add document') },
+    { icon: <Calendar className="w-5 h-5" />, label: "Schedule maintenance", action: () => console.log('Schedule') }
+  ]
+
+  const hasAlerts = alerts.length > 0
+
+  return (
+    <>
+      <AppNavigation />
+      
+      {/* =================================================================
+          IMMERSIVE HERO SECTION - Full width with vehicle photo + overlay
+          ================================================================= */}
+      <div className="w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <Container size="md" useCase="articles">
+          <Section spacing="md">
+            <Stack spacing="lg" className="py-8">
+              {/* Back Button */}
+              <button
+                onClick={() => router.push('/garage')}
+                className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors self-start group"
+              >
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                <span>Back to garage</span>
+              </button>
+
+              {/* Large Vehicle Photo */}
+              {vehicle.hero_image_url ? (
+                <div className="relative w-full aspect-[21/9] rounded-xl overflow-hidden bg-white/10 backdrop-blur">
+                  <img 
+                    src={vehicle.hero_image_url} 
+                    alt={displayName}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent" />
+                </div>
+              ) : (
+                <button
+                  onClick={handlePhotoUpload}
+                  className="w-full aspect-[21/9] flex flex-col items-center justify-center gap-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all border-2 border-dashed border-white/20 hover:border-white/40 group"
+                >
+                  <Flex align="center" justify="center" className="w-20 h-20 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
+                    <Camera className="w-10 h-10 text-white/60" />
+                  </Flex>
+                  <Text className="text-lg font-medium text-white/70">Add Vehicle Photo</Text>
+                </button>
+              )}
+
+              {/* Vehicle Title + Stats Pills */}
+              <Stack spacing="md">
+                <Heading level="hero" className="text-white text-3xl md:text-4xl">
+                  {vehicle.year} {vehicle.make} {vehicle.model}
+                </Heading>
+                
+                <Text className="text-lg text-white/60">
+                  {vehicle.trim && `${vehicle.trim} • `}
+                  {vehicle.nickname && `${vehicle.nickname} • `}
+                  {vehicle.garage_name}
+                </Text>
+
+                {/* Stat Pills */}
+                <Flex align="center" gap="sm" className="flex-wrap">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur rounded-full text-sm font-semibold text-white">
+                    <Gauge className="w-4 h-4" />
+                    {vehicle.current_mileage.toLocaleString()} mi
+                  </span>
+                  
+                  {hasAlerts && (
+                    <span className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/90 backdrop-blur rounded-full text-sm font-semibold text-white">
+                      <AlertTriangle className="w-4 h-4" />
+                      {alerts.length} alerts
+                    </span>
+                  )}
+                  
+                  <span className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/90 backdrop-blur rounded-full text-sm font-semibold text-white">
+                    <Activity className="w-4 h-4" />
+                    87/100 health
+                  </span>
+                </Flex>
+              </Stack>
+            </Stack>
+          </Section>
+        </Container>
+      </div>
+
+      {/* =================================================================
+          MAIN CONTENT - Long-form sections in Container
+          ================================================================= */}
+      <Container size="md" useCase="articles">
+        <Section spacing="lg">
+          <Stack spacing="2xl">
+            
+            {/* AI Chat Bar */}
+            <Card className="shadow-sm bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+              <Flex gap="md" align="center">
+                <MessageSquare className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Ask AI anything about your Accord..."
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                  className="flex-1 px-3 py-2 border-0 focus:outline-none text-sm bg-transparent text-gray-900 placeholder-gray-500"
+                />
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={!chatInput.trim()}
+                  className="flex-shrink-0"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </Flex>
+            </Card>
+
+            {/* ===== ATTENTION NEEDED - Full Contextual Cards ===== */}
+            <Stack spacing="lg">
+              <Heading level="title">Attention Needed</Heading>
+              
+              <DestructiveBox className="p-6 rounded-xl">
+                <Stack spacing="md">
+                  <Flex align="start" gap="md">
+                    <Flex align="center" justify="center" className="w-12 h-12 rounded-lg bg-white/20 flex-shrink-0">
+                      <Wrench className="w-6 h-6" />
+                    </Flex>
+                    <Stack spacing="sm" className="flex-1">
+                      <Heading level="subtitle">Oil Change Due</Heading>
+                      <Text className="leading-relaxed">
+                        Your vehicle needs an oil change in the next <strong>234 miles</strong> (approximately 1 week based on your driving patterns). Delaying this service may affect engine performance and could lead to increased wear.
+                      </Text>
+                    </Stack>
+                  </Flex>
+                  
+                  <Flex align="center" gap="sm" className="flex-wrap">
+                    <Button onClick={() => router.push(`/vehicles/${vehicleId}/service/schedule`)}>
+                      Schedule Service
+                    </Button>
+                    <Button variant="secondary">
+                      I Did This
+                    </Button>
+                    <Button variant="secondary">
+                      Remind Me
+                    </Button>
+                  </Flex>
+                </Stack>
+              </DestructiveBox>
+
+              <MutedBox className="p-6 rounded-xl">
+                <Stack spacing="md">
+                  <Flex align="start" gap="md">
+                    <Flex align="center" justify="center" className="w-12 h-12 rounded-lg bg-gray-900/10 flex-shrink-0">
+                      <Wind className="w-6 h-6" />
+                    </Flex>
+                    <Stack spacing="sm" className="flex-1">
+                      <Heading level="subsection">Tire Rotation Recommended</Heading>
+                      <Text className="leading-relaxed">
+                        Based on your mileage, tire rotation is due in <strong>2,500 miles</strong> to extend tire life by up to 20%. Regular rotation helps ensure even wear and optimal traction.
+                      </Text>
+                    </Stack>
+                  </Flex>
+                  
+                  <Flex align="center" gap="sm" className="flex-wrap">
+                    <Button onClick={() => router.push(`/vehicles/${vehicleId}/service/schedule`)}>
+                      Schedule Service
+                    </Button>
+                    <Button variant="secondary">
+                      I Did This
+                    </Button>
+                    <Button variant="secondary">
+                      Remind Me
+                    </Button>
+                  </Flex>
+                </Stack>
+              </MutedBox>
+            </Stack>
+
+            {/* ===== HEALTH OVERVIEW - Progress Bars (NOT Accordion) ===== */}
+            <Stack spacing="lg">
+              <Stack spacing="sm">
+                <Heading level="section">Health Overview</Heading>
+                <Text className="text-gray-600 leading-relaxed">
+                  Your Accord is performing well with an overall health score of <strong>87/100</strong> (up 5 points from last month). Here's what we're tracking:
+                </Text>
+              </Stack>
+
+              <Grid columns="auto" gap="md" className="grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                <Card>
+                  <Stack spacing="sm">
+                    <Flex align="center" justify="between">
+                      <Text className="text-sm font-semibold text-gray-700">Engine</Text>
+                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                    </Flex>
+                    <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-green-600 rounded-full" style={{ width: '85%' }} />
+                    </div>
+                    <Text className="text-xs text-gray-500">85% ✓</Text>
+                  </Stack>
+                </Card>
+
+                <Card>
+                  <Stack spacing="sm">
+                    <Flex align="center" justify="between">
+                      <Text className="text-sm font-semibold text-gray-700">Brakes</Text>
+                      <AlertTriangle className="w-5 h-5 text-orange-500" />
+                    </Flex>
+                    <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-orange-500 rounded-full" style={{ width: '60%' }} />
+                    </div>
+                    <Text className="text-xs text-gray-500">60% ⚠️</Text>
+                  </Stack>
+                </Card>
+
+                <Card>
+                  <Stack spacing="sm">
+                    <Flex align="center" justify="between">
+                      <Text className="text-sm font-semibold text-gray-700">Tires</Text>
+                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                    </Flex>
+                    <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-green-600 rounded-full" style={{ width: '75%' }} />
+                    </div>
+                    <Text className="text-xs text-gray-500">75% ✓</Text>
+                  </Stack>
+                </Card>
+
+                <Card>
+                  <Stack spacing="sm">
+                    <Flex align="center" justify="between">
+                      <Text className="text-sm font-semibold text-gray-700">Fluids</Text>
+                      <AlertTriangle className="w-5 h-5 text-orange-500" />
+                    </Flex>
+                    <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-orange-500 rounded-full" style={{ width: '45%' }} />
+                    </div>
+                    <Text className="text-xs text-gray-500">45% ⚠️</Text>
+                  </Stack>
+                </Card>
+              </Grid>
+
+              <button
+                onClick={() => router.push(`/vehicles/${vehicleId}/health`)}
+                className="text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors self-start group flex items-center gap-1"
+              >
+                <span>View Detailed Report</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </Stack>
+
+            {/* ===== RECENT SERVICE HISTORY - Long-form Timeline ===== */}
+            <Stack spacing="lg">
+              <Heading level="section">Recent Service History</Heading>
+
+              <Stack spacing="md">
+                {serviceHistory.map((service, index) => (
+                  <Card key={service.id} className="hover:shadow-md transition-shadow">
+                    <button
+                      onClick={() => router.push(`/vehicles/${vehicleId}/history/${service.id}`)}
+                      className="w-full text-left"
+                    >
+                      <Stack spacing="sm">
+                        <Flex align="start" justify="between" gap="md">
+                          <Stack spacing="xs" className="flex-1">
+                            <Text className="text-xs text-gray-500">
+                              {service.date} • {service.mileage.toLocaleString()} mi
+                            </Text>
+                            <Heading level="subsection">{service.type}</Heading>
+                          </Stack>
+                          <Text className="text-lg font-bold text-gray-900">${service.cost}</Text>
+                        </Flex>
+                        
+                        <Text className="text-sm text-gray-600 leading-relaxed">
+                          {service.type === 'Oil Change' && 
+                            'Standard oil change with synthetic 5W-30. Next service recommended at 91,000 miles.'}
+                          {service.type === 'Brake Service' && 
+                            'Replaced front brake pads and resurfaced rotors. Rear brakes still have 40% life remaining.'}
+                          {service.type === 'Tire Rotation' && 
+                            'Rotated all four tires and checked alignment. Tire pressure set to 35 PSI.'}
+                        </Text>
+                        
+                        <Flex align="center" gap="sm" className="flex-wrap pt-2">
+                          <span className="text-xs text-gray-500 hover:text-gray-700">View Receipt</span>
+                          <span className="text-gray-300">•</span>
+                          <span className="text-xs text-gray-500 hover:text-gray-700">Add Notes</span>
+                        </Flex>
+                      </Stack>
+                    </button>
+                  </Card>
+                ))}
+              </Stack>
+
+              <button
+                onClick={() => router.push(`/vehicles/${vehicleId}/history`)}
+                className="text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors self-start group flex items-center gap-1"
+              >
+                <span>View Complete History (23 services)</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </Stack>
+
+            {/* ===== COST ANALYTICS - Chart Section ===== */}
+            <Stack spacing="lg">
+              <Heading level="section">Cost Analytics</Heading>
+              
+              <Text className="text-gray-600 leading-relaxed">
+                You've spent <strong>$1,247</strong> on maintenance this year, which is <strong>18% below</strong> the industry average for a 2015 Honda Accord. At your current rate, you're on track to spend $1,850 annually, finishing under budget by $340.
+              </Text>
+
+              {/* Simple ASCII-style chart */}
+              <Card className="bg-gray-50">
+                <Stack spacing="sm">
+                  <Text className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Monthly Spending</Text>
+                  <pre className="text-xs text-gray-600 font-mono overflow-x-auto">
+{`     $400 ┤     
+          │  ╭──╮
+     $300 ┤  │  │    ╭──╮
+          │  │  │    │  │
+     $200 ┤──┴──┴────┴──┴──╮
+          │                 │  
+     $100 ┤                 ╰──
+          └─────────────────────
+          J F M A M J J A S O N D`}
+                  </pre>
+                </Stack>
+              </Card>
+
+              <button
+                onClick={() => router.push(`/vehicles/${vehicleId}/analytics`)}
+                className="text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors self-start group flex items-center gap-1"
+              >
+                <span>View Detailed Breakdown</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </Stack>
+
+            {/* ===== AI RECOMMENDATIONS - Full Cards ===== */}
+            <Stack spacing="lg">
+              <Flex align="center" gap="sm">
+                <Sparkles className="w-5 h-5 text-blue-600" />
+                <Heading level="section">AI Recommendations</Heading>
+              </Flex>
+
+              <Stack spacing="md">
+                <AccentBox className="p-6 rounded-xl">
+                  <Stack spacing="md">
+                    <Flex align="start" gap="md">
+                      <Flex align="center" justify="center" className="w-10 h-10 rounded-lg bg-white/50 flex-shrink-0">
+                        <Sparkles className="w-5 h-5" />
+                      </Flex>
+                      <Stack spacing="sm" className="flex-1">
+                        <Heading level="subsection">Bundle and Save</Heading>
+                        <Text className="leading-relaxed">
+                          Schedule your upcoming oil change and tire rotation together to save approximately <strong>$25 on labor costs</strong>.
+                        </Text>
+                      </Stack>
+                    </Flex>
+                    <Button onClick={() => router.push(`/vehicles/${vehicleId}/service/schedule`)}>
+                      Schedule Both Services →
+                    </Button>
+                  </Stack>
+                </AccentBox>
+
+                <AccentBox className="p-6 rounded-xl">
+                  <Stack spacing="md">
+                    <Flex align="start" gap="md">
+                      <Flex align="center" justify="center" className="w-10 h-10 rounded-lg bg-white/50 flex-shrink-0">
+                        <Gauge className="w-5 h-5" />
+                      </Flex>
+                      <Stack spacing="sm" className="flex-1">
+                        <Heading level="subsection">Tire Pressure Alert</Heading>
+                        <Text className="leading-relaxed">
+                          Your front-left tire pressure is reading <strong>29 PSI</strong> (should be 35 PSI). This could reduce fuel economy by 3%, costing you ~$15/month in extra fuel.
+                        </Text>
+                      </Stack>
+                    </Flex>
+                    <Button variant="secondary">
+                      Set Reminder to Check →
+                    </Button>
+                  </Stack>
+                </AccentBox>
+
+                <AccentBox className="p-6 rounded-xl">
+                  <Stack spacing="md">
+                    <Flex align="start" gap="md">
+                      <Flex align="center" justify="center" className="w-10 h-10 rounded-lg bg-white/50 flex-shrink-0">
+                        <Wind className="w-5 h-5" />
+                      </Flex>
+                      <Stack spacing="sm" className="flex-1">
+                        <Heading level="subsection">Winter Preparation</Heading>
+                        <Text className="leading-relaxed">
+                          Based on your location (Chicago) and the upcoming season, consider these preparations in the next 3 weeks:
+                        </Text>
+                        <Stack spacing="xs" className="pl-4">
+                          <Text className="text-sm">• Check antifreeze levels</Text>
+                          <Text className="text-sm">• Test battery performance</Text>
+                          <Text className="text-sm">• Inspect wiper blades</Text>
+                        </Stack>
+                      </Stack>
+                    </Flex>
+                    <Button variant="secondary">
+                      View Winter Checklist →
+                    </Button>
+                  </Stack>
+                </AccentBox>
+              </Stack>
+            </Stack>
+
+            {/* ===== DOCUMENTS & RECORDS - Simple Pills ===== */}
+            <Stack spacing="lg">
+              <Heading level="section">Documents & Records</Heading>
+
+              <Flex align="center" gap="sm" className="flex-wrap">
+                <button className="px-4 py-2 bg-gray-900 text-white rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">
+                  Service Receipts (12)
+                </button>
+                <button className="px-4 py-2 bg-gray-100 text-gray-900 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">
+                  Insurance (4)
+                </button>
+                <button className="px-4 py-2 bg-gray-100 text-gray-900 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">
+                  Registration (3)
+                </button>
+                <button className="px-4 py-2 bg-gray-100 text-gray-900 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">
+                  Manuals (4)
+                </button>
+              </Flex>
+
+              <Card className="bg-gray-50">
+                <Stack spacing="sm">
+                  <Text className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Most Recent</Text>
+                  <Stack spacing="xs">
+                    <Text className="text-sm">Oil Change Receipt - Sep 15, 2024</Text>
+                    <Text className="text-sm">Insurance Card - Active until Dec 2024</Text>
+                    <Text className="text-sm">Registration - Expires Mar 15, 2025</Text>
+                  </Stack>
+                </Stack>
+              </Card>
+
+              <Flex align="center" gap="sm">
+                <button
+                  onClick={() => router.push(`/vehicles/${vehicleId}/documents`)}
+                  className="text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors group flex items-center gap-1"
+                >
+                  <span>View All Documents</span>
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+                <span className="text-gray-300">•</span>
+                <button
+                  onClick={() => router.push(`/vehicles/${vehicleId}/documents/upload`)}
+                  className="text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors"
+                >
+                  Upload Document
+                </button>
+              </Flex>
+            </Stack>
+
+            {/* ===== VEHICLE SPECIFICATIONS - Minimal Accordion at Bottom ===== */}
+            <Stack spacing="md">
+              <button
+                onClick={() => setExpandedSection(expandedSection === 'specs' ? null : 'specs')}
+                className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors group"
+              >
+                <Flex align="center" gap="sm">
+                  <Info className="w-5 h-5 text-gray-600" />
+                  <Heading level="subsection">Vehicle Specifications</Heading>
+                </Flex>
+                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${expandedSection === 'specs' ? 'rotate-180' : ''}`} />
+              </button>
+
+              {expandedSection === 'specs' && (
+                <Card>
+                  <Stack spacing="lg">
+                    <Stack spacing="sm">
+                      <Text className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Basic Information</Text>
+                      <Grid columns="auto" gap="sm" className="grid-cols-2">
+                        <div>
+                          <Text className="text-xs text-gray-500">Model</Text>
+                          <Text className="text-sm font-medium">2015 Honda Accord EX-L</Text>
+                        </div>
+                        <div>
+                          <Text className="text-xs text-gray-500">VIN</Text>
+                          <Text className="text-sm font-medium font-mono">{vehicle.vin}</Text>
+                        </div>
+                        <div>
+                          <Text className="text-xs text-gray-500">Body</Text>
+                          <Text className="text-sm font-medium">4-door Sedan</Text>
+                        </div>
+                        <div>
+                          <Text className="text-xs text-gray-500">Color</Text>
+                          <Text className="text-sm font-medium">{vehicle.color}</Text>
+                        </div>
+                      </Grid>
+                    </Stack>
+
+                    <Stack spacing="sm">
+                      <Text className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Engine & Performance</Text>
+                      <Grid columns="auto" gap="sm" className="grid-cols-2">
+                        <div>
+                          <Text className="text-xs text-gray-500">Engine</Text>
+                          <Text className="text-sm font-medium">2.4L 4-Cylinder</Text>
+                        </div>
+                        <div>
+                          <Text className="text-xs text-gray-500">Power</Text>
+                          <Text className="text-sm font-medium">185 HP @ 6,400 RPM</Text>
+                        </div>
+                        <div>
+                          <Text className="text-xs text-gray-500">EPA City</Text>
+                          <Text className="text-sm font-medium">27 mpg</Text>
+                        </div>
+                        <div>
+                          <Text className="text-xs text-gray-500">EPA Highway</Text>
+                          <Text className="text-sm font-medium">36 mpg</Text>
+                        </div>
+                      </Grid>
+                    </Stack>
+
+                    <Stack spacing="sm">
+                      <Text className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Features & Options</Text>
+                      <Text className="text-sm text-gray-600">
+                        Leather seats, Sunroof, Navigation, Heated front seats, Backup camera
+                      </Text>
+                    </Stack>
+                  </Stack>
+                </Card>
+              )}
+            </Stack>
+
+          </Stack>
+        </Section>
+      </Container>
+
+      {/* Modals (unchanged) */}
+      <Modal
+        isOpen={showActionsModal}
+        onClose={() => setShowActionsModal(false)}
+        title="More Actions"
+        size="md"
+      >
+        <Text>Additional actions modal content here...</Text>
+      </Modal>
+
+      <Modal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        title="Edit Vehicle"
+        size="md"
+      >
+        <Text>Edit vehicle modal content here...</Text>
+      </Modal>
+    </>
+  )
+}

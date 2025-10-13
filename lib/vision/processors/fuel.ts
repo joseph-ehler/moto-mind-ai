@@ -50,11 +50,11 @@ export function processFuelReceipt(rawExtraction: any): ProcessorResult {
   
   // Step 6: Generate summary
   const summary = generateFuelSummary({
-    station_name: stationResult?.data,
-    total_amount: rawExtraction.total_amount,
-    gallons: rawExtraction.gallons,
-    price_per_gallon: rawExtraction.price_per_gallon,
-    fuel_type: rawExtraction.fuel_type
+    station_name: stationResult?.data || null,
+    total_amount: rawExtraction.total_amount || null,
+    gallons: rawExtraction.gallons || null,
+    price_per_gallon: rawExtraction.price_per_gallon || null,
+    fuel_type: rawExtraction.fuel_type || null
   })
   
   // Step 7: Calculate confidence
@@ -67,16 +67,36 @@ export function processFuelReceipt(rawExtraction: any): ProcessorResult {
   
   const enrichedData = {
     key_facts: {
+      // CORE FUEL DATA
       station_name: stationResult?.data || null,
-      total_amount: rawExtraction.total_amount,
-      gallons: rawExtraction.gallons,
-      price_per_gallon: rawExtraction.price_per_gallon,
+      total_amount: rawExtraction.total_amount || null,
+      gallons: rawExtraction.gallons || null,
+      price_per_gallon: rawExtraction.price_per_gallon || null,
       fuel_type: rawExtraction.fuel_type || 'Regular',
-      date: rawExtraction.date,
-      odometer_reading: rawExtraction.odometer_reading,
-      payment_method: rawExtraction.payment_method,
-      pump_number: rawExtraction.pump_number,
-      fuel_efficiency: efficiency
+      date: rawExtraction.date || null,
+      odometer_reading: rawExtraction.odometer_reading || null,
+      payment_method: rawExtraction.payment_method || null,
+      pump_number: rawExtraction.pump_number || null,
+      fuel_efficiency: efficiency || null,
+      // RICH TRANSACTION DATA (fraud detection, reconciliation)
+      station_address: rawExtraction.station_address || null,
+      transaction_id: rawExtraction.transaction_id || null,
+      invoice_number: rawExtraction.invoice_number || null,
+      auth_code: rawExtraction.auth_code || null,
+      time: rawExtraction.time || null,
+      transaction_time: rawExtraction.time || null,
+      card_last_four: rawExtraction.card_last_four || null,
+      entry_method: rawExtraction.entry_method || null,
+      // MERCHANT/SITE DATA
+      site_id: rawExtraction.site_id || null,
+      trace_id: rawExtraction.trace_id || null,
+      merchant_id: rawExtraction.merchant_id || null,
+      // EMV TRANSACTION CODES
+      aid: rawExtraction.aid || null,
+      tvr: rawExtraction.tvr || null,
+      iad: rawExtraction.iad || null,
+      tsi: rawExtraction.tsi || null,
+      arc: rawExtraction.arc || null
     },
     summary,
     validation,

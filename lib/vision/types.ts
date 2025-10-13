@@ -9,6 +9,8 @@ export type DocumentType =
   | 'insurance_card'
   | 'dashboard_snapshot'
   | 'odometer'
+  | 'fuel_gauge'
+  | 'product_label'
   | 'license_plate'
   | 'vin'
   | 'accident_report'

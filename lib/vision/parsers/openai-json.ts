@@ -79,8 +79,26 @@ export function parseOpenAIResponse<T = any>(content: string): ParsedResponse<T>
     warnings.push('Removed markdown code fences from response')
   }
   
+  console.log('🔍 Parsing OpenAI response, length:', cleanedContent.length)
+  
   // Step 2: Parse JSON
   const data = safeJsonParse<T>(cleanedContent)
+  
+  // Debug: Log parsed fields
+  if (typeof data === 'object' && data !== null) {
+    const fields = Object.keys(data as any)
+    console.log('📋 Parsed fields from GPT-4o:', fields.length, 'fields')
+    console.log('   Fields:', fields.join(', '))
+    
+    // Check for specific rich data fields
+    const richFields = ['transaction_id', 'auth_code', 'invoice_number', 'station_address', 'transaction_time']
+    const foundRichFields = richFields.filter(f => f in (data as any) && (data as any)[f] !== null)
+    if (foundRichFields.length > 0) {
+      console.log('✅ Found rich data fields:', foundRichFields.join(', '))
+    } else {
+      console.log('⚠️ No rich data fields found (all null or missing)')
+    }
+  }
   
   // Step 3: Extract confidence if present
   let confidence = 1.0 // Default confidence

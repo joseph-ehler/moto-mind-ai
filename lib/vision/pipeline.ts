@@ -22,9 +22,23 @@ export async function processDocument(request: VisionRequest): Promise<VisionRes
     // Step 1: Generate appropriate prompt
     const prompt = generatePrompt(request.mode, request.document_type)
     
-    // Runtime verification and debugging
+    // Runtime verification and debugging - LOG FOR ALL TYPES NOW
+    console.log(`🔍 ${request.document_type} prompt preview:`, prompt.substring(0, 500))
+    
+    if (request.document_type === 'fuel_receipt') {
+      console.log('✅ Contains transaction_id field:', prompt.includes('transaction_id'))
+      console.log('✅ Contains auth_code field:', prompt.includes('auth_code'))
+      console.log('✅ Contains station_address field:', prompt.includes('station_address'))
+      console.log('✅ Contains invoice_number field:', prompt.includes('invoice_number'))
+      
+      // Log full prompt for fuel receipts
+      console.log('📋 FULL FUEL_RECEIPT PROMPT SENT TO GPT-4O:')
+      console.log('=' .repeat(80))
+      console.log(prompt)
+      console.log('=' .repeat(80))
+    }
+    
     if (request.document_type === 'dashboard_snapshot') {
-      console.log('🔍 Dashboard prompt preview:', prompt.substring(0, 500))
       console.log('✅ Contains few-shot examples:', prompt.includes('FEW-SHOT EXAMPLES'))
       console.log('✅ Contains km conversion example:', prompt.includes('499 km'))
       console.log('✅ Contains temperature disambiguation:', prompt.includes('72°F'))
@@ -47,8 +61,8 @@ export async function processDocument(request: VisionRequest): Promise<VisionRes
     })
     
     // Step 3: Log raw response for analysis
-    if (request.document_type === 'dashboard_snapshot') {
-      console.log('\n🤖 RAW GPT-4O RESPONSE:')
+    if (request.document_type === 'fuel_receipt' || request.document_type === 'dashboard_snapshot') {
+      console.log(`\n🤖 RAW GPT-4O RESPONSE for ${request.document_type}:`)
       console.log('=' .repeat(80))
       console.log(visionResponse.content)
       console.log('=' .repeat(80))
@@ -58,6 +72,9 @@ export async function processDocument(request: VisionRequest): Promise<VisionRes
         outputTokens: visionResponse.outputTokens,
         processingMs: visionResponse.processingMs
       })
+    }
+    
+    if (request.document_type === 'dashboard_snapshot') {
       
       // Save raw response to file for analysis
       const fs = require('fs')
@@ -256,9 +273,32 @@ function extractKeyFacts(data: any): Record<string, any> {
     'total_amount', 'amount', 'cost',
     'date', 'service_date',
     'odometer_miles', 'mileage',
-    'gallons', 'fuel_type',
+    'gallons', 'fuel_type', 'price_per_gallon',
     'service_description', 'description',
-    'policy_number', 'insurance_company'
+    'policy_number', 'insurance_company',
+    // RICH FUEL RECEIPT DATA
+    'station_address', 'address', 'location',
+    'transaction_id', 'tran_number', 'tran_id',
+    'invoice_number', 'invoice', 'receipt_number',
+    'auth_code', 'auth', 'authorization',
+    'transaction_time', 'time',
+    'pump_number', 'pump',
+    'payment_method', 'payment', 'card',
+    'card_last_four',
+    'entry_method',
+    'site_id', 'site',
+    'trace_id', 'trace',
+    'merchant_id', 'merchant',
+    // EMV CODES
+    'aid', 'tvr', 'iad', 'tsi', 'arc',
+    // FUEL GAUGE DATA
+    'fuel_level', 'percentage', 'level',
+    'indicator_position', 'low_fuel_warning',
+    'bars_filled', 'total_bars',
+    // PRODUCT LABEL DATA
+    'brand', 'product_name', 'product_type',
+    'size', 'quantity', 'purpose',
+    'ingredients', 'warnings'
   ]
   
   for (const field of importantFields) {
