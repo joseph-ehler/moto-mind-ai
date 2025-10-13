@@ -11,38 +11,96 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // For now, allow all Google sign-ins
-      // Get or create tenant_id from database later
-      console.log('✅ User signed in:', user.email)
-      return true
+      if (!user.email) {
+        console.error('❌ No email provided')
+        return false
+      }
+
+      try {
+        // 1. Get or create user in auth.users (Supabase Auth)
+        const { data: { users }, error: listError } = await supabaseAdmin.auth.admin.listUsers()
+        
+        let userId: string
+        let existingUser = users?.find(u => u.email === user.email)
+        
+        if (!existingUser) {
+          // Create user in Supabase Auth
+          const { data, error: createError } = await supabaseAdmin.auth.admin.createUser({
+            email: user.email,
+            email_confirm: true,
+            user_metadata: {
+              name: user.name,
+              avatar: user.image,
+              provider: 'google'
+            }
+          })
+          
+          if (createError || !data.user) {
+            console.error('❌ Failed to create user:', createError)
+            return false
+          }
+          
+          userId = data.user.id
+          console.log('✅ Created new user:', user.email, userId)
+        } else {
+          userId = existingUser.id
+          console.log('✅ Found existing user:', user.email, userId)
+        }
+
+        // 2. Get or create tenant
+        const { data: existingTenant } = await supabaseAdmin
+          .from('tenants')
+          .select('id')
+          .eq('id', userId)
+          .single()
+
+        if (!existingTenant) {
+          // Create tenant with same ID as user
+          const { error: tenantError } = await supabaseAdmin
+            .from('tenants')
+            .insert({
+              id: userId,
+              created_at: new Date().toISOString()
+            })
+
+          if (tenantError) {
+            console.error('❌ Failed to create tenant:', tenantError)
+            return false
+          }
+
+          console.log('✅ Created tenant for user:', userId)
+        }
+
+        return true
+      } catch (error) {
+        console.error('❌ Sign-in error:', error)
+        return false
+      }
     },
     async jwt({ token, user, account }) {
-      // On first sign-in, get tenant_id from database
-      if (account && user) {
+      // On first sign-in, attach user ID as tenant_id
+      if (account && user && user.email) {
         try {
-          // Try to get first tenant from database for development
-          const { data: tenants } = await supabaseAdmin
-            .from('tenants')
-            .select('id')
-            .limit(1)
-            .single()
+          // Get user from Supabase Auth
+          const { data: { users } } = await supabaseAdmin.auth.admin.listUsers()
+          const authUser = users?.find(u => u.email === user.email)
           
-          if (tenants) {
-            token.tenant_id = tenants.id
-            console.log('✅ Attached tenant_id to token:', tenants.id)
-          } else {
-            console.warn('⚠️ No tenants found in database')
+          if (authUser) {
+            token.tenant_id = authUser.id
+            token.user_id = authUser.id
+            console.log('✅ Attached tenant_id to token:', authUser.id)
           }
         } catch (error) {
-          console.error('❌ Error getting tenant:', error)
+          console.error('❌ Error getting user for JWT:', error)
         }
       }
       return token
     },
     async session({ session, token }) {
-      // Attach tenant_id to session
+      // Attach tenant_id and user_id to session
       if (token.tenant_id) {
-        session.user.tenant_id = token.tenant_id as string
+        ;(session.user as any).tenant_id = token.tenant_id as string
+        ;(session.user as any).id = token.user_id as string
       }
       return session
     },
