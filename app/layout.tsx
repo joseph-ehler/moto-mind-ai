@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google'
 import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 import { ClientProviders } from './client-providers'
 import '../styles/globals.css'
 import '../styles/gradients.css'
@@ -41,6 +42,28 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var link = document.createElement('link');
+                link.rel = 'manifest';
+                link.href = '/manifest.json';
+                document.head.appendChild(link);
+                
+                var meta = document.createElement('meta');
+                meta.name = 'theme-color';
+                meta.content = '#2563eb';
+                document.head.appendChild(meta);
+                
+                var apple = document.createElement('link');
+                apple.rel = 'apple-touch-icon';
+                apple.href = '/icons/apple-touch-icon.png';
+                document.head.appendChild(apple);
+              })();
+            `,
+          }}
+        />
         <ClientProviders>
           {children}
         </ClientProviders>

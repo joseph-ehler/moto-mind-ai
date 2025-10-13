@@ -43,6 +43,19 @@ const nextConfig = {
         destination: '/api/health'
       }
     ]
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Link',
+            value: '</manifest.json>; rel="manifest"'
+          }
+        ]
+      }
+    ]
   }
 }
 
