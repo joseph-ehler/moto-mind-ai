@@ -7,7 +7,7 @@ import { NextApiRequest } from 'next'
 // Demo tenant ID - in production, extract from JWT or session
 const DEMO_TENANT_ID = '550e8400-e29b-41d4-a716-446655440000'
 
-export function createTenantAwareSupabaseClient(req?: NextApiRequest) {
+export async function createTenantAwareSupabaseClient(req?: NextApiRequest) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -21,10 +21,10 @@ export function createTenantAwareSupabaseClient(req?: NextApiRequest) {
 
   // Set tenant context for RLS policies
   // In production, extract tenant_id from JWT token or session
-  const tenantId = extractTenantId(req) || DEMO_TENANT_ID
+  const tenantId = await extractTenantId(req) || DEMO_TENANT_ID
 
   // Set the tenant context for this database session
-  supabase.rpc('set_config', {
+  await supabase.rpc('set_config', {
     setting_name: 'app.tenant_id',
     setting_value: tenantId,
     is_local: true
@@ -33,16 +33,43 @@ export function createTenantAwareSupabaseClient(req?: NextApiRequest) {
   return { supabase, tenantId }
 }
 
-function extractTenantId(req?: NextApiRequest): string | null {
-  // TODO: In production, implement proper tenant extraction
-  // Options:
-  // 1. From JWT token: req.headers.authorization
-  // 2. From session cookie
-  // 3. From subdomain: req.headers.host
-  // 4. From API key header
-  
-  // For now, return demo tenant
-  return DEMO_TENANT_ID
+async function extractTenantId(req?: NextApiRequest): Promise<string | null> {
+  if (!req) return DEMO_TENANT_ID
+
+  try {
+    // Extract auth token from cookies or Authorization header
+    const authHeader = req.headers.authorization
+    const authCookie = req.cookies['sb-access-token'] || 
+                      req.cookies['supabase-auth-token']
+    
+    if (!authHeader && !authCookie) {
+      console.log('⚠️ No auth token found, using demo tenant')
+      return DEMO_TENANT_ID
+    }
+
+    // Get token from either source
+    const token = authHeader?.replace('Bearer ', '') || authCookie
+
+    // Verify token and get user from Supabase
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    const { data: { user }, error } = await supabase.auth.getUser(token)
+
+    if (error || !user) {
+      console.log('⚠️ Failed to get user from token:', error?.message)
+      return DEMO_TENANT_ID
+    }
+
+    console.log('✅ Extracted tenant ID from Supabase user:', user.id)
+    return user.id
+
+  } catch (error) {
+    console.error('❌ Error extracting tenant ID:', error)
+    return DEMO_TENANT_ID
+  }
 }
 
 // Helper to create RLS-aware database client
@@ -50,7 +77,7 @@ export async function withTenantContext<T>(
   req: NextApiRequest,
   operation: (supabase: any, tenantId: string) => Promise<T>
 ): Promise<T> {
-  const { supabase, tenantId } = createTenantAwareSupabaseClient(req)
+  const { supabase, tenantId } = await createTenantAwareSupabaseClient(req)
   
   try {
     // Set tenant context
@@ -74,7 +101,7 @@ export function withTenantIsolation(handler: any) {
   return async (req: NextApiRequest, res: any) => {
     try {
       // Create tenant-aware client
-      const { supabase, tenantId } = createTenantAwareSupabaseClient(req)
+      const { supabase, tenantId } = await createTenantAwareSupabaseClient(req)
       
       // Set tenant context
       await supabase.rpc('set_config', {
