@@ -34,21 +34,48 @@ export async function createTenantAwareSupabaseClient(req?: NextApiRequest) {
 }
 
 async function extractTenantId(req?: NextApiRequest): Promise<string | null> {
-  if (!req) return DEMO_TENANT_ID
+  if (!req) {
+    console.log('⚠️ No request object, using demo tenant')
+    return DEMO_TENANT_ID
+  }
 
   try {
-    // Extract auth token from cookies or Authorization header
+    console.log('🔍 Looking for auth token in cookies:', Object.keys(req.cookies || {}))
+    
+    // Extract auth token from cookies - Supabase uses different cookie names
     const authHeader = req.headers.authorization
-    const authCookie = req.cookies['sb-access-token'] || 
-                      req.cookies['supabase-auth-token']
+    
+    // Try all possible Supabase cookie names
+    const supabaseProject = process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0] || ''
+    const possibleCookies = [
+      `sb-${supabaseProject}-auth-token`,
+      'sb-access-token',
+      'supabase-auth-token',
+      'sb-auth-token'
+    ]
+    
+    let authCookie = null
+    for (const cookieName of possibleCookies) {
+      if (req.cookies[cookieName]) {
+        authCookie = req.cookies[cookieName]
+        console.log('✅ Found auth cookie:', cookieName)
+        break
+      }
+    }
     
     if (!authHeader && !authCookie) {
-      console.log('⚠️ No auth token found, using demo tenant')
+      console.log('⚠️ No auth token found in headers or cookies, using demo tenant')
+      console.log('Available cookies:', Object.keys(req.cookies || {}))
       return DEMO_TENANT_ID
     }
 
     // Get token from either source
-    const token = authHeader?.replace('Bearer ', '') || authCookie
+    const token = authHeader?.replace('Bearer ', '') || authCookie || undefined
+
+    if (!token) {
+      console.log('⚠️ Token is empty, using demo tenant')
+      return DEMO_TENANT_ID
+    }
 
     // Verify token and get user from Supabase
     const supabase = createClient(
