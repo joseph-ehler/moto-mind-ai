@@ -29,7 +29,9 @@ export function AIBadgeWithPopover({
   detectionDetails,
   className
 }: AIBadgeWithPopoverProps) {
-  const confidencePercent = Math.round(confidence * 100)
+  // Handle both decimal (0.85) and percentage (85) formats
+  const normalizedConfidence = confidence > 1 ? confidence / 100 : confidence
+  const confidencePercent = Math.round(normalizedConfidence * 100)
   
   const aiTypeLabels = {
     generated: 'AI Generated',
