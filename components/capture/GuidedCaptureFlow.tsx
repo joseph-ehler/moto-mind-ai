@@ -341,8 +341,8 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
       console.log('📸 Photos to process:', photosToProcess.map(p => ({ stepId: p.stepId, hasFile: !!p.file })))
       
       // FIX: Split photos into batches to stay under Vercel payload limit
-      // Vercel Pro: 10MB limit, ~2MB per photo → batch size 4 is safe
-      const BATCH_SIZE = 4
+      // iPhone HEIC→JPEG photos are 2.5-3MB each, batch size 2 = ~6MB (safe for 10MB limit)
+      const BATCH_SIZE = 2
       const batches: CapturedPhoto[][] = []
       
       for (let i = 0; i < photosToProcess.length; i += BATCH_SIZE) {
