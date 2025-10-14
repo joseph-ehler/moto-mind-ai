@@ -340,8 +340,9 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
       console.log('🔍 Starting batch vision processing for', photosToProcess.length, 'photos')
       console.log('📸 Photos to process:', photosToProcess.map(p => ({ stepId: p.stepId, hasFile: !!p.file })))
       
-      // FIX: Split photos into batches of 2 to avoid 4.5MB Vercel limit
-      const BATCH_SIZE = 2
+      // FIX: Split photos into batches to stay under Vercel payload limit
+      // Vercel Pro: 10MB limit, ~2MB per photo → batch size 4 is safe
+      const BATCH_SIZE = 4
       const batches: CapturedPhoto[][] = []
       
       for (let i = 0; i < photosToProcess.length; i += BATCH_SIZE) {
