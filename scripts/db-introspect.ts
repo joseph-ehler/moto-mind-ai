@@ -9,6 +9,10 @@
 import { createClient } from '@supabase/supabase-js'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as dotenv from 'dotenv'
+
+// Load .env.local
+dotenv.config({ path: path.join(process.cwd(), '.env.local') })
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -68,44 +72,18 @@ interface RLSPolicyInfo {
 }
 
 async function getTables(): Promise<string[]> {
-  const { data, error } = await supabase.rpc('exec_sql', {
-    query: `
-      SELECT tablename
-      FROM pg_tables 
-      WHERE schemaname = 'public'
-      ORDER BY tablename
-    `
-  }).single() as any
+  const { data, error } = await supabase.rpc('get_all_tables')
 
   if (error) {
-    // Fallback: use information_schema
-    const result = await supabase
-      .from('information_schema.tables' as any)
-      .select('table_name')
-      .eq('table_schema', 'public')
-
-    if (result.error) throw result.error
-    return result.data?.map((r: any) => r.table_name) || []
+    console.error('Failed to get tables:', error)
+    throw error
   }
 
-  return data || []
+  return data?.map((r: any) => r.table_name) || []
 }
 
 async function getColumns(tableName: string): Promise<ColumnInfo[]> {
-  const query = `
-    SELECT 
-      column_name,
-      data_type,
-      is_nullable,
-      column_default,
-      character_maximum_length
-    FROM information_schema.columns
-    WHERE table_schema = 'public'
-      AND table_name = '${tableName}'
-    ORDER BY ordinal_position
-  `
-
-  const { data, error } = await supabase.rpc('exec_sql', { query }).single() as any
+  const { data, error } = await supabase.rpc('get_table_columns', { table_name_param: tableName })
   
   if (error) {
     console.warn(`⚠️  Could not get columns for ${tableName}:`, error.message)
@@ -115,33 +93,14 @@ async function getColumns(tableName: string): Promise<ColumnInfo[]> {
   return (data || []).map((col: any) => ({
     name: col.column_name,
     dataType: col.data_type,
-    isNullable: col.is_nullable === 'YES',
+    isNullable: col.is_nullable,
     defaultValue: col.column_default,
-    maxLength: col.character_maximum_length,
+    maxLength: col.max_length,
   }))
 }
 
 async function getForeignKeys(tableName: string): Promise<ForeignKeyInfo[]> {
-  const query = `
-    SELECT
-      kcu.column_name,
-      ccu.table_name AS foreign_table_name,
-      ccu.column_name AS foreign_column_name,
-      rc.delete_rule,
-      rc.update_rule
-    FROM information_schema.table_constraints AS tc
-    JOIN information_schema.key_column_usage AS kcu
-      ON tc.constraint_name = kcu.constraint_name
-    JOIN information_schema.constraint_column_usage AS ccu
-      ON ccu.constraint_name = tc.constraint_name
-    JOIN information_schema.referential_constraints AS rc
-      ON rc.constraint_name = tc.constraint_name
-    WHERE tc.constraint_type = 'FOREIGN KEY'
-      AND tc.table_name = '${tableName}'
-      AND tc.table_schema = 'public'
-  `
-
-  const { data, error } = await supabase.rpc('exec_sql', { query }).single() as any
+  const { data, error } = await supabase.rpc('get_table_foreign_keys', { table_name_param: tableName })
   
   if (error) {
     console.warn(`⚠️  Could not get foreign keys for ${tableName}`)
@@ -158,14 +117,7 @@ async function getForeignKeys(tableName: string): Promise<ForeignKeyInfo[]> {
 }
 
 async function getIndexes(tableName: string): Promise<IndexInfo[]> {
-  const query = `
-    SELECT indexname, indexdef
-    FROM pg_indexes
-    WHERE tablename = '${tableName}'
-      AND schemaname = 'public'
-  `
-
-  const { data, error } = await supabase.rpc('exec_sql', { query }).single() as any
+  const { data, error } = await supabase.rpc('get_table_indexes', { table_name_param: tableName })
   
   if (error) {
     console.warn(`⚠️  Could not get indexes for ${tableName}`)
@@ -173,8 +125,8 @@ async function getIndexes(tableName: string): Promise<IndexInfo[]> {
   }
 
   return (data || []).map((idx: any) => ({
-    name: idx.indexname,
-    definition: idx.indexdef,
+    name: idx.index_name,
+    definition: idx.index_definition,
   }))
 }
 
@@ -193,43 +145,21 @@ async function getRowCount(tableName: string): Promise<number> {
 
 async function getRLSInfo(tableName: string): Promise<{ enabled: boolean; policies: RLSPolicyInfo[] }> {
   // Check if RLS is enabled
-  const rlsQuery = `
-    SELECT rowsecurity as rls_enabled
-    FROM pg_tables
-    WHERE tablename = '${tableName}'
-      AND schemaname = 'public'
-  `
-
-  const { data: rlsData, error: rlsError } = await supabase.rpc('exec_sql', { query: rlsQuery }).single() as any
+  const { data: rlsEnabled, error: rlsError } = await supabase.rpc('get_table_rls_status', { table_name_param: tableName })
   
-  const rlsEnabled = rlsData?.[0]?.rls_enabled || false
-
   // Get policies
-  const policiesQuery = `
-    SELECT
-      policyname,
-      permissive,
-      roles,
-      cmd,
-      qual,
-      with_check
-    FROM pg_policies
-    WHERE tablename = '${tableName}'
-      AND schemaname = 'public'
-  `
-
-  const { data: policiesData, error: policiesError } = await supabase.rpc('exec_sql', { query: policiesQuery }).single() as any
+  const { data: policiesData, error: policiesError } = await supabase.rpc('get_table_rls_policies', { table_name_param: tableName })
   
   const policies = (policiesData || []).map((pol: any) => ({
-    name: pol.policyname,
+    name: pol.policy_name,
     permissive: pol.permissive === 'PERMISSIVE',
-    roles: Array.isArray(pol.roles) ? pol.roles : [pol.roles],
-    command: pol.cmd,
+    roles: pol.roles || [],
+    command: pol.command,
     using: pol.qual,
     withCheck: pol.with_check,
   }))
 
-  return { enabled: rlsEnabled, policies }
+  return { enabled: rlsEnabled || false, policies }
 }
 
 async function introspectTable(tableName: string): Promise<TableInfo> {
@@ -257,28 +187,23 @@ async function introspectTable(tableName: string): Promise<TableInfo> {
 async function auditTenantData() {
   console.log('\n🔍 Auditing tenant data...')
 
-  const tenantTables = ['vehicles', 'vehicle_events', 'vehicle_images', 'photo_metadata']
-  const auditResults: any[] = []
-
-  for (const table of tenantTables) {
-    const { count: total } = await supabase
-      .from(table as any)
-      .select('*', { count: 'exact', head: true })
-
-    const { count: withTenant } = await supabase
-      .from(table as any)
-      .select('*', { count: 'exact', head: true })
-      .not('tenant_id', 'is', null)
-
-    auditResults.push({
-      table,
-      totalRows: total || 0,
-      rowsWithTenant: withTenant || 0,
-      rowsMissingTenant: (total || 0) - (withTenant || 0),
-    })
-
-    console.log(`  ${table}: ${withTenant}/${total} rows have tenant_id`)
+  const { data, error } = await supabase.rpc('get_tenant_data_audit')
+  
+  if (error) {
+    console.error('Failed to audit tenant data:', error)
+    return []
   }
+
+  const auditResults = (data || []).map((row: any) => ({
+    table: row.table_name,
+    totalRows: row.total_rows,
+    rowsWithTenant: row.rows_with_tenant,
+    rowsMissingTenant: row.rows_missing_tenant,
+  }))
+
+  auditResults.forEach((audit: any) => {
+    console.log(`  ${audit.table}: ${audit.rowsWithTenant}/${audit.totalRows} rows have tenant_id`)
+  })
 
   return auditResults
 }
