@@ -4,7 +4,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withTenantIsolation } from '@/lib/middleware/tenant-context'
 
-import { withValidation, validationSchemas } from '../../../lib/utils/api-validation'
+import { withValidation, validationSchemas } from '@/features/vehicles/data/api-validation'
 import { parseMultipart, toBase64, normMode, normDocType } from '../../../lib/http/multipart'
 import { compressImageForVision, shouldCompressImage } from '../../../lib/utils/image-compression'
 import fs from 'fs'

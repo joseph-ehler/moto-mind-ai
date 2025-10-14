@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { withTenantIsolation } from '@/lib/middleware/tenant-context'
 
-import { VehicleBodyType, mapToBodyType } from '../../../lib/types/vehicle-body-types'
+import { VehicleBodyType, mapToBodyType } from '@/features/vehicles/domain/vehicle-body-types'
 
 interface GetImageRequest {
   year: string

@@ -4,7 +4,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withTenantIsolation } from '@/lib/middleware/tenant-context'
 
-import { withValidation, validationSchemas } from '../../../lib/utils/api-validation'
+import { withValidation, validationSchemas } from '@/features/vehicles/data/api-validation'
 
 interface VisionUsageRecord {
   timestamp: string

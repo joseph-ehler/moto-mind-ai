@@ -24,7 +24,7 @@ import {
   Clock
 } from 'lucide-react'
 import { AppNavigation } from '@/components/app/AppNavigation'
-import { useVehicles } from '@/hooks/useVehicles'
+import { useVehicles } from '@/features/vehicles/hooks/useVehicles'
 
 export default function HomePage() {
   const { vehicles } = useVehicles()

@@ -3,7 +3,7 @@ import { withTenantIsolation } from '@/lib/middleware/tenant-context'
 
 import OpenAI from 'openai'
 // import { trackOpenAICall } from '../../lib/clients/api-usage-tracker' // Commented out for deployment
-import { withValidation, validationSchemas } from '../../../lib/utils/api-validation'
+import { withValidation, validationSchemas } from '@/features/vehicles/data/api-validation'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

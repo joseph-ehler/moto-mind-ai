@@ -10,7 +10,7 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Container, Section, Stack, Card, Heading, Text, Button, Flex } from '@/components/design-system'
 import { Car, Plus, ChevronRight, AlertCircle } from 'lucide-react'
-import { useVehicles } from '@/hooks/useVehicles'
+import { useVehicles } from '@/features/vehicles/hooks/useVehicles'
 import { AppNavigation } from '@/components/app/AppNavigation'
 
 export default function VehiclesPage() {
