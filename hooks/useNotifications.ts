@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { useOptimisticActions } from './useOptimisticActions'
+import { useOptimisticActions } from '@/features/vehicles/hooks/useOptimisticActions'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
