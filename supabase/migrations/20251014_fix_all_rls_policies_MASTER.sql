@@ -44,8 +44,6 @@ TO authenticated
 USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
 WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
 
-RAISE NOTICE '✅ Fixed: garages';
-
 -- ============================================
 -- 2. CAPTURE_SESSIONS
 -- ============================================
@@ -65,8 +63,6 @@ TO authenticated
 USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
 WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
 
-RAISE NOTICE '✅ Fixed: capture_sessions';
-
 -- ============================================
 -- 3. EVENT_PHOTOS
 -- ============================================
@@ -84,7 +80,6 @@ TO authenticated
 USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
 WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
 
-RAISE NOTICE '✅ Fixed: event_photos';
 
 -- ============================================
 -- 4. PHOTO_METADATA
@@ -103,7 +98,6 @@ TO authenticated
 USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
 WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
 
-RAISE NOTICE '✅ Fixed: photo_metadata';
 
 -- ============================================
 -- 5. PROFILES
@@ -119,7 +113,6 @@ TO authenticated
 USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
 WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
 
-RAISE NOTICE '✅ Fixed: profiles';
 
 -- ============================================
 -- 6. USER_TENANTS
@@ -143,7 +136,6 @@ FOR INSERT
 TO service_role
 WITH CHECK (true);
 
-RAISE NOTICE '✅ Fixed: user_tenants';
 
 -- ============================================
 -- 7. VEHICLE_EVENT_AUDIT_LOGS
@@ -159,7 +151,6 @@ TO authenticated
 USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
 WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
 
-RAISE NOTICE '✅ Fixed: vehicle_event_audit_logs';
 
 -- ============================================
 -- 8. VEHICLE_EVENTS
@@ -182,7 +173,6 @@ USING (
 )
 WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
 
-RAISE NOTICE '✅ Fixed: vehicle_events';
 
 -- ============================================
 -- 9. VEHICLE_IMAGES
@@ -199,7 +189,6 @@ TO authenticated
 USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
 WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
 
-RAISE NOTICE '✅ Fixed: vehicle_images';
 
 -- ============================================
 -- 10. VEHICLES
@@ -215,7 +204,6 @@ TO authenticated
 USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
 WITH CHECK (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
 
-RAISE NOTICE '✅ Fixed: vehicles';
 
 -- ============================================
 -- FINAL VERIFICATION
