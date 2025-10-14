@@ -23,6 +23,7 @@
     "protect:check": "node scripts/windsurf-protection.js check",
     "db:migrate": "npx tsx scripts/run-migrations.ts",
     "db:seed": "npx tsx scripts/seed.ts",
+    "db:introspect": "npx tsx scripts/db-introspect.ts",
     "training:label": "node scripts/create-ground-truth-label.js",
     "training:validate": "node scripts/run-training-validation.js",
     "training:report": "node scripts/run-training-validation.js",
