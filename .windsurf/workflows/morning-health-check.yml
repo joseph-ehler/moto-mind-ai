@@ -1,0 +1,64 @@
+# Windsurf Workflow: Morning Health Check
+# Triggers: Manually when starting work
+# Purpose: Quick health check of entire system
+
+name: Morning Health Check
+description: Comprehensive health check - run at start of day
+
+on:
+  manual: true
+
+steps:
+  - name: Welcome Message
+    run: |
+      echo "☀️  Good morning! Running system health check..."
+      echo ""
+
+  - name: Git Status
+    run: |
+      echo "📊 Git Status:"
+      git status --short
+      echo ""
+    continue_on_error: true
+
+  - name: Repository Analysis
+    run: |
+      echo "📋 Repository Analysis:"
+      npm run repo:analyze
+      echo ""
+    continue_on_error: true
+
+  - name: Database Health Check
+    run: |
+      echo "🗄️  Database Validation:"
+      npm run db:validate
+      echo ""
+    continue_on_error: true
+
+  - name: Check for Issues
+    run: |
+      echo "🧹 Repository Cleanup Check:"
+      npm run repo:clean
+      echo ""
+    continue_on_error: true
+
+  - name: Security Test Status
+    run: |
+      echo "🔒 Security Tests:"
+      npm run test:security
+      echo ""
+    continue_on_error: true
+
+  - name: Summary
+    run: |
+      echo ""
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      echo "✅ Morning health check complete!"
+      echo ""
+      echo "Your system status:"
+      echo "  • Repository state: See analysis above"
+      echo "  • Database health: See validation above"
+      echo "  • Security tests: See results above"
+      echo ""
+      echo "Ready to start coding! 🚀"
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

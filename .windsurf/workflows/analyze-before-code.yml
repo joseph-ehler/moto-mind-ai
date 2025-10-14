@@ -1,0 +1,51 @@
+# Windsurf Workflow: Analyze Before Code Generation
+# Triggers: Before AI generates any code
+# Purpose: Ensure AI learns from YOUR codebase first
+
+name: Analyze Before Code Generation
+description: Runs context analysis before AI generates code to ensure it follows your patterns
+
+on:
+  manual: true
+  # Future: before_ai_generation event when available
+
+env:
+  TASK_DESCRIPTION: ${{ inputs.task || 'current task' }}
+
+steps:
+  - name: Show Analysis Message
+    run: echo "🧠 Analyzing codebase before generating code..."
+
+  - name: Run Context Engine
+    run: npm run windsurf:guide "${TASK_DESCRIPTION}"
+    continue_on_error: false
+    
+  - name: Display Guidance File
+    run: |
+      echo ""
+      echo "📋 Generated Guidance:"
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      cat .windsurf-context.md
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    
+  - name: Check Repository State
+    run: npm run repo:analyze
+    continue_on_error: true
+    
+  - name: Ready Message
+    run: |
+      echo ""
+      echo "✅ Context analysis complete!"
+      echo "   AI can now generate code following YOUR patterns."
+      echo ""
+
+inputs:
+  task:
+    description: Description of what you're building
+    required: false
+    default: ''
+
+outputs:
+  guidance_file:
+    value: .windsurf-context.md
+    description: Path to generated guidance file

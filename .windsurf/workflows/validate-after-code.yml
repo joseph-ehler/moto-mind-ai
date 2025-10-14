@@ -1,0 +1,61 @@
+# Windsurf Workflow: Validate After Code Generation
+# Triggers: After AI generates code
+# Purpose: Catch issues immediately
+
+name: Validate After Code Generation
+description: Runs validation checks after AI generates code to catch issues early
+
+on:
+  manual: true
+  # Future: after_ai_generation event when available
+  # Future: on_file_save event
+
+steps:
+  - name: Show Validation Message
+    run: echo "🔍 Validating generated code..."
+
+  - name: Check Import Patterns
+    run: |
+      echo "📦 Checking for deep imports..."
+      DEEP_IMPORTS=$(grep -r "from ['\"]\.\.\/\.\.\/\.\.\/" \
+        --include="*.ts" \
+        --include="*.tsx" \
+        --exclude-dir="node_modules" \
+        --exclude-dir=".next" \
+        app/ lib/ components/ 2>/dev/null | wc -l | xargs)
+      
+      if [ "$DEEP_IMPORTS" -gt 0 ]; then
+        echo "⚠️  WARNING: Found $DEEP_IMPORTS files with deep imports"
+        echo "   Consider using @/ imports instead"
+      else
+        echo "✅ No deep imports found"
+      fi
+    continue_on_error: true
+
+  - name: Run Repository Analysis
+    run: npm run repo:analyze
+    continue_on_error: true
+    
+  - name: Run Repository Cleanup Check
+    run: npm run repo:clean
+    continue_on_error: true
+    
+  - name: Run Type Check
+    run: npx tsc --noEmit
+    continue_on_error: true
+    
+  - name: Run Tests (if test files exist)
+    run: |
+      if [ -d "tests" ] && [ "$(ls -A tests)" ]; then
+        npm test -- --passWithNoTests
+      else
+        echo "No tests to run"
+      fi
+    continue_on_error: true
+    
+  - name: Summary
+    run: |
+      echo ""
+      echo "✅ Validation complete!"
+      echo "   Review any warnings above."
+      echo ""

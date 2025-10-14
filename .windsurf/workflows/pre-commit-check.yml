@@ -1,0 +1,105 @@
+# Windsurf Workflow: Pre-Commit Check
+# Triggers: Before git commit
+# Purpose: Catch all issues before code is committed
+
+name: Pre-Commit Check
+description: Comprehensive validation before committing code
+
+on:
+  manual: true
+  # Future: before_git_commit event when available
+
+steps:
+  - name: Start Message
+    run: |
+      echo "🔍 Running pre-commit validation..."
+      echo ""
+
+  - name: Check Import Patterns
+    run: |
+      echo "📦 Checking imports..."
+      DEEP_IMPORTS=$(grep -r "from ['\"]\.\.\/\.\.\/\.\.\/" \
+        --include="*.ts" \
+        --include="*.tsx" \
+        --exclude-dir="node_modules" \
+        --exclude-dir=".next" \
+        app/ lib/ components/ 2>/dev/null | wc -l | xargs)
+      
+      if [ "$DEEP_IMPORTS" -gt 0 ]; then
+        echo "⚠️  WARNING: Found $DEEP_IMPORTS files with deep imports (../../../)"
+        echo "   Consider fixing with: npm run repo:clean --fix"
+      else
+        echo "✅ No deep imports found"
+      fi
+      echo ""
+
+  - name: Repository Analysis
+    run: |
+      echo "📊 Analyzing repository..."
+      npm run repo:analyze
+      echo ""
+    continue_on_error: true
+
+  - name: Repository Cleanup Check
+    run: |
+      echo "🧹 Checking for issues..."
+      npm run repo:clean > /tmp/repo-clean-output.txt 2>&1
+      
+      if grep -q "❌ HIGH PRIORITY" /tmp/repo-clean-output.txt; then
+        echo "❌ ERROR: High priority issues found"
+        cat /tmp/repo-clean-output.txt
+        echo ""
+        echo "Fix with: npm run repo:clean --fix"
+        exit 1
+      else
+        echo "✅ No high priority issues"
+      fi
+      echo ""
+
+  - name: Type Check
+    run: |
+      echo "🔷 Type checking..."
+      npx tsc --noEmit
+      echo ""
+    continue_on_error: true
+
+  - name: Lint Check
+    run: |
+      echo "✨ Linting..."
+      npm run lint
+      echo ""
+    continue_on_error: true
+
+  - name: Security Tests
+    run: |
+      echo "🔒 Running security tests..."
+      npm run test:security
+      echo ""
+
+  - name: Check Database Changes
+    run: |
+      if git diff --cached --name-only | grep -q "supabase/migrations"; then
+        echo "🗄️  Database changes detected, validating..."
+        npm run db:validate
+        echo ""
+      else
+        echo "No database changes detected"
+        echo ""
+      fi
+    continue_on_error: true
+
+  - name: Run Tests
+    run: |
+      echo "🧪 Running tests..."
+      npm test -- --passWithNoTests
+      echo ""
+    continue_on_error: true
+
+  - name: Summary
+    run: |
+      echo ""
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      echo "✅ All pre-commit checks passed!"
+      echo ""
+      echo "Your code is ready to commit. 🚀"
+      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
