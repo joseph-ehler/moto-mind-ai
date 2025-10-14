@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { QuickGarageAssignment } from '@/components/vehicles/QuickGarageAssignment'
+import { QuickGarageAssignment } from '@/features/vehicles/ui/QuickGarageAssignment'
 import { 
   MoreVertical, 
   Edit, 

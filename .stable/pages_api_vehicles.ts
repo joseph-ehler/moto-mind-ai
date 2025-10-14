@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withApiError, apiErrors, apiSuccess } from '@/lib/utils/api-error'
-import { getVehicles, createVehicle } from '@/lib/services/vehicles'
+import { getVehicles, createVehicle } from '@/features/vehicles/data'
 import { createVehicleRequestSchema, vehicleQuerySchema } from '@/lib/validation/vehicles'
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

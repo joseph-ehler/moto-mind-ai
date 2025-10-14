@@ -493,7 +493,7 @@ class WindsurfContextEngine {
     guidance += '```typescript\n'
     guidance += '// ✅ CORRECT - Use path alias\n'
     guidance += 'import { VehicleService } from "@/lib/vehicles/api"\n'
-    guidance += 'import { VehicleCard } from "@/components/vehicles/VehicleCard"\n'
+    guidance += 'import { VehicleCard } from "@/features/vehicles/ui/VehicleCard"\n'
     guidance += 'import { withTenantIsolation } from "@/lib/middleware/tenant-isolation"\n\n'
     guidance += '// ❌ WRONG - Deep relative imports\n'
     guidance += 'import { VehicleService } from "../../../../lib/vehicles/api"\n'
