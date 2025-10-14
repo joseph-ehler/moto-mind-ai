@@ -337,66 +337,90 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
         return
       }
       
-      console.log('🔍 Starting batch vision processing for', photosToProcess.length, 'photos')
+      console.log('🔍 Starting vision processing for', photosToProcess.length, 'photos')
       console.log('📸 Photos to process:', photosToProcess.map(p => ({ stepId: p.stepId, hasFile: !!p.file })))
       
-      // FIX: Split photos into batches to stay under Vercel payload limit
-      // iPhone HEIC→JPEG photos are 2.5-3MB each, batch size 2 = ~6MB (safe for 10MB limit)
-      const BATCH_SIZE = 2
-      const batches: CapturedPhoto[][] = []
+      // NEW ARCHITECTURE: Upload to Supabase Storage first, then send URLs
+      // This eliminates payload size limits entirely
+      console.log('📤 Step 1: Uploading photos to Supabase Storage...')
       
-      for (let i = 0; i < photosToProcess.length; i += BATCH_SIZE) {
-        batches.push(photosToProcess.slice(i, i + BATCH_SIZE))
+      const tenantId = session?.user?.tenant_id
+      if (!tenantId) {
+        throw new Error('No tenant_id available')
       }
       
-      console.log(`📦 Split into ${batches.length} batches of ${BATCH_SIZE} photos each`)
-      
-      // Process each batch and collect results
-      const allResults: any[] = []
-      
-      for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
-        const batch = batches[batchIndex]
-        console.log(`📤 Processing batch ${batchIndex + 1}/${batches.length} (${batch.length} photos)...`)
+      // Upload all photos in parallel
+      const uploadPromises = photosToProcess.map(async (photo) => {
+        const timestamp = Date.now()
+        const ext = photo.file.name.split('.').pop() || 'jpg'
+        const filename = `${tenantId}/${vehicleId}/${timestamp}-${photo.stepId}.${ext}`
         
-        // Create FormData for this batch
-        const formData = new FormData()
-        formData.append('vehicle_id', vehicleId)
-        formData.append('event_type', eventType)
+        const { createClient } = await import('@supabase/supabase-js')
+        const supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        )
         
-        // Add photos from this batch
-        for (const photo of batch) {
-          formData.append(photo.stepId, photo.file)
+        const { data, error } = await supabase.storage
+          .from('vehicle-events')
+          .upload(filename, photo.file, {
+            contentType: photo.file.type,
+            cacheControl: '3600'
+          })
+        
+        if (error) {
+          console.error(`❌ Upload failed for ${photo.stepId}:`, error)
+          throw new Error(`Failed to upload ${photo.stepId}: ${error.message}`)
         }
         
-        // Call batch processing API
-        const response = await fetch('/api/vision/process-batch', {
-          method: 'POST',
-          body: formData
+        const { data: urlData } = supabase.storage
+          .from('vehicle-events')
+          .getPublicUrl(filename)
+        
+        console.log(`✅ Uploaded ${photo.stepId}: ${urlData.publicUrl}`)
+        
+        return {
+          stepId: photo.stepId,
+          url: urlData.publicUrl
+        }
+      })
+      
+      const uploadedPhotos = await Promise.all(uploadPromises)
+      console.log(`✅ All ${uploadedPhotos.length} photos uploaded to storage`)
+      
+      // Call vision API with URLs (tiny payload, no limits!)
+      console.log('📤 Step 2: Processing photos with Vision API...')
+      const response = await fetch('/api/vision/process-batch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          vehicle_id: vehicleId,
+          event_type: eventType,
+          photos: uploadedPhotos // Array of { stepId, url }
         })
-        
-        console.log(`   Batch ${batchIndex + 1} response: ${response.status}`)
-        
-        if (!response.ok) {
-          const errorText = await response.text()
-          console.error(`❌ Batch ${batchIndex + 1} failed:`, response.status, errorText)
-          throw new Error(`Batch ${batchIndex + 1} processing failed: ${response.status}`)
-        }
-        
-        const result = await response.json()
-        
-        if (!result.success) {
-          throw new Error(result.error || `Batch ${batchIndex + 1} processing failed`)
-        }
-        
-        console.log(`✅ Batch ${batchIndex + 1} complete`)
-        allResults.push(result)
+      })
+      
+      console.log(`   Vision API response: ${response.status}`)
+      
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error(`❌ Vision API failed:`, response.status, errorText)
+        throw new Error(`Vision processing failed: ${response.status}`)
       }
       
-      console.log('✅ All batches processed successfully!')
+      const visionResult = await response.json()
       
-      // Merge results from all batches
-      const result = mergeBatchResults(allResults)
-      console.log('📊 Merged result:', result)
+      if (!visionResult.success) {
+        throw new Error(visionResult.error || 'Vision processing failed')
+      }
+      
+      console.log('✅ Vision processing complete')
+      
+      // Use the result directly (no batching needed with URLs)
+      const result = visionResult
+      console.log('📊 Result:', result)
       
       console.log('✅ Batch vision processing complete')
       console.log('📊 Raw data received:', result.data)

@@ -20,8 +20,8 @@ import { VisionRequest } from '../../../lib/vision/types'
 
 export const config = {
   api: {
-    bodyParser: false,
-    sizeLimit: '50mb', // Larger limit for multiple photos
+    bodyParser: true, // Now accepting JSON with photo URLs
+    sizeLimit: '1mb', // Tiny payload now (just URLs!)
   },
 }
 
@@ -73,7 +73,7 @@ interface BatchVisionResult {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log('\n\n🔥🔥🔥 BATCH VISION API HIT! 🔥🔥🔥')
   console.log('   Method:', req.method)
-  console.log('   Headers:', req.headers['content-type'])
+  console.log('   Content-Type:', req.headers['content-type'])
   
   if (req.method !== 'POST') {
     console.error('❌ Wrong method:', req.method)
@@ -84,50 +84,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   console.log('   Start time:', new Date().toISOString())
 
   try {
-    // Parse multipart form data
-    const parseResult = await parseMultipart(req)
-    const fields = parseResult.fields
-    const files = parseResult.files
-    
-    const vehicleId = fields.vehicle_id as string
-    const eventType = (fields.event_type as string) || 'fuel'
-    
-    // Collect all photo files
-    const photoFiles: Array<{ stepId: string; filepath: string; mimetype: string }> = []
-    
-    // Parse photo files (expecting: receipt, odometer, gauge, additives)
-    // NOTE: 'additives' can have MULTIPLE files (user can upload multiple additive products)
-    const stepIds = ['receipt', 'odometer', 'gauge', 'additives']
-    for (const stepId of stepIds) {
-      const fileOrFiles = files[stepId]
-      
-      if (!fileOrFiles) continue
-      
-      // Handle both single file and array of files (for multiple additives)
-      const filesArray = Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles]
-      
-      for (const file of filesArray) {
-        photoFiles.push({
-          stepId,
-          filepath: file.filepath,
-          mimetype: file.mimetype || 'image/jpeg'
-        })
-      }
+    // NEW: Accept JSON with photo URLs from Supabase Storage
+    const { vehicle_id, event_type, photos } = req.body as {
+      vehicle_id: string
+      event_type: string
+      photos: Array<{ stepId: string; url: string }>
     }
     
-    if (photoFiles.length === 0) {
+    const vehicleId = vehicle_id
+    const eventType = event_type || 'fuel'
+    
+    if (!photos || photos.length === 0) {
       return res.status(400).json({
         success: false,
-        error: 'No photo files provided'
+        error: 'No photo URLs provided'
       })
     }
     
-    console.log(`📸 Batch processing ${photoFiles.length} photos for vehicle ${vehicleId}`)
-    console.log(`   Breakdown: ${photoFiles.filter(p => p.stepId === 'receipt').length} receipt, ${photoFiles.filter(p => p.stepId === 'odometer').length} odometer, ${photoFiles.filter(p => p.stepId === 'gauge').length} gauge, ${photoFiles.filter(p => p.stepId === 'additives').length} additive(s)`)
+    console.log(`📸 Batch processing ${photos.length} photos for vehicle ${vehicleId}`)
+    console.log(`   Photos:`, photos.map(p => `${p.stepId}: ${p.url.substring(0, 80)}...`))
     
-    // Process each photo through vision API
+    // Process each photo through vision API using URLs
     const individualResults = []
-    const photos = photoFiles
     
     // Track counts for multiple photos of same type (e.g., multiple additives)
     const stepCounts: Record<string, number> = {}
@@ -140,15 +118,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ? `${photo.stepId} #${stepCounts[photo.stepId]}`
           : photo.stepId
         
-        console.log(`🔍 Processing ${photoLabel}...`)
+        console.log(`🔍 Processing ${photoLabel} from URL...`)
         
-        // Read the photo file
-        const fs = require('fs')
-        const originalBuffer = fs.readFileSync(photo.filepath)
+        // NEW: Fetch image from URL (OpenAI will also fetch it, but we need it for compression check)
+        const imageResponse = await fetch(photo.url)
+        if (!imageResponse.ok) {
+          throw new Error(`Failed to fetch image from ${photo.url}`)
+        }
+        
+        const arrayBuffer = await imageResponse.arrayBuffer()
+        const originalBuffer = Buffer.from(arrayBuffer)
         let imageBuffer = originalBuffer
-        let mime = photo.mimetype
+        let mime = imageResponse.headers.get('content-type') || 'image/jpeg'
         
-        // Compress large images
+        // Compress large images (convert to base64 for OpenAI)
         if (shouldCompressImage(originalBuffer.length)) {
           const compressed = await compressImageForVision(originalBuffer)
           imageBuffer = compressed.buffer
