@@ -14,7 +14,10 @@
     "test:security": "jest --config=tests/security/jest.config.js",
     "test:security:ci": "jest --config=tests/security/jest.config.js --ci --coverage=false",
     "test:isolation": "jest tests/isolation",
-    "test:integration": "jest tests/integration",
+    "test:integration": "jest tests/integration --testTimeout=30000",
+    "test:integration:watch": "jest tests/integration --watch --testTimeout=30000",
+    "test:integration:ci": "jest tests/integration --ci --coverage=false --testTimeout=30000",
+    "test:all": "npm run test:security:ci && npm run test:integration:ci",
     "fix-permissions": "./scripts/fix-permissions.sh",
     "protect": "node scripts/windsurf-protection.js protect",
     "protect:check": "node scripts/windsurf-protection.js check",
@@ -128,7 +131,6 @@
     "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
-    "uuid": "^9.0.1",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -138,6 +140,8 @@
     "@types/glob": "^8.1.0",
     "esbuild": "^0.25.10",
     "glob": "^11.0.3",
-    "tsx": "^4.20.6"
+    "node-mocks-http": "^1.17.2",
+    "tsx": "^4.20.6",
+    "uuid": "^13.0.0"
   }
 }
