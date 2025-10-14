@@ -775,7 +775,7 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
           .from('vehicle_images')
           .insert({
             vehicle_id: vehicleId,
-            tenant_id: tenantId,
+            tenant_id: tenantId, // Now a proper UUID from auth
             event_id: event.id, // Link photo to this specific event
             storage_path: storagePath,
             public_url: urlData.publicUrl,
@@ -795,7 +795,7 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
         const metadata = capturedPhoto.metadata!
         await supabase.from('photo_metadata').insert({
           image_id: imageRecord.id,
-          tenant_id: tenantId,
+          tenant_id: tenantId, // Now a proper UUID from auth
           captured_at: metadata.timestamp,
           capture_method: metadata.captureMethod || 'camera',
           event_type: eventType,
