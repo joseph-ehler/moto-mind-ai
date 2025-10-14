@@ -1,0 +1,462 @@
+# 🧠 WINDSURF CONTEXT - READ THIS BEFORE EVERY TASK
+
+## 🚨 MANDATORY PRE-FLIGHT
+
+Before generating ANY code, you MUST:
+
+1. **Run:** `npm run windsurf:guide "<your task>"`
+2. **Read** the generated `.windsurf-context.md` file  
+3. **Study** the examples it provides
+4. **Follow** ALL rules it specifies
+
+**WHY:** This codebase has specific patterns, architecture, and conventions. Following them prevents:
+- ❌ Deeply nested imports (we already have 12+ problematic files)
+- ❌ Orphaned code that doesn't fit
+- ❌ Missing tests
+- ❌ Security vulnerabilities
+- ❌ Pattern inconsistencies
+
+---
+
+## 📐 Architecture
+
+### Structure
+- **Framework:** Next.js 13+ App Router
+- **Routing:** Use `/app` directory
+- **API Routes:** Use `/app/api` with proper middleware
+- **Business Logic:** Keep in `/lib` (domain-organized)
+- **Components:** Keep in `/components` (domain-organized)
+- **Tests:** Add in `/tests` (REQUIRED for ALL features)
+
+### Domain Organization
+```
+lib/
+  ├── vehicles/      # Vehicle domain logic
+  ├── garages/       # Garage domain logic
+  ├── maintenance/   # Maintenance domain logic
+  └── [domain]/      # Each feature = one domain folder
+
+app/
+  ├── vehicles/      # Vehicle routes
+  ├── api/           # API endpoints
+  └── [domain]/      # Routes match lib/ structure
+
+components/
+  ├── vehicles/      # Vehicle UI components
+  ├── design-system/ # Shared design system
+  └── [domain]/      # Components match lib/ structure
+```
+
+---
+
+## 📦 Import Strategy (MOST CRITICAL!)
+
+### ✅ ALWAYS DO THIS:
+
+```typescript
+// Use path alias @/ for ALL imports
+import { VehicleService } from "@/lib/vehicles/api"
+import { VehicleCard } from "@/components/vehicles/VehicleCard"
+import { withTenantIsolation } from "@/lib/middleware/tenant-isolation"
+import type { Vehicle } from "@/lib/vehicles/types"
+```
+
+### ❌ NEVER DO THIS:
+
+```typescript
+// Deep relative imports - FORBIDDEN!
+import { VehicleService } from "../../../../lib/vehicles/api"
+import { VehicleCard } from "../../../components/vehicles/VehicleCard"
+import { withTenantIsolation } from "../../middleware/tenant-isolation"
+```
+
+### WHY THIS MATTERS:
+
+**We have 12+ files with deep import nesting already.** Deep imports make:
+- Refactoring impossible (paths break when moving files)
+- Code navigation difficult
+- IDE autocomplete unreliable
+- Import order inconsistent
+
+**DO NOT ADD MORE DEEPLY NESTED IMPORTS!**
+
+### Import Order:
+
+```typescript
+// 1. External packages
+import { useState } from 'react'
+import { z } from 'zod'
+
+// 2. @/ imports (lib, then components)
+import { VehicleService } from '@/lib/vehicles/api'
+import { VehicleCard } from '@/components/vehicles/VehicleCard'
+
+// 3. Relative imports (same folder only)
+import { helper } from './helper'
+```
+
+---
+
+## 🔒 Security (NON-NEGOTIABLE)
+
+### Every API Route MUST:
+
+```typescript
+import { withTenantIsolation } from '@/lib/middleware/tenant-isolation'
+
+export const GET = withTenantIsolation(async (req, { tenantId }) => {
+  // Your logic here
+  // tenantId is automatically provided and validated
+})
+```
+
+### Database Rules:
+
+- ✅ Every table MUST have `tenant_id` column
+- ✅ Every RLS policy MUST use `app.current_tenant_id`
+- ❌ NEVER use `auth.uid()` in RLS policies
+- ❌ NEVER hardcode tenant IDs
+- ❌ NEVER expose data across tenants
+
+### Example RLS Policy:
+
+```sql
+-- ✅ CORRECT
+CREATE POLICY vehicles_tenant_isolation ON vehicles
+FOR ALL TO authenticated
+USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
+
+-- ❌ WRONG
+CREATE POLICY vehicles_user_access ON vehicles
+FOR ALL TO authenticated
+USING (user_id = auth.uid());  -- This allows cross-tenant access!
+```
+
+---
+
+## ✅ Testing (REQUIRED)
+
+### Every Feature MUST Have:
+
+1. **Unit Tests** - Test business logic in isolation
+2. **Integration Tests** - Test API routes end-to-end
+3. **Security Tests** - Verify tenant isolation
+
+### Test Structure:
+
+```typescript
+// tests/vehicles/api.test.ts
+import { VehicleService } from '@/lib/vehicles/api'
+
+describe('VehicleService', () => {
+  it('should fetch vehicles for tenant', async () => {
+    // Test implementation
+  })
+  
+  it('should not access other tenant data', async () => {
+    // Security test
+  })
+})
+```
+
+### Commands:
+
+```bash
+npm run test                    # Run all tests
+npm run test:security          # Security tests (CI)
+npm run test:integration       # Integration tests
+```
+
+---
+
+## 🗄️ Database Migrations
+
+### Never Write SQL Manually!
+
+```bash
+# Generate migration (AI creates proper SQL)
+npm run db:generate-migration <action> <table>
+
+# Test migration safely
+npm run db:test-migration <file.sql>
+
+# Apply with safety checks
+npm run db:smart-migrate
+
+# Validate result
+npm run db:validate
+```
+
+### Every Migration MUST:
+
+- ✅ Have a rollback script (`_rollback.sql`)
+- ✅ Include proper RLS policies
+- ✅ Add tenant_id column if creating tables
+- ✅ Include performance indexes
+- ✅ Be tested before applying
+
+---
+
+## 🎨 UI Components
+
+### Use the Design System:
+
+```typescript
+import {
+  Container,
+  Stack,
+  Heading,
+  Text,
+  Card,
+  Button
+} from '@/components/design-system'
+
+// ✅ CORRECT
+<Container size="md">
+  <Stack spacing="lg">
+    <Heading level="h1">Title</Heading>
+    <Text>Description</Text>
+  </Stack>
+</Container>
+
+// ❌ WRONG
+<div className="max-w-md mx-auto">
+  <div className="space-y-4">
+    <h1>Title</h1>
+    <p>Description</p>
+  </div>
+</div>
+```
+
+### Why:
+- Consistent spacing and sizing
+- Responsive by default
+- Accessible
+- Easy to refactor
+
+---
+
+## 📋 Pre-Flight Checklist
+
+Before creating ANY new code, verify:
+
+- [ ] Ran `npm run windsurf:guide "<task>"`
+- [ ] Read the generated `.windsurf-context.md`
+- [ ] Studied similar features in the codebase
+- [ ] Planned file structure to match existing patterns
+- [ ] Will use @/ imports (no deep nesting)
+- [ ] Will add tests from the start
+- [ ] Will use proper middleware for API routes
+- [ ] Will include database migrations if needed
+
+---
+
+## 🚀 Workflow
+
+### 1. Analyze First
+```bash
+npm run windsurf:guide "add document storage"
+```
+
+This generates a custom guide with:
+- Your architecture patterns
+- Import examples
+- Similar features to copy
+- Recommended structure
+
+### 2. Study Examples
+
+The guide will show you existing features that are similar. Study them:
+- Look at file structure
+- Study import patterns
+- Copy their approach
+
+### 3. Generate Code
+
+Follow the recommended structure exactly:
+- Match file naming
+- Use path aliases
+- Include tests
+- Add proper security
+
+### 4. Validate
+
+```bash
+npm run repo:analyze        # Check if it fits
+npm run repo:clean          # Fix any issues
+npm run db:validate         # If database changes
+npm run test:security       # Security check
+npm test                    # All tests
+```
+
+### 5. Commit
+
+```bash
+git add -A
+git commit -m "feat: Add feature following patterns"
+git push
+```
+
+---
+
+## 🎯 Success Criteria
+
+Your code is good if:
+
+- ✅ Matches existing patterns
+- ✅ Uses @/ imports (no deep nesting)
+- ✅ Includes comprehensive tests
+- ✅ Passes all validation
+- ✅ Follows architecture conventions
+- ✅ No orphaned files
+- ✅ No security issues
+- ✅ Documented with comments
+
+---
+
+## 🔧 Available Tools
+
+### Before Making Changes:
+```bash
+npm run windsurf:guide "<task>"     # Get context
+npm run repo:analyze                # Understand state
+npm run db:introspect              # See database
+```
+
+### During Development:
+```bash
+npm run db:generate-migration      # Create migrations
+npm run db:test-migration          # Test migrations
+npm test                           # Run tests
+```
+
+### After Making Changes:
+```bash
+npm run repo:clean                 # Check for issues
+npm run db:validate                # Validate database
+npm run test:security              # Security scan
+npm run windsurf:validate          # Full validation
+```
+
+---
+
+## ⚠️ Common Mistakes to Avoid
+
+### 1. Deep Imports
+```typescript
+// ❌ WRONG
+import { X } from '../../../../lib/vehicles/api'
+
+// ✅ CORRECT
+import { X } from '@/lib/vehicles/api'
+```
+
+### 2. Missing Tests
+```typescript
+// ❌ WRONG - No tests
+lib/documents/api.ts
+
+// ✅ CORRECT - Has tests
+lib/documents/api.ts
+tests/documents/api.test.ts
+```
+
+### 3. Unprotected API Routes
+```typescript
+// ❌ WRONG
+export async function GET(req: Request) {
+  // No tenant isolation!
+}
+
+// ✅ CORRECT
+import { withTenantIsolation } from '@/lib/middleware/tenant-isolation'
+
+export const GET = withTenantIsolation(async (req, { tenantId }) => {
+  // Tenant isolated automatically
+})
+```
+
+### 4. Wrong RLS Policies
+```sql
+-- ❌ WRONG
+USING (user_id = auth.uid())
+
+-- ✅ CORRECT
+USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid)
+```
+
+### 5. Ignoring Existing Patterns
+```
+// ❌ WRONG - New random structure
+lib/my-feature.ts
+helpers/my-helper.ts
+utils/my-util.ts
+
+// ✅ CORRECT - Matches existing structure
+lib/my-feature/
+  ├── types.ts
+  ├── api.ts
+  ├── validation.ts
+  └── utils.ts
+```
+
+---
+
+## 💡 Pro Tips
+
+1. **When in doubt, copy existing features**
+   - Find a similar feature
+   - Copy its structure exactly
+   - Adapt the logic
+
+2. **Use the context engine**
+   - Always run `windsurf:guide` first
+   - It shows you exactly what to do
+
+3. **Validate early and often**
+   - Don't wait until the end
+   - Run validation after each file
+
+4. **Keep PRs focused**
+   - One feature per PR
+   - Include tests in same PR
+   - Update docs in same PR
+
+---
+
+## 📞 Quick Commands Reference
+
+```bash
+# Before starting
+npm run windsurf:guide "your task"
+
+# While working
+npm run db:generate-migration
+npm run db:test-migration
+npm test
+
+# Before committing
+npm run windsurf:validate
+npm run repo:clean
+npm run test:security
+
+# If you mess up
+npm run repo:clean --fix        # Auto-fix issues
+npm run db:doctor --fix         # Fix database
+```
+
+---
+
+## 🎓 Learning Resources
+
+- `docs/ELITE-DATABASE-SYSTEM.md` - Database tools
+- `docs/REPO-MANAGEMENT.md` - Repository tools
+- `docs/FINAL-SYSTEM-SUMMARY.md` - Complete system overview
+- `.windsurf-context.md` - Generated guidance (per task)
+
+---
+
+**Remember: Analyze → Study → Follow → Validate**
+
+*This context file helps you write code that fits perfectly.*
+*Use it before every task. Your future self will thank you.*
