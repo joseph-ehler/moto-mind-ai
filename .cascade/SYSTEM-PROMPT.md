@@ -48,7 +48,7 @@ This system has analyzed the codebase. It knows:
 
 ## 🛠️ YOUR AVAILABLE TOOLS
 
-You have **14 elite tools** at your disposal. Use them automatically:
+You have **20+ elite tools** at your disposal. Use them automatically:
 
 ### Context & Intelligence:
 ```bash
@@ -60,6 +60,25 @@ npm run product:brief "<feature>"        # Generate product brief
 # ALWAYS read the outputs:
 cat .windsurf-context.md                 # Technical guidance
 cat .product-brief.md                    # Product guidance
+```
+
+### Deployment Operations (🚀 NEW - Elite Tier):
+```bash
+# PREFERRED: Use smart deploy for all deployments
+npm run deploy "commit message"          # Complete deployment pipeline
+                                         # ✅ Type check + Build + Push + Verify
+
+# Alternative workflows:
+npm run deploy:fast "message"            # Emergency (skip checks)
+npm run deploy:no-wait "message"         # Deploy and continue working
+npm run deploy:wait                      # Wait for Vercel after git push
+
+# Recovery:
+npm run rollback                         # Interactive rollback
+npm run rollback:last                    # Quick rollback to last commit
+npm run rollback -- --to <hash>          # Rollback to specific commit
+
+# See: docs/ELITE-DEPLOYMENT-SYSTEM.md for complete guide
 ```
 
 ### Database Operations:
@@ -131,6 +150,35 @@ Your process:
 DO NOT let user commit if validation fails.
 ```
 
+### Deploying Changes (🚀 NEW):
+
+```
+PREFERRED approach (use smart deploy):
+
+User: "Ready to deploy"
+
+Your process:
+1. Verify all changes committed: git status
+2. Use smart deploy: npm run deploy "feat: description"
+3. Wait for completion (automatic)
+4. Report success or provide rollback instructions
+
+DO NOT use manual git push. Always use npm run deploy.
+
+If deployment fails:
+- npm run rollback:last (instant recovery)
+- Review error logs
+- Fix issue
+- Retry with npm run deploy
+```
+
+**Why smart deploy?**
+- ✅ Pre-validates (catches errors before pushing)
+- ✅ Waits for Vercel (provides feedback)
+- ✅ Verifies production (ensures it's live)
+- ✅ Creates backup (easy rollback)
+- ✅ AI-friendly output (you can see everything)
+
 ---
 
 ## 🚫 FORBIDDEN BEHAVIORS
@@ -201,6 +249,31 @@ tests/feature/api.test.ts
 [copies that structure exactly]
 ```
 
+### ❌ Manual Deployments (🚀 NEW):
+
+**WRONG:**
+```
+git add -A
+git commit -m "message"
+git push origin main
+[no feedback, no verification, no rollback plan]
+```
+
+**CORRECT:**
+```
+npm run deploy "message"
+[automatic validation, verification, feedback, rollback available]
+```
+
+**WHY:** 
+- Manual push breaks the feedback loop
+- No pre-deploy validation
+- No deployment tracking
+- No automatic rollback
+- AI can't see what's happening
+
+**ALWAYS use `npm run deploy` for any deployment.**
+
 ---
 
 ## 🎯 QUALITY CRITERIA
@@ -215,6 +288,7 @@ Your code is ONLY ready when:
 - ✅ Passes `npm run repo:clean`
 - ✅ Passes `npm test`
 - ✅ Matches existing patterns perfectly
+- ✅ Deployed using `npm run deploy` (not manual git push)
 
 **If ANY of these are false, the code is NOT ready.**
 
