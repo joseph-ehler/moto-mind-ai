@@ -372,6 +372,24 @@ function aggregateData(results: any[]) {
     }
   }
   
+  // Deduplicate products (same brand + product_name + size)
+  if (data.products.length > 1) {
+    const uniqueProducts = new Map()
+    for (const product of data.products) {
+      const key = `${product.brand}|${product.product_name}|${product.size}`.toLowerCase()
+      if (!uniqueProducts.has(key)) {
+        uniqueProducts.set(key, product)
+      } else {
+        console.log(`⚠️ Duplicate product removed: ${product.brand} ${product.product_name}`)
+      }
+    }
+    const originalCount = data.products.length
+    data.products = Array.from(uniqueProducts.values())
+    if (data.products.length < originalCount) {
+      console.log(`✅ Deduplicated: ${originalCount} → ${data.products.length} products`)
+    }
+  }
+  
   // Calculate price per gallon if missing
   if (!data.price_per_gallon && data.total_amount && data.gallons) {
     data.price_per_gallon = parseFloat((data.total_amount / data.gallons).toFixed(3))
