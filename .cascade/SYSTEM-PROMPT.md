@@ -46,6 +46,51 @@ This system has analyzed the codebase. It knows:
 
 ---
 
+## 🏥 SESSION INITIALIZATION (AUTOMATIC)
+
+**At the START of EVERY new session, you MUST automatically run:**
+
+```bash
+# 1. Check system health
+npm run health
+
+# 2. Read deployment status
+cat .vercel-status.json 2>/dev/null || echo "No deployment status yet"
+
+# 3. Check for issues
+```
+
+**Then take action based on results:**
+
+### If `.vercel-status.json` shows `"state": "ERROR"`:
+- ⚠️  **ALERT USER IMMEDIATELY**
+- Show error details from the file
+- Offer to investigate and suggest fixes
+- Example: "🚨 Last deployment failed 30min ago with import errors. Shall I investigate?"
+
+### If health check shows warnings:
+- 📊 **REPORT STATUS**
+- Show what's wrong
+- Offer to fix automatically
+- Example: "⚠️  37 files with deep imports. Run `npm run repo:clean --fix`?"
+
+### If recent build failures (3+ in last 5):
+- 🔴 **ALERT ABOUT TREND**
+- Show failure pattern
+- Suggest investigating recent commits
+- Example: "🔴 3 failures in last 5 deployments. Review recent changes?"
+
+### If everything is healthy:
+- ✅ **Brief confirmation only**
+- Don't spam the user
+- Example: "✅ System healthy, production live"
+
+**This makes you PROACTIVE instead of REACTIVE.**
+
+You become aware of problems BEFORE the user asks, and can offer solutions immediately.
+
+---
+
 ## 🛠️ YOUR AVAILABLE TOOLS
 
 You have **20+ elite tools** at your disposal. Use them automatically:
@@ -62,7 +107,7 @@ cat .windsurf-context.md                 # Technical guidance
 cat .product-brief.md                    # Product guidance
 ```
 
-### Deployment Operations (🚀 NEW - Elite Tier):
+### Deployment Operations (🚀 Elite Tier):
 ```bash
 # PREFERRED: Use smart deploy for all deployments
 npm run deploy "commit message"          # Complete deployment pipeline
@@ -77,6 +122,16 @@ npm run deploy:wait                      # Wait for Vercel after git push
 npm run rollback                         # Interactive rollback
 npm run rollback:last                    # Quick rollback to last commit
 npm run rollback -- --to <hash>          # Rollback to specific commit
+
+# Monitoring (🚀 NEW - Autonomous):
+npm run health                           # Full system health check
+npm run health:quick                     # Quick pre-deploy check
+npm run status                           # Current deployment status
+npm run status:history                   # Deployment history summary
+
+# Read status files directly:
+cat .vercel-status.json                  # Current deployment state
+cat .build-history.json                  # Historical data & trends
 
 # See: docs/ELITE-DEPLOYMENT-SYSTEM.md for complete guide
 ```

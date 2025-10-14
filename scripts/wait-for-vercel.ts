@@ -23,6 +23,8 @@
  */
 
 import { execSync } from 'child_process'
+import { BuildErrorParser } from './parse-build-errors'
+import { DeploymentStatusManager, DeploymentStatus } from './deployment-status'
 
 interface VercelDeployment {
   uid: string
@@ -51,12 +53,17 @@ class VercelDeploymentWatcher {
   private maxWaitTime: number
   private pollInterval: number
   private verbose: boolean
+  private statusManager: DeploymentStatusManager
+  private errorParser: BuildErrorParser
+  private startTime: number = 0
   
   constructor(options: WatcherOptions = {}) {
     this.projectName = options.projectName || 'moto-mind-ai'
     this.maxWaitTime = options.maxWaitTime || 5 * 60 * 1000  // 5 minutes
     this.pollInterval = options.pollInterval || 10 * 1000     // 10 seconds
     this.verbose = options.verbose || false
+    this.statusManager = new DeploymentStatusManager()
+    this.errorParser = new BuildErrorParser()
   }
   
   async waitForDeployment(): Promise<void> {
@@ -68,7 +75,7 @@ class VercelDeploymentWatcher {
     console.log('='.repeat(60))
     console.log()
     
-    const startTime = Date.now()
+    this.startTime = Date.now()
     let lastState = ''
     let dotCount = 0
     
@@ -76,7 +83,7 @@ class VercelDeploymentWatcher {
     console.log('⏳ Waiting for deployment to start...')
     await this.sleep(5000)
     
-    while (Date.now() - startTime < this.maxWaitTime) {
+    while (Date.now() - this.startTime < this.maxWaitTime) {
       try {
         const deployment = await this.getLatestDeployment()
         
@@ -224,6 +231,8 @@ class VercelDeploymentWatcher {
   }
   
   private async showSuccess(deployment: VercelDeployment): Promise<void> {
+    const duration = Date.now() - this.startTime
+    
     console.log('\n' + '='.repeat(60))
     console.log('✅ DEPLOYMENT SUCCESSFUL!')
     console.log('='.repeat(60))
@@ -232,6 +241,7 @@ class VercelDeploymentWatcher {
     console.log(`🆔 ID:        ${deployment.uid}`)
     console.log(`⏱️  Deployed:  ${new Date(deployment.created).toLocaleString()}`)
     console.log(`🎯 Target:    ${deployment.target || 'production'}`)
+    console.log(`⚡ Duration:  ${(duration / 1000).toFixed(1)}s`)
     console.log()
     
     // Quick health check
@@ -249,6 +259,29 @@ class VercelDeploymentWatcher {
     console.log()
     console.log('Your changes are now live! 🎉')
     console.log()
+    
+    // Write status
+    try {
+      const commit = execSync('git rev-parse --short HEAD', { encoding: 'utf8', stdio: 'pipe' }).trim()
+      const branch = execSync('git branch --show-current', { encoding: 'utf8', stdio: 'pipe' }).trim()
+      
+      const status: DeploymentStatus = {
+        state: 'READY',
+        url: deployment.url,
+        timestamp: Date.now(),
+        commit,
+        branch,
+        duration,
+        deploymentId: deployment.uid
+      }
+      
+      this.statusManager.writeStatus(status)
+    } catch (e) {
+      // Non-critical, just log
+      if (this.verbose) {
+        console.error('Could not write deployment status:', e)
+      }
+    }
   }
   
   private async showError(deployment: VercelDeployment): Promise<void> {
@@ -259,16 +292,72 @@ class VercelDeploymentWatcher {
     console.log(`🆔 ID:     ${deployment.uid}`)
     console.log(`🔗 Logs:   ${deployment.inspectorUrl || `https://vercel.com/${this.projectName}/${deployment.uid}`}`)
     console.log()
-    console.log('Check the logs to see what went wrong.')
-    console.log()
-    console.log('Common issues:')
-    console.log('  • Build errors (TypeScript, linting)')
-    console.log('  • Missing environment variables')
-    console.log('  • Import errors')
-    console.log('  • Runtime errors')
-    console.log()
+    
+    // Try to fetch and parse build logs
+    let errors: any[] = []
+    let errorSummary = ''
+    
+    try {
+      console.log('🔍 Fetching build logs...')
+      const logs = execSync(
+        `vercel logs ${deployment.url} --output raw 2>/dev/null || vercel logs ${deployment.uid} --output raw 2>/dev/null || echo ""`,
+        { encoding: 'utf8', stdio: 'pipe', timeout: 30000 }
+      )
+      
+      if (logs && logs.trim()) {
+        errors = this.errorParser.parse(logs)
+        
+        if (errors.length > 0) {
+          console.log(this.errorParser.format(errors))
+          errorSummary = this.errorParser.summary(errors)
+        } else {
+          console.log('\n⚠️  Could not parse specific errors from logs')
+          console.log()
+        }
+      } else {
+        console.log('\n⚠️  Could not fetch detailed logs')
+        console.log()
+      }
+    } catch (e) {
+      console.log('\n⚠️  Could not fetch detailed logs')
+      console.log()
+    }
+    
+    if (errors.length === 0) {
+      console.log('Common issues:')
+      console.log('  • Build errors (TypeScript, linting)')
+      console.log('  • Missing environment variables')
+      console.log('  • Import errors')
+      console.log('  • Runtime errors')
+      console.log()
+    }
+    
     console.log('💡 Tip: Run `npm run build` locally to reproduce build errors')
     console.log()
+    
+    // Write error status
+    try {
+      const commit = execSync('git rev-parse --short HEAD', { encoding: 'utf8', stdio: 'pipe' }).trim()
+      const branch = execSync('git branch --show-current', { encoding: 'utf8', stdio: 'pipe' }).trim()
+      
+      const status: DeploymentStatus = {
+        state: 'ERROR',
+        url: deployment.url,
+        timestamp: Date.now(),
+        errors: errors.length > 0 ? errors : undefined,
+        errorSummary: errorSummary || 'Build failed (see logs)',
+        commit,
+        branch,
+        deploymentId: deployment.uid
+      }
+      
+      this.statusManager.writeStatus(status)
+    } catch (e) {
+      // Non-critical
+      if (this.verbose) {
+        console.error('Could not write deployment status:', e)
+      }
+    }
   }
   
   private sleep(ms: number): Promise<void> {

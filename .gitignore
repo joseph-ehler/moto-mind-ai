@@ -62,3 +62,7 @@ AFTER-CODE-CHECKLIST.md
 
 # Tool usage logs
 .windsurf/tool-usage.log
+
+# Deployment status (local only, not committed)
+.vercel-status.json
+.build-history.json
