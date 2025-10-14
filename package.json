@@ -23,6 +23,7 @@
     "protect:check": "node scripts/windsurf-protection.js check",
     "db:migrate": "npx tsx scripts/db-migrate.ts",
     "db:migrate:old": "npx tsx scripts/run-migrations.ts",
+    "db:smart-migrate": "npx tsx scripts/smart-migrate.ts",
     "db:seed": "npx tsx scripts/seed.ts",
     "db:introspect": "npx tsx scripts/db-introspect.ts",
     "db:generate-migration": "npx tsx scripts/generate-migration.ts",
