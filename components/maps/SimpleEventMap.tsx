@@ -42,7 +42,7 @@ export function SimpleEventMap({
   useEffect(() => {
     if (coordinates || !address || isGeocoding) return
 
-    const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
+    const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
     if (!token) return
 
     setIsGeocoding(true)
@@ -81,7 +81,7 @@ export function SimpleEventMap({
   useEffect(() => {
     if (!mapContainer.current || map.current || !coordinates) return
 
-    const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
+    const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
     if (!token) {
       console.warn('Mapbox token not configured')
       return
@@ -158,7 +158,7 @@ export function SimpleEventMap({
     }
   }, [mapStyle, coordinates, address, stationName])
 
-  if (!process.env.NEXT_PUBLIC_MAPBOX_TOKEN) {
+  if (!process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN) {
     return (
       <div className={`bg-gray-50 rounded-lg flex items-center justify-center ${className}`}>
         <div className="text-center p-6">

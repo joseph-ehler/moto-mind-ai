@@ -65,7 +65,7 @@ export function EventsMap({ events, height = '600px' }: EventsMapProps) {
   }
 
   // Check if Mapbox is configured
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
+  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
 
   if (!mapboxToken) {
     return (
@@ -75,7 +75,7 @@ export function EventsMap({ events, height = '600px' }: EventsMapProps) {
           Map Visualization Not Configured
         </h3>
         <p className="text-sm text-amber-700 mb-4">
-          Add your Mapbox token to <code className="bg-amber-100 px-2 py-1 rounded">NEXT_PUBLIC_MAPBOX_TOKEN</code> in <code className="bg-amber-100 px-2 py-1 rounded">.env.local</code>
+          Add your Mapbox token to <code className="bg-amber-100 px-2 py-1 rounded">NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN</code> in <code className="bg-amber-100 px-2 py-1 rounded">.env.local</code>
         </p>
         <a
           href="https://account.mapbox.com/access-tokens/"

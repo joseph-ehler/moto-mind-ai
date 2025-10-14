@@ -63,7 +63,7 @@ export function InteractiveEventMap({
   useEffect(() => {
     if (!mapContainer.current || map.current) return
 
-    const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
+    const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
     if (!token) {
       console.warn('Mapbox token not configured')
       return
@@ -292,7 +292,7 @@ export function InteractiveEventMap({
       )}
 
       {/* No Token Warning */}
-      {!process.env.NEXT_PUBLIC_MAPBOX_TOKEN && (
+      {!process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
           <div className="text-center p-6">
             <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-3" />
@@ -300,7 +300,7 @@ export function InteractiveEventMap({
               Mapbox token not configured
             </p>
             <p className="text-xs text-gray-500 mt-1">
-              Add NEXT_PUBLIC_MAPBOX_TOKEN to .env
+              Add NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN to .env
             </p>
           </div>
         </div>
