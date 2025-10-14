@@ -57,14 +57,14 @@ async function ensureMigrationsTable() {
 async function getAppliedMigrations(): Promise<Set<string>> {
   const { data, error } = await supabase
     .from('schema_migrations')
-    .select('name')
+    .select('filename')
   
   if (error) {
     console.warn('⚠️  Could not read schema_migrations:', error.message)
     return new Set()
   }
   
-  return new Set(data?.map(m => m.name) || [])
+  return new Set(data?.map(m => m.filename) || [])
 }
 
 async function getPendingMigrations(appliedSet: Set<string>): Promise<string[]> {
@@ -109,7 +109,7 @@ async function applyMigration(fileName: string): Promise<boolean> {
     // Record as applied
     const { error } = await supabase
       .from('schema_migrations')
-      .insert({ name: fileName })
+      .insert({ filename: fileName })
     
     if (error && !error.message.includes('duplicate key')) {
       throw error
