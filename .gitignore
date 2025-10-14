@@ -66,3 +66,4 @@ AFTER-CODE-CHECKLIST.md
 # Deployment status (local only, not committed)
 .vercel-status.json
 .build-history.json
+.vercel
