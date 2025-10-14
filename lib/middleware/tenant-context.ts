@@ -1,11 +1,10 @@
 // Tenant Context Middleware
-// Sets app.tenant_id in database sessions for RLS policies
+// Extracts tenant_id from NextAuth session for database queries
 
 import { createClient } from '@supabase/supabase-js'
 import { NextApiRequest } from 'next'
-
-// Demo tenant ID - in production, extract from JWT or session
-const DEMO_TENANT_ID = '550e8400-e29b-41d4-a716-446655440000'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../../app/api/auth/[...nextauth]/route'
 
 export async function createTenantAwareSupabaseClient(req?: NextApiRequest) {
   const supabase = createClient(
@@ -19,102 +18,49 @@ export async function createTenantAwareSupabaseClient(req?: NextApiRequest) {
     }
   )
 
-  // Extract tenant_id from JWT token or session
-  const tenantId = await extractTenantId(req) || DEMO_TENANT_ID
-
-  // Note: We don't use RLS with set_config because we explicitly set tenant_id in all queries
-  // This approach is simpler and more reliable than PostgreSQL session variables
+  // Extract tenant_id from NextAuth session
+  const tenantId = await extractTenantId(req)
 
   return { supabase, tenantId }
 }
 
 async function extractTenantId(req?: NextApiRequest): Promise<string | null> {
   if (!req) {
-    console.log('⚠️ No request object, using demo tenant')
-    return DEMO_TENANT_ID
+    console.error('❌ No request object provided to tenant middleware')
+    return null
   }
 
   try {
-    console.log('🔍 Looking for auth token in cookies:', Object.keys(req.cookies || {}))
+    // Get NextAuth session
+    const session = await getServerSession(authOptions)
     
-    // Extract auth token from cookies - Supabase uses chunked cookies for large JWTs
-    const authHeader = req.headers.authorization
-    
-    // Supabase splits large cookies into chunks (.0, .1, .2, etc.)
-    const supabaseProject = process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0] || ''
-    const baseCookieName = `sb-${supabaseProject}-auth-token`
-    
-    // Collect all chunks
-    let authCookie = null
-    const chunks: string[] = []
-    let chunkIndex = 0
-    
-    // Try to find chunked cookies
-    while (req.cookies[`${baseCookieName}.${chunkIndex}`]) {
-      const chunk = req.cookies[`${baseCookieName}.${chunkIndex}`]
-      if (chunk) chunks.push(chunk)
-      chunkIndex++
-    }
-    
-    if (chunks.length > 0) {
-      // Combine all chunks - they form a base64-encoded JSON session object
-      let combinedString = chunks.join('')
-      console.log(`✅ Found ${chunks.length} auth cookie chunks`)
-      
-      try {
-        // Decode base64 if needed
-        if (combinedString.startsWith('base64-')) {
-          combinedString = Buffer.from(combinedString.substring(7), 'base64').toString('utf-8')
-          console.log('✅ Decoded base64 session')
-        }
-        
-        // Parse the JSON session object
-        const session = JSON.parse(combinedString)
-        authCookie = session.access_token
-        console.log('✅ Extracted access_token from session JSON')
-      } catch (err) {
-        console.error('❌ Failed to parse session JSON:', err)
-        return DEMO_TENANT_ID
-      }
-    } else if (req.cookies[baseCookieName]) {
-      // Try non-chunked cookie
-      authCookie = req.cookies[baseCookieName]
-      console.log('✅ Found auth cookie:', baseCookieName)
-    }
-    
-    if (!authHeader && !authCookie) {
-      console.log('⚠️ No auth token found in headers or cookies, using demo tenant')
-      console.log('Available cookies:', Object.keys(req.cookies || {}))
-      return DEMO_TENANT_ID
+    if (!session || !session.user) {
+      console.log('⚠️ No NextAuth session found')
+      return null
     }
 
-    // Get token from either source
-    const token = authHeader?.replace('Bearer ', '') || authCookie || undefined
-
-    if (!token) {
-      console.log('⚠️ Token is empty, using demo tenant')
-      return DEMO_TENANT_ID
+    // Extract tenant_id from session (set by auth callback)
+    const tenantId = (session.user as any).tenant_id
+    
+    if (!tenantId) {
+      console.error('❌ Session exists but no tenant_id found')
+      console.error('Session user:', JSON.stringify(session.user, null, 2))
+      return null
     }
 
-    // Verify token and get user from Supabase
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
-
-    const { data: { user }, error } = await supabase.auth.getUser(token)
-
-    if (error || !user) {
-      console.log('⚠️ Failed to get user from token:', error?.message)
-      return DEMO_TENANT_ID
+    // Validate it's a UUID
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(tenantId)) {
+      console.error('❌ tenant_id is not a valid UUID:', tenantId)
+      return null
     }
 
-    console.log('✅ Extracted tenant ID from Supabase user:', user.id)
-    return user.id
+    console.log('✅ Extracted tenant ID from NextAuth session:', tenantId)
+    return tenantId
 
   } catch (error) {
     console.error('❌ Error extracting tenant ID:', error)
-    return DEMO_TENANT_ID
+    return null
   }
 }
 
@@ -124,6 +70,10 @@ export async function withTenantContext<T>(
   operation: (supabase: any, tenantId: string) => Promise<T>
 ): Promise<T> {
   const { supabase, tenantId } = await createTenantAwareSupabaseClient(req)
+  
+  if (!tenantId) {
+    throw new Error('UNAUTHORIZED: No valid session found')
+  }
   
   try {
     // Execute the operation with tenant-aware client
@@ -142,6 +92,15 @@ export function withTenantIsolation(handler: any) {
     try {
       // Create tenant-aware client and extract tenant ID
       const { supabase, tenantId } = await createTenantAwareSupabaseClient(req)
+      
+      // REJECT if no valid tenant_id (not authenticated)
+      if (!tenantId) {
+        console.error('❌ API request rejected - no valid authentication')
+        return res.status(401).json({
+          error: 'UNAUTHORIZED',
+          message: 'Authentication required'
+        })
+      }
       
       // Add to request object for handler access
       // Tenant isolation is handled by explicitly setting tenant_id in all queries

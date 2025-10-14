@@ -51,8 +51,12 @@ interface Vehicle {
 
 async function vehiclesHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Get tenant ID from middleware
-    const tenantId = (req as any).tenantId || '550e8400-e29b-41d4-a716-446655440000'
+    // Get tenant ID from middleware (set by withTenantIsolation)
+    const tenantId = (req as any).tenantId
+    
+    if (!tenantId) {
+      return res.status(401).json({ error: 'Unauthorized - no tenant context' })
+    }
 
     switch (req.method) {
       case 'GET':
