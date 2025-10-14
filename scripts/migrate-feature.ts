@@ -201,6 +201,7 @@ class FeatureMigrationHelper {
   private categorizeFile(filePath: string): FileToMove {
     const featureLower = this.featureName.toLowerCase()
     const fileName = path.basename(filePath)
+    const baseFileName = path.basename(filePath, path.extname(filePath))
     const dirName = path.dirname(filePath)
     
     // Determine category based on path and name
@@ -208,14 +209,21 @@ class FeatureMigrationHelper {
     let confidence: FileToMove['confidence'] = 'medium'
     let reason = ''
     
+    // FIX 1: API routes → data/ (highest priority - check first)
+    if (filePath.startsWith('pages/api/')) {
+      category = 'data'
+      confidence = 'high'
+      reason = 'API route'
+    }
     // Tests
-    if (dirName.includes('tests/') || dirName.includes('__tests__') || fileName.includes('.test.') || fileName.includes('.spec.')) {
+    else if (dirName.includes('tests/') || dirName.includes('__tests__') || fileName.includes('.test.') || fileName.includes('.spec.')) {
       category = 'tests'
       confidence = 'high'
       reason = 'Test file'
     }
-    // Hooks
-    else if (fileName.startsWith('use') && fileName.includes(featureLower)) {
+    // FIX 2: React hooks → hooks/ (improved detection)
+    // Matches: useVehicles, useVehicleEvents, etc. (use + PascalCase pattern)
+    else if (baseFileName.startsWith('use') && baseFileName.match(/^use[A-Z]/)) {
       category = 'hooks'
       confidence = 'high'
       reason = 'React hook'
@@ -226,7 +234,7 @@ class FeatureMigrationHelper {
       confidence = 'high'
       reason = 'UI component'
     }
-    // Data/API
+    // Data/API (services, queries, mutations)
     else if (fileName.includes('api') || fileName.includes('query') || fileName.includes('queries') || fileName.includes('mutation') || dirName.includes('services/')) {
       category = 'data'
       confidence = 'high'
