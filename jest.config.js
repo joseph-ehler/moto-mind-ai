@@ -22,6 +22,7 @@ const customJestConfig = {
   testMatch: [
     '<rootDir>/tests/unit/**/*.test.{ts,tsx}',
     '<rootDir>/tests/integration/**/*.test.{ts,tsx}',
+    '<rootDir>/tests/security/**/*.test.{ts,tsx}',
   ],
   collectCoverageFrom: [
     'app/**/*.{js,jsx,ts,tsx}',

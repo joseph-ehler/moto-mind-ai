@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { withTenantIsolation } from '@/lib/middleware/tenant-context'
 
-import { createClient } from '@supabase/supabase-js'
-
 // Increase body size limit for image uploads
 export const config = {
   api: {
@@ -12,14 +10,17 @@ export const config = {
   },
 }
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  // Get tenant context from middleware
+  const tenantId = (req as any).tenantId
+  const supabase = (req as any).supabase
+  
+  if (!tenantId || !supabase) {
+    return res.status(401).json({ error: 'Unauthorized - no tenant context' })
   }
 
   const { id: vehicleId } = req.query
@@ -77,7 +78,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { data: photoRecord, error: dbError } = await supabase
       .from('vehicle_images')
       .insert({
-        tenant_id: '550e8400-e29b-41d4-a716-446655440000', // Mock tenant ID
+        tenant_id: tenantId,
         vehicle_id: vehicleId,
         public_url: publicUrl,
         filename: filename || fileName,

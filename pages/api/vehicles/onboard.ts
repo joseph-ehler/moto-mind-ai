@@ -31,8 +31,12 @@ async function onboardHandler(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     // Get tenant ID and supabase client from middleware
-    const tenantId = (req as any).tenantId || '550e8400-e29b-41d4-a716-446655440000'
+    const tenantId = (req as any).tenantId
     const supabase = (req as any).supabase
+    
+    if (!tenantId) {
+      return res.status(401).json({ error: 'Unauthorized - no tenant context' })
+    }
     
     // Ensure tenant exists (create if first-time user)
     const { error: tenantCheckError } = await supabase

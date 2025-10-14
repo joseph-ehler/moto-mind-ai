@@ -4,7 +4,6 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { createClient } from '@supabase/supabase-js'
 import { withTenantIsolation } from '@/lib/middleware/tenant-context'
 
 async function saveFuelFillupHandler(
@@ -17,11 +16,12 @@ async function saveFuelFillupHandler(
 
   try {
     // Get tenant ID and supabase client from middleware
-    const tenantId = (req as any).tenantId || '550e8400-e29b-41d4-a716-446655440000'
-    const supabase = (req as any).supabase || createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const tenantId = (req as any).tenantId
+    const supabase = (req as any).supabase
+    
+    if (!tenantId || !supabase) {
+      return res.status(401).json({ error: 'Unauthorized - no tenant context' })
+    }
 
     const {
       vehicle_id,

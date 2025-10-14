@@ -44,7 +44,7 @@ async function updateEvent(req: NextApiRequest, res: NextApiResponse, vehicleId:
   // Build the update object
   const updateData: any = {
     edited_at: new Date().toISOString(),
-    // edited_by: userId, // TODO: Add when auth is implemented
+    edited_by: (req as any).userId || 'unknown',
   }
 
   // Update payload fields
@@ -110,7 +110,7 @@ async function deleteEvent(req: NextApiRequest, res: NextApiResponse, vehicleId:
     .from('vehicle_events')
     .update({ 
       deleted_at: new Date().toISOString(),
-      // edited_by: userId, // TODO: Add when auth is implemented
+      edited_by: (req as any).userId || 'unknown',
     })
     .eq('id', eventId)
     .eq('vehicle_id', vehicleId)

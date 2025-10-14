@@ -3,8 +3,6 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { withTenantIsolation } from '@/lib/middleware/tenant-context'
-
-import { createClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 
 // Validation schemas
@@ -17,29 +15,6 @@ const CreateImageSchema = z.object({
   description: z.string().optional(),
 })
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error('Missing Supabase environment variables')
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
-  }
-})
-
-// Mock auth for development
-function mockAuth(req: NextApiRequest) {
-  return {
-    tenantId: '550e8400-e29b-41d4-a716-446655440000',
-    userId: '550e8400-e29b-41d4-a716-446655440001',
-  }
-}
-
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -47,7 +22,16 @@ async function handler(
   try {
     console.log('🚀 Vehicle images API called:', req.method, req.url)
     
-    const auth = mockAuth(req)
+    // Get auth context from middleware
+    const tenantId = (req as any).tenantId
+    const userId = (req as any).userId
+    const supabase = (req as any).supabase
+    
+    if (!tenantId || !userId || !supabase) {
+      return res.status(401).json({ error: 'Unauthorized - no tenant context' })
+    }
+    
+    const auth = { tenantId, userId }
     const { id: vehicleId } = req.query
 
     if (!vehicleId || typeof vehicleId !== 'string') {
@@ -55,17 +39,17 @@ async function handler(
       return res.status(400).json({ error: 'Vehicle ID is required' })
     }
 
-    console.log('📋 Request details:', { method: req.method, vehicleId, tenantId: auth.tenantId })
+    console.log('📋 Request details:', { method: req.method, vehicleId, tenantId })
 
     switch (req.method) {
       case 'GET':
-        return await handleGetImages(req, res, auth, vehicleId)
+        return await handleGetImages(req, res, auth, vehicleId, supabase)
       case 'POST':
-        return await handleCreateImage(req, res, auth, vehicleId)
+        return await handleCreateImage(req, res, auth, vehicleId, supabase)
       case 'DELETE':
-        return await handleDeleteImage(req, res, auth, vehicleId)
+        return await handleDeleteImage(req, res, auth, vehicleId, supabase)
       case 'PATCH':
-        return await handleUpdateImage(req, res, auth, vehicleId)
+        return await handleUpdateImage(req, res, auth, vehicleId, supabase)
       default:
         console.log('❌ Method not allowed:', req.method)
         return res.status(405).json({ error: 'Method not allowed' })
@@ -84,7 +68,8 @@ async function handleGetImages(
   req: NextApiRequest,
   res: NextApiResponse,
   auth: { tenantId: string; userId: string },
-  vehicleId: string
+  vehicleId: string,
+  supabase: any
 ) {
   try {
     console.log('🔍 Fetching images for vehicle:', vehicleId, 'tenant:', auth.tenantId)
@@ -145,7 +130,8 @@ async function handleCreateImage(
   req: NextApiRequest,
   res: NextApiResponse,
   auth: { tenantId: string; userId: string },
-  vehicleId: string
+  vehicleId: string,
+  supabase: any
 ) {
   try {
     // Validate request body
@@ -214,7 +200,8 @@ async function handleUpdateImage(
   req: NextApiRequest,
   res: NextApiResponse,
   auth: { tenantId: string; userId: string },
-  vehicleId: string
+  vehicleId: string,
+  supabase: any
 ) {
   try {
     const { imageId, action, image_type } = req.body
@@ -314,7 +301,8 @@ async function handleDeleteImage(
   req: NextApiRequest,
   res: NextApiResponse,
   auth: { tenantId: string; userId: string },
-  vehicleId: string
+  vehicleId: string,
+  supabase: any
 ) {
   try {
     const { imageId } = req.body

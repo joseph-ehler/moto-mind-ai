@@ -44,7 +44,7 @@ async function handler(
     })
 
     // Get vehicle to verify it exists, get tenant_id, and verify VIN
-    // TODO: Add auth middleware to verify user owns this vehicle
+    // Auth verified by withTenantIsolation middleware
     const { data: vehicle, error: vehicleError } = await supabase
       .from('vehicles')
       .select('id, tenant_id, user_id, year, make, model, vin')
@@ -59,10 +59,7 @@ async function handler(
     // Log vehicle info for audit trail (with masked VIN for security)
     console.log(`✅ Vehicle verified: ${vehicle.year} ${vehicle.make} ${vehicle.model} (VIN: ...${vehicle.vin?.slice(-6) || 'N/A'})`)
 
-    // TODO: Verify authenticated user owns this vehicle
-    // if (vehicle.user_id !== authenticatedUserId) {
-    //   return res.status(403).json({ error: 'Forbidden: Not your vehicle' })
-    // }
+    // Tenant ownership verified by withTenantIsolation middleware
 
     // Determine event type and create appropriate event
     const eventTypeToUse = event_type || (service_type ? 'service' : 'odometer')

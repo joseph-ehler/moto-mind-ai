@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { createClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 import { handleApiError, ValidationError, DatabaseError } from '../../../lib/utils/errors'
 import { withTenantIsolation } from '../../../lib/middleware/tenant-context'
@@ -23,12 +22,12 @@ async function saveEventHandler(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     // Get tenant ID and supabase client from middleware
-    const tenantId = (req as any).tenantId || '550e8400-e29b-41d4-a716-446655440000'
-    const supabase = (req as any).supabase || createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      { auth: { autoRefreshToken: false, persistSession: false } }
-    )
+    const tenantId = (req as any).tenantId
+    const supabase = (req as any).supabase
+    
+    if (!tenantId || !supabase) {
+      return res.status(401).json({ error: 'Unauthorized - no tenant context' })
+    }
     
     // Validate request body
     const eventData = saveEventSchema.parse(req.body)

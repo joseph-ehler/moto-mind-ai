@@ -119,8 +119,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         timestamp: new Date().toISOString(),
         reason: updates.edit_reason || 'Manual edit via UI',
         changes: changes,
-        // TODO: Add edited_by when auth is implemented
-        // edited_by: userId,
+        edited_by: (req as any).userId || 'unknown',
       }
       
       console.log('📚 Edit history:', {
@@ -136,8 +135,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         updated_at: new Date().toISOString(),
         edit_changes: changes, // Keep for backward compatibility
         edit_history: [...existingHistory, newEditEntry], // Full history array
-        // TODO: Add edited_by when auth is implemented
-        // edited_by: userId,
+        edited_by: (req as any).userId || 'unknown',
       }
 
       console.log('🔧 Updating event with changes tracked:', eventId, { changes, updateData })
