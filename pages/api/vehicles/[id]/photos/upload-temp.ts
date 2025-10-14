@@ -6,6 +6,8 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { createClient } from '@supabase/supabase-js'
 import formidable from 'formidable'
 import { promises as fs } from 'fs'
@@ -23,7 +25,7 @@ export const config = {
   }
 }
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -109,3 +111,6 @@ export default async function handler(
     })
   }
 }
+
+
+export default withTenantIsolation(handler)

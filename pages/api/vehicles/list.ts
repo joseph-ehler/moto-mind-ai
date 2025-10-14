@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { createClient } from '@supabase/supabase-js'
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -31,3 +33,6 @@ export default async function handler(
     return res.status(500).json({ error: error.message })
   }
 }
+
+
+export default withTenantIsolation(handler)

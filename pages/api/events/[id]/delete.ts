@@ -1,11 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { createClient } from '@supabase/supabase-js'
 
 /**
  * DELETE /api/events/[id]/delete
  * Soft deletes an event (sets deleted_at timestamp)
  */
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -63,3 +65,6 @@ export default async function handler(
     return res.status(500).json({ error: 'Internal server error' })
   }
 }
+
+
+export default withTenantIsolation(handler)

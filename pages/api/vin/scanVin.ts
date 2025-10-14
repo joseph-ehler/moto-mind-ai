@@ -1,5 +1,7 @@
 // VIN Scanner API - Extract VIN from photos and decode vehicle details
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import formidable from 'formidable'
 import fs from 'fs'
 import OpenAI from 'openai'
@@ -29,7 +31,7 @@ interface VINDecodeResponse {
   confidence: number
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log('🔍 VIN Scanner API called:', { method: req.method })
   
   if (req.method !== 'POST') {
@@ -251,3 +253,6 @@ function isValidVIN(vin: string): boolean {
   
   return vin[8] === expectedCheckDigit
 }
+
+
+export default withTenantIsolation(handler)

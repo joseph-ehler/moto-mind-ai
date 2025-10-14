@@ -7,6 +7,8 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -14,7 +16,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -159,3 +161,6 @@ async function handleDelete(
     message: 'Mileage override removed - now using computed value from events'
   })
 }
+
+
+export default withTenantIsolation(handler)

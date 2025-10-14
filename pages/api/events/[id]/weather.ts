@@ -1,11 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { createClient } from '@supabase/supabase-js'
 
 /**
  * POST /api/events/[id]/weather
  * Re-fetches weather data for an event based on its date/time and location
  */
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -149,3 +151,6 @@ export default async function handler(
     return res.status(500).json({ error: 'Internal server error' })
   }
 }
+
+
+export default withTenantIsolation(handler)

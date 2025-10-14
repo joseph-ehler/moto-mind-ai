@@ -2,6 +2,8 @@
 // Combines Tesseract OCR and OpenAI Vision for reliable VIN detection
 
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import formidable from 'formidable'
 import fs from 'fs'
 import Tesseract from 'tesseract.js'
@@ -169,7 +171,7 @@ No explanations, just the VIN or "NOT_FOUND".`
   }
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -264,3 +266,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
   }
 }
+
+
+export default withTenantIsolation(handler)

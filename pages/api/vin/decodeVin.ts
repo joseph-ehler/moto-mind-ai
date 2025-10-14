@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { Pool } from 'pg'
 import { config } from 'dotenv'
 import { withValidation, validationSchemas } from '../../../lib/utils/api-validation'
@@ -184,7 +186,7 @@ async function getEPAFuelEconomy(make: string, model: string, year: number): Pro
   return null
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -285,3 +287,6 @@ function generateSmartDefaults(specs: VehicleSpecs) {
 
   return defaults
 }
+
+
+export default withTenantIsolation(handler)

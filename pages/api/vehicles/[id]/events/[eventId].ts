@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -12,7 +14,7 @@ const supabase = createClient(
   }
 )
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id: vehicleId, eventId } = req.query
 
   if (!vehicleId || !eventId) {
@@ -127,3 +129,6 @@ async function deleteEvent(req: NextApiRequest, res: NextApiResponse, vehicleId:
     message: 'Event deleted successfully'
   })
 }
+
+
+export default withTenantIsolation(handler)

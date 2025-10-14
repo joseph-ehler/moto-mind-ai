@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 
@@ -20,7 +22,7 @@ const openai = new OpenAI({
 const CATEGORIES = ['engine', 'drivetrain', 'dimensions', 'fuel_economy', 'safety', 'features'] as const
 type Category = typeof CATEGORIES[number]
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -522,3 +524,6 @@ function normalizeValue(value: any, key: string): any {
 
   return str
 }
+
+
+export default withTenantIsolation(handler)

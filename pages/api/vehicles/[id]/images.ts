@@ -2,6 +2,8 @@
 // Handles CRUD operations for vehicle images
 
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { createClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 
@@ -38,7 +40,7 @@ function mockAuth(req: NextApiRequest) {
   }
 }
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -373,3 +375,6 @@ async function handleDeleteImage(
     return res.status(500).json({ error: 'Failed to delete image' })
   }
 }
+
+
+export default withTenantIsolation(handler)

@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 
@@ -133,7 +135,7 @@ async function createTimelineEventFromPhoto({
   }
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -344,3 +346,6 @@ ${vehicle ? `- Compare visible vehicle features against expected: ${vehicle.year
     return res.status(500).json({ error: 'Failed to process image' })
   }
 }
+
+
+export default withTenantIsolation(handler)

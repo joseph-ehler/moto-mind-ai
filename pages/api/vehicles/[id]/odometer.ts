@@ -1,23 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { createClient } from '@supabase/supabase-js'
-// Note: Using simplified auth check - replace with your actual auth system
-// import { getServerSession } from 'next-auth/next'
-// import { authOptions } from '../../auth/[...nextauth]'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // @ts-ignore - tenantId and userId added by middleware
+  const tenantId = req.tenantId
+  // @ts-ignore
+  const userId = req.userId
+  // @ts-ignore
+  const supabase = req.supabase
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // TODO: Replace with proper auth check
-  // const session = await getServerSession(req, res, authOptions)
-  // if (!session?.user?.id) {
-  //   return res.status(401).json({ error: 'Unauthorized' })
-  // }
-  
-  // Temporary: Use mock user for development
-  const mockUserId = 'temp-user-id'
+  if (!tenantId) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
 
   const { id: vehicleId } = req.query
 
@@ -45,27 +39,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
     }
 
-    // TODO: Get user's tenant from proper auth
-    // const { data: user, error: userError } = await supabase
-    //   .from('users')
-    //   .select('tenant_id')
-    //   .eq('id', mockUserId)
-    //   .single()
-
-    // if (userError || !user || user.tenant_id !== vehicle.tenant_id) {
-    //   return res.status(403).json({ error: 'Access denied' })
-    // }
-
-    // Temporary: Use vehicle's tenant_id directly
-    const tenantId = vehicle.tenant_id
+    // Verify vehicle belongs to authenticated tenant
+    if (vehicle.tenant_id !== tenantId) {
+      return res.status(403).json({ error: 'Access denied' })
+    }
 
     switch (req.method) {
       case 'GET':
-        return handleGet(req, res, vehicleId, tenantId)
+        return handleGet(req, res, vehicleId, tenantId, supabase)
       case 'POST':
-        return handlePost(req, res, vehicleId, tenantId, mockUserId)
+        return handlePost(req, res, vehicleId, tenantId, userId, supabase)
       case 'PUT':
-        return handlePut(req, res, vehicleId, tenantId, mockUserId)
+        return handlePut(req, res, vehicleId, tenantId, userId, supabase)
       default:
         res.setHeader('Allow', ['GET', 'POST', 'PUT'])
         return res.status(405).json({ error: 'Method not allowed' })
@@ -77,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 // GET /api/vehicles/[id]/odometer - Get odometer readings for vehicle
-async function handleGet(req: NextApiRequest, res: NextApiResponse, vehicleId: string, tenantId: string) {
+async function handleGet(req: NextApiRequest, res: NextApiResponse, vehicleId: string, tenantId: string, supabase: any) {
   const { limit = '10', offset = '0', include_stats = 'false' } = req.query
 
   try {
@@ -147,7 +132,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, vehicleId: s
 }
 
 // POST /api/vehicles/[id]/odometer - Add new odometer reading
-async function handlePost(req: NextApiRequest, res: NextApiResponse, vehicleId: string, tenantId: string, userId: string) {
+async function handlePost(req: NextApiRequest, res: NextApiResponse, vehicleId: string, tenantId: string, userId: string, supabase: any) {
   const {
     mileage,
     source = 'manual',
@@ -224,8 +209,8 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, vehicleId: 
   }
 }
 
-// PUT /api/vehicles/[id]/odometer - Update odometer reading
-async function handlePut(req: NextApiRequest, res: NextApiResponse, vehicleId: string, tenantId: string, userId: string) {
+// PUT /api/vehicles/[id]/odometer - Update existing odometer reading
+async function handlePut(req: NextApiRequest, res: NextApiResponse, vehicleId: string, tenantId: string, userId: string, supabase: any) {
   const { reading_id, ...updateData } = req.body
 
   if (!reading_id) {
@@ -273,3 +258,5 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, vehicleId: s
     return res.status(500).json({ error: 'Failed to update odometer reading' })
   }
 }
+
+export default withTenantIsolation(handler)

@@ -2,6 +2,8 @@
 // Thin I/O adapter using the new modular vision architecture
 
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { withValidation, validationSchemas } from '../../../lib/utils/api-validation'
 import { parseMultipart, toBase64, normMode, normDocType } from '../../../lib/http/multipart'
 import { compressImageForVision, shouldCompressImage } from '../../../lib/utils/image-compression'
@@ -247,4 +249,4 @@ function getHttpStatusCode(errorCode: string): number {
   return statusMap[errorCode] || 500
 }
 
-export default handler
+export default withTenantIsolation(handler)
