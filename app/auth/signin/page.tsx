@@ -1,33 +1,12 @@
 'use client'
 
-import { useState } from 'react'
-import { createClient } from '@/lib/clients/supabase-browser'
+import { signIn } from 'next-auth/react'
 import { Container, Stack, Heading, Text, Button, Card } from '@/components/design-system'
-import { Chrome, AlertCircle } from 'lucide-react'
+import { Chrome } from 'lucide-react'
 
 export default function SignInPage() {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const supabase = createClient()
-
-  const handleGoogleSignIn = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      })
-
-      if (error) throw error
-    } catch (err: any) {
-      console.error('Sign-in error:', err)
-      setError(err.message || 'Failed to sign in')
-      setLoading(false)
-    }
+  const handleGoogleSignIn = () => {
+    signIn('google', { callbackUrl: '/vehicles' })
   }
 
   return (
@@ -43,27 +22,15 @@ export default function SignInPage() {
               </Text>
             </div>
 
-            {/* Error Message */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <Text className="text-red-800 font-medium">Sign-in failed</Text>
-                  <Text size="sm" className="text-red-600 mt-1">{error}</Text>
-                </div>
-              </div>
-            )}
-
             {/* Sign In Button */}
             <Button
               onClick={handleGoogleSignIn}
-              disabled={loading}
               size="lg"
               variant="primary"
               className="w-full flex items-center justify-center gap-3"
             >
               <Chrome className="w-5 h-5" />
-              {loading ? 'Signing in...' : 'Sign in with Google'}
+              Sign in with Google
             </Button>
 
             {/* Info */}

@@ -1,8 +1,9 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { LogOut } from 'lucide-react'
 
 export default function AuthenticatedLayout({
   children,
@@ -37,6 +38,19 @@ export default function AuthenticatedLayout({
     return null
   }
 
-  // Authenticated - render protected content
-  return <>{children}</>
+  // Authenticated - render protected content with sign-out button
+  return (
+    <>
+      <div className="fixed top-4 right-4 z-50">
+        <button
+          onClick={() => signOut({ callbackUrl: '/auth/signin' })}
+          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
+        >
+          <LogOut className="w-4 h-4" />
+          <span className="text-sm font-medium">Sign Out</span>
+        </button>
+      </div>
+      {children}
+    </>
+  )
 }
