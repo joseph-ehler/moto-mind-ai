@@ -53,3 +53,6 @@ playwright-report/
 # Temporary files
 tmp/
 temp/
+
+# Generated context files (regenerated per task)
+.windsurf-context.md
