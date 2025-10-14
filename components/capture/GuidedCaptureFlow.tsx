@@ -680,7 +680,9 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
         .from('vehicle_events')
         .insert({
           vehicle_id: vehicleId,
-          tenant_id: tenantId,
+          // TEMPORARILY DISABLED: tenant_id expects UUID but auth uses email
+          // TODO: Fix once proper user/tenant system is implemented
+          // tenant_id: tenantId,
           type: eventType,
           date: confirmedData.date || new Date().toISOString(),
           // Core fuel data
