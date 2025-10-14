@@ -713,7 +713,13 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
         .select()
         .single()
       
-      if (eventError) throw new Error(`Event creation failed: ${eventError.message}`)
+      if (eventError) {
+        // Friendly error message for duplicate receipts
+        if (eventError.message.includes('duplicate key') && eventError.message.includes('transaction_id')) {
+          throw new Error('This receipt has already been submitted. Each receipt can only be recorded once to prevent duplicates.')
+        }
+        throw new Error(`Event creation failed: ${eventError.message}`)
+      }
       console.log('✅ Event created with extracted data:', event.id)
       
       // 6. Upload and save each photo
