@@ -1,14 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { createClient } from '@supabase/supabase-js'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  // @ts-ignore - tenantId added by middleware
+  const tenantId = req.tenantId
+  // @ts-ignore - userId added by middleware
+  const userId = req.userId
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Temporary: Use mock user for development
-  const mockUserId = 'temp-user-id'
+  if (!tenantId) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
 
   const { id: vehicleId } = req.query
 
@@ -17,32 +18,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    console.log('🔍 Looking for vehicle:', vehicleId)
-    
-    // Verify vehicle belongs to user's tenant
-    const { data: vehicle, error: vehicleError } = await supabase
-      .from('vehicles')
-      .select('id, tenant_id')
-      .eq('id', vehicleId)
-      .single()
-
-    console.log('🚗 Vehicle query result:', { vehicle, vehicleError })
-
-    if (vehicleError || !vehicle) {
-      console.error('❌ Vehicle not found:', vehicleError)
-      return res.status(404).json({ 
-        error: 'Vehicle not found',
-        debug: { vehicleId, vehicleError: vehicleError?.message }
-      })
-    }
-
-    const tenantId = vehicle.tenant_id
-
     switch (req.method) {
       case 'GET':
         return handleGet(req, res, vehicleId, tenantId)
       case 'POST':
-        return handlePost(req, res, vehicleId, tenantId, mockUserId)
+        return handlePost(req, res, vehicleId, tenantId, userId)
       default:
         res.setHeader('Allow', ['GET', 'POST'])
         return res.status(405).json({ error: 'Method not allowed' })
@@ -52,6 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: 'Internal server error' })
   }
 }
+
+export default withTenantIsolation(handler)
 
 // GET /api/vehicles/[id]/fuel - Get fuel records for vehicle
 async function handleGet(req: NextApiRequest, res: NextApiResponse, vehicleId: string, tenantId: string) {
@@ -98,8 +80,8 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, vehicleId: 
   }
 
   try {
-    // For now, let's create a simple fuel record using a basic approach
-    // We'll use the existing database structure and create a simple log
+    // @ts-ignore - supabase added by middleware
+    const supabase = req.supabase
     
     console.log(`🔧 Attempting to save fuel record: $${total_amount} at ${station_name} for vehicle ${vehicleId}`)
     

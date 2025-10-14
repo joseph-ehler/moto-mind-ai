@@ -84,11 +84,14 @@ export async function withTenantContext<T>(
 export function withTenantIsolation(handler: any) {
   return async (req: NextApiRequest, res: any) => {
     try {
+      // Get session for user info
+      const session = await getServerSession(req, res, authOptions)
+      
       // Create tenant-aware client and extract tenant ID
       const { supabase, tenantId } = await createTenantAwareSupabaseClient(req, res)
       
       // REJECT if no valid tenant_id (not authenticated)
-      if (!tenantId) {
+      if (!tenantId || !session?.user?.email) {
         console.error('❌ API request rejected - no valid authentication')
         return res.status(401).json({
           error: 'UNAUTHORIZED',
@@ -100,6 +103,7 @@ export function withTenantIsolation(handler: any) {
       // Tenant isolation is handled by explicitly setting tenant_id in all queries
       ;(req as any).supabase = supabase
       ;(req as any).tenantId = tenantId
+      ;(req as any).userId = session.user.email
       
       // Call the original handler
       return await handler(req, res)
