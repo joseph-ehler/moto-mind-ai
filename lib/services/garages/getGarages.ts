@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NotFoundError, DatabaseError } from '@/lib/utils/errors'
-import type { GarageQuery } from '@/lib/validation/vehicless'
+import type { GarageQuery } from '@/lib/validation/garages'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

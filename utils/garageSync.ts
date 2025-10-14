@@ -39,7 +39,7 @@ export function notifyVehicleMoved(vehicleId: string, fromGarageId?: string, toG
 // Helper function to refresh garage data
 export async function refreshGarageData() {
   try {
-    const response = await fetch('/api/vehicless')
+    const response = await fetch('/api/garages')
     if (response.ok) {
       const data = await response.json()
       return data.garages || []
@@ -53,7 +53,7 @@ export async function refreshGarageData() {
 // Helper function to refresh specific garage
 export async function refreshGarage(garageId: string) {
   try {
-    const response = await fetch(`/api/vehicless/${garageId}`)
+    const response = await fetch(`/api/garages/${garageId}`)
     if (response.ok) {
       const data = await response.json()
       return data.garage

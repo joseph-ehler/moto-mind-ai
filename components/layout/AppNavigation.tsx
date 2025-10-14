@@ -15,9 +15,9 @@ export function AppNavigation() {
     },
     {
       label: 'Garages',
-      href: '/vehicless',
+      href: '/garages',
       icon: MapPin,
-      active: router.pathname.startsWith('/vehicless')
+      active: router.pathname.startsWith('/garages')
     }
   ]
 

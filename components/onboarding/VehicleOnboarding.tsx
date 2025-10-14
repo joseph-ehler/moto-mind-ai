@@ -192,7 +192,7 @@ export function VehicleOnboarding({ onComplete, onCancel }: VehicleOnboardingPro
   const handleCreateNewGarage = useCallback(async (location: { lat: number; lng: number; address: string }) => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/vehicless', {
+      const response = await fetch('/api/garages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

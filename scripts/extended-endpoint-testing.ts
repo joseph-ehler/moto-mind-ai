@@ -41,7 +41,7 @@ const keyEndpoints: EndpointTest[] = [
     }
   },
   {
-    endpoint: '/api/vehicless',
+    endpoint: '/api/garages',
     method: 'GET',
     expectedStatus: 200,
     testDescription: 'Garages list (verified working)'

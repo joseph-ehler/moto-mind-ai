@@ -29,8 +29,8 @@ const fetcher = async (url: string) => {
 
 export function useGarageWeather(garageId: string) {
   const endpoint = flags.useSimpleWeather
-    ? `/api/vehicless/${garageId}/weather-simple`
-    : `/api/vehicless/${garageId}/weather`
+    ? `/api/garages/${garageId}/weather-simple`
+    : `/api/garages/${garageId}/weather`
     
   const { data, error, mutate, isLoading } = useSWR(
     garageId ? endpoint : null,

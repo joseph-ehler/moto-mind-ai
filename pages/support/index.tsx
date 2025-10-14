@@ -29,7 +29,7 @@ const popularTopics = [
     icon: MapPin,
     title: 'Garage management',
     description: 'Adding locations and moving vehicles between garages',
-    href: '/support/vehicless'
+    href: '/support/garages'
   }
 ]
 

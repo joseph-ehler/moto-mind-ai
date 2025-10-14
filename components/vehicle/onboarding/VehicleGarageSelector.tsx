@@ -41,7 +41,7 @@ export function GaragePicker({
 
   const loadGarages = async () => {
     try {
-      const response = await fetch('/api/vehicless')
+      const response = await fetch('/api/garages')
       if (response.ok) {
         const data = await response.json()
         setGarages(data.garages || [])

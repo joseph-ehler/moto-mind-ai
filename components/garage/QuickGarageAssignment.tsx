@@ -37,7 +37,7 @@ export function QuickGarageAssignment({
 
   const fetchGarages = async () => {
     try {
-      const response = await fetch('/api/vehicless')
+      const response = await fetch('/api/garages')
       const data = await response.json()
       setGarages(data.garages || [])
     } catch (error) {

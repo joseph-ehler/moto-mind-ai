@@ -181,7 +181,7 @@ export function useOptimisticActions() {
       // Revalidate after success
       mutate('/api/vehicles')
       mutate(`/api/vehicles/${vehicleId}`)
-      mutate('/api/vehicless')
+      mutate('/api/garages')
       
       onSuccess?.(result)
       return result

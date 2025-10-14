@@ -38,8 +38,8 @@ const fetcher = async (url: string) => {
 
 export function useGarageJurisdiction(garageId: string) {
   const endpoint = flags.useSimpleJurisdiction 
-    ? `/api/vehicless/${garageId}/jurisdiction-simple`
-    : `/api/vehicless/${garageId}/jurisdiction`
+    ? `/api/garages/${garageId}/jurisdiction-simple`
+    : `/api/garages/${garageId}/jurisdiction`
     
   const { data, error, mutate, isLoading } = useSWR(
     garageId ? endpoint : null,
@@ -53,7 +53,7 @@ export function useGarageJurisdiction(garageId: string) {
 
   const applyJurisdiction = async () => {
     try {
-      const response = await fetch(`/api/vehicless/${garageId}/jurisdiction/apply`, {
+      const response = await fetch(`/api/garages/${garageId}/jurisdiction/apply`, {
         method: 'POST'
       })
       

@@ -24,7 +24,7 @@ const fetcher = async (url: string): Promise<{ garages: Garage[] }> => {
 }
 
 export function useGarages() {
-  const { data, error, mutate, isLoading } = useSWR('/api/vehicless', fetcher, {
+  const { data, error, mutate, isLoading } = useSWR('/api/garages', fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
     dedupingInterval: 30000, // 30 seconds
@@ -64,7 +64,7 @@ const singleGarageFetcher = async (url: string): Promise<{ garage: Garage }> => 
 
 export function useGarage(id: string) {
   const { data, error, mutate, isLoading } = useSWR(
-    id ? `/api/vehicless/${id}` : null,
+    id ? `/api/garages/${id}` : null,
     singleGarageFetcher,
     {
       revalidateOnFocus: false,
