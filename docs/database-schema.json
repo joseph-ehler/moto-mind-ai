@@ -1,0 +1,3242 @@
+{
+  "generatedAt": "2025-10-14T17:14:02.916Z",
+  "database": "https://ucbbzzoimghnaoihyqbd.supabase.co",
+  "totalTables": 19,
+  "tables": [
+    {
+      "name": "capture_sessions",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "vehicle_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "event_type",
+          "dataType": "character varying",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "capture_path",
+          "dataType": "character varying",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": 20
+        },
+        {
+          "name": "status",
+          "dataType": "character varying",
+          "isNullable": false,
+          "defaultValue": "'active'::character varying",
+          "maxLength": 20
+        },
+        {
+          "name": "total_steps",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "completed_steps",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": "0",
+          "maxLength": null
+        },
+        {
+          "name": "photos_captured",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": "0",
+          "maxLength": null
+        },
+        {
+          "name": "completed_step_ids",
+          "dataType": "ARRAY",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "started_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "last_activity_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "completed_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "abandoned_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "total_duration_ms",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "avg_step_duration_ms",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "event_id",
+          "dataType": "uuid",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "abandoned_at_step",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "abandonment_reason",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 100
+        },
+        {
+          "name": "platform",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 20
+        },
+        {
+          "name": "user_agent",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "gps_latitude",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "gps_longitude",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "event_id",
+          "foreignTableName": "vehicle_events",
+          "foreignColumnName": "id",
+          "deleteRule": "SET NULL",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "vehicle_id",
+          "foreignTableName": "vehicles",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "capture_sessions_pkey",
+          "definition": "CREATE UNIQUE INDEX capture_sessions_pkey ON public.capture_sessions USING btree (id)"
+        },
+        {
+          "name": "idx_capture_sessions_vehicle_id",
+          "definition": "CREATE INDEX idx_capture_sessions_vehicle_id ON public.capture_sessions USING btree (vehicle_id)"
+        },
+        {
+          "name": "idx_capture_sessions_tenant_id",
+          "definition": "CREATE INDEX idx_capture_sessions_tenant_id ON public.capture_sessions USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_capture_sessions_status",
+          "definition": "CREATE INDEX idx_capture_sessions_status ON public.capture_sessions USING btree (status)"
+        },
+        {
+          "name": "idx_capture_sessions_event_type",
+          "definition": "CREATE INDEX idx_capture_sessions_event_type ON public.capture_sessions USING btree (event_type)"
+        },
+        {
+          "name": "idx_capture_sessions_started_at",
+          "definition": "CREATE INDEX idx_capture_sessions_started_at ON public.capture_sessions USING btree (started_at)"
+        },
+        {
+          "name": "idx_capture_sessions_abandoned",
+          "definition": "CREATE INDEX idx_capture_sessions_abandoned ON public.capture_sessions USING btree (status, abandoned_at) WHERE ((status)::text = 'abandoned'::text)"
+        },
+        {
+          "name": "idx_session_completion",
+          "definition": "CREATE INDEX idx_session_completion ON public.capture_sessions USING btree (vehicle_id, status, started_at DESC) INCLUDE (event_type, total_duration_ms, photos_captured) WHERE ((status)::text = ANY ((ARRAY['completed'::character varying, 'abandoned'::character varying])::text[]))"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "capture_sessions_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "conversation_messages",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "thread_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "role",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "content",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "tokens_used",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": "0",
+          "maxLength": null
+        },
+        {
+          "name": "feedback_rating",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "feedback_comment",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "actions",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": "'[]'::jsonb",
+          "maxLength": null
+        },
+        {
+          "name": "context_references",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "model_used",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "model_version",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "was_helpful",
+          "dataType": "boolean",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "resolved_issue",
+          "dataType": "boolean",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "follow_up_needed",
+          "dataType": "boolean",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "feedback_tags",
+          "dataType": "ARRAY",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "metadata",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "thread_id",
+          "foreignTableName": "conversation_threads",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "conversation_messages_pkey",
+          "definition": "CREATE UNIQUE INDEX conversation_messages_pkey ON public.conversation_messages USING btree (id)"
+        },
+        {
+          "name": "idx_conversation_messages_thread",
+          "definition": "CREATE INDEX idx_conversation_messages_thread ON public.conversation_messages USING btree (thread_id, created_at)"
+        },
+        {
+          "name": "idx_conversation_messages_actions",
+          "definition": "CREATE INDEX idx_conversation_messages_actions ON public.conversation_messages USING gin (actions)"
+        },
+        {
+          "name": "idx_conversation_messages_role",
+          "definition": "CREATE INDEX idx_conversation_messages_role ON public.conversation_messages USING btree (thread_id, role)"
+        },
+        {
+          "name": "idx_conversation_messages_metadata",
+          "definition": "CREATE INDEX idx_conversation_messages_metadata ON public.conversation_messages USING gin (metadata)"
+        }
+      ],
+      "rowCount": 100,
+      "rlsEnabled": false,
+      "rlsPolicies": [
+        {
+          "name": "conversation_messages_all_policy",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "conversation_threads",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "vehicle_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "user_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "title",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "last_message_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "message_count",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": "0",
+          "maxLength": null
+        },
+        {
+          "name": "is_archived",
+          "dataType": "boolean",
+          "isNullable": true,
+          "defaultValue": "false",
+          "maxLength": null
+        },
+        {
+          "name": "context_snapshot",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "total_tokens",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": "0",
+          "maxLength": null
+        },
+        {
+          "name": "estimated_cost_usd",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": "0.00",
+          "maxLength": null
+        },
+        {
+          "name": "archived_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "vehicle_id",
+          "foreignTableName": "vehicles",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "conversation_threads_pkey",
+          "definition": "CREATE UNIQUE INDEX conversation_threads_pkey ON public.conversation_threads USING btree (id)"
+        },
+        {
+          "name": "idx_conversation_threads_vehicle",
+          "definition": "CREATE INDEX idx_conversation_threads_vehicle ON public.conversation_threads USING btree (vehicle_id, updated_at DESC)"
+        },
+        {
+          "name": "idx_conversation_threads_user",
+          "definition": "CREATE INDEX idx_conversation_threads_user ON public.conversation_threads USING btree (user_id, updated_at DESC)"
+        },
+        {
+          "name": "idx_conversation_threads_lookup",
+          "definition": "CREATE INDEX idx_conversation_threads_lookup ON public.conversation_threads USING btree (vehicle_id, user_id, last_message_at DESC) WHERE ((is_archived = false) OR (is_archived IS NULL))"
+        },
+        {
+          "name": "idx_conversation_threads_active",
+          "definition": "CREATE INDEX idx_conversation_threads_active ON public.conversation_threads USING btree (vehicle_id, updated_at DESC) WHERE (archived_at IS NULL)"
+        }
+      ],
+      "rowCount": 16,
+      "rlsEnabled": false,
+      "rlsPolicies": [
+        {
+          "name": "conversation_threads_all_policy",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "event_photos",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "event_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "image_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "sequence",
+          "dataType": "integer",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "step_id",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "is_primary",
+          "dataType": "boolean",
+          "isNullable": true,
+          "defaultValue": "false",
+          "maxLength": null
+        },
+        {
+          "name": "caption",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "notes",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "event_id",
+          "foreignTableName": "vehicle_events",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "image_id",
+          "foreignTableName": "vehicle_images",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_event_photos_lookup",
+          "definition": "CREATE INDEX idx_event_photos_lookup ON public.event_photos USING btree (event_id, sequence) INCLUDE (step_id, is_primary)"
+        },
+        {
+          "name": "event_photos_pkey",
+          "definition": "CREATE UNIQUE INDEX event_photos_pkey ON public.event_photos USING btree (id)"
+        },
+        {
+          "name": "unique_event_image",
+          "definition": "CREATE UNIQUE INDEX unique_event_image ON public.event_photos USING btree (event_id, image_id)"
+        },
+        {
+          "name": "unique_event_step",
+          "definition": "CREATE UNIQUE INDEX unique_event_step ON public.event_photos USING btree (event_id, step_id)"
+        },
+        {
+          "name": "idx_event_photos_event_id",
+          "definition": "CREATE INDEX idx_event_photos_event_id ON public.event_photos USING btree (event_id)"
+        },
+        {
+          "name": "idx_event_photos_image_id",
+          "definition": "CREATE INDEX idx_event_photos_image_id ON public.event_photos USING btree (image_id)"
+        },
+        {
+          "name": "idx_event_photos_tenant_id",
+          "definition": "CREATE INDEX idx_event_photos_tenant_id ON public.event_photos USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_event_photos_step_id",
+          "definition": "CREATE INDEX idx_event_photos_step_id ON public.event_photos USING btree (step_id)"
+        },
+        {
+          "name": "idx_event_photos_sequence",
+          "definition": "CREATE INDEX idx_event_photos_sequence ON public.event_photos USING btree (event_id, sequence)"
+        },
+        {
+          "name": "idx_event_photos_primary",
+          "definition": "CREATE INDEX idx_event_photos_primary ON public.event_photos USING btree (event_id, is_primary) WHERE (is_primary = true)"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "event_photos_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "garages",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "name",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "address",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": "''::text",
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "vehicle_count",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": "0",
+          "maxLength": null
+        },
+        {
+          "name": "last_used",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "deleted_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "lat",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "lng",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "timezone",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": "'UTC'::text",
+          "maxLength": null
+        },
+        {
+          "name": "is_default",
+          "dataType": "boolean",
+          "isNullable": true,
+          "defaultValue": "false",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_garages_tenant_active",
+          "definition": "CREATE INDEX idx_garages_tenant_active ON public.garages USING btree (tenant_id, deleted_at) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "garages_pkey",
+          "definition": "CREATE UNIQUE INDEX garages_pkey ON public.garages USING btree (id)"
+        },
+        {
+          "name": "idx_garages_vehicle_count",
+          "definition": "CREATE INDEX idx_garages_vehicle_count ON public.garages USING btree (vehicle_count DESC)"
+        },
+        {
+          "name": "idx_garages_last_used",
+          "definition": "CREATE INDEX idx_garages_last_used ON public.garages USING btree (last_used DESC NULLS LAST)"
+        },
+        {
+          "name": "idx_garages_deleted_at",
+          "definition": "CREATE INDEX idx_garages_deleted_at ON public.garages USING btree (deleted_at) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "idx_garages_tenant_id",
+          "definition": "CREATE INDEX idx_garages_tenant_id ON public.garages USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_garages_active",
+          "definition": "CREATE INDEX idx_garages_active ON public.garages USING btree (tenant_id) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "idx_garages_default",
+          "definition": "CREATE INDEX idx_garages_default ON public.garages USING btree (tenant_id, is_default) WHERE (is_default = true)"
+        },
+        {
+          "name": "idx_garages_one_default_per_tenant",
+          "definition": "CREATE UNIQUE INDEX idx_garages_one_default_per_tenant ON public.garages USING btree (tenant_id) WHERE ((is_default = true) AND (deleted_at IS NULL))"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": false,
+      "rlsPolicies": []
+    },
+    {
+      "name": "location_corrections",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "user_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "source_type",
+          "dataType": "character varying",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "source_id",
+          "dataType": "uuid",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "extracted_address",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "extracted_latitude",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "extracted_longitude",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "extraction_method",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "extraction_confidence",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 20
+        },
+        {
+          "name": "corrected_address",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "corrected_latitude",
+          "dataType": "numeric",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "corrected_longitude",
+          "dataType": "numeric",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "correction_method",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "correction_distance_km",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "name": "location_corrections_pkey",
+          "definition": "CREATE UNIQUE INDEX location_corrections_pkey ON public.location_corrections USING btree (id)"
+        },
+        {
+          "name": "idx_location_corrections_user_id",
+          "definition": "CREATE INDEX idx_location_corrections_user_id ON public.location_corrections USING btree (user_id)"
+        },
+        {
+          "name": "idx_location_corrections_source",
+          "definition": "CREATE INDEX idx_location_corrections_source ON public.location_corrections USING btree (source_type, source_id)"
+        },
+        {
+          "name": "idx_location_corrections_created_at",
+          "definition": "CREATE INDEX idx_location_corrections_created_at ON public.location_corrections USING btree (created_at DESC)"
+        },
+        {
+          "name": "idx_location_corrections_extraction_method",
+          "definition": "CREATE INDEX idx_location_corrections_extraction_method ON public.location_corrections USING btree (extraction_method)"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "location_corrections_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "photo_metadata",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "image_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "captured_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "capture_method",
+          "dataType": "character varying",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": 20
+        },
+        {
+          "name": "event_type",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "step_id",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "gps_latitude",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "gps_longitude",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "gps_accuracy",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "gps_timestamp",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "quality_score",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "quality_issues",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "original_size_bytes",
+          "dataType": "bigint",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "compressed_size_bytes",
+          "dataType": "bigint",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "compression_ratio",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "output_format",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 20
+        },
+        {
+          "name": "width",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "height",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "aspect_ratio",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "flash_mode",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 10
+        },
+        {
+          "name": "facing_mode",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 20
+        },
+        {
+          "name": "retake_count",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": "0",
+          "maxLength": null
+        },
+        {
+          "name": "capture_duration_ms",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "quality_warnings_shown",
+          "dataType": "ARRAY",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "platform",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 20
+        },
+        {
+          "name": "user_agent",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "was_heic_converted",
+          "dataType": "boolean",
+          "isNullable": true,
+          "defaultValue": "false",
+          "maxLength": null
+        },
+        {
+          "name": "heic_original_size_bytes",
+          "dataType": "bigint",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "was_edited",
+          "dataType": "boolean",
+          "isNullable": true,
+          "defaultValue": "false",
+          "maxLength": null
+        },
+        {
+          "name": "edit_operations",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "image_id",
+          "foreignTableName": "vehicle_images",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_photo_gps_location",
+          "definition": "CREATE INDEX idx_photo_gps_location ON public.photo_metadata USING gist (ll_to_earth((gps_latitude)::double precision, (gps_longitude)::double precision)) WHERE ((gps_latitude IS NOT NULL) AND (gps_longitude IS NOT NULL))"
+        },
+        {
+          "name": "photo_metadata_pkey",
+          "definition": "CREATE UNIQUE INDEX photo_metadata_pkey ON public.photo_metadata USING btree (id)"
+        },
+        {
+          "name": "idx_photo_metadata_image_id",
+          "definition": "CREATE INDEX idx_photo_metadata_image_id ON public.photo_metadata USING btree (image_id)"
+        },
+        {
+          "name": "idx_photo_metadata_tenant_id",
+          "definition": "CREATE INDEX idx_photo_metadata_tenant_id ON public.photo_metadata USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_photo_metadata_captured_at",
+          "definition": "CREATE INDEX idx_photo_metadata_captured_at ON public.photo_metadata USING btree (captured_at)"
+        },
+        {
+          "name": "idx_photo_metadata_event_type",
+          "definition": "CREATE INDEX idx_photo_metadata_event_type ON public.photo_metadata USING btree (event_type)"
+        },
+        {
+          "name": "idx_photo_metadata_step_id",
+          "definition": "CREATE INDEX idx_photo_metadata_step_id ON public.photo_metadata USING btree (step_id)"
+        },
+        {
+          "name": "idx_photo_metadata_quality_score",
+          "definition": "CREATE INDEX idx_photo_metadata_quality_score ON public.photo_metadata USING btree (quality_score)"
+        },
+        {
+          "name": "idx_photo_metadata_gps_location",
+          "definition": "CREATE INDEX idx_photo_metadata_gps_location ON public.photo_metadata USING btree (gps_latitude, gps_longitude) WHERE (gps_latitude IS NOT NULL)"
+        },
+        {
+          "name": "idx_photo_metadata_capture_method",
+          "definition": "CREATE INDEX idx_photo_metadata_capture_method ON public.photo_metadata USING btree (capture_method)"
+        },
+        {
+          "name": "idx_photo_quality_lookup",
+          "definition": "CREATE INDEX idx_photo_quality_lookup ON public.photo_metadata USING btree (quality_score DESC, event_type) INCLUDE (captured_at, gps_latitude, gps_longitude, retake_count) WHERE (quality_score IS NOT NULL)"
+        },
+        {
+          "name": "photo_metadata_tenant_id_idx",
+          "definition": "CREATE INDEX photo_metadata_tenant_id_idx ON public.photo_metadata USING btree (tenant_id)"
+        }
+      ],
+      "rowCount": 5,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "photo_metadata_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "profiles",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "email",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "full_name",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "profiles_pkey",
+          "definition": "CREATE UNIQUE INDEX profiles_pkey ON public.profiles USING btree (id)"
+        },
+        {
+          "name": "idx_profiles_tenant_id",
+          "definition": "CREATE INDEX idx_profiles_tenant_id ON public.profiles USING btree (tenant_id)"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "allow_all_profiles",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": null
+        }
+      ]
+    },
+    {
+      "name": "schema_migrations",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "integer",
+          "isNullable": false,
+          "defaultValue": "nextval('schema_migrations_id_seq'::regclass)",
+          "maxLength": null
+        },
+        {
+          "name": "filename",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "applied_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "name": "schema_migrations_pkey",
+          "definition": "CREATE UNIQUE INDEX schema_migrations_pkey ON public.schema_migrations USING btree (id)"
+        },
+        {
+          "name": "schema_migrations_filename_key",
+          "definition": "CREATE UNIQUE INDEX schema_migrations_filename_key ON public.schema_migrations USING btree (filename)"
+        }
+      ],
+      "rowCount": 3,
+      "rlsEnabled": false,
+      "rlsPolicies": []
+    },
+    {
+      "name": "tenants",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "name",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "is_active",
+          "dataType": "boolean",
+          "isNullable": true,
+          "defaultValue": "true",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "name": "tenants_pkey",
+          "definition": "CREATE UNIQUE INDEX tenants_pkey ON public.tenants USING btree (id)"
+        }
+      ],
+      "rowCount": 1,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "Service role can insert tenants",
+          "permissive": true,
+          "roles": [
+            "service_role"
+          ],
+          "command": "INSERT",
+          "using": null,
+          "withCheck": "true"
+        },
+        {
+          "name": "allow_all_tenants",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": null
+        }
+      ]
+    },
+    {
+      "name": "user_maintenance_preferences",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "user_id",
+          "dataType": "uuid",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "vehicle_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "interval_type",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "interval_value",
+          "dataType": "integer",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "interval_unit",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": "'miles'::text",
+          "maxLength": null
+        },
+        {
+          "name": "notes",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "source",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "vehicle_id",
+          "foreignTableName": "vehicles",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "user_maintenance_preferences_pkey",
+          "definition": "CREATE UNIQUE INDEX user_maintenance_preferences_pkey ON public.user_maintenance_preferences USING btree (id)"
+        },
+        {
+          "name": "user_maintenance_preferences_vehicle_id_interval_type_key",
+          "definition": "CREATE UNIQUE INDEX user_maintenance_preferences_vehicle_id_interval_type_key ON public.user_maintenance_preferences USING btree (vehicle_id, interval_type)"
+        },
+        {
+          "name": "idx_user_maintenance_prefs_vehicle",
+          "definition": "CREATE INDEX idx_user_maintenance_prefs_vehicle ON public.user_maintenance_preferences USING btree (vehicle_id)"
+        },
+        {
+          "name": "idx_user_maintenance_prefs_user",
+          "definition": "CREATE INDEX idx_user_maintenance_prefs_user ON public.user_maintenance_preferences USING btree (user_id)"
+        }
+      ],
+      "rowCount": 1,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "user_maintenance_preferences_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "user_tenants",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "user_id",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "role",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": "'owner'::text",
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "user_tenants_pkey",
+          "definition": "CREATE UNIQUE INDEX user_tenants_pkey ON public.user_tenants USING btree (id)"
+        },
+        {
+          "name": "user_tenants_user_id_tenant_id_key",
+          "definition": "CREATE UNIQUE INDEX user_tenants_user_id_tenant_id_key ON public.user_tenants USING btree (user_id, tenant_id)"
+        },
+        {
+          "name": "idx_user_tenants_user_id",
+          "definition": "CREATE INDEX idx_user_tenants_user_id ON public.user_tenants USING btree (user_id)"
+        },
+        {
+          "name": "idx_user_tenants_tenant_id",
+          "definition": "CREATE INDEX idx_user_tenants_tenant_id ON public.user_tenants USING btree (tenant_id)"
+        }
+      ],
+      "rowCount": 1,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "Service role can insert user_tenants",
+          "permissive": true,
+          "roles": [
+            "service_role"
+          ],
+          "command": "INSERT",
+          "using": null,
+          "withCheck": "true"
+        },
+        {
+          "name": "user_tenants_select",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "SELECT",
+          "using": "((auth.uid())::text = user_id)",
+          "withCheck": null
+        }
+      ]
+    },
+    {
+      "name": "vehicle_event_audit_logs",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "event_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "event_date",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "vehicle_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "action",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "changes",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "original_values",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "confidence_at_edit",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "validation_issues",
+          "dataType": "ARRAY",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "created_by",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "event_id",
+          "foreignTableName": "vehicle_events",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "vehicle_id",
+          "foreignTableName": "vehicles",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "vehicle_event_audit_logs_pkey",
+          "definition": "CREATE UNIQUE INDEX vehicle_event_audit_logs_pkey ON public.vehicle_event_audit_logs USING btree (id)"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "allow_all_audit",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": null
+        }
+      ]
+    },
+    {
+      "name": "vehicle_events",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "vehicle_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "type",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "date",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "miles",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "total_amount",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "gallons",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "vendor",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "payload",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "display_vendor",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "display_amount",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "display_summary",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "user_notes",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "edited_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "edited_by",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "edit_reason",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "deleted_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "event_summary",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "odometer_miles",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "fuel_eighths",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "image_id",
+          "dataType": "uuid",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "notes",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "edit_changes",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "edit_history",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "geocoded_lat",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "geocoded_lng",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "geocoded_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "geocoded_address",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "weather_temperature_f",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "weather_condition",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 20
+        },
+        {
+          "name": "weather_precipitation_mm",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "weather_windspeed_mph",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "weather_source",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": "'open_meteo'::character varying",
+          "maxLength": 50
+        },
+        {
+          "name": "weather_humidity_percent",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "weather_pressure_inhg",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "deletion_reason",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "restored_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "is_manual_entry",
+          "dataType": "boolean",
+          "isNullable": true,
+          "defaultValue": "true",
+          "maxLength": null
+        },
+        {
+          "name": "ocr_confidence",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "price_per_gallon",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "fuel_level",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "fuel_grade",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "products",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": "'[]'::jsonb",
+          "maxLength": null
+        },
+        {
+          "name": "vision_confidence_detail",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "validation_results",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "transaction_time",
+          "dataType": "time without time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "station_address",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "pump_number",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 10
+        },
+        {
+          "name": "payment_method",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 100
+        },
+        {
+          "name": "transaction_id",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 255
+        },
+        {
+          "name": "auth_code",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "invoice_number",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 50
+        },
+        {
+          "name": "receipt_metadata",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "image_id",
+          "foreignTableName": "vehicle_images",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "vehicle_id",
+          "foreignTableName": "vehicles",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_events_notes_fts",
+          "definition": "CREATE INDEX idx_events_notes_fts ON public.vehicle_events USING gin (to_tsvector('english'::regconfig, notes)) WHERE ((notes IS NOT NULL) AND (notes <> ''::text))"
+        },
+        {
+          "name": "idx_vehicle_events_edited_at",
+          "definition": "CREATE INDEX idx_vehicle_events_edited_at ON public.vehicle_events USING btree (edited_at) WHERE (edited_at IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_updated_at",
+          "definition": "CREATE INDEX idx_vehicle_events_updated_at ON public.vehicle_events USING btree (updated_at)"
+        },
+        {
+          "name": "idx_vehicle_events_is_manual_entry",
+          "definition": "CREATE INDEX idx_vehicle_events_is_manual_entry ON public.vehicle_events USING btree (is_manual_entry)"
+        },
+        {
+          "name": "idx_vehicle_events_ocr_confidence",
+          "definition": "CREATE INDEX idx_vehicle_events_ocr_confidence ON public.vehicle_events USING btree (ocr_confidence)"
+        },
+        {
+          "name": "idx_vehicle_events_edit_changes",
+          "definition": "CREATE INDEX idx_vehicle_events_edit_changes ON public.vehicle_events USING gin (edit_changes) WHERE (edit_changes IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_weather_condition",
+          "definition": "CREATE INDEX idx_vehicle_events_weather_condition ON public.vehicle_events USING btree (weather_condition) WHERE (weather_condition IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_temperature",
+          "definition": "CREATE INDEX idx_vehicle_events_temperature ON public.vehicle_events USING btree (weather_temperature_f) WHERE (weather_temperature_f IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_fuel_grade",
+          "definition": "CREATE INDEX idx_vehicle_events_fuel_grade ON public.vehicle_events USING btree (fuel_grade)"
+        },
+        {
+          "name": "idx_vehicle_events_price_per_gallon",
+          "definition": "CREATE INDEX idx_vehicle_events_price_per_gallon ON public.vehicle_events USING btree (price_per_gallon)"
+        },
+        {
+          "name": "idx_events_tenant_type",
+          "definition": "CREATE INDEX idx_events_tenant_type ON public.vehicle_events USING btree (tenant_id, type)"
+        },
+        {
+          "name": "idx_events_tenant_odometer",
+          "definition": "CREATE INDEX idx_events_tenant_odometer ON public.vehicle_events USING btree (tenant_id, odometer_miles) WHERE (odometer_miles IS NOT NULL)"
+        },
+        {
+          "name": "idx_events_summary",
+          "definition": "CREATE INDEX idx_events_summary ON public.vehicle_events USING btree (tenant_id, event_summary) WHERE (event_summary IS NOT NULL)"
+        },
+        {
+          "name": "idx_dashboard_snapshots",
+          "definition": "CREATE INDEX idx_dashboard_snapshots ON public.vehicle_events USING btree (tenant_id, vehicle_id, created_at) WHERE (type = 'dashboard_snapshot'::text)"
+        },
+        {
+          "name": "idx_vehicle_events_image",
+          "definition": "CREATE INDEX idx_vehicle_events_image ON public.vehicle_events USING btree (image_id) WHERE (image_id IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_edit_history",
+          "definition": "CREATE INDEX idx_vehicle_events_edit_history ON public.vehicle_events USING gin (edit_history) WHERE (edit_history IS NOT NULL)"
+        },
+        {
+          "name": "vehicle_events_pkey",
+          "definition": "CREATE UNIQUE INDEX vehicle_events_pkey ON public.vehicle_events USING btree (id)"
+        },
+        {
+          "name": "idx_vehicle_events_date",
+          "definition": "CREATE INDEX idx_vehicle_events_date ON public.vehicle_events USING btree (date)"
+        },
+        {
+          "name": "idx_vehicle_events_transaction_id",
+          "definition": "CREATE UNIQUE INDEX idx_vehicle_events_transaction_id ON public.vehicle_events USING btree (transaction_id) WHERE (transaction_id IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_payment_method",
+          "definition": "CREATE INDEX idx_vehicle_events_payment_method ON public.vehicle_events USING btree (payment_method)"
+        },
+        {
+          "name": "idx_vehicle_events_pump_number",
+          "definition": "CREATE INDEX idx_vehicle_events_pump_number ON public.vehicle_events USING btree (pump_number)"
+        },
+        {
+          "name": "idx_vehicle_events_date_time",
+          "definition": "CREATE INDEX idx_vehicle_events_date_time ON public.vehicle_events USING btree (date, transaction_time)"
+        },
+        {
+          "name": "idx_vehicle_events_notes",
+          "definition": "CREATE INDEX idx_vehicle_events_notes ON public.vehicle_events USING gin (to_tsvector('english'::regconfig, notes)) WHERE (notes IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_ai_context",
+          "definition": "CREATE INDEX idx_vehicle_events_ai_context ON public.vehicle_events USING btree (vehicle_id, date DESC, deleted_at) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_summary",
+          "definition": "CREATE INDEX idx_vehicle_events_summary ON public.vehicle_events USING btree (vehicle_id, type, date DESC) INCLUDE (total_amount, miles, display_summary) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_geocoded",
+          "definition": "CREATE INDEX idx_vehicle_events_geocoded ON public.vehicle_events USING btree (geocoded_lat, geocoded_lng) WHERE ((geocoded_lat IS NOT NULL) AND (geocoded_lng IS NOT NULL))"
+        },
+        {
+          "name": "idx_vehicle_events_vehicle_date_miles",
+          "definition": "CREATE INDEX idx_vehicle_events_vehicle_date_miles ON public.vehicle_events USING btree (vehicle_id, date DESC, miles) WHERE ((miles IS NOT NULL) AND (miles > 0))"
+        },
+        {
+          "name": "idx_events_tenant_vehicle_date_id",
+          "definition": "CREATE INDEX idx_events_tenant_vehicle_date_id ON public.vehicle_events USING btree (tenant_id, vehicle_id, date DESC, id DESC) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "idx_events_vehicle_type",
+          "definition": "CREATE INDEX idx_events_vehicle_type ON public.vehicle_events USING btree (vehicle_id, type) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "idx_events_timeline",
+          "definition": "CREATE INDEX idx_events_timeline ON public.vehicle_events USING btree (vehicle_id, date DESC, type) INCLUDE (total_amount, miles, vendor, display_summary) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "vehicle_events_tenant_id_idx",
+          "definition": "CREATE INDEX vehicle_events_tenant_id_idx ON public.vehicle_events USING btree (tenant_id)"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "vehicle_events_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "(deleted_at IS NULL)",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "vehicle_images",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "vehicle_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "storage_path",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "public_url",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "filename",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "image_type",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": "'general'::text",
+          "maxLength": null
+        },
+        {
+          "name": "is_primary",
+          "dataType": "boolean",
+          "isNullable": false,
+          "defaultValue": "false",
+          "maxLength": null
+        },
+        {
+          "name": "description",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "ai_category",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "ai_description",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "detected_text",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "processing_status",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": "'pending'::text",
+          "maxLength": null
+        },
+        {
+          "name": "processed_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "vehicle_details",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "condition_data",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "parts_visible",
+          "dataType": "ARRAY",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "maintenance_indicators",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "suggested_actions",
+          "dataType": "ARRAY",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "vehicle_match",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "event_id",
+          "dataType": "uuid",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "event_id",
+          "foreignTableName": "vehicle_events",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "vehicle_id",
+          "foreignTableName": "vehicles",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_vehicle_images_category",
+          "definition": "CREATE INDEX idx_vehicle_images_category ON public.vehicle_images USING btree (ai_category) WHERE (ai_category IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_images_processing_status",
+          "definition": "CREATE INDEX idx_vehicle_images_processing_status ON public.vehicle_images USING btree (processing_status)"
+        },
+        {
+          "name": "idx_vehicle_images_damage",
+          "definition": "CREATE INDEX idx_vehicle_images_damage ON public.vehicle_images USING btree (((condition_data ->> 'damage_detected'::text))) WHERE (condition_data IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_images_parts",
+          "definition": "CREATE INDEX idx_vehicle_images_parts ON public.vehicle_images USING gin (parts_visible) WHERE (parts_visible IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_images_mismatch",
+          "definition": "CREATE INDEX idx_vehicle_images_mismatch ON public.vehicle_images USING btree (((vehicle_match ->> 'matches_expected'::text))) WHERE (vehicle_match IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_images_vehicle",
+          "definition": "CREATE INDEX idx_vehicle_images_vehicle ON public.vehicle_images USING btree (vehicle_id)"
+        },
+        {
+          "name": "idx_vehicle_images_event_id",
+          "definition": "CREATE INDEX idx_vehicle_images_event_id ON public.vehicle_images USING btree (event_id)"
+        },
+        {
+          "name": "vehicle_images_pkey",
+          "definition": "CREATE UNIQUE INDEX vehicle_images_pkey ON public.vehicle_images USING btree (id)"
+        },
+        {
+          "name": "idx_vehicle_images_vehicle_id",
+          "definition": "CREATE INDEX idx_vehicle_images_vehicle_id ON public.vehicle_images USING btree (vehicle_id)"
+        },
+        {
+          "name": "idx_vehicle_images_tenant_id",
+          "definition": "CREATE INDEX idx_vehicle_images_tenant_id ON public.vehicle_images USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_vehicle_images_created_at",
+          "definition": "CREATE INDEX idx_vehicle_images_created_at ON public.vehicle_images USING btree (created_at DESC)"
+        },
+        {
+          "name": "vehicle_images_tenant_id_idx",
+          "definition": "CREATE INDEX vehicle_images_tenant_id_idx ON public.vehicle_images USING btree (tenant_id)"
+        }
+      ],
+      "rowCount": 25,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "vehicle_images_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "vehicle_spec_enhancements",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "vehicle_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "category",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "status",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": "'pending'::text",
+          "maxLength": null
+        },
+        {
+          "name": "data",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "sources",
+          "dataType": "ARRAY",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "confidence",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "processing_started_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "completed_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "error",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "vehicle_id",
+          "foreignTableName": "vehicles",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "vehicle_spec_enhancements_pkey",
+          "definition": "CREATE UNIQUE INDEX vehicle_spec_enhancements_pkey ON public.vehicle_spec_enhancements USING btree (id)"
+        },
+        {
+          "name": "vehicle_spec_enhancements_vehicle_id_category_key",
+          "definition": "CREATE UNIQUE INDEX vehicle_spec_enhancements_vehicle_id_category_key ON public.vehicle_spec_enhancements USING btree (vehicle_id, category)"
+        },
+        {
+          "name": "idx_vehicle_spec_status",
+          "definition": "CREATE INDEX idx_vehicle_spec_status ON public.vehicle_spec_enhancements USING btree (vehicle_id, status)"
+        },
+        {
+          "name": "idx_vehicle_spec_pending",
+          "definition": "CREATE INDEX idx_vehicle_spec_pending ON public.vehicle_spec_enhancements USING btree (status) WHERE (status = ANY (ARRAY['pending'::text, 'processing'::text]))"
+        }
+      ],
+      "rowCount": 111,
+      "rlsEnabled": false,
+      "rlsPolicies": []
+    },
+    {
+      "name": "vehicles",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "year",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "make",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "model",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "vin",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "display_name",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": false,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "garage_id",
+          "dataType": "uuid",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "trim",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "license_plate",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "nickname",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "manufacturer_mpg",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "manufacturer_service_interval_miles",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "hero_image_url",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "specs_enhancement_status",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": "'pending'::text",
+          "maxLength": null
+        },
+        {
+          "name": "specs_last_enhanced",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "specs_categories_completed",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": "0",
+          "maxLength": null
+        },
+        {
+          "name": "current_mileage",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "current_mileage_override",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "mileage_last_updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "mileage_computed_from",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "garage_id",
+          "foreignTableName": "garages",
+          "foreignColumnName": "id",
+          "deleteRule": "NO ACTION",
+          "updateRule": "NO ACTION"
+        },
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "vehicles_pkey",
+          "definition": "CREATE UNIQUE INDEX vehicles_pkey ON public.vehicles USING btree (id)"
+        },
+        {
+          "name": "idx_vehicles_tenant_id",
+          "definition": "CREATE INDEX idx_vehicles_tenant_id ON public.vehicles USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_vehicles_hero_image",
+          "definition": "CREATE INDEX idx_vehicles_hero_image ON public.vehicles USING btree (hero_image_url) WHERE (hero_image_url IS NOT NULL)"
+        },
+        {
+          "name": "vehicles_tenant_id_idx",
+          "definition": "CREATE INDEX vehicles_tenant_id_idx ON public.vehicles USING btree (tenant_id)"
+        }
+      ],
+      "rowCount": 22,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "vehicles_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "vision_accuracy",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "document_type",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "field_name",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "is_correct",
+          "dataType": "boolean",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "predicted_confidence",
+          "dataType": "numeric",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "name": "vision_accuracy_pkey",
+          "definition": "CREATE UNIQUE INDEX vision_accuracy_pkey ON public.vision_accuracy USING btree (id)"
+        },
+        {
+          "name": "idx_vision_accuracy_tenant_created",
+          "definition": "CREATE INDEX idx_vision_accuracy_tenant_created ON public.vision_accuracy USING btree (tenant_id, created_at DESC)"
+        },
+        {
+          "name": "idx_vision_accuracy_field",
+          "definition": "CREATE INDEX idx_vision_accuracy_field ON public.vision_accuracy USING btree (field_name)"
+        },
+        {
+          "name": "idx_vision_accuracy_document_type",
+          "definition": "CREATE INDEX idx_vision_accuracy_document_type ON public.vision_accuracy USING btree (document_type)"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "vision_accuracy_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "ALL",
+          "using": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)",
+          "withCheck": null
+        }
+      ]
+    },
+    {
+      "name": "vision_metrics",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "document_type",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "processing_time_ms",
+          "dataType": "integer",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "success",
+          "dataType": "boolean",
+          "isNullable": false,
+          "defaultValue": "false",
+          "maxLength": null
+        },
+        {
+          "name": "confidence",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "error_code",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "retry_attempt",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": "0",
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "name": "vision_metrics_pkey",
+          "definition": "CREATE UNIQUE INDEX vision_metrics_pkey ON public.vision_metrics USING btree (id)"
+        },
+        {
+          "name": "idx_vision_metrics_tenant_created",
+          "definition": "CREATE INDEX idx_vision_metrics_tenant_created ON public.vision_metrics USING btree (tenant_id, created_at DESC)"
+        },
+        {
+          "name": "idx_vision_metrics_document_type",
+          "definition": "CREATE INDEX idx_vision_metrics_document_type ON public.vision_metrics USING btree (document_type)"
+        },
+        {
+          "name": "idx_vision_metrics_success",
+          "definition": "CREATE INDEX idx_vision_metrics_success ON public.vision_metrics USING btree (success)"
+        }
+      ],
+      "rowCount": 51,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "vision_metrics_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "ALL",
+          "using": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)",
+          "withCheck": null
+        }
+      ]
+    }
+  ],
+  "tenantDataAudit": [
+    {
+      "table": "vehicles",
+      "totalRows": 22,
+      "rowsWithTenant": 22,
+      "rowsMissingTenant": 0
+    },
+    {
+      "table": "vehicle_events",
+      "totalRows": 0,
+      "rowsWithTenant": 0,
+      "rowsMissingTenant": 0
+    },
+    {
+      "table": "vehicle_images",
+      "totalRows": 25,
+      "rowsWithTenant": 25,
+      "rowsMissingTenant": 0
+    },
+    {
+      "table": "photo_metadata",
+      "totalRows": 5,
+      "rowsWithTenant": 5,
+      "rowsMissingTenant": 0
+    }
+  ]
+}

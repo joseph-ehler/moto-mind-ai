@@ -214,28 +214,28 @@ BEGIN
     (SELECT COUNT(*) FROM vehicles)::bigint,
     (SELECT COUNT(*) FROM vehicles WHERE tenant_id IS NOT NULL)::bigint,
     (SELECT COUNT(*) FROM vehicles WHERE tenant_id IS NULL)::bigint
-  WHERE EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'vehicles' AND column_name = 'tenant_id')
+  WHERE EXISTS (SELECT 1 FROM information_schema.columns c WHERE c.table_name = 'vehicles' AND c.column_name = 'tenant_id')
   UNION ALL
   SELECT 
     'vehicle_events'::text,
     (SELECT COUNT(*) FROM vehicle_events)::bigint,
     (SELECT COUNT(*) FROM vehicle_events WHERE tenant_id IS NOT NULL)::bigint,
     (SELECT COUNT(*) FROM vehicle_events WHERE tenant_id IS NULL)::bigint
-  WHERE EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'vehicle_events' AND column_name = 'tenant_id')
+  WHERE EXISTS (SELECT 1 FROM information_schema.columns c WHERE c.table_name = 'vehicle_events' AND c.column_name = 'tenant_id')
   UNION ALL
   SELECT 
     'vehicle_images'::text,
     (SELECT COUNT(*) FROM vehicle_images)::bigint,
     (SELECT COUNT(*) FROM vehicle_images WHERE tenant_id IS NOT NULL)::bigint,
     (SELECT COUNT(*) FROM vehicle_images WHERE tenant_id IS NULL)::bigint
-  WHERE EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'vehicle_images' AND column_name = 'tenant_id')
+  WHERE EXISTS (SELECT 1 FROM information_schema.columns c WHERE c.table_name = 'vehicle_images' AND c.column_name = 'tenant_id')
   UNION ALL
   SELECT 
     'photo_metadata'::text,
     (SELECT COUNT(*) FROM photo_metadata)::bigint,
     (SELECT COUNT(*) FROM photo_metadata WHERE tenant_id IS NOT NULL)::bigint,
     (SELECT COUNT(*) FROM photo_metadata WHERE tenant_id IS NULL)::bigint
-  WHERE EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'photo_metadata' AND column_name = 'tenant_id');
+  WHERE EXISTS (SELECT 1 FROM information_schema.columns c WHERE c.table_name = 'photo_metadata' AND c.column_name = 'tenant_id');
 END;
 $$;
 
