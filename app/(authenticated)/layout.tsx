@@ -1,8 +1,7 @@
 'use client'
 
-import { useSession, signOut } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useRequireAuth } from '@/lib/auth/client'
+import { signOut } from 'next-auth/react'
 import { LogOut } from 'lucide-react'
 
 export default function AuthenticatedLayout({
@@ -10,19 +9,10 @@ export default function AuthenticatedLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { data: session, status } = useSession()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (status === 'loading') return // Still loading
-    if (!session) {
-      // Not authenticated - redirect to sign in
-      router.push('/auth/signin')
-    }
-  }, [session, status, router])
+  const { user, isLoading } = useRequireAuth()
 
   // Show loading while checking auth
-  if (status === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -33,8 +23,8 @@ export default function AuthenticatedLayout({
     )
   }
 
-  // Not authenticated - don't render anything (redirect will happen)
-  if (!session) {
+  // useRequireAuth handles redirect if not authenticated
+  if (!user) {
     return null
   }
 

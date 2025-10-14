@@ -2,11 +2,14 @@
 // Extracts tenant_id from NextAuth session for database queries
 
 import { createClient } from '@supabase/supabase-js'
-import { NextApiRequest } from 'next'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../../app/api/auth/[...nextauth]/route'
+import { authOptions } from '../auth/config'
 
-export async function createTenantAwareSupabaseClient(req?: NextApiRequest) {
+export async function createTenantAwareSupabaseClient(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -19,43 +22,33 @@ export async function createTenantAwareSupabaseClient(req?: NextApiRequest) {
   )
 
   // Extract tenant_id from NextAuth session
-  const tenantId = await extractTenantId(req)
+  const tenantId = await extractTenantId(req, res)
 
   return { supabase, tenantId }
 }
 
-async function extractTenantId(req?: NextApiRequest): Promise<string | null> {
-  if (!req) {
-    console.error('❌ No request object provided to tenant middleware')
-    return null
-  }
-
+async function extractTenantId(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<string | null> {
   try {
-    // Get NextAuth session
-    const session = await getServerSession(authOptions)
+    // Get NextAuth session with req/res for API routes
+    const session = await getServerSession(req, res, authOptions)
     
-    if (!session || !session.user) {
-      console.log('⚠️ No NextAuth session found')
-      return null
-    }
-
-    // Extract tenant_id from session (set by auth callback)
-    const tenantId = (session.user as any).tenant_id
-    
-    if (!tenantId) {
-      console.error('❌ Session exists but no tenant_id found')
-      console.error('Session user:', JSON.stringify(session.user, null, 2))
+    if (!session?.user?.tenantId) {
+      console.log('⚠️ No valid session found')
       return null
     }
 
     // Validate it's a UUID
+    const tenantId = session.user.tenantId
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    
     if (!uuidRegex.test(tenantId)) {
       console.error('❌ tenant_id is not a valid UUID:', tenantId)
       return null
     }
 
-    console.log('✅ Extracted tenant ID from NextAuth session:', tenantId)
     return tenantId
 
   } catch (error) {
@@ -67,9 +60,10 @@ async function extractTenantId(req?: NextApiRequest): Promise<string | null> {
 // Helper to create tenant-aware database client
 export async function withTenantContext<T>(
   req: NextApiRequest,
+  res: NextApiResponse,
   operation: (supabase: any, tenantId: string) => Promise<T>
 ): Promise<T> {
-  const { supabase, tenantId } = await createTenantAwareSupabaseClient(req)
+  const { supabase, tenantId } = await createTenantAwareSupabaseClient(req, res)
   
   if (!tenantId) {
     throw new Error('UNAUTHORIZED: No valid session found')
@@ -91,7 +85,7 @@ export function withTenantIsolation(handler: any) {
   return async (req: NextApiRequest, res: any) => {
     try {
       // Create tenant-aware client and extract tenant ID
-      const { supabase, tenantId } = await createTenantAwareSupabaseClient(req)
+      const { supabase, tenantId } = await createTenantAwareSupabaseClient(req, res)
       
       // REJECT if no valid tenant_id (not authenticated)
       if (!tenantId) {
