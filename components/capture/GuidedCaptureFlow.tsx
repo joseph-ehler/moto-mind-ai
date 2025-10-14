@@ -99,27 +99,34 @@ export function GuidedCaptureFlow({ vehicleId, eventType }: GuidedCaptureFlowPro
       console.log('✅ Authenticated user with tenant:', tenantId)
       
       try {
+        // TEMPORARILY DISABLED: Capture sessions require proper UUID tenant_id
+        // Currently auth uses email as tenant_id which breaks UUID column
+        // TODO: Enable once proper user/tenant system is implemented
+        
+        // Skip capture_sessions for now (it's analytics, not critical)
+        console.log('⚠️ Capture sessions disabled (auth uses email, not UUID)')
+        
         // Create capture session
-        const { data: captureSession, error } = await supabase
-          .from('capture_sessions')
-          .insert({
-            vehicle_id: vehicleId,
-            tenant_id: tenantId,
-            event_type: eventType,
-            capture_path: 'guided',
-            total_steps: flowConfig.steps.length,
-            status: 'active'
-          })
-          .select()
-          .single()
+        // const { data: captureSession, error } = await supabase
+        //   .from('capture_sessions')
+        //   .insert({
+        //     vehicle_id: vehicleId,
+        //     tenant_id: tenantId,
+        //     event_type: eventType,
+        //     capture_path: 'guided',
+        //     total_steps: flowConfig.steps.length,
+        //     status: 'active'
+        //   })
+        //   .select()
+        //   .single()
         
-        if (error) {
-          console.error('❌ Session creation failed:', error)
-          return
-        }
+        // if (error) {
+        //   console.error('❌ Session creation failed:', error)
+        //   return
+        // }
         
-        setSessionId(captureSession.id)
-        console.log('✅ Session created:', captureSession.id)
+        // setSessionId(captureSession.id)
+        // console.log('✅ Session created:', captureSession.id)
       } catch (error) {
         console.error('❌ Session initialization error:', error)
       }
