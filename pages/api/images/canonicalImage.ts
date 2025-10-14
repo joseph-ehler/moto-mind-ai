@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { VehicleBodyType, mapToBodyType } from '../../../lib/types/vehicle-body-types'
 
 interface GetImageRequest {
@@ -26,7 +28,7 @@ interface GetImageResponse {
   error?: string
 }
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<GetImageResponse>
 ) {
@@ -87,3 +89,6 @@ export default async function handler(
     })
   }
 }
+
+
+export default withTenantIsolation(handler)

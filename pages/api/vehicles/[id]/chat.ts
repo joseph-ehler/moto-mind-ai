@@ -5,6 +5,8 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { OpenAI } from 'openai'
 
 const openai = new OpenAI({
@@ -33,7 +35,7 @@ interface ChatRequest {
   vehicleContext: VehicleContext
 }
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -112,3 +114,6 @@ GUIDELINES:
 
 Remember: This is a real vehicle with real maintenance needs. Provide practical, owner-focused guidance.`
 }
+
+
+export default withTenantIsolation(handler)

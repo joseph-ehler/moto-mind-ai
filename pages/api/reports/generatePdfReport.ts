@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { Pool } from 'pg'
 import { config } from 'dotenv'
 import PDFDocument from 'pdfkit'
@@ -16,7 +18,7 @@ interface ReportData {
   generatedAt: Date
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -408,3 +410,6 @@ function generateFooter(doc: PDFKit.PDFDocument, data: ReportData) {
      .text('QR Code', 460, footerY + 5)
      .text('(View Online)', 455, footerY + 15)
 }
+
+
+export default withTenantIsolation(handler)

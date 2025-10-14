@@ -2,6 +2,8 @@
 // Monitors usage, costs, and optimization opportunities
 
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { withValidation, validationSchemas } from '../../../lib/utils/api-validation'
 
 interface VisionUsageRecord {
@@ -21,7 +23,7 @@ interface VisionUsageRecord {
 // In-memory storage (replace with database in production)
 let usageRecords: VisionUsageRecord[] = []
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     // Record usage with validation
     return withValidation(req, res, validationSchemas.vision.costTracking, async (validatedData) => {
@@ -228,3 +230,6 @@ export const recordVisionUsage = async (record: VisionUsageRecord) => {
     console.error('Failed to record vision usage:', error)
   }
 }
+
+
+export default withTenantIsolation(handler)

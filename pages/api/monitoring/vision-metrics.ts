@@ -2,10 +2,12 @@
 // Provides production metrics for monitoring dashboard
 
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { visionMetrics } from '../../../lib/monitoring/vision-metrics'
 import { databaseVisionMetrics } from '../../../lib/monitoring/database-metrics'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
     return res.status(405).json({ 
       success: false, 
@@ -125,3 +127,6 @@ function getUptimeHours(): number {
   // Simple uptime calculation - in production would track actual start time
   return 1 // Placeholder - would calculate actual uptime
 }
+
+
+export default withTenantIsolation(handler)

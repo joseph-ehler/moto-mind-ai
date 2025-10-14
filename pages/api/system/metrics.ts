@@ -2,6 +2,8 @@
 // Production observability for monitoring and alerting
 
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import client from 'prom-client'
 
 // Create registry
@@ -86,7 +88,7 @@ register.registerMetric(uploadSize)
 register.registerMetric(manualEventsTotal)
 register.registerMetric(dataQualityScore)
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -231,3 +233,6 @@ export function recordManualEvent(
     })
     .inc()
 }
+
+
+export default withTenantIsolation(handler)

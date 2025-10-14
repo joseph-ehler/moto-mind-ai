@@ -12,11 +12,13 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+
 import { createClient } from '@supabase/supabase-js'
 import { getGeocodingMetrics } from '@/lib/geocoding-enhanced'
 import { getCacheStats } from '@/lib/cache/redis'
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -137,3 +139,6 @@ export default async function handler(
     return res.status(500).json({ error: 'Internal server error' })
   }
 }
+
+
+export default withTenantIsolation(handler)
