@@ -1,0 +1,253 @@
+{
+  "$schema": "https://windsurf.ai/schemas/project-settings.json",
+  "version": "1.0",
+  "project": {
+    "name": "MotoMind AI",
+    "type": "nextjs",
+    "description": "Fleet intelligence platform with elite autonomous tooling"
+  },
+  
+  "ai": {
+    "instructionsFile": ".cascade/SYSTEM-PROMPT.md",
+    "alwaysRead": [
+      ".cascade/SYSTEM-PROMPT.md",
+      ".cascade/instructions.md",
+      ".windsurfcontext",
+      "CONTRIBUTING.md"
+    ],
+    "beforeAnyTask": [
+      {
+        "name": "Read System Instructions",
+        "file": ".cascade/SYSTEM-PROMPT.md",
+        "required": true
+      },
+      {
+        "name": "Read Project Instructions",
+        "file": ".cascade/instructions.md",
+        "required": true
+      },
+      {
+        "name": "Check Available Tools",
+        "command": "npm run --silent 2>&1 | grep -E '(windsurf|product|db|repo|tools):' || true",
+        "display": false
+      }
+    ]
+  },
+  
+  "commands": {
+    "beforeCodeGeneration": {
+      "required": true,
+      "commands": [
+        {
+          "name": "Analyze Context",
+          "command": "npm run windsurf:guide",
+          "description": "MANDATORY: Analyze codebase before generating code",
+          "alwaysRun": true,
+          "requiresInput": true,
+          "inputPrompt": "What are you building?"
+        },
+        {
+          "name": "Show Reminder",
+          "command": "npm run tools:before-code",
+          "description": "Remind about mandatory workflow",
+          "alwaysRun": true
+        }
+      ]
+    },
+    "afterCodeGeneration": {
+      "required": true,
+      "commands": [
+        {
+          "name": "Validate Code",
+          "command": "npm run repo:analyze && npm run repo:clean",
+          "description": "Validate generated code",
+          "alwaysRun": true
+        },
+        {
+          "name": "Show Validation Reminder",
+          "command": "npm run tools:after-code",
+          "description": "Remind about validation",
+          "alwaysRun": true
+        }
+      ]
+    },
+    "beforeCommit": {
+      "required": true,
+      "commands": [
+        {
+          "name": "Pre-commit Check",
+          "command": "npm run windsurf:validate",
+          "description": "Full validation before commit",
+          "alwaysRun": true
+        },
+        {
+          "name": "Show Commit Reminder",
+          "command": "npm run tools:before-commit",
+          "description": "Remind about pre-commit checks",
+          "alwaysRun": true
+        }
+      ]
+    }
+  },
+  
+  "tools": {
+    "context": {
+      "analyze": {
+        "command": "npm run windsurf:guide",
+        "description": "Analyze codebase and generate task-specific guidance",
+        "requiresInput": true,
+        "outputFile": ".windsurf-context.md"
+      },
+      "validate": {
+        "command": "npm run windsurf:validate",
+        "description": "Full validation suite"
+      }
+    },
+    "product": {
+      "analyze": {
+        "command": "npm run product:analyze",
+        "description": "Strategic product analysis",
+        "requiresInput": true
+      },
+      "brief": {
+        "command": "npm run product:brief",
+        "description": "Generate comprehensive product brief",
+        "requiresInput": true,
+        "outputFile": ".product-brief.md"
+      }
+    },
+    "database": {
+      "introspect": {
+        "command": "npm run db:introspect",
+        "description": "Analyze complete database schema"
+      },
+      "generateMigration": {
+        "command": "npm run db:generate-migration",
+        "description": "Generate migration file",
+        "requiresInput": true
+      },
+      "testMigration": {
+        "command": "npm run db:test-migration",
+        "description": "Test migration safely",
+        "requiresInput": true
+      },
+      "applyMigration": {
+        "command": "npm run db:smart-migrate",
+        "description": "Apply migration with safety checks"
+      },
+      "validate": {
+        "command": "npm run db:validate",
+        "description": "Validate database health"
+      },
+      "doctor": {
+        "command": "npm run db:doctor",
+        "description": "Auto-heal database issues"
+      }
+    },
+    "repository": {
+      "analyze": {
+        "command": "npm run repo:analyze",
+        "description": "Understand repository state"
+      },
+      "clean": {
+        "command": "npm run repo:clean",
+        "description": "Find repository issues"
+      },
+      "cleanFix": {
+        "command": "npm run repo:clean --fix",
+        "description": "Auto-fix safe issues"
+      }
+    },
+    "testing": {
+      "all": {
+        "command": "npm test",
+        "description": "Run all tests"
+      },
+      "security": {
+        "command": "npm run test:security",
+        "description": "Run security tests"
+      },
+      "integration": {
+        "command": "npm run test:integration",
+        "description": "Run integration tests"
+      }
+    },
+    "enforcement": {
+      "remind": {
+        "command": "npm run tools:remind",
+        "description": "Show tool usage reminders"
+      },
+      "check": {
+        "command": "npm run tools:check",
+        "description": "Check tool usage compliance"
+      },
+      "generateReminders": {
+        "command": "npm run tools:generate-reminders",
+        "description": "Create reminder files"
+      }
+    }
+  },
+  
+  "workflows": {
+    "location": ".windsurf/workflows",
+    "autoDiscover": true,
+    "recommendations": {
+      "newFeature": "analyze-before-code",
+      "validation": "validate-after-code",
+      "morning": "morning-health-check",
+      "migration": "safe-migration",
+      "commit": "pre-commit-check"
+    }
+  },
+  
+  "rules": {
+    "imports": {
+      "enforce": "@/ path aliases",
+      "forbidden": ["../../../", "../../../../"],
+      "autoFix": true,
+      "errorLevel": "warning"
+    },
+    "testing": {
+      "required": true,
+      "minCoverage": 0,
+      "alwaysGenerate": true,
+      "errorLevel": "warning"
+    },
+    "security": {
+      "requireMiddleware": ["withTenantIsolation"],
+      "forbiddenPatterns": ["auth.uid()", "hardcoded-tenant-id"],
+      "rlsRequired": true,
+      "errorLevel": "error"
+    },
+    "codeGeneration": {
+      "mustAnalyzeFirst": true,
+      "mustFollowGuidance": true,
+      "mustIncludeTests": true,
+      "mustValidateAfter": true
+    }
+  },
+  
+  "reminders": {
+    "beforeTask": [
+      "🚨 MANDATORY: Run npm run windsurf:guide \"<task>\"",
+      "📖 Read: .windsurf-context.md",
+      "📚 Study: Examples shown in guidance"
+    ],
+    "duringTask": [
+      "✅ Use @/ imports (never ../../../)",
+      "✅ Include tests from the start",
+      "✅ Follow patterns from similar features"
+    ],
+    "afterTask": [
+      "🔍 Run: npm run repo:analyze",
+      "🧹 Run: npm run repo:clean",
+      "🧪 Run: npm test",
+      "✅ Fix any issues before committing"
+    ]
+  },
+  
+  "onboarding": {
+    "showOnFirstUse": true,
+    "message": "Welcome to MotoMind AI! This project has elite autonomous tooling. Before generating ANY code, run: npm run windsurf:guide \"<your task>\" to analyze the codebase and learn the patterns. See .cascade/instructions.md for full workflow."
+  }
+}

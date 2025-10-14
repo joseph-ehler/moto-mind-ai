@@ -56,3 +56,9 @@ temp/
 
 # Generated context files (regenerated per task)
 .windsurf-context.md
+.product-brief.md
+BEFORE-YOU-START.md
+AFTER-CODE-CHECKLIST.md
+
+# Tool usage logs
+.windsurf/tool-usage.log
