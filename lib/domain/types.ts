@@ -35,15 +35,15 @@ export function getVehicleDisplayName(vehicle: Partial<Vehicle>): string {
   }
   
   if (vehicle.make) {
-    parts.push(vehicle.make)
+    parts.push(vehicle.make.trim())
   }
   
   if (vehicle.model) {
-    parts.push(vehicle.model)
+    parts.push(vehicle.model.trim())
   }
   
   if (vehicle.trim) {
-    parts.push(vehicle.trim)
+    parts.push(vehicle.trim.trim())
   }
 
   if (parts.length === 0) {

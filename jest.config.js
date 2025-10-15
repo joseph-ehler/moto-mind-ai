@@ -23,18 +23,21 @@ const customJestConfig = {
     '<rootDir>/tests/unit/**/*.test.{ts,tsx}',
     '<rootDir>/tests/integration/**/*.test.{ts,tsx}',
     '<rootDir>/tests/security/**/*.test.{ts,tsx}',
+    '<rootDir>/features/**/__tests__/**/*.test.{ts,tsx}',
   ],
   collectCoverageFrom: [
     'app/**/*.{js,jsx,ts,tsx}',
     'components/**/*.{js,jsx,ts,tsx}',
     'lib/**/*.{js,jsx,ts,tsx}',
+    'features/**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
     '!**/.next/**',
     '!**/coverage/**',
     '!**/tests/**',
+    '!**/__tests__/**',
   ],
-  coverageThresholds: {
+  coverageThreshold: {
     global: {
       branches: 70,
       functions: 70,
