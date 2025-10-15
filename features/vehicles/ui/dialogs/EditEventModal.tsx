@@ -10,7 +10,7 @@ import React, { useState, useEffect } from 'react'
 import { Stack, Flex, Text, Button, Heading } from '@/components/design-system'
 import { BaseModalShell } from '@/components/design-system/feedback/ModalSystem'
 import { ModalContent } from '@/components/design-system/feedback/ModalInternals'
-import { EventValidationBanner } from './EventValidationBanner'
+import { EventValidationBanner } from '@/features/vehicles/ui/EventValidationBanner'
 import { validateEvent, ValidationWarning } from '@/lib/validation/event-validation'
 import { Edit, Loader, Check, X } from 'lucide-react'
 

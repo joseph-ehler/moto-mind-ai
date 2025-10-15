@@ -13,7 +13,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { Stack, Flex, Text, Button, Card, Modal, Heading } from '@/components/design-system'
 import { Sparkles, Send, Loader, AlertCircle, Trash2, MessageSquare, RefreshCw, Menu, X, Plus } from 'lucide-react'
-import { ConversationThreadList, ConversationThread } from './ConversationThreadList'
+import { ConversationThreadList, ConversationThread } from '@/features/vehicles/ui/ConversationThreadList'
 
 export interface Message {
   id: string
