@@ -68,14 +68,14 @@ class SmartDeploy {
   
   async deploy(): Promise<DeployResult> {
     console.log('🚀 SMART DEPLOY - ENTERPRISE EDITION\n')
-    console.log('='.repeat(70))
-    console.log(`Message: "${this.options.message}"`)
-    console.log(`Mode: ${this.options.fast ? 'FAST' : this.options.skipBuild ? 'SKIP BUILD' : 'FULL CHECKS'}`)
-    console.log('='.repeat(70))
+    console.log('='.repeat(60))
     console.log()
     
     try {
-      // Phase 1: Pre-flight checks
+      // Phase 0: Capture system state (automatic, silent)
+      execSync('npm run state:capture pre-deploy', { stdio: 'pipe' })
+      
+      // Phase 1: Pre-flight checks (includes backup creation)
       await this.preFlight()
       
       // Phase 2: Validation

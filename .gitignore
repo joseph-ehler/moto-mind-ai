@@ -67,6 +67,9 @@ AFTER-CODE-CHECKLIST.md
 .vercel-status.json
 .build-history.json
 
+# System state (auto-generated, not committed)
+.system-state.json
+
 # Temporary Vercel env file (created by env:check)
 .env.vercel.local
 .vercel
