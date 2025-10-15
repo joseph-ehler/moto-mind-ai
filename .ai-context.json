@@ -4,28 +4,27 @@
   "startedAt": "2025-10-15T17:42:39.794Z",
   "nextAction": null,
   "feature": "migrations",
-  "phase": "tests",
+  "phase": "domain",
   "files": [
     ".ai-context.json",
-    ".migration-analysis-ai-auth.json",
-    ".migration-analysis-auth.json",
-    ".migration-predictions-auth.json",
     ".migration-session.json",
-    ".tmp/jest_dx/haste-map-6098d5343f472e54bba0b592fe019453-fe2e1961869b53241f72d4f8ca6d60ee-92e75cb10cbed92ff2474c0d07a7d338",
-    "app/layout.tsx",
-    "components/auth/SupabaseAuthProvider.tsx",
-    "components/layout/Navigation.tsx",
-    "docs/AUTH-MIGRATION-CHECKLIST-AI.md",
-    "pages/_app.tsx"
+    "lib/middleware/tenant-context.ts",
+    "package.json",
+    "scripts/apply-rls-migration.ts",
+    "scripts/apply-rls-simple.ts",
+    "scripts/supabase-admin.ts",
+    "supabase/.temp/cli-latest",
+    "supabase/migrations/20251015_create_session_context_function.sql",
+    "supabase/migrations/20251015_secure_rls_policies.sql"
   ],
-  "windsurfStatus": "Committed: refactor(auth): remove unused SupabaseAuthProvider...",
-  "windsurfUpdated": "2025-10-15T18:33:43.456Z",
+  "windsurfStatus": "Committed: feat(auth): secure RLS policies with database-leve...",
+  "windsurfUpdated": "2025-10-15T18:54:53.714Z",
   "codexFeedback": {
     "command": "npm test features/migrations",
-    "result": "Tried running `npm test features/migrations`, but the sandbox terminated the command each time before Jest could start, so no test output was produced. Because approvals are disabled (`approval_policy` is `never`), I can’t rerun it outside the sandbox. You’ll need to execute the test locally in your own shell to see the results.\n",
+    "result": "Tried running `npm test features/migrations` (also with `--`) from the project root, but both invocations were blocked by the sandbox. With the current “never” approval policy I can’t escalate or bypass the restriction, so I couldn’t execute the tests myself. You can run `npm test -- features/migrations` locally to validate. Let me know if there’s anything else you’d like me to check in the meantime.\n",
     "success": true,
     "suggestions": [],
-    "timestamp": "2025-10-15T18:36:19.585Z"
+    "timestamp": "2025-10-15T18:55:19.130Z"
   },
-  "codexUpdated": "2025-10-15T18:36:19.585Z"
+  "codexUpdated": "2025-10-15T18:55:19.130Z"
 }
