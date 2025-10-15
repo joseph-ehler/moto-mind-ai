@@ -8,7 +8,7 @@
 'use client'
 
 import { use } from 'react'
-import { QuickCapturePath } from '@/components/capture/QuickCapturePath'
+import { QuickCapturePath } from '@/features/capture/ui/QuickCapturePath'
 
 export default function QuickCapturePage({
   params

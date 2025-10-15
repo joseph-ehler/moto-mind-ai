@@ -3,7 +3,7 @@
  * for use with DataSection component
  */
 
-import type { ExtractedField } from '@/components/capture/AIProposalReview'
+import type { ExtractedField } from '@/features/capture/ui/AIProposalReview'
 
 export interface FieldSection {
   title: string

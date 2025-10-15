@@ -13,9 +13,9 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Stack, Flex, Heading, Text, Button } from '@/components/design-system'
 import { Camera, Target, Zap, Clock, Sparkles } from 'lucide-react'
-import { CAPTURE_FLOWS } from './flow-config'
-import { useRecentEventTypes } from './hooks/useRecentEventTypes'
-import { useSuggestedEventType } from './hooks/useSuggestedEventType'
+import { CAPTURE_FLOWS } from '@/features/capture/domain/flow-config'
+import { useRecentEventTypes } from '@/features/capture/hooks/useRecentEventTypes'
+import { useSuggestedEventType } from '@/features/capture/hooks/useSuggestedEventType'
 import { captureAnalytics } from '@/lib/analytics'
 
 interface CaptureEntryModalProps {

@@ -17,7 +17,7 @@ import { AppNavigation } from '@/components/app/AppNavigation'
 import { CameraInterface } from './CameraInterface'
 import { CaptureMetadata } from '@/lib/capture-metadata'
 import { processImageFile } from '@/lib/heic-converter'
-import { detectEventType, CAPTURE_FLOWS } from './flow-config'
+import { detectEventType, CAPTURE_FLOWS } from '@/features/capture/domain/flow-config'
 import { Camera, ArrowLeft, Check, X, Sparkles } from 'lucide-react'
 import { captureAnalytics } from '@/lib/analytics'
 

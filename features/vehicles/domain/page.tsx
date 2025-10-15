@@ -8,7 +8,7 @@
 'use client'
 
 import { use } from 'react'
-import { GuidedCaptureFlow } from '@/components/capture/GuidedCaptureFlow'
+import { GuidedCaptureFlow } from '@/features/capture/ui/GuidedCaptureFlow'
 
 export default function GuidedCapturePage({
   params

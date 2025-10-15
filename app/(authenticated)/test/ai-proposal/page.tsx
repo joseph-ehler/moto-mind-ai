@@ -6,7 +6,7 @@
 'use client'
 
 import { useState } from 'react'
-import { AIProposalReview, type ExtractedField } from '@/components/capture/AIProposalReview'
+import { AIProposalReview, type ExtractedField } from '@/features/capture/ui/AIProposalReview'
 import type { DataConflict } from '@/lib/data-conflict-detection'
 
 export default function AIProposalTestPage() {

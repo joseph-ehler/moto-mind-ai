@@ -21,7 +21,7 @@ import { AreaChartCard, RadialProgress, Badge } from '@/components/design-system
 import { Timeline } from '@/features/timeline/ui/Timeline'
 import { VehicleFAB } from '@/components/ui/VehicleFAB.v2'
 import { QuickActionsModal } from '@/components/ui/QuickActionsModal'
-import { CaptureEntryModal } from '@/components/capture/CaptureEntryModal'
+import { CaptureEntryModal } from '@/features/capture/ui/CaptureEntryModal'
 import { VehicleDetailsSkeleton } from '@/features/vehicles/ui/VehicleDetailsSkeleton'
 import { VehicleSpecifications } from '@/features/vehicles/ui/VehicleSpecifications'
 import { DocumentsView } from '@/features/vehicles/ui/DocumentsView'
