@@ -171,7 +171,70 @@ function printSummary(session: MigrationSession) {
   console.log()
 }
 
-async function orchestrate(featureName: string) {
+async function orchestrateWithAI(featureName: string) {
+  try {
+    console.log('\n🚀 MIGRATION ORCHESTRATOR (AI-ENHANCED)\n')
+    
+    // Step 1: Capture baseline
+    const baseline = await captureBaseline()
+    
+    // Step 2: Template analysis
+    const analysis = await analyzeFeature(featureName)
+    
+    // Step 3: AI-enhanced analysis
+    console.log('\n🤖 Running AI-enhanced analysis...')
+    try {
+      execSync(`npm run migrate:analyze:ai ${featureName}`, { stdio: 'inherit' })
+    } catch (error) {
+      console.warn('⚠️  AI analysis failed, falling back to template analysis')
+    }
+    
+    // Step 4: Predict issues
+    console.log('\n🔮 Predicting potential issues...')
+    try {
+      execSync(`npm run migrate:predict ${featureName}`, { stdio: 'inherit' })
+    } catch (error) {
+      console.warn('⚠️  Issue prediction failed, continuing without predictions')
+    }
+    
+    // Step 5: Generate adaptive checklist
+    console.log('\n📋 Generating AI-enhanced checklist...')
+    let checklistPath: string
+    try {
+      execSync(`npm run migrate:checklist:ai ${featureName}`, { stdio: 'inherit' })
+      checklistPath = path.join(
+        process.cwd(),
+        'docs',
+        `${featureName.toUpperCase()}-MIGRATION-CHECKLIST-AI.md`
+      )
+    } catch (error) {
+      console.warn('⚠️  Adaptive checklist failed, using template checklist')
+      checklistPath = await generateChecklist(featureName)
+    }
+    
+    // Step 6: Create session
+    const session = createSession(featureName, baseline, analysis, checklistPath)
+    
+    // Step 7: Print summary
+    printSummary(session)
+    
+    console.log('✅ AI-enhanced migration session initialized!')
+    console.log(`💾 Session saved to: .migration-session.json`)
+    console.log()
+    console.log(`🎯 Ready to start Phase 1: Test Infrastructure`)
+    console.log()
+    
+  } catch (error) {
+    console.error('❌ Migration orchestration failed:', error)
+    process.exit(1)
+  }
+}
+
+async function orchestrate(featureName: string, useAI: boolean = false) {
+  if (useAI) {
+    return orchestrateWithAI(featureName)
+  }
+  
   try {
     console.log('\n🚀 MIGRATION ORCHESTRATOR\n')
     
@@ -195,6 +258,8 @@ async function orchestrate(featureName: string) {
     console.log()
     console.log(`🎯 Ready to start Phase 1: Test Infrastructure`)
     console.log()
+    console.log(`💡 Tip: Use 'npm run migrate:ai ${featureName}' for AI-enhanced analysis`)
+    console.log()
     
   } catch (error) {
     console.error('❌ Migration orchestration failed:', error)
@@ -203,12 +268,15 @@ async function orchestrate(featureName: string) {
 }
 
 // CLI
-const featureName = process.argv[2]
+const args = process.argv.slice(2)
+const useAI = args.includes('--ai')
+const featureName = args.find(arg => !arg.startsWith('--'))
 
 if (!featureName) {
-  console.error('❌ Usage: npm run migrate <feature-name>')
+  console.error('❌ Usage: npm run migrate <feature-name> [--ai]')
   console.error('   Example: npm run migrate vision')
+  console.error('   Example: npm run migrate vision --ai  # AI-enhanced')
   process.exit(1)
 }
 
-orchestrate(featureName)
+orchestrate(featureName, useAI)
