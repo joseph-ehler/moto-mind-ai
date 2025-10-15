@@ -163,15 +163,35 @@ class CodexWatcher {
     success: boolean
   }> {
     try {
-      const output = execSync(command, {
+      // Use Codex CLI with --full-auto for automatic execution
+      // This provides workspace-write sandbox and automatic approval on failures
+      const codexCommand = `codex exec --full-auto "${command}"`
+      
+      const output = execSync(codexCommand, {
         encoding: 'utf-8',
-        stdio: 'pipe'
+        stdio: 'pipe',
+        cwd: process.cwd()
       })
       
-      return { output, success: true }
+      // Extract actual command output from Codex response
+      // Codex wraps output with headers and token counts
+      const lines = output.split('\n')
+      const execLineIndex = lines.findIndex(line => line.includes('exec') || line.includes('succeeded') || line.includes('exited'))
+      const actualOutput = lines.slice(execLineIndex + 1, -2).join('\n').trim()
+      
+      // Check if command actually succeeded
+      const hasError = output.toLowerCase().includes('failed in sandbox') || 
+                      output.toLowerCase().includes('exited -1') ||
+                      output.toLowerCase().includes('error:')
+      
+      return { 
+        output: actualOutput || output, 
+        success: !hasError
+      }
     } catch (error: any) {
+      const errorOutput = error.stdout || error.stderr || error.message
       return {
-        output: error.stdout || error.stderr || error.message,
+        output: errorOutput,
         success: false
       }
     }
