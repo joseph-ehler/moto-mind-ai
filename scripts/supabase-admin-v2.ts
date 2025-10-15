@@ -27,6 +27,7 @@ import { generateMigration, saveMigration } from './supabase-admin/migration-gen
 import { simulatePolicy, testCrossTenantIsolation } from './supabase-admin/policy-simulator'
 import { validateDataIntegrity, printIntegrityReport, autoFixIssues } from './supabase-admin/data-integrity'
 import { analyzePerformance, printPerformanceReport, generateOptimizationSQL } from './supabase-admin/performance-analyzer'
+import { generateTestData, previewTestData } from './supabase-admin/test-data-generator'
 
 // Load environment
 dotenv.config({ path: path.join(__dirname, '../.env.local') })
@@ -255,6 +256,46 @@ async function main() {
       break
     }
     
+    // SEED TEST DATA
+    case 'seed': {
+      const table = args[0]
+      const countArg = args.find(a => a.startsWith('--count='))
+      const tenantArg = args.find(a => a.startsWith('--tenant='))
+      const preview = args.includes('--preview')
+      
+      if (!table) {
+        console.error('Usage: npm run supabase:admin seed <table> --count=<n> --tenant=<id> [--preview]')
+        process.exit(1)
+      }
+      
+      if (preview) {
+        previewTestData(table, 5)
+        break
+      }
+      
+      if (!tenantArg) {
+        console.error('Error: --tenant=<id> is required')
+        process.exit(1)
+      }
+      
+      const count = countArg ? parseInt(countArg.split('=')[1]) : 10
+      const tenantId = tenantArg.split('=')[1]
+      
+      const result = await generateTestData(supabase, {
+        table,
+        count,
+        tenantId,
+        realistic: true
+      })
+      
+      if (result.failed > 0) {
+        console.error(`\n⚠️  ${result.failed} records failed to insert`)
+        process.exit(1)
+      }
+      
+      break
+    }
+    
     // COMPREHENSIVE ANALYSIS
     case 'analyze':
     case 'full': {
@@ -298,6 +339,7 @@ async function main() {
       console.log()
       console.log('Migration & Development:')
       console.log('  generate-migration --add-column=<table>:<column>:<type> [--secure] [--save]')
+      console.log('  seed <table> --count=<n> --tenant=<id> [--preview]  - Generate realistic test data')
       console.log('  tenants                         - List all tenants')
       console.log()
       console.log('Analysis:')
