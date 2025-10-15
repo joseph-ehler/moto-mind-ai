@@ -74,11 +74,16 @@
         "status": "in_progress",
         "startTime": "2025-10-15T18:38:17.869Z",
         "commits": 1
+      },
+      "domain": {
+        "status": "in_progress",
+        "startTime": "2025-10-15T19:02:56.505Z",
+        "commits": 1
       }
     },
-    "currentPhase": null,
-    "totalElapsed": 31.506566666666668,
-    "commits": 4,
-    "lastUpdate": "2025-10-15T18:54:44.155Z"
+    "currentPhase": "domain",
+    "totalElapsed": 39.7124,
+    "commits": 5,
+    "lastUpdate": "2025-10-15T19:02:56.505Z"
   }
 }

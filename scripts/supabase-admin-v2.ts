@@ -25,6 +25,8 @@ import { generateTypes } from './supabase-admin/type-generator'
 import { mapRelationships, printRelationshipMap, generateMermaidDiagram } from './supabase-admin/relationship-mapper'
 import { generateMigration, saveMigration } from './supabase-admin/migration-generator'
 import { simulatePolicy, testCrossTenantIsolation } from './supabase-admin/policy-simulator'
+import { validateDataIntegrity, printIntegrityReport, autoFixIssues } from './supabase-admin/data-integrity'
+import { analyzePerformance, printPerformanceReport, generateOptimizationSQL } from './supabase-admin/performance-analyzer'
 
 // Load environment
 dotenv.config({ path: path.join(__dirname, '../.env.local') })
@@ -96,6 +98,39 @@ async function main() {
       printSecurityReport(report)
       
       // Exit with error code if score is low
+      if (report.score < 70) {
+        process.exit(1)
+      }
+      break
+    }
+    
+    // DATA INTEGRITY VALIDATION
+    case 'validate-integrity':
+    case 'integrity': {
+      const report = await validateDataIntegrity(supabase, TABLES)
+      printIntegrityReport(report)
+      
+      if (args.includes('--auto-fix')) {
+        const result = await autoFixIssues(supabase, report.issues)
+        console.log(`\n✅ Auto-fix complete: ${result.fixed} fixed, ${result.failed} failed`)
+      }
+      
+      if (report.score < 70) {
+        process.exit(1)
+      }
+      break
+    }
+    
+    // PERFORMANCE ANALYSIS
+    case 'performance':
+    case 'analyze-performance': {
+      const report = await analyzePerformance(supabase, TABLES)
+      printPerformanceReport(report)
+      
+      if (args.includes('--generate-sql')) {
+        generateOptimizationSQL(report.issues)
+      }
+      
       if (report.score < 70) {
         process.exit(1)
       }
@@ -257,6 +292,10 @@ async function main() {
       console.log('  test-policy <table> --tenant=<id>       - Simulate RLS policy')
       console.log('  test-isolation <table> --tenant1=<id> --tenant2=<id>  - Test cross-tenant isolation')
       console.log()
+      console.log('Data Quality & Performance:')
+      console.log('  integrity [--auto-fix]          - Validate data integrity, find orphaned records')
+      console.log('  performance [--generate-sql]    - Analyze performance, find slow queries')
+      console.log()
       console.log('Migration & Development:')
       console.log('  generate-migration --add-column=<table>:<column>:<type> [--secure] [--save]')
       console.log('  tenants                         - List all tenants')
@@ -267,6 +306,8 @@ async function main() {
       console.log('Examples:')
       console.log('  npm run supabase:admin schema vehicles --json')
       console.log('  npm run supabase:admin audit')
+      console.log('  npm run supabase:admin integrity')
+      console.log('  npm run supabase:admin performance --generate-sql')
       console.log('  npm run supabase:admin test-policy vehicles --tenant=b9281da3-16c4-4370-83ad-4672cf928065')
       console.log('  npm run supabase:admin generate-migration --add-column=vehicles:fuel_type:varchar --secure --save')
       console.log('  npm run supabase:admin analyze')
