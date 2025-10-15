@@ -42,6 +42,7 @@
     "product:brief": "npx tsx scripts/dev-tools/product-intelligence.ts brief",
     "product:analyze:ai": "npx tsx scripts/dev-tools/product-intelligence-ai.ts analyze",
     "product:brief:ai": "npx tsx scripts/dev-tools/product-intelligence-ai.ts brief",
+    "build:errors:ai": "npx tsx scripts/dev-tools/parse-build-errors-ai.ts",
     "tools:remind": "npx tsx scripts/windsurf-tools/tool-enforcer.ts remind",
     "tools:check": "npx tsx scripts/windsurf-tools/tool-enforcer.ts check",
     "tools:before-code": "npx tsx scripts/windsurf-tools/tool-enforcer.ts before-code",
