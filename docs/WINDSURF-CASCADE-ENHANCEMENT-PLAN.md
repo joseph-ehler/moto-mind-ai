@@ -1,9 +1,33 @@
 # 🚀 WINDSURF CASCADE ENHANCEMENT PLAN
-## Transform Cascade from helpful assistant → true AI pair programmer
+## Internal Tools to Make Cascade 10x More Effective on MotoMindAI
 
 **Created:** October 15, 2025  
 **Status:** Strategic Vision & Implementation Roadmap  
-**Estimated Value:** Category-defining differentiation in AI coding assistant market
+**Scope:** Internal tools built WITHIN MotoMindAI project (not modifying Windsurf itself)  
+**Estimated Value:** 30-40% productivity boost on MotoMindAI development
+
+---
+
+## ⚠️ IMPORTANT SCOPE CLARIFICATION
+
+**What we're building:**
+- Internal tools within the MotoMindAI repository
+- Scripts and utilities that help Cascade work better on THIS project
+- Knowledge files (.windsurf/) that Cascade can read
+- CLI commands that Cascade can invoke
+
+**What we're NOT building:**
+- Modifications to Windsurf/Cascade product itself
+- Features that require Codeium source code access
+- A new product (though this could become one later)
+
+**Why this approach:**
+✅ No dependencies on Codeium
+✅ Can start immediately
+✅ Full control over implementation
+✅ Rapid iteration
+✅ Proven value before pitching to Codeium
+✅ Could become open-source toolkit later
 
 ---
 
