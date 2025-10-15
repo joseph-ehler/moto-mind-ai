@@ -1,0 +1,36 @@
+{
+  "featureName": "auth",
+  "componentCount": 1,
+  "totalFiles": 1,
+  "maxNestingDepth": 0,
+  "hasSubdirectories": false,
+  "hasInternalImports": false,
+  "complexityLevel": "low",
+  "estimatedTime": "0.5-1 hour",
+  "similarTo": "capture",
+  "recommendations": [
+    "✅ Straightforward migration - follow standard 4-phase process",
+    "✅ Should be fastest migration yet (based on capture pattern)"
+  ],
+  "warnings": [],
+  "aiInsights": {
+    "actualComplexity": "medium",
+    "hiddenIssues": [
+      "Dependency on external library for auth",
+      "Use of React context and hooks for state management"
+    ],
+    "recommendations": [
+      "Ensure the Supabase client initialization is compatible with the new structure",
+      "Refactor the context and state logic into the domain layer, ensuring hooks are properly isolated"
+    ],
+    "estimatedTime": "2-4 hours",
+    "reasoning": "While the template analysis suggests low complexity due to the small number of components and files, the use of external libraries (Supabase) and React's context and hooks for state management introduces additional complexity. These aspects require careful extraction of domain logic and updating of import paths, especially considering the need to maintain backward compatibility. The migration also involves ensuring that the Supabase client is correctly initialized in the new structure, which could require adjustments beyond simple file relocation.",
+    "confidence": 0.8
+  },
+  "confidenceLevel": 0.5599999999999999,
+  "usedAI": true,
+  "costEstimate": {
+    "inputTokens": 542,
+    "outputTokens": 205
+  }
+}

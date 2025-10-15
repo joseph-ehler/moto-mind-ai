@@ -4,7 +4,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useAuth } from '@/components/auth/SupabaseAuthProvider'
+import { useSession, signOut } from 'next-auth/react'
 import { 
   Home, 
   Car, 
@@ -18,7 +18,9 @@ import {
 
 export function Navigation() {
   const router = useRouter()
-  const { user, signOut: handleSignOut } = useAuth()
+  const { data: session } = useSession()
+  const user = session?.user
+  const handleSignOut = () => signOut()
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   
   const navItems = [
@@ -101,7 +103,7 @@ export function Navigation() {
                     {user?.email && (
                       <div className="px-4 py-2 border-b border-gray-100">
                         <p className="text-sm font-medium text-gray-900 truncate">
-                          {user.user_metadata?.name || 'User'}
+                          {user.name || 'User'}
                         </p>
                         <p className="text-xs text-gray-500 truncate">
                           {user.email}

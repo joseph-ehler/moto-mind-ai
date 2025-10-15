@@ -1,0 +1,16 @@
+{
+  "featureName": "auth",
+  "componentCount": 1,
+  "totalFiles": 1,
+  "maxNestingDepth": 0,
+  "hasSubdirectories": false,
+  "hasInternalImports": false,
+  "complexityLevel": "low",
+  "estimatedTime": "0.5-1 hour",
+  "similarTo": "capture",
+  "recommendations": [
+    "✅ Straightforward migration - follow standard 4-phase process",
+    "✅ Should be fastest migration yet (based on capture pattern)"
+  ],
+  "warnings": []
+}
