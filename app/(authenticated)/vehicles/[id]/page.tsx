@@ -68,7 +68,7 @@ import {
 } from 'lucide-react'
 import { AppNavigation } from '@/components/app/AppNavigation'
 import { VehicleHeader } from '@/features/vehicles/ui/VehicleHeader'
-import { DataSectionV2 } from '@/components/events/DataSection.v2'
+import { DataSectionV2 } from '@/features/events/ui/DataSection.v2'
 import { FieldHelp } from '@/components/ui/FieldHelp'
 import { AIBadgeWithPopover } from '@/components/ui/AIBadgeWithPopover'
 import { 
