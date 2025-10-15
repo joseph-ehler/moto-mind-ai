@@ -27,6 +27,7 @@
     "db:test-migration": "npx tsx scripts/test-migration.ts",
     "db:storage": "npx tsx scripts/database-suite/storage-manager.ts",
     "db:doctor": "npx tsx scripts/database-suite/doctor.ts",
+    "db:doctor:ai": "npx tsx scripts/database-suite/doctor-ai.ts",
     "db:schema-diff": "npx tsx scripts/database-suite/diff.ts",
     "db:seed": "npx tsx scripts/dev-tools/seed.ts",
     "db:apply-rls": "npx tsx scripts/database-suite/apply-rls-simple.ts",
