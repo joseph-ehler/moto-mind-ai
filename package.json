@@ -72,6 +72,8 @@
     "windsurf:query": "npx tsx scripts/windsurf-tools/query-graph.ts",
     "windsurf:batch": "npx tsx scripts/windsurf-tools/batch-operations.ts",
     "windsurf:history": "npx tsx scripts/windsurf-tools/operation-history.ts",
+    "windsurf:patterns": "npx tsx scripts/windsurf-tools/pattern-library.ts",
+    "windsurf:context": "npx tsx scripts/windsurf-tools/context-checkpoint.ts",
     "refine:vehicles": "npx tsx scripts/refine-vehicles-structure.ts",
     "deploy": "npx tsx scripts/smart-deploy.ts",
     "deploy:wait": "npx tsx scripts/wait-for-vercel.ts",

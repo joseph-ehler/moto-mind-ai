@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "motomind-ai",
+    "description": "Fleet intelligence you can explain, audit, and trust",
+    "tech_stack": [
+      "Next.js",
+      "TypeScript",
+      "Supabase",
+      "NextAuth"
+    ],
+    "patterns": [
+      "Feature-based architecture",
+      "NextAuth + Supabase",
+      "RLS tenant isolation"
+    ]
+  },
+  "architecture": {
+    "style": "feature-based",
+    "structure": "features/{name}/{domain,data,ui,hooks}",
+    "key_directories": [
+      "features/",
+      "components/",
+      "lib/",
+      "pages/"
+    ],
+    "conventions": [
+      "Features are self-contained",
+      "Public API via index.ts",
+      "Path aliases (@/) for imports",
+      "RLS for tenant isolation"
+    ]
+  },
+  "decisions": [
+    {
+      "id": "decision_1760564747333",
+      "timestamp": "2025-10-15T21:45:47.333Z",
+      "decision": "Build Windsurf Intelligence Tools",
+      "rationale": "Created internal tools to make Cascade 20x more effective - codebase graph, batch operations, pattern learning, and context persistence",
+      "affected_files": [],
+      "category": "technical",
+      "impact": "high"
+    }
+  ],
+  "active_work": {
+    "next_steps": [],
+    "blockers": [],
+    "files_changed": [],
+    "context_summary": ""
+  },
+  "important_files": [],
+  "known_patterns": [],
+  "last_updated": "2025-10-15T21:45:47.333Z"
+}
