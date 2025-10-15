@@ -56,5 +56,18 @@
     "warnings": []
   },
   "checklistPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/CHAT-MIGRATION-CHECKLIST-AI.md",
-  "sessionId": "migration-chat-1760560303856"
+  "sessionId": "migration-chat-1760560303856",
+  "progress": {
+    "phases": {
+      "components": {
+        "status": "in_progress",
+        "startTime": "2025-10-15T20:45:44.531Z",
+        "commits": 1
+      }
+    },
+    "currentPhase": "components",
+    "totalElapsed": 14.011249999999999,
+    "commits": 1,
+    "lastUpdate": "2025-10-15T20:45:44.531Z"
+  }
 }

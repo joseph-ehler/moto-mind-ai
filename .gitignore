@@ -63,6 +63,12 @@ AFTER-CODE-CHECKLIST.md
 # Tool usage logs
 .windsurf/tool-usage.log
 
+# Windsurf Tools (auto-generated)
+.windsurf/codebase-graph.json
+.windsurf/patterns.json
+.windsurf/operation-history.json
+.windsurf/staging/
+
 # Deployment status (local only, not committed)
 .vercel-status.json
 .build-history.json
