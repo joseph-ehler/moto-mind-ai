@@ -4,9 +4,10 @@
  * Pure business logic for vision processing.
  * No React dependencies, fully testable.
  * 
- * To be extracted from components in Phase 3.
+ * This layer addresses the "tight coupling" issue detected by AI analysis.
+ * Components now use these pure functions via dependency injection.
  * 
- * Will include:
+ * Includes:
  * - Image validation logic
  * - OCR processing functions
  * - License plate detection algorithms
@@ -14,5 +15,11 @@
  * - Data transformation functions
  */
 
-// Placeholder - domain logic to be extracted in Phase 3
-export {}
+// Image Validation
+export * from './image-validation'
+
+// OCR Processing
+export * from './ocr-processing'
+
+// License Plate Detection
+export * from './plate-detection'
