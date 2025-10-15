@@ -4,7 +4,7 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 async function saveFuelFillupHandler(
   req: NextApiRequest,

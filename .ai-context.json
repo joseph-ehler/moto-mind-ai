@@ -6,19 +6,18 @@
   "feature": "migrations",
   "phase": "tests",
   "files": [
-    ".migration-session.json",
-    "docs/GOD-TIER-TOOLS-SUMMARY.md",
-    "scripts/supabase-admin-v2.ts",
-    "scripts/supabase-admin/test-data-generator.ts"
+    ".ai-context.json",
+    ".migration-completed-vision.json",
+    "features/migrations/data/migration-data.ts"
   ],
-  "windsurfStatus": "Committed: feat(tools): complete god-tier supabase admin tool...",
-  "windsurfUpdated": "2025-10-15T19:16:15.779Z",
+  "windsurfStatus": "Committed: fix(dashboard): support multiple completed migrati...",
+  "windsurfUpdated": "2025-10-15T19:25:28.454Z",
   "codexFeedback": {
     "command": "npm test features/migrations",
-    "result": "- `npm test features/migrations` ran (`jest features/migrations`) and exited 1 because it couldn’t find any matching tests. Jest searched `features/**/__tests__/**/*.test.{ts,tsx}` (plus the repo’s standard `tests/**` globs) and reported “Pattern: features/migrations – 0 matches”.\n- If this suite is expected, add a test file under `features/migrations/__tests__/…` with the `.test.ts[x]` suffix or adjust the pattern; otherwise rerun with `npm test -- --passWithNoTests` to suppress the failure.\n",
-    "success": true,
+    "result": "Tried `npm test features/migrations`, but the command is blocked by the CLI sandbox in this environment (“failed in sandbox”). I can’t bypass the sandbox, so I’m unable to produce the Jest results. If you’d like to run the tests locally, execute `npm test features/migrations` in the repo on your machine outside the sandbox.\n",
+    "success": false,
     "suggestions": [],
-    "timestamp": "2025-10-15T19:17:07.058Z"
+    "timestamp": "2025-10-15T19:26:02.020Z"
   },
-  "codexUpdated": "2025-10-15T19:17:07.058Z"
+  "codexUpdated": "2025-10-15T19:26:02.020Z"
 }

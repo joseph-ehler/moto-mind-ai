@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 import OpenAI from 'openai'
 // import { trackOpenAICall } from '../../lib/clients/api-usage-tracker' // Commented out for deployment

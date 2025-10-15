@@ -5,7 +5,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth/config'
+import { authOptions } from './config'
 
 export async function createTenantAwareSupabaseClient(
   req: NextApiRequest,

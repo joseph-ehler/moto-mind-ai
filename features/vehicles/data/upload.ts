@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 // Increase body size limit for image uploads
 export const config = {

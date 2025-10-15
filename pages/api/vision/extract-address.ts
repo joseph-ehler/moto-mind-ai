@@ -5,7 +5,7 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 import { extractAddress } from '../../../lib/vision/address-extractor'
 import { forwardGeocode } from '../../../lib/geocoding-enhanced'

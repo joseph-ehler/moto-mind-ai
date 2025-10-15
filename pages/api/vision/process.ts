@@ -2,7 +2,7 @@
 // Thin I/O adapter using the new modular vision architecture
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 import { withValidation, validationSchemas } from '@/features/vehicles/data/api-validation'
 import { parseMultipart, toBase64, normMode, normDocType } from '../../../lib/http/multipart'

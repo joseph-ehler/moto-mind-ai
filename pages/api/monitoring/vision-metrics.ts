@@ -2,7 +2,7 @@
 // Provides production metrics for monitoring dashboard
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 import { visionMetrics } from '../../../lib/monitoring/vision-metrics'
 import { databaseVisionMetrics } from '../../../lib/monitoring/database-metrics'

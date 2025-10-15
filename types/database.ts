@@ -1,6 +1,6 @@
 /**
  * Auto-generated TypeScript types from Supabase schema
- * Generated: 2025-10-15T19:01:30.888Z
+ * Generated: 2025-10-15T20:22:42.217Z
  * 
  * DO NOT EDIT MANUALLY - Changes will be overwritten
  * Run: npm run supabase:admin generate-types

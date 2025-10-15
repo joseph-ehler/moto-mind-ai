@@ -1,6 +1,6 @@
 'use client'
 
-import { useRequireAuth } from '@/lib/auth/client'
+import { useRequireAuth } from '@/features/auth'
 import { signOut } from 'next-auth/react'
 import { LogOut } from 'lucide-react'
 

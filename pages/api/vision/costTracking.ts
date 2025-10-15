@@ -2,7 +2,7 @@
 // Monitors usage, costs, and optimization opportunities
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 import { withValidation, validationSchemas } from '@/features/vehicles/data/api-validation'
 

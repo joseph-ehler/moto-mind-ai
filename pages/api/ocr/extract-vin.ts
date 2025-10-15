@@ -2,7 +2,7 @@
 // Combines Tesseract OCR and OpenAI Vision for reliable VIN detection
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 import formidable from 'formidable'
 import fs from 'fs'

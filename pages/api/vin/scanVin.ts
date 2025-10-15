@@ -1,6 +1,6 @@
 // VIN Scanner API - Extract VIN from photos and decode vehicle details
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 import formidable from 'formidable'
 import fs from 'fs'

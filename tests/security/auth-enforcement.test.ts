@@ -42,7 +42,7 @@ describe('API Security Enforcement', () => {
           unprotectedRoutes.map(r => `  - ${r}`).join('\n') +
           '\n\n' +
           '🔒 FIX: Wrap your handler with withTenantIsolation:\n\n' +
-          "import { withTenantIsolation } from '@/lib/middleware/tenant-context'\n" +
+          "import { withTenantIsolation } from '@/features/auth'\n" +
           'async function handler(req, res) { ... }\n' +
           'export default withTenantIsolation(handler)\n'
         )

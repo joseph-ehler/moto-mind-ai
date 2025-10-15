@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { handleApiError, ValidationError, DatabaseError } from '@/lib/utils/errors'
 import { visionMetrics } from '@/lib/monitoring/vision-metrics'
 import { databaseVisionMetrics } from '@/lib/monitoring/database-metrics'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 // Event validation schema
 const eventSchema = z.object({

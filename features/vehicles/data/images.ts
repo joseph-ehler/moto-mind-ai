@@ -2,7 +2,7 @@
 // Handles CRUD operations for vehicle images
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { withTenantIsolation } from '@/lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 import { z } from 'zod'
 
 // Validation schemas
