@@ -33,6 +33,15 @@
   },
   "decisions": [
     {
+      "id": "decision_1760566606238",
+      "timestamp": "2025-10-15T22:16:46.238Z",
+      "decision": "Migrated insights feature",
+      "rationale": "Successfully migrated insights feature (AskQuestion component) to features/insights/ui in 2 minutes using new tools",
+      "affected_files": [],
+      "category": "technical",
+      "impact": "medium"
+    },
+    {
       "id": "decision_1760564747333",
       "timestamp": "2025-10-15T21:45:47.333Z",
       "decision": "Build Windsurf Intelligence Tools",
@@ -50,5 +59,5 @@
   },
   "important_files": [],
   "known_patterns": [],
-  "last_updated": "2025-10-15T21:45:47.333Z"
+  "last_updated": "2025-10-15T22:16:46.239Z"
 }

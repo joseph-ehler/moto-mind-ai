@@ -63,11 +63,16 @@
         "status": "in_progress",
         "startTime": "2025-10-15T20:45:44.531Z",
         "commits": 1
+      },
+      "tests": {
+        "status": "in_progress",
+        "startTime": "2025-10-15T21:49:50.389Z",
+        "commits": 1
       }
     },
-    "currentPhase": "components",
-    "totalElapsed": 14.011249999999999,
-    "commits": 1,
-    "lastUpdate": "2025-10-15T20:45:44.531Z"
+    "currentPhase": "tests",
+    "totalElapsed": 78.10888333333334,
+    "commits": 2,
+    "lastUpdate": "2025-10-15T21:49:50.389Z"
   }
 }

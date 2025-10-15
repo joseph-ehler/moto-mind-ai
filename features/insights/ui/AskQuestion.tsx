@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ExplanationResult } from '../explain/ExplanationResult'
+import { ExplanationResult } from '@/components/explain/ExplanationResult'
 
 interface AskQuestionProps {
   vehicleId: string
