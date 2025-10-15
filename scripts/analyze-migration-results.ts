@@ -304,6 +304,21 @@ async function analyze() {
   
   console.log(`✅ Analysis complete! Session closed.`)
   console.log()
+  
+  // Trigger learning if we have enough data
+  if (historyCount >= 3) {
+    console.log('🧠 Running pattern detection (3+ migrations)...')
+    console.log()
+    try {
+      execSync('npm run migrate:patterns', { stdio: 'inherit' })
+    } catch (error) {
+      console.warn('⚠️  Pattern detection failed, continuing...')
+    }
+  } else {
+    console.log(`💡 Pattern detection available after ${3 - historyCount} more migration${3 - historyCount === 1 ? '' : 's'}`)
+    console.log(`   Run manually: npm run migrate:learn`)
+    console.log()
+  }
 }
 
 // CLI
