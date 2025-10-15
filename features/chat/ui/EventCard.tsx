@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
-interface EventCardProps {
+export interface EventCardProps {
   eventData: {
     event_id: string
     event_type: string

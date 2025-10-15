@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { handleApiError, ValidationError } from '../../../lib/utils/errors'
 import { listEnvelope, trackEnvelopeUsage } from '../../../lib/utils/http-envelope'
 import { getVehicleDisplayName } from '../../../lib/domain/types'
-import { withTenantIsolation } from '../../../lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 import { z } from 'zod'
 
 const supabase = createClient(

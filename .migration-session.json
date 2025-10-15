@@ -1,12 +1,13 @@
 {
-  "feature": "auth",
-  "startTime": "2025-10-15T18:23:13.761Z",
+  "feature": "chat",
+  "startTime": "2025-10-15T20:31:43.856Z",
   "baseline": {
-    "timestamp": "2025-10-15T18:22:55.449Z",
-    "tests": 18,
+    "timestamp": "2025-10-15T20:31:27.252Z",
+    "tests": 21,
     "violations": 0,
     "features": {
       "migrated": [
+        "auth",
         "capture",
         "events",
         "migrations",
@@ -39,7 +40,7 @@
     }
   },
   "analysis": {
-    "featureName": "auth",
+    "featureName": "chat",
     "componentCount": 1,
     "totalFiles": 1,
     "maxNestingDepth": 0,
@@ -54,40 +55,6 @@
     ],
     "warnings": []
   },
-  "checklistPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/AUTH-MIGRATION-CHECKLIST-AI.md",
-  "sessionId": "migration-auth-1760552593761",
-  "progress": {
-    "phases": {
-      "validation": {
-        "status": "complete",
-        "startTime": "2025-10-15T18:28:22.025Z",
-        "commits": 2,
-        "endTime": "2025-10-15T19:12:12.607Z",
-        "duration": 43.84303333333333
-      },
-      "components": {
-        "status": "complete",
-        "startTime": "2025-10-15T18:33:41.589Z",
-        "commits": 2,
-        "endTime": "2025-10-15T18:54:44.155Z",
-        "duration": 21.04276666666667
-      },
-      "tests": {
-        "status": "complete",
-        "startTime": "2025-10-15T18:38:17.869Z",
-        "commits": 2,
-        "endTime": "2025-10-15T19:25:26.591Z",
-        "duration": 47.14536666666667
-      },
-      "domain": {
-        "status": "in_progress",
-        "startTime": "2025-10-15T19:02:56.505Z",
-        "commits": 1
-      }
-    },
-    "currentPhase": null,
-    "totalElapsed": 62.21383333333333,
-    "commits": 7,
-    "lastUpdate": "2025-10-15T19:25:26.591Z"
-  }
+  "checklistPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/CHAT-MIGRATION-CHECKLIST-AI.md",
+  "sessionId": "migration-chat-1760560303856"
 }

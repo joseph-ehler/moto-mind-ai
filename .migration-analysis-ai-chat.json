@@ -1,0 +1,36 @@
+{
+  "featureName": "chat",
+  "componentCount": 1,
+  "totalFiles": 1,
+  "maxNestingDepth": 0,
+  "hasSubdirectories": false,
+  "hasInternalImports": false,
+  "complexityLevel": "low",
+  "estimatedTime": "0.5-1 hour",
+  "similarTo": "capture",
+  "recommendations": [
+    "✅ Straightforward migration - follow standard 4-phase process",
+    "✅ Should be fastest migration yet (based on capture pattern)"
+  ],
+  "warnings": [],
+  "aiInsights": {
+    "actualComplexity": "medium",
+    "hiddenIssues": [
+      "Dependency on external and internal components",
+      "Prop drilling complexity for event data"
+    ],
+    "recommendations": [
+      "Refactor to use a context or state management for event data",
+      "Abstract external component imports to a single internal file"
+    ],
+    "estimatedTime": "2-4 hours",
+    "reasoning": "Although the file count and nesting level suggest low complexity, the component's reliance on a mix of external and internal components increases the migration complexity. The prop drilling for event data indicates potential for refactoring to improve maintainability. Updating import paths and ensuring backward compatibility with these considerations will likely extend the migration time.",
+    "confidence": 0.75
+  },
+  "confidenceLevel": 0.5249999999999999,
+  "usedAI": true,
+  "costEstimate": {
+    "inputTokens": 546,
+    "outputTokens": 163
+  }
+}

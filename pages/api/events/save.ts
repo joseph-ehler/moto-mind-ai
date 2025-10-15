@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import { handleApiError, ValidationError, DatabaseError } from '../../../lib/utils/errors'
-import { withTenantIsolation } from '../../../lib/middleware/tenant-context'
+import { withTenantIsolation } from '@/features/auth'
 
 // Supabase client will be created by tenant isolation middleware
 
