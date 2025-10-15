@@ -61,6 +61,7 @@
     "migrate:feature": "npx tsx scripts/migrate-feature.ts",
     "codex:watch": "npx tsx scripts/codex-watcher.ts",
     "codex:status": "bash scripts/codex-helpers.sh status",
+    "codex:feedback": "npx tsx scripts/check-codex-feedback.ts",
     "refine:vehicles": "npx tsx scripts/refine-vehicles-structure.ts",
     "deploy": "npx tsx scripts/smart-deploy.ts",
     "deploy:wait": "npx tsx scripts/wait-for-vercel.ts",
