@@ -52,6 +52,7 @@
     "tools:log": "npx tsx scripts/windsurf-tools/tool-enforcer.ts log",
     "arch:validate": "npx tsx scripts/qa-platform/validate-architecture.ts",
     "arch:validate:staged": "npx tsx scripts/qa-platform/validate-architecture.ts --staged",
+    "arch:validate:ai": "npx tsx scripts/qa-platform/validate-architecture-ai.ts",
     "migrate": "npx tsx scripts/migration-toolkit/orchestrate-migration.ts",
     "migrate:ai": "npx tsx scripts/migration-toolkit/orchestrate-migration.ts --ai",
     "migrate:codex": "npx tsx scripts/migration-toolkit/orchestrate-migration.ts --ai --codex",
