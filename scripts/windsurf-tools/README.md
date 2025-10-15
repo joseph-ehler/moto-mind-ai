@@ -21,13 +21,62 @@ Internal tools to supercharge Cascade's capabilities on the MotoMindAI codebase.
 - Impact of changes before making them
 - Architectural violations
 
-### 2. Batch Editor (Coming Soon)
-Multi-file atomic operations with preview and rollback.
+### 2. Batch Operations System ✅
+**Command:** `npm run windsurf:batch <command> [args]`  
+**Purpose:** Multi-file atomic operations with preview and rollback  
 
-### 3. Pattern Library (Coming Soon)
+**What it does:**
+- Replace text across multiple files at once
+- Replace import statements intelligently
+- Preview changes before applying
+- Atomic execution (all or nothing)
+- Automatic rollback on errors
+
+**Commands:**
+```bash
+# Preview changes (safe, no modifications)
+npm run windsurf:batch replace "old" "new"
+
+# Execute changes
+npm run windsurf:batch replace "old" "new" --execute
+
+# Replace imports
+npm run windsurf:batch replace-import "@/lib/auth" "@/features/auth" --execute
+```
+
+**Why:** Today we had to do 17 separate edits. Now: 1 atomic operation in seconds.
+
+### 3. Operation History ✅
+**Command:** `npm run windsurf:history <command>`  
+**Purpose:** Track all operations for rollback and audit  
+
+**What it does:**
+- Records every batch operation
+- Stores before/after state
+- Enables instant rollback
+- Shows operation history
+
+**Commands:**
+```bash
+# List recent operations
+npm run windsurf:history list
+
+# Show operation details
+npm run windsurf:history show <operation-id>
+
+# Rollback an operation
+npm run windsurf:history rollback <operation-id>
+
+# Rollback last operation
+npm run windsurf:history rollback-last
+```
+
+**Why:** Safe experimentation - instant undo when things break.
+
+### 4. Pattern Library (Coming Next)
 Learn from successful migrations and auto-apply patterns.
 
-### 4. Context Checkpointer (Coming Soon)
+### 5. Context Checkpointer (Coming Next)
 Save and recall project decisions across sessions.
 
 ## 🎯 Usage
@@ -36,11 +85,26 @@ Save and recall project decisions across sessions.
 # Generate codebase graph
 npm run windsurf:graph
 
-# Watch for changes (coming soon)
-npm run windsurf:watch
+# Query the graph
+npm run windsurf:query importers features/auth/index.ts
+npm run windsurf:query find authOptions
+npm run windsurf:query stats
 
-# Batch edit (coming soon)
-npm run windsurf:batch --pattern="old" --replace="new"
+# Batch operations (preview mode)
+npm run windsurf:batch replace "old-text" "new-text"
+npm run windsurf:batch replace-import "@/old" "@/new"
+
+# Execute batch operations
+npm run windsurf:batch replace "old-text" "new-text" --execute
+npm run windsurf:batch replace-import "@/old" "@/new" --execute
+
+# View history
+npm run windsurf:history list
+npm run windsurf:history show <operation-id>
+
+# Rollback operations
+npm run windsurf:history rollback <operation-id>
+npm run windsurf:history rollback-last
 ```
 
 ## 📊 Output Files
