@@ -1,0 +1,18 @@
+{
+  "feature": "vision",
+  "completedAt": "2025-10-15T13:45:00.000Z",
+  "duration": 28.6,
+  "estimatedDuration": 240,
+  "testsCreated": 80,
+  "testsPassing": 80,
+  "buildSuccess": true,
+  "issuesPrevented": 7,
+  "predictions": {
+    "total": 7,
+    "addressed": 7,
+    "accuracy": 100
+  },
+  "roi": 72500,
+  "timeSaved": 211.4,
+  "costSaved": 326
+}

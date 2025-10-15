@@ -109,8 +109,39 @@ export interface MigrationMetrics {
 
 /**
  * Read migration session data
+ * First checks for completed migration, then active session
  */
 export function readMigrationSession(feature: string): MigrationSession | null {
+  // Check for completed migration first
+  const completedPath = join(process.cwd(), `.migration-completed-${feature}.json`)
+  if (existsSync(completedPath)) {
+    try {
+      const completed = JSON.parse(readFileSync(completedPath, 'utf-8'))
+      // Convert completed format to session format
+      return {
+        feature: completed.feature,
+        startTime: new Date(new Date(completed.completedAt).getTime() - completed.duration * 60000).toISOString(),
+        baseline: { timestamp: '', tests: 0, violations: 0, features: { migrated: [], remaining: [] } },
+        analysis: { featureName: completed.feature, componentCount: 0, totalFiles: 0, complexityLevel: 'medium', estimatedTime: `${Math.round(completed.estimatedDuration / 60)} hours`, hasInternalImports: false },
+        progress: {
+          phases: {
+            tests: { status: 'complete', startTime: '', endTime: completed.completedAt, duration: completed.duration, commits: 0 },
+            components: { status: 'complete', startTime: '', endTime: completed.completedAt, duration: 0, commits: 0 },
+            domain: { status: 'complete', startTime: '', endTime: completed.completedAt, duration: 0, commits: 0 },
+            validation: { status: 'complete', startTime: '', endTime: completed.completedAt, duration: 0, commits: 0 }
+          },
+          currentPhase: null,
+          totalElapsed: completed.duration,
+          commits: 0,
+          lastUpdate: completed.completedAt
+        }
+      }
+    } catch {
+      // Fall through to active session
+    }
+  }
+  
+  // Check active session
   const filePath = join(process.cwd(), '.migration-session.json')
   
   if (!existsSync(filePath)) return null
@@ -158,15 +189,17 @@ export function readPredictions(feature: string): PredictedIssues | null {
  * Get all completed migrations
  */
 export function getCompletedMigrations(): string[] {
-  const session = readMigrationSession('vision') // Read active session first
+  const completed: string[] = []
+  const features = ['vision', 'auth', 'chat', 'insights', 'explain'] // Add more as needed
   
-  if (!session) return []
+  for (const feature of features) {
+    const completedPath = join(process.cwd(), `.migration-completed-${feature}.json`)
+    if (existsSync(completedPath)) {
+      completed.push(feature)
+    }
+  }
   
-  // For now, just return vision if it's complete
-  const allPhasesComplete = session.progress.currentPhase === null &&
-    Object.values(session.progress.phases).every(p => p.status === 'complete')
-  
-  return allPhasesComplete ? [session.feature] : []
+  return completed
 }
 
 /**
