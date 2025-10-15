@@ -7,20 +7,19 @@
   "phase": "tests",
   "files": [
     ".ai-context.json",
-    "docs/SCRIPTS-ANALYSIS-OPPORTUNITIES.md",
-    "scripts/dev-tools/README.md",
-    "scripts/devops-suite/README.md",
-    "scripts/migration-toolkit/README.md",
-    "scripts/qa-platform/README.md"
+    "docs/OPENAI-INTEGRATION-ANALYSIS.md",
+    "package.json",
+    "scripts/archive/2025-10/analyze-code-structure-ai.ts",
+    "scripts/migration-toolkit/analyze-code-structure-ai.ts"
   ],
-  "windsurfStatus": "Committed: docs(scripts): complete all product suite READMEs ...",
-  "windsurfUpdated": "2025-10-15T23:08:19.382Z",
+  "windsurfStatus": "Committed: restore(scripts): recover AI code analyzer from ar...",
+  "windsurfUpdated": "2025-10-15T23:23:58.622Z",
   "codexFeedback": {
     "command": "npm test features/to",
-    "result": "Tried running `npm test features/to`, but the sandbox blocks it—the shell tries to execute `/bin/ps`, which isn’t permitted here, so the test never starts. Let me know if there’s another way you’d like me to proceed (e.g., different command or additional steps I can run within the current restrictions).\n",
+    "result": "`npm test features/to` (and with `--`) exited non-zero immediately, and the sandbox didn’t capture any stdout/stderr to share. I checked the repo and there isn’t a path under `features/` that begins with `to` (existing ones are `auth`, `capture`, `chat`, `events`, `insights`, `migrations`, `timeline`, `vehicles`, `vision`). Please double-check the intended test target and re-run with the correct path, e.g. `npm test -- features/timeline`.\n",
     "success": true,
     "suggestions": [],
-    "timestamp": "2025-10-15T23:08:42.415Z"
+    "timestamp": "2025-10-15T23:24:59.906Z"
   },
-  "codexUpdated": "2025-10-15T23:08:42.415Z"
+  "codexUpdated": "2025-10-15T23:24:59.906Z"
 }

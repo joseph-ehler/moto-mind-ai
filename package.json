@@ -40,6 +40,8 @@
     "windsurf:validate": "npm run repo:clean && npm run db:validate && npm run test:security",
     "product:analyze": "npx tsx scripts/dev-tools/product-intelligence.ts analyze",
     "product:brief": "npx tsx scripts/dev-tools/product-intelligence.ts brief",
+    "product:analyze:ai": "npx tsx scripts/dev-tools/product-intelligence-ai.ts analyze",
+    "product:brief:ai": "npx tsx scripts/dev-tools/product-intelligence-ai.ts brief",
     "tools:remind": "npx tsx scripts/windsurf-tools/tool-enforcer.ts remind",
     "tools:check": "npx tsx scripts/windsurf-tools/tool-enforcer.ts check",
     "tools:before-code": "npx tsx scripts/windsurf-tools/tool-enforcer.ts before-code",
