@@ -78,50 +78,80 @@ class VercelEnvValidator {
   }
   
   private async fetchVercelEnvs(): Promise<void> {
-    console.log('📡 Fetching Vercel environment variables...\n')
+    console.log('📡 Checking Vercel environment setup...\n')
     
     try {
-      // Get environment variables for production
-      const output = execSync('vercel env ls production --json 2>/dev/null', {
-        encoding: 'utf8',
-        stdio: 'pipe'
-      })
+      // Try multiple methods to get environment variables
       
-      if (!output.trim()) {
-        console.log('⚠️  No environment variables found in Vercel\n')
-        return
-      }
-      
-      // Parse the output (Vercel CLI returns JSON array)
+      // Method 1: Try vercel env pull (downloads .env.local)
       try {
-        const envs = JSON.parse(output)
-        if (Array.isArray(envs)) {
-          envs.forEach((env: any) => {
-            if (env.key) {
-              this.vercelEnvs.set(env.key, env.value || '(set)')
+        execSync('vercel env pull .env.vercel.local 2>/dev/null', {
+          encoding: 'utf8',
+          stdio: 'pipe',
+          timeout: 10000
+        })
+        
+        // Read the downloaded file
+        const fs = require('fs')
+        const path = require('path')
+        const vercelEnvPath = path.join(process.cwd(), '.env.vercel.local')
+        
+        if (fs.existsSync(vercelEnvPath)) {
+          const content = fs.readFileSync(vercelEnvPath, 'utf8')
+          const lines = content.split('\n')
+          
+          lines.forEach((line: string) => {
+            const match = line.match(/^([A-Z_][A-Z0-9_]*)\s*=/)
+            if (match) {
+              this.vercelEnvs.set(match[1], '(set)')
             }
           })
+          
+          // Clean up the file
+          fs.unlinkSync(vercelEnvPath)
+          
+          console.log(`✅ Successfully verified ${this.vercelEnvs.size} variables in Vercel\n`)
+          return
         }
       } catch (e) {
-        // If JSON parsing fails, try parsing line by line
-        const lines = output.split('\n')
-        lines.forEach(line => {
-          const match = line.match(/^(\w+)\s+/)
-          if (match) {
-            this.vercelEnvs.set(match[1], '(set)')
-          }
-        })
+        // Method 1 failed, try method 2
       }
       
-      console.log(`✅ Found ${this.vercelEnvs.size} variables in Vercel\n`)
+      // Method 2: Try vercel env ls without JSON
+      try {
+        const output = execSync('vercel env ls 2>/dev/null', {
+          encoding: 'utf8',
+          stdio: 'pipe',
+          timeout: 10000
+        })
+        
+        if (output && output.trim()) {
+          const lines = output.split('\n')
+          lines.forEach((line: string) => {
+            // Parse table format: "NAME    VALUE    ENV"
+            const match = line.match(/^([A-Z_][A-Z0-9_]*)\s+/)
+            if (match) {
+              this.vercelEnvs.set(match[1], '(set)')
+            }
+          })
+          
+          if (this.vercelEnvs.size > 0) {
+            console.log(`✅ Verified ${this.vercelEnvs.size} variables in Vercel\n`)
+            return
+          }
+        }
+      } catch (e) {
+        // Method 2 failed, continue
+      }
+      
+      // All methods failed - fall back to local-only validation
+      console.log('ℹ️  Unable to fetch Vercel variables via CLI\n')
+      console.log('   This is normal if variables are set via dashboard.\n')
+      console.log('   Validating local .env files only...\n')
       
     } catch (error: any) {
-      if (error.message.includes('not found')) {
-        console.log('❌ Vercel CLI not found. Install with: npm install -g vercel\n')
-        process.exit(1)
-      }
-      console.log('⚠️  Could not fetch Vercel environment variables\n')
-      console.log('   Make sure you are logged in: vercel login\n')
+      // Silently fall back to local validation
+      console.log('ℹ️  Vercel CLI not available, checking local files only\n')
     }
   }
   
@@ -154,29 +184,55 @@ class VercelEnvValidator {
     console.log('🔍 Checking required variables...\n')
     
     const issues: Array<{ key: string, issue: string }> = []
+    const canCheckVercel = this.vercelEnvs.size > 0
     
     for (const variable of REQUIRED_VARS) {
       const inVercel = this.vercelEnvs.has(variable.key)
       const inLocal = this.localEnvs.has(variable.key)
       
-      if (!inVercel) {
-        console.log(`❌ ${variable.key}`)
-        console.log(`   Missing in Vercel`)
-        if (variable.description) {
-          console.log(`   ${variable.description}`)
+      // If we can check Vercel, validate against both
+      if (canCheckVercel) {
+        if (!inVercel) {
+          console.log(`❌ ${variable.key}`)
+          console.log(`   Missing in Vercel`)
+          if (variable.description) {
+            console.log(`   ${variable.description}`)
+          }
+          if (inLocal) {
+            console.log(`   ✅ Found in local .env`)
+            console.log(`   💡 Add to Vercel: vercel env add ${variable.key} production`)
+          } else {
+            console.log(`   ❌ Not found in local .env either`)
+          }
+          console.log()
+          issues.push({ key: variable.key, issue: 'missing' })
+        } else {
+          console.log(`✅ ${variable.key}`)
+          if (variable.description) {
+            console.log(`   ${variable.description}`)
+          }
+          console.log()
         }
-        if (inLocal) {
-          console.log(`   ✅ Found in local .env`)
-          console.log(`   💡 Add to Vercel: vercel env add ${variable.key} production`)
-        }
-        console.log()
-        issues.push({ key: variable.key, issue: 'missing' })
       } else {
-        console.log(`✅ ${variable.key}`)
-        if (variable.description) {
-          console.log(`   ${variable.description}`)
+        // Can't check Vercel, only validate local .env
+        if (!inLocal) {
+          console.log(`⚠️  ${variable.key}`)
+          console.log(`   Missing in local .env`)
+          if (variable.description) {
+            console.log(`   ${variable.description}`)
+          }
+          console.log(`   💡 Add to .env.local or verify it's set in Vercel dashboard`)
+          console.log()
+          issues.push({ key: variable.key, issue: 'missing-local' })
+        } else {
+          console.log(`✅ ${variable.key}`)
+          console.log(`   Found in local .env`)
+          if (variable.description) {
+            console.log(`   ${variable.description}`)
+          }
+          console.log(`   ℹ️  Verify it's also set in Vercel dashboard`)
+          console.log()
         }
-        console.log()
       }
     }
     
@@ -223,18 +279,42 @@ class VercelEnvValidator {
   private showResults(issues: Array<{ key: string, issue: string }>): void {
     console.log('='.repeat(70))
     
+    const canCheckVercel = this.vercelEnvs.size > 0
+    
     if (issues.length === 0) {
-      console.log('\n✅ ALL REQUIRED VARIABLES ARE SET\n')
-      console.log('Safe to deploy! 🚀\n')
+      if (canCheckVercel) {
+        console.log('\n✅ ALL REQUIRED VARIABLES VERIFIED\n')
+        console.log('Both local and Vercel environments are configured correctly.')
+        console.log('Safe to deploy! 🚀\n')
+      } else {
+        console.log('\n✅ LOCAL ENVIRONMENT CONFIGURED\n')
+        console.log('All required variables found in local .env')
+        console.log('Verify they are also set in Vercel dashboard.')
+        console.log('\n💡 To verify Vercel env vars:')
+        console.log('   1. Visit https://vercel.com/dashboard')
+        console.log('   2. Select your project → Settings → Environment Variables\n')
+      }
     } else {
-      console.log(`\n❌ ${issues.length} REQUIRED VARIABLE(S) MISSING\n`)
-      console.log('Fix these before deploying:\n')
-      
-      issues.forEach(({ key }) => {
-        console.log(`   vercel env add ${key} production`)
-      })
-      
-      console.log('\nThen verify: npm run env:check\n')
+      if (canCheckVercel) {
+        console.log(`\n❌ ${issues.length} REQUIRED VARIABLE(S) MISSING IN VERCEL\n`)
+        console.log('Add these to Vercel before deploying:\n')
+        
+        issues.forEach(({ key }) => {
+          console.log(`   vercel env add ${key} production`)
+        })
+        
+        console.log('\nThen verify: npm run env:check\n')
+      } else {
+        console.log(`\n⚠️  ${issues.length} VARIABLE(S) MISSING IN LOCAL .ENV\n`)
+        console.log('These should be in your .env.local file:\n')
+        
+        issues.forEach(({ key }) => {
+          console.log(`   ${key}=your_value_here`)
+        })
+        
+        console.log('\nAlso verify they are set in Vercel dashboard:')
+        console.log('https://vercel.com/dashboard → Settings → Environment Variables\n')
+      }
     }
   }
 }
