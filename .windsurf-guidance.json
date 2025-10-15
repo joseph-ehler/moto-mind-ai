@@ -1,0 +1,353 @@
+{
+  "featureMigrationPatterns": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-10-15",
+    "validatedExamples": 3,
+    "totalSuccessRate": "100%",
+    
+    "migrationPhases": {
+      "phase1": {
+        "name": "Test Infrastructure",
+        "description": "Create comprehensive tests before moving any components",
+        "estimatedTime": "30-40 minutes",
+        "steps": [
+          "Create features/{feature}/__tests__/domain/",
+          "Create features/{feature}/__tests__/mocks/",
+          "Generate domain tests (validation, business logic)",
+          "Create mock fixtures",
+          "Run tests to verify (npm test features/{feature})",
+          "Commit before Phase 2"
+        ],
+        "successCriteria": [
+          "All tests passing",
+          "Minimum 20+ tests for comprehensive coverage",
+          "Mock fixtures reusable"
+        ]
+      },
+      "phase2": {
+        "name": "Component Migration",
+        "description": "Move all UI components to features/{feature}/ui/",
+        "estimatedTime": "20-30 minutes",
+        "steps": [
+          "Create features/{feature}/ui/ structure",
+          "Use git mv to preserve history",
+          "Move components from components/{feature}/ to features/{feature}/ui/",
+          "Organize into subdirectories (modals/, sections/, cards/, etc.)",
+          "Update all import paths (relative → absolute)",
+          "Fix internal component imports",
+          "Run build to verify (npm run build)",
+          "Commit after successful build"
+        ],
+        "successCriteria": [
+          "Build passing",
+          "All imports resolved",
+          "No broken references"
+        ]
+      },
+      "phase3": {
+        "name": "Domain Logic Migration",
+        "description": "Move business logic to features/{feature}/domain/",
+        "estimatedTime": "15-20 minutes",
+        "steps": [
+          "Identify domain code in lib/ or components/",
+          "Create features/{feature}/domain/",
+          "Move types, utilities, business logic",
+          "Update imports across codebase",
+          "Add backward compatibility exports if needed",
+          "Run tests and build to verify"
+        ],
+        "successCriteria": [
+          "All tests passing",
+          "Build successful",
+          "No regressions"
+        ]
+      },
+      "phase4": {
+        "name": "Validation & Deploy",
+        "description": "Final checks and deployment",
+        "estimatedTime": "5-10 minutes",
+        "steps": [
+          "npm test features/{feature}",
+          "npm run build",
+          "npm run arch:validate",
+          "git commit with detailed message",
+          "git push origin main"
+        ],
+        "successCriteria": [
+          "All tests passing",
+          "Build successful",
+          "Architecture violations reduced",
+          "Clean git history"
+        ]
+      }
+    },
+    
+    "validatedExamples": {
+      "vehicles": {
+        "complexity": "medium",
+        "totalFiles": 116,
+        "testFiles": 10,
+        "totalTests": 123,
+        "componentCount": 42,
+        "timeSpent": "2.15 hours",
+        "structure": {
+          "__tests__": {
+            "domain": ["vehicle-display-name", "vin-validation", "vehicle-context-builder", "fleet-rules"],
+            "data": ["createVehicle", "updateVehicle", "deleteVehicle", "getVehicle", "listVehicles", "decodeVin"],
+            "mocks": ["vehicle-fixtures"]
+          },
+          "domain": ["types", "vehicle-context-builder"],
+          "data": ["repository functions"],
+          "ui": {
+            "subdirs": ["cards", "dialogs", "forms", "onboarding", "sections"],
+            "count": 42
+          },
+          "hooks": ["vehicle-specific hooks"]
+        },
+        "keyLearnings": [
+          "Comprehensive tests caught whitespace bug early",
+          "Domain types needed careful extraction from lib/domain/types.ts",
+          "Backward compatibility exports prevented breaking changes",
+          "Pre-commit hooks validated architecture"
+        ]
+      },
+      "timeline": {
+        "complexity": "high",
+        "totalFiles": 54,
+        "testFiles": 2,
+        "totalTests": 22,
+        "componentCount": 45,
+        "timeSpent": "1.20 hours",
+        "structure": {
+          "__tests__": {
+            "domain": ["timeline-types", "timeline-filtering"],
+            "mocks": ["timeline-fixtures"]
+          },
+          "ui": {
+            "subdirs": ["blocks", "card-components", "event-types"],
+            "count": 45,
+            "note": "Deep nesting with internal type dependencies"
+          },
+          "hooks": ["useTimelineData", "useTimelineFilters", "useTimelineState"]
+        },
+        "challenges": [
+          "Internal coupling between event-types and card-components",
+          "Required creating types.ts for EventCardData interface",
+          "Complex import graph needed careful fixing"
+        ],
+        "keyLearnings": [
+          "Complex features need proper type exports",
+          "Internal barrel exports can cause issues",
+          "Direct file imports more reliable than index.ts",
+          "Second feature was 44% faster (pattern learning)"
+        ]
+      },
+      "capture": {
+        "complexity": "low-medium",
+        "totalFiles": 42,
+        "testFiles": 2,
+        "totalTests": 31,
+        "componentCount": 35,
+        "timeSpent": "0.75 hours",
+        "structure": {
+          "__tests__": {
+            "domain": ["capture-validation", "capture-flow"],
+            "mocks": ["capture-fixtures"]
+          },
+          "domain": ["flow-config", "types"],
+          "ui": {
+            "count": 35,
+            "subdirs": ["modals", "steps", "sections"]
+          },
+          "hooks": ["useRecentEventTypes", "useSuggestedEventType"]
+        },
+        "keyLearnings": [
+          "Third feature was 62% faster than baseline",
+          "Pattern replication becoming automatic",
+          "sed commands for bulk import updates work well",
+          "Velocity accelerating with practice"
+        ]
+      }
+    },
+    
+    "complexityHeuristics": {
+      "assessmentCriteria": {
+        "componentCount": {
+          "low": "< 30 components",
+          "medium": "30-45 components",
+          "high": "> 45 components"
+        },
+        "internalCoupling": {
+          "low": "Flat structure, few internal imports",
+          "medium": "Some subdirectories, moderate imports",
+          "high": "Deep nesting, many internal dependencies"
+        },
+        "domainComplexity": {
+          "low": "Simple types, minimal business logic",
+          "medium": "Some business logic, moderate types",
+          "high": "Complex business logic, many types"
+        }
+      },
+      "timeEstimates": {
+        "low": "0.5-1 hour",
+        "medium": "1-1.5 hours",
+        "high": "1.5-2 hours",
+        "note": "Times decrease with experience"
+      }
+    },
+    
+    "commonPatterns": {
+      "directoryStructure": {
+        "required": [
+          "features/{feature}/__tests__/",
+          "features/{feature}/__tests__/domain/",
+          "features/{feature}/__tests__/mocks/",
+          "features/{feature}/ui/"
+        ],
+        "optional": [
+          "features/{feature}/domain/",
+          "features/{feature}/data/",
+          "features/{feature}/hooks/"
+        ],
+        "note": "Create domain/ if feature has business logic, data/ if feature has API calls"
+      },
+      "testPatterns": {
+        "domainTests": [
+          "Type validation tests",
+          "Business logic tests",
+          "Utility function tests"
+        ],
+        "dataTests": [
+          "API interaction tests",
+          "Data transformation tests",
+          "CRUD operation tests"
+        ],
+        "mockPatterns": [
+          "Create {feature}-fixtures.ts",
+          "Export mock data objects",
+          "Include factory functions",
+          "Make reusable across tests"
+        ]
+      },
+      "importPatterns": {
+        "before": [
+          "@/components/{feature}/...",
+          "./relative/paths",
+          "../../../deep/nesting"
+        ],
+        "after": [
+          "@/features/{feature}/ui/...",
+          "@/features/{feature}/domain/...",
+          "@/features/{feature}/hooks/..."
+        ],
+        "tools": [
+          "sed for bulk replacements",
+          "git mv to preserve history",
+          "Manual fixes for edge cases"
+        ]
+      },
+      "validationGates": {
+        "afterPhase1": [
+          "npm test features/{feature}",
+          "All tests passing"
+        ],
+        "afterPhase2": [
+          "npm run build",
+          "Build successful",
+          "No module not found errors"
+        ],
+        "afterPhase3": [
+          "npm test (all tests)",
+          "npm run build",
+          "npm run arch:validate"
+        ],
+        "beforeCommit": [
+          "Pre-commit hooks run",
+          "Architecture validation",
+          "Import checks",
+          "Security tests"
+        ]
+      }
+    },
+    
+    "velocityData": {
+      "learningCurve": {
+        "feature1": "2.15 hours (baseline, learning pattern)",
+        "feature2": "1.20 hours (44% faster, pattern replication)",
+        "feature3": "0.75 hours (62% faster, mastery)",
+        "trend": "Exponential improvement",
+        "projection": "Features 4-5 should take 0.5-0.75 hours each"
+      },
+      "qualityMetrics": {
+        "testsCreated": 176,
+        "testSuccessRate": "100%",
+        "buildSuccessRate": "100%",
+        "breakingChanges": 0,
+        "architectureViolations": "Decreasing"
+      }
+    },
+    
+    "commandReference": {
+      "setup": [
+        "mkdir -p features/{feature}/__tests__/domain features/{feature}/__tests__/mocks",
+        "mkdir -p features/{feature}/ui features/{feature}/domain"
+      ],
+      "migration": [
+        "git mv components/{feature}/*.tsx features/{feature}/ui/",
+        "git mv components/{feature}/types.ts features/{feature}/domain/",
+        "rm -rf components/{feature}/"
+      ],
+      "importFixes": [
+        "sed -i '' 's|@/components/{feature}/|@/features/{feature}/ui/|g' **/*.{ts,tsx}",
+        "grep -r \"from '@/components/{feature}\" --include=\"*.tsx\" --include=\"*.ts\" app/ features/"
+      ],
+      "validation": [
+        "npm test features/{feature} -- --silent",
+        "npm run build",
+        "npm run arch:validate"
+      ]
+    },
+    
+    "troubleshooting": {
+      "moduleNotFound": {
+        "symptom": "Module not found errors during build",
+        "causes": [
+          "Relative imports not updated",
+          "Missing index.ts exports",
+          "Incorrect import paths"
+        ],
+        "solutions": [
+          "Use absolute imports (@/features/...)",
+          "Create proper type exports",
+          "Import directly from files, not index.ts"
+        ]
+      },
+      "typeErrors": {
+        "symptom": "TypeScript errors after migration",
+        "causes": [
+          "Types not exported from domain/",
+          "Missing interface definitions",
+          "Circular dependencies"
+        ],
+        "solutions": [
+          "Create proper type exports in domain/types.ts",
+          "Expand interfaces with all used properties",
+          "Break circular dependencies with proper layering"
+        ]
+      },
+      "testFailures": {
+        "symptom": "Tests fail after migration",
+        "causes": [
+          "Mock imports broken",
+          "Test utilities not updated",
+          "Path changes broke fixtures"
+        ],
+        "solutions": [
+          "Update test imports to new paths",
+          "Verify mock data still accessible",
+          "Check jest.config.js includes new paths"
+        ]
+      }
+    }
+  }
+}
