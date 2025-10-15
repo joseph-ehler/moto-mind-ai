@@ -83,6 +83,7 @@
     "deploy:wait": "npx tsx scripts/devops-suite/wait-for-vercel.ts",
     "deploy:fast": "npx tsx scripts/devops-suite/smart-deploy.ts --fast",
     "deploy:no-wait": "npx tsx scripts/devops-suite/smart-deploy.ts --no-wait",
+    "deploy:risk:ai": "npx tsx scripts/devops-suite/deploy-risk-ai.ts",
     "rollback": "npx tsx scripts/devops-suite/rollback.ts",
     "rollback:last": "npx tsx scripts/devops-suite/rollback.ts --last",
     "rollback:vercel": "npx tsx scripts/devops-suite/rollback.ts --vercel-only",
