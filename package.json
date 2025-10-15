@@ -47,6 +47,8 @@
     "arch:validate": "npx tsx scripts/validate-architecture.ts",
     "arch:validate:staged": "npx tsx scripts/validate-architecture.ts --staged",
     "migrate:feature": "npx tsx scripts/migrate-feature.ts",
+    "migrate:analyze": "npx tsx scripts/analyze-feature-complexity.ts",
+    "migrate:checklist": "npx tsx scripts/generate-migration-checklist.ts",
     "refine:vehicles": "npx tsx scripts/refine-vehicles-structure.ts",
     "deploy": "npx tsx scripts/smart-deploy.ts",
     "deploy:wait": "npx tsx scripts/wait-for-vercel.ts",
