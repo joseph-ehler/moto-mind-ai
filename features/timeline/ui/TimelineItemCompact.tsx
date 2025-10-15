@@ -17,16 +17,14 @@ import { MoreVertical, Edit2, Copy, Trash2, Check, AlertCircle, ChevronDown, Che
 import { TimelineItem as TimelineItemType } from '@/types/timeline'
 import { getEventIcon, getEventColor } from '@/lib/utils/event-icons'
 import { formatTime } from '@/lib/utils/date-grouping'
-import { getEventRenderer } from './event-types'
+import { getEventRenderer } from '@/features/timeline/ui/event-types/types'
 import { calculateQualityScore, getQualityBadgeClasses } from '@/lib/quality-score'
-import { 
-  DataDisplay, 
-  AISummary,
-  SourceImage,
-  QualityIndicator,
-  CollapsibleData,
-  ExtractionWarning
-} from './card-components'
+import { DataDisplay } from '@/features/timeline/ui/card-components/DataGrid'
+import { AISummary } from '@/features/timeline/ui/card-components/AISummary'
+import { SourceImage } from '@/features/timeline/ui/card-components/SourceImage'
+import { QualityIndicator } from '@/features/timeline/ui/card-components/QualityIndicator'
+import { CollapsibleData } from '@/features/timeline/ui/card-components/CollapsibleData'
+import { ExtractionWarning } from '@/features/timeline/ui/card-components/ExtractionWarning'
 
 interface Props {
   item: TimelineItemType

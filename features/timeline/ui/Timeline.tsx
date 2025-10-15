@@ -19,9 +19,9 @@ import { Sparkline } from './Sparkline'
 import { TimelineItem as TimelineItemType, TimelineFilter } from '@/types/timeline'
 import { EditEventModal } from '@/features/vehicles/ui/dialogs/EditEventModal'
 import { DeleteEventConfirmation } from '@/features/vehicles/ui/dialogs/DeleteEventConfirmation'
-import { useTimelineFilters } from './hooks/useTimelineFilters'
-import { useTimelineState } from './hooks/useTimelineState'
-import { useTimelineData } from './hooks/useTimelineData'
+import { useTimelineFilters } from '@/features/timeline/hooks/useTimelineFilters'
+import { useTimelineState } from '@/features/timeline/hooks/useTimelineState'
+import { useTimelineData } from '@/features/timeline/hooks/useTimelineData'
 
 interface TimelineProps {
   items: TimelineItemType[]
