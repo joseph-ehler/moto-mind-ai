@@ -10,7 +10,7 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { callClaude, parseClaudeJSON } from '../lib/ai/claude-client'
+import { callOpenAI, parseOpenAIJSON } from '../lib/ai/openai-client'
 
 interface MigrationHistory {
   feature: string
@@ -185,17 +185,23 @@ Focus on migration-specific issues like:
 - Test failures after moving`
 
   try {
-    const response = await callClaude({
-      model: 'claude-sonnet-4-20250514',
-      messages: [{ role: 'user', content: prompt }],
+    const response = await callOpenAI({
+      model: 'gpt-4-turbo-preview',
+      messages: [
+        { 
+          role: 'system', 
+          content: 'You are an expert at predicting software migration issues. Respond only with valid JSON arrays.' 
+        },
+        { role: 'user', content: prompt }
+      ],
       max_tokens: 2000,
       temperature: 0.2
     })
     
-    const predictions = parseClaudeJSON<PredictedIssue[]>(response)
+    const predictions = parseOpenAIJSON<PredictedIssue[]>(response)
     
     // Mark as AI-based
-    predictions.forEach(p => p.basedOn = 'ai')
+    predictions.forEach((p: PredictedIssue) => p.basedOn = 'ai')
     
     return predictions
   } catch (error) {

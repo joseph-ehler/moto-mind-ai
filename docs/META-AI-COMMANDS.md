@@ -146,18 +146,20 @@ npm run migrate:learn
 | Command | Cost | Speed |
 |---------|------|-------|
 | `migrate` | Free | Fast |
-| `migrate:ai` | ~$0.01 | Medium |
+| `migrate:ai` | ~$0.006 | Medium |
 | `migrate:analyze` | Free | Fast |
-| `migrate:analyze:ai` | ~$0.005 | Medium |
-| `migrate:predict` | ~$0.003 | Medium |
+| `migrate:analyze:ai` | ~$0.003 | Medium |
+| `migrate:predict` | ~$0.002 | Medium |
 | `migrate:checklist` | Free | Fast |
-| `migrate:checklist:ai` | ~$0.002 | Fast |
+| `migrate:checklist:ai` | ~$0.001 | Fast |
 | `migrate:complete` | Free | Fast |
 | `migrate:learn` | Free | Fast |
 
-**Total AI migration:** ~$0.01  
-**10 AI migrations:** ~$0.10  
+**Total AI migration:** ~$0.006 (with GPT-4 Turbo)  
+**10 AI migrations:** ~$0.06  
 **Template migrations:** $0.00
+
+**Note:** Costs will be even lower with GPT-5 when available.
 
 ---
 

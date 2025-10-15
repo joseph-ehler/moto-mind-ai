@@ -139,12 +139,12 @@ npm run migrate:analyze:ai <feature>
 
 **What it does:**
 - Samples actual code files
-- Uses Claude to analyze complexity
+- Uses OpenAI GPT-4 Turbo (auto-upgrades to GPT-5) to analyze complexity
 - Detects circular dependencies
 - Finds hidden issues
 - Provides concrete recommendations
 
-**Cost:** ~$0.005 per analysis
+**Cost:** ~$0.003 per analysis (GPT-4 Turbo pricing)
 
 **Output:**
 - `.migration-analysis-ai-<feature>.json`
@@ -361,7 +361,7 @@ npm run migrate:learn
 - `.windsurf-guidance.json` - Updated guidance
 
 ### **AI Data**
-- Code samples sent to Claude API
+- Code samples sent to OpenAI API (GPT-4 Turbo/GPT-5)
 - First 800 chars of 3-5 files max
 - Types, hooks, components only
 - No secrets, no full files

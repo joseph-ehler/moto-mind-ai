@@ -9,7 +9,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { execSync } from 'child_process'
-import { callClaude, parseClaudeJSON } from '../lib/ai/claude-client'
+import { callOpenAI, parseOpenAIJSON } from '../lib/ai/openai-client'
 
 interface BasicAnalysis {
   featureName: string
@@ -194,14 +194,20 @@ Respond with JSON:
 Be specific and concrete. Focus on migration-relevant insights.`
 
   try {
-    const response = await callClaude({
-      model: 'claude-sonnet-4-20250514',
-      messages: [{ role: 'user', content: prompt }],
+    const response = await callOpenAI({
+      model: 'gpt-4-turbo-preview', // Will auto-upgrade to GPT-5 when available
+      messages: [
+        { 
+          role: 'system', 
+          content: 'You are an expert code analyzer. Respond only with valid JSON matching the requested schema.' 
+        },
+        { role: 'user', content: prompt }
+      ],
       max_tokens: 2000,
       temperature: 0.2
     })
     
-    const insights = parseClaudeJSON<AIInsights>(response)
+    const insights = parseOpenAIJSON<AIInsights>(response)
     
     // Add internal import info if detected
     if (internalImports.count > 0) {
@@ -210,7 +216,10 @@ Be specific and concrete. Focus on migration-relevant insights.`
     
     return {
       insights,
-      usage: response.usage
+      usage: {
+        inputTokens: response.usage.prompt_tokens,
+        outputTokens: response.usage.completion_tokens
+      }
     }
   } catch (error) {
     console.error('AI analysis failed:', error)
