@@ -22,10 +22,10 @@ import { Timeline } from '@/components/timeline/Timeline'
 import { VehicleFAB } from '@/components/ui/VehicleFAB.v2'
 import { QuickActionsModal } from '@/components/ui/QuickActionsModal'
 import { CaptureEntryModal } from '@/components/capture/CaptureEntryModal'
-import { VehicleDetailsSkeleton } from '@/components/vehicle/VehicleDetailsSkeleton'
-import { VehicleSpecifications } from '@/components/vehicle/VehicleSpecifications'
-import { DocumentsView } from '@/components/vehicle/DocumentsView'
-import { VehicleAIChatModal } from '@/components/vehicle/VehicleAIChatModal.final'
+import { VehicleDetailsSkeleton } from '@/features/vehicles/ui/VehicleDetailsSkeleton'
+import { VehicleSpecifications } from '@/features/vehicles/ui/VehicleSpecifications'
+import { DocumentsView } from '@/features/vehicles/ui/DocumentsView'
+import { VehicleAIChatModal } from '@/features/vehicles/ui/dialogs/VehicleAIChatModal'
 import { 
   Car, 
   ArrowLeft,
@@ -67,7 +67,7 @@ import {
   Lightbulb
 } from 'lucide-react'
 import { AppNavigation } from '@/components/app/AppNavigation'
-import { VehicleHeaderV2 } from '@/components/vehicle/VehicleHeader.v2'
+import { VehicleHeader } from '@/features/vehicles/ui/VehicleHeader'
 import { DataSectionV2 } from '@/components/events/DataSection.v2'
 import { FieldHelp } from '@/components/ui/FieldHelp'
 import { AIBadgeWithPopover } from '@/components/ui/AIBadgeWithPopover'
@@ -77,7 +77,7 @@ import {
   CostOverviewCard,
   MaintenanceScheduleCard,
   RecentActivityCard 
-} from '@/components/vehicle/sections'
+} from '@/features/vehicles/ui/sections'
 import { Skeleton } from '@/components/ui/skeleton'
 
 // Filter Button Component
@@ -364,7 +364,7 @@ export default function VehicleDetailsPage() {
       <AppNavigation />
       
       {/* New Animated Hero + Glassmorphic Sticky Header */}
-      <VehicleHeaderV2
+      <VehicleHeader
         vehicle={{
           id: vehicle.id,
           year: vehicle.year,
