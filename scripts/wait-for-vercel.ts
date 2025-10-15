@@ -59,8 +59,8 @@ class VercelDeploymentWatcher {
   
   constructor(options: WatcherOptions = {}) {
     this.projectName = options.projectName || 'moto-mind-ai'
-    this.maxWaitTime = options.maxWaitTime || 5 * 60 * 1000  // 5 minutes
-    this.pollInterval = options.pollInterval || 10 * 1000     // 10 seconds
+    this.maxWaitTime = options.maxWaitTime || 10 * 60 * 1000  // 10 minutes
+    this.pollInterval = options.pollInterval || 10 * 1000      // 10 seconds
     this.verbose = options.verbose || false
     this.statusManager = new DeploymentStatusManager()
     this.errorParser = new BuildErrorParser()
