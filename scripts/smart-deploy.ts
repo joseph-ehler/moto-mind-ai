@@ -89,7 +89,7 @@ class SmartDeploy {
       // Phase 4: Wait for Vercel (optional)
       let deploymentUrl: string | undefined
       if (!this.options.noWait) {
-        deploymentUrl = await this.waitForVercel()
+        deploymentUrl = await this.waitForVercel(commitHash)
       }
       
       // Phase 5: Verify deployment
@@ -284,15 +284,16 @@ class SmartDeploy {
   // PHASE 4: WAIT FOR VERCEL
   // ========================================================================
   
-  private async waitForVercel(): Promise<string | undefined> {
-    console.log('⏳ PHASE 4: VERCEL DEPLOYMENT\n')
+  private async waitForVercel(commitSha?: string): Promise<string | undefined> {
+    console.log('⏳ PHASE 4: VERCEL DEPLOYMENT (ENHANCED)\n')
     
     console.log('   Waiting for deployment to start...')
     await this.sleep(5000)
     
     try {
-      // Use the wait-for-vercel script
-      execSync('npx tsx scripts/wait-for-vercel.ts', { stdio: 'inherit' })
+      // Use the enhanced wait-for-vercel script with commit SHA
+      const commitFlag = commitSha ? `--commit=${commitSha}` : ''
+      execSync(`npx tsx scripts/wait-for-vercel.ts ${commitFlag}`, { stdio: 'inherit' })
       
       // Get deployment URL
       const url = this.getLatestDeploymentUrl()

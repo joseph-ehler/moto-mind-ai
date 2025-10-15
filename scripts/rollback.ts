@@ -32,6 +32,7 @@ interface RollbackOptions {
   targetCommit?: string
   targetBranch?: string
   force?: boolean
+  rollbackType?: 'git' | 'vercel' | 'both' // NEW: Rollback strategy
 }
 
 class RollbackSystem {
@@ -44,15 +45,141 @@ class RollbackSystem {
     })
   }
   
+  // NEW: Show rollback strategy options
+  private async chooseRollbackStrategy(): Promise<'git' | 'vercel' | 'both'> {
+    console.log('\n🔄 ROLLBACK STRATEGY\n')
+    console.log('Choose rollback method:\n')
+    console.log('1. ⚡ VERCEL INSTANT ROLLBACK (5 seconds)')
+    console.log('   - Production serves previous deployment immediately')
+    console.log('   - Code stays the same (no git changes)')
+    console.log('   - No new build needed')
+    console.log('   - Perfect for: Emergency fixes')
+    console.log()
+    console.log('2. 📝 GIT ROLLBACK (2-3 minutes)')
+    console.log('   - Reverts commit in git history')
+    console.log('   - Changes source code')
+    console.log('   - Triggers new Vercel deployment')
+    console.log('   - Perfect for: Permanent code revert')
+    console.log()
+    console.log('3. 🎯 BOTH (Safest - Instant fix + code fix)')
+    console.log('   - Vercel rollback first (instant production fix)')
+    console.log('   - Git rollback second (fixes code)')
+    console.log('   - Best of both worlds')
+    console.log('   - Perfect for: Critical issues')
+    console.log()
+    
+    const answer = await this.ask('Select option (1/2/3): ')
+    
+    switch (answer.trim()) {
+      case '1':
+        return 'vercel'
+      case '2':
+        return 'git'
+      case '3':
+        return 'both'
+      default:
+        console.log('Invalid option, defaulting to both')
+        return 'both'
+    }
+  }
+  
+  // NEW: Instant Vercel rollback
+  private async vercelRollback(): Promise<void> {
+    console.log('\n⚡ VERCEL INSTANT ROLLBACK\n')
+    console.log('='.repeat(70))
+    
+    try {
+      // Get recent successful deployments
+      const output = execSync('vercel ls moto-mind-ai --yes', { 
+        encoding: 'utf8',
+        stdio: 'pipe'
+      })
+      
+      const lines = output.split('\n')
+      
+      // Find successful deployments
+      const successful = lines
+        .filter(l => l.includes('● Ready') && l.includes('Production'))
+        .slice(0, 10) // Last 10 successful
+      
+      if (successful.length === 0) {
+        console.log('❌ No successful deployments found')
+        return
+      }
+      
+      console.log('\n📋 Recent successful deployments:\n')
+      successful.forEach((line, i) => {
+        // Parse age from line
+        const ageMatch = line.match(/(\d+[mhd])\s+/)
+        const age = ageMatch ? ageMatch[1] : 'unknown'
+        console.log(`${i + 1}. ${age} ago`)
+      })
+      
+      console.log()
+      const choice = await this.ask('Select deployment to restore (1-10): ')
+      const selectedIndex = parseInt(choice) - 1
+      
+      if (selectedIndex < 0 || selectedIndex >= successful.length) {
+        console.log('❌ Invalid selection')
+        return
+      }
+      
+      // Extract deployment URL from selected line
+      const selectedLine = successful[selectedIndex]
+      const urlMatch = selectedLine.match(/https:\/\/[^\s]+/)
+      
+      if (!urlMatch) {
+        console.log('❌ Could not extract deployment URL')
+        return
+      }
+      
+      const deploymentUrl = urlMatch[0]
+      
+      console.log(`\n🔄 Promoting ${deploymentUrl} to production...`)
+      console.log()
+      
+      // Promote to production
+      execSync(`vercel promote ${deploymentUrl} --yes`, { stdio: 'inherit' })
+      
+      console.log('\n' + '='.repeat(70))
+      console.log('✅ PRODUCTION RESTORED!')
+      console.log('='.repeat(70))
+      console.log()
+      console.log('⚡ Time to fix: ~5 seconds')
+      console.log('🌐 Production now serving previous deployment')
+      console.log()
+      console.log('💡 Next steps:')
+      console.log('   1. Verify production is working')
+      console.log('   2. Fix the code issue')
+      console.log('   3. Deploy the fix with: npm run deploy "fix: ..."')
+      console.log()
+      
+    } catch (error: any) {
+      console.error('❌ Vercel rollback failed:', error.message)
+      throw error
+    }
+  }
+  
   async rollback(options: RollbackOptions): Promise<void> {
     console.log('🔄 ROLLBACK SYSTEM\n')
     console.log('='.repeat(60))
     
     try {
-      // Step 1: Verify git state
+      // NEW: Step 1: Choose rollback strategy (if not specified)
+      const rollbackType = options.rollbackType || await this.chooseRollbackStrategy()
+      
+      // If Vercel-only rollback, do it and return
+      if (rollbackType === 'vercel') {
+        await this.vercelRollback()
+        this.rl.close()
+        return
+      }
+      
+      // For git or both, continue with git rollback
+      // Step 2: Verify git state
       await this.verifyGitState()
       
-      // Step 2: Determine rollback target
+      // Step 3: Determine rollback target
       const target = await this.determineTarget(options)
       
       // Step 3: Show what will be rolled back
@@ -68,10 +195,22 @@ class RollbackSystem {
         }
       }
       
+      // NEW: If "both" strategy, do Vercel rollback first (instant fix)
+      if (rollbackType === 'both') {
+        console.log('\n🎯 DUAL ROLLBACK STRATEGY\n')
+        console.log('Step 1: Instant Vercel rollback (fix production now)')
+        console.log('Step 2: Git rollback (fix code)\n')
+        
+        await this.vercelRollback()
+        
+        console.log('\n✅ Production fixed! Now rolling back git...\n')
+        await this.sleep(2000) // Brief pause
+      }
+      
       // Step 5: Create safety backup
       await this.createSafetyBackup()
       
-      // Step 6: Execute rollback
+      // Step 6: Execute git rollback
       await this.executeRollback(target)
       
       // Step 7: Show success
@@ -276,6 +415,10 @@ class RollbackSystem {
     const answer = await this.ask(`${question} (y/n): `)
     return answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes'
   }
+  
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
 }
 
 // ============================================================================
@@ -285,15 +428,26 @@ class RollbackSystem {
 function parseArgs(): RollbackOptions {
   const args = process.argv.slice(2)
   
+  // NEW: Rollback type flags
+  let rollbackType: 'git' | 'vercel' | 'both' | undefined
+  if (args.includes('--vercel-only')) {
+    rollbackType = 'vercel'
+  } else if (args.includes('--git-only')) {
+    rollbackType = 'git'
+  } else if (args.includes('--both')) {
+    rollbackType = 'both'
+  }
+  
   if (args.includes('--last')) {
-    return { mode: 'last' }
+    return { mode: 'last', rollbackType }
   }
   
   const toIndex = args.indexOf('--to')
   if (toIndex !== -1 && args[toIndex + 1]) {
     return {
       mode: 'to-commit',
-      targetCommit: args[toIndex + 1]
+      targetCommit: args[toIndex + 1],
+      rollbackType
     }
   }
   
@@ -301,7 +455,8 @@ function parseArgs(): RollbackOptions {
   if (branchIndex !== -1 && args[branchIndex + 1]) {
     return {
       mode: 'from-branch',
-      targetBranch: args[branchIndex + 1]
+      targetBranch: args[branchIndex + 1],
+      rollbackType
     }
   }
   
@@ -309,7 +464,8 @@ function parseArgs(): RollbackOptions {
   
   return { 
     mode: 'interactive',
-    force
+    force,
+    rollbackType
   }
 }
 

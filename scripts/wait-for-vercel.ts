@@ -22,7 +22,7 @@
  *   - Project linked: vercel link
  */
 
-import { execSync } from 'child_process'
+import { execSync, spawn } from 'child_process'
 import { BuildErrorParser } from './parse-build-errors'
 import { DeploymentStatusManager, DeploymentStatus } from './deployment-status'
 
@@ -42,10 +42,12 @@ interface VercelDeployment {
 }
 
 interface WatcherOptions {
-  maxWaitTime?: number  // milliseconds
+  maxWaitTime?: number // milliseconds
   pollInterval?: number // milliseconds
   projectName?: string
   verbose?: boolean
+  useEnhancedMonitoring?: boolean // Use Vercel CLI for real-time monitoring
+  commitSha?: string // Git commit SHA to track
 }
 
 class VercelDeploymentWatcher {
@@ -56,23 +58,173 @@ class VercelDeploymentWatcher {
   private statusManager: DeploymentStatusManager
   private errorParser: BuildErrorParser
   private startTime: number = 0
+  private useEnhancedMonitoring: boolean
+  private commitSha: string | undefined
   
   constructor(options: WatcherOptions = {}) {
     this.projectName = options.projectName || 'moto-mind-ai'
     this.maxWaitTime = options.maxWaitTime || 10 * 60 * 1000  // 10 minutes
-    this.pollInterval = options.pollInterval || 10 * 1000      // 10 seconds
+    this.pollInterval = options.pollInterval || 5 * 1000       // 5 seconds (faster)
     this.verbose = options.verbose || false
+    this.useEnhancedMonitoring = options.useEnhancedMonitoring !== false // Default true
+    this.commitSha = options.commitSha
     this.statusManager = new DeploymentStatusManager()
     this.errorParser = new BuildErrorParser()
   }
   
+  // NEW: Get deployment ID immediately using commit SHA or recent deployments
+  private async getDeploymentId(): Promise<string | null> {
+    try {
+      // If we have a commit SHA, find deployment for that commit
+      if (this.commitSha) {
+        if (this.verbose) {
+          console.log(`🔍 Finding deployment for commit ${this.commitSha.substring(0, 7)}...`)
+        }
+        
+        const output = execSync(
+          `vercel ls ${this.projectName} --yes`,
+          { encoding: 'utf8', stdio: 'pipe', timeout: 30000 }
+        )
+        
+        // Look for deployment with this commit in meta
+        const lines = output.split('\n')
+        for (const line of lines) {
+          if (line.includes(this.commitSha.substring(0, 7))) {
+            // Extract deployment URL from line
+            const urlMatch = line.match(/https:\/\/[^\s]+/)
+            if (urlMatch) {
+              const deploymentId = urlMatch[0].split('-')[2]?.split('.')[0]
+              if (deploymentId) {
+                console.log(`✅ Found deployment: ${deploymentId}`)
+                return deploymentId
+              }
+            }
+          }
+        }
+      }
+      
+      // Otherwise, get the most recent deployment
+      const latest = await this.getLatestDeployment()
+      return latest?.uid || null
+      
+    } catch (error) {
+      if (this.verbose) {
+        console.error('Error getting deployment ID:', error)
+      }
+      return null
+    }
+  }
+  
+  // NEW: Stream build logs in real-time
+  private async streamBuildLogs(deploymentId: string): Promise<void> {
+    console.log('\n📡 Streaming build logs...\n')
+    console.log('='.repeat(70))
+    
+    return new Promise((resolve, reject) => {
+      const logsProcess = spawn('vercel', [
+        'logs',
+        deploymentId,
+        '--output', 'raw'
+      ])
+      
+      let logBuffer = ''
+      const errors: any[] = []
+      
+      logsProcess.stdout.on('data', (data) => {
+        const text = data.toString()
+        logBuffer += text
+        
+        // Show logs with formatting
+        text.split('\n').forEach((line: string) => {
+          if (!line.trim()) return
+          
+          if (line.toLowerCase().includes('error')) {
+            console.log(`❌ ${line}`)
+            errors.push(line)
+          } else if (line.toLowerCase().includes('warning')) {
+            console.log(`⚠️  ${line}`)
+          } else if (line.includes('✓') || line.includes('success')) {
+            console.log(`✅ ${line}`)
+          } else {
+            console.log(`   ${line}`)
+          }
+        })
+      })
+      
+      logsProcess.stderr.on('data', (data) => {
+        if (this.verbose) {
+          console.error(data.toString())
+        }
+      })
+      
+      logsProcess.on('close', (code) => {
+        console.log('='.repeat(70))
+        
+        // Parse errors from logs if any
+        if (logBuffer) {
+          const parsedErrors = this.errorParser.parse(logBuffer)
+          if (parsedErrors.length > 0) {
+            errors.push(...parsedErrors)
+          }
+        }
+        
+        resolve()
+      })
+      
+      logsProcess.on('error', (error) => {
+        if (this.verbose) {
+          console.error('Error streaming logs:', error)
+        }
+        resolve() // Don't fail just because log streaming failed
+      })
+    })
+  }
+  
+  // NEW: Get detailed deployment status using Vercel CLI
+  private async getDeploymentStatus(deploymentId: string): Promise<any> {
+    try {
+      const output = execSync(
+        `vercel inspect ${deploymentId} --json`,
+        { encoding: 'utf8', stdio: 'pipe', timeout: 30000 }
+      )
+      
+      return JSON.parse(output)
+    } catch (error) {
+      if (this.verbose) {
+        console.error('Error getting deployment status:', error)
+      }
+      return null
+    }
+  }
+  
+  // NEW: Write status update to file (so Windsurf can read anytime)
+  private writeStatusUpdate(deployment: any): void {
+    try {
+      const status: DeploymentStatus = {
+        state: deployment.readyState || deployment.state,
+        url: deployment.url,
+        timestamp: Date.now(),
+        deploymentId: deployment.id || deployment.uid,
+        commit: this.commitSha,
+        branch: execSync('git branch --show-current', { encoding: 'utf8', stdio: 'pipe' }).trim()
+      }
+      
+      this.statusManager.writeStatus(status)
+    } catch (error) {
+      if (this.verbose) {
+        console.error('Error writing status update:', error)
+      }
+    }
+  }
+  
   async waitForDeployment(): Promise<void> {
-    console.log('🚀 VERCEL DEPLOYMENT WATCHER\n')
-    console.log('='.repeat(60))
+    console.log('🚀 VERCEL DEPLOYMENT WATCHER (ENHANCED)\n')
+    console.log('='.repeat(70))
     console.log(`Project: ${this.projectName}`)
     console.log(`Timeout: ${this.maxWaitTime / 1000}s`)
     console.log(`Poll Interval: ${this.pollInterval / 1000}s`)
-    console.log('='.repeat(60))
+    console.log(`Enhanced Monitoring: ${this.useEnhancedMonitoring ? 'ON ✨' : 'OFF'}`)
+    console.log('='.repeat(70))
     console.log()
     
     this.startTime = Date.now()
@@ -105,6 +257,9 @@ class VercelDeploymentWatcher {
         if (deployment.state !== lastState) {
           this.showStatus(deployment)
           lastState = deployment.state
+          
+          // Write status update (so Windsurf can read anytime)
+          this.writeStatusUpdate(deployment)
         }
         
         // Check if done
@@ -114,6 +269,10 @@ class VercelDeploymentWatcher {
         }
         
         if (deployment.state === 'ERROR') {
+          // Stream logs if enhanced monitoring enabled
+          if (this.useEnhancedMonitoring && deployment.uid) {
+            await this.streamBuildLogs(deployment.uid)
+          }
           await this.showError(deployment)
           process.exit(1)
         }
@@ -370,10 +529,24 @@ const args = process.argv.slice(2)
 const verbose = args.includes('--verbose') || args.includes('-v')
 const timeoutArg = args.find(arg => arg.startsWith('--timeout='))
 const timeout = timeoutArg ? parseInt(timeoutArg.split('=')[1]) * 1000 : undefined
+const commitArg = args.find(arg => arg.startsWith('--commit='))
+const commitSha = commitArg ? commitArg.split('=')[1] : undefined
+const noEnhanced = args.includes('--no-enhanced')
+
+// Get commit SHA from git if not provided
+const actualCommitSha = commitSha || (() => {
+  try {
+    return execSync('git rev-parse HEAD', { encoding: 'utf8', stdio: 'pipe' }).trim()
+  } catch {
+    return undefined
+  }
+})()
 
 const watcher = new VercelDeploymentWatcher({
   verbose,
-  maxWaitTime: timeout
+  maxWaitTime: timeout,
+  commitSha: actualCommitSha,
+  useEnhancedMonitoring: !noEnhanced
 })
 
 watcher.waitForDeployment().catch(error => {
