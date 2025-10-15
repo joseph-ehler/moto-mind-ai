@@ -29,6 +29,8 @@
     "db:doctor": "npx tsx scripts/db-doctor.ts",
     "db:schema-diff": "npx tsx scripts/schema-diff.ts",
     "db:seed": "npx tsx scripts/seed.ts",
+    "db:apply-rls": "npx tsx scripts/apply-rls-simple.ts",
+    "supabase:admin": "npx tsx scripts/supabase-admin.ts",
     "repo:analyze": "npx tsx scripts/repo-analyze.ts",
     "repo:clean": "npx tsx scripts/repo-clean.ts",
     "repo:clean:fix": "npx tsx scripts/repo-clean.ts --fix",

@@ -62,11 +62,21 @@
         "status": "in_progress",
         "startTime": "2025-10-15T18:28:22.025Z",
         "commits": 1
+      },
+      "components": {
+        "status": "in_progress",
+        "startTime": "2025-10-15T18:33:41.589Z",
+        "commits": 1
+      },
+      "tests": {
+        "status": "in_progress",
+        "startTime": "2025-10-15T18:38:17.869Z",
+        "commits": 1
       }
     },
-    "currentPhase": "validation",
-    "totalElapsed": 5.137733333333333,
-    "commits": 1,
-    "lastUpdate": "2025-10-15T18:28:22.025Z"
+    "currentPhase": "tests",
+    "totalElapsed": 15.068466666666666,
+    "commits": 3,
+    "lastUpdate": "2025-10-15T18:38:17.869Z"
   }
 }
