@@ -1,0 +1,61 @@
+{
+  "feature": "vision",
+  "startTime": "2025-10-15T17:36:22.556Z",
+  "baseline": {
+    "timestamp": "2025-10-15T17:36:06.421Z",
+    "tests": 16,
+    "violations": 0,
+    "features": {
+      "migrated": [
+        "capture",
+        "events",
+        "timeline",
+        "vehicles"
+      ],
+      "remaining": [
+        "admin",
+        "auth",
+        "capture",
+        "chat",
+        "explain",
+        "fleet",
+        "garage",
+        "home",
+        "insights",
+        "layout",
+        "location",
+        "maps",
+        "modals",
+        "monitoring",
+        "onboarding",
+        "providers",
+        "reminders",
+        "timeline",
+        "ui",
+        "vision"
+      ]
+    }
+  },
+  "analysis": {
+    "featureName": "vision",
+    "componentCount": 12,
+    "totalFiles": 13,
+    "maxNestingDepth": 0,
+    "hasSubdirectories": false,
+    "hasInternalImports": true,
+    "complexityLevel": "high",
+    "estimatedTime": "1.5-2 hours",
+    "similarTo": "timeline",
+    "recommendations": [
+      "🚨 Complex migration - expect challenges with imports",
+      "💡 Follow timeline pattern: create proper type exports first",
+      "💡 Consider direct file imports instead of barrel exports"
+    ],
+    "warnings": [
+      "⚠️  Internal imports detected - will need careful refactoring",
+      "💡 Create index.ts or use absolute imports for internal modules"
+    ]
+  },
+  "checklistPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/VISION-MIGRATION-CHECKLIST-AI.md",
+  "sessionId": "migration-vision-1760549782556"
+}

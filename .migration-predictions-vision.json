@@ -1,0 +1,57 @@
+{
+  "feature": "vision",
+  "historicalPatterns": [],
+  "predictedIssues": [
+    {
+      "issue": "10 files with internal imports will need refactoring",
+      "probability": 0.95,
+      "phase": "components",
+      "mitigation": "Create barrel exports (index.ts) or convert to absolute imports before moving",
+      "basedOn": "pattern"
+    },
+    {
+      "issue": "Test failures after moving due to hard-coded paths or dependencies in test files",
+      "probability": 0.9,
+      "phase": "tests",
+      "mitigation": "Update test configurations and paths; abstract or mock dependencies where necessary",
+      "basedOn": "ai"
+    },
+    {
+      "issue": "Build failures due to unresolved dependencies after file moves",
+      "probability": 0.85,
+      "phase": "components",
+      "mitigation": "Verify build configuration and paths; ensure all dependencies are correctly installed and imported",
+      "basedOn": "ai"
+    },
+    {
+      "issue": "Import resolution failures due to relative paths after moving files",
+      "probability": 0.8,
+      "phase": "components",
+      "mitigation": "Use module aliases or update import paths after moving files",
+      "basedOn": "ai"
+    },
+    {
+      "issue": "Type errors from moved files due to incorrect or missing imports",
+      "probability": 0.75,
+      "phase": "components",
+      "mitigation": "Ensure all imports are correctly updated and exist; consider using a static type checker",
+      "basedOn": "ai"
+    },
+    {
+      "issue": "Circular dependencies due to tight coupling between components and domain logic",
+      "probability": 0.7,
+      "phase": "domain",
+      "mitigation": "Refactor to introduce an intermediary layer or use dependency inversion",
+      "basedOn": "ai"
+    },
+    {
+      "issue": "Missing exports after extracting business logic",
+      "probability": 0.6,
+      "phase": "domain",
+      "mitigation": "Review all extracted logic for completeness and ensure all necessary exports are included",
+      "basedOn": "ai"
+    }
+  ],
+  "confidence": 0.5,
+  "dataPoints": 0
+}

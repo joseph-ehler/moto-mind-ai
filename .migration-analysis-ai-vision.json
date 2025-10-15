@@ -1,0 +1,55 @@
+{
+  "featureName": "vision",
+  "componentCount": 12,
+  "totalFiles": 13,
+  "maxNestingDepth": 0,
+  "hasSubdirectories": false,
+  "hasInternalImports": true,
+  "complexityLevel": "high",
+  "estimatedTime": "1.5-2 hours",
+  "similarTo": "timeline",
+  "recommendations": [
+    "🚨 Complex migration - expect challenges with imports",
+    "💡 Follow timeline pattern: create proper type exports first",
+    "💡 Consider direct file imports instead of barrel exports"
+  ],
+  "warnings": [
+    "⚠️  Internal imports detected - will need careful refactoring",
+    "💡 Create index.ts or use absolute imports for internal modules"
+  ],
+  "aiInsights": {
+    "actualComplexity": "medium",
+    "hiddenIssues": [
+      "Tight coupling between components and domain logic",
+      "Potential for circular dependencies between components and domain logic"
+    ],
+    "recommendations": [
+      "Refactor tightly coupled components to separate UI from business logic before migration",
+      "Ensure proper dependency injection to avoid circular dependencies"
+    ],
+    "estimatedTime": "3-5 hours",
+    "reasoning": "The migration involves not just moving files but also significant refactoring to separate UI from business logic. Given the high template complexity and the need to update internal imports carefully to avoid breaking changes, the process is more involved than the initial estimate suggests. Additionally, ensuring backward compatibility adds another layer of complexity.",
+    "confidence": 0.75,
+    "internalImports": {
+      "count": 10,
+      "files": [
+        "components/vision/DashboardCaptureModal.tsx",
+        "components/vision/DocumentScanner.tsx",
+        "components/vision/DocumentScannerModal.tsx",
+        "components/vision/index.ts",
+        "components/vision/LicensePlateScanner.tsx",
+        "components/vision/OdometerReader.tsx",
+        "components/vision/RoutineDashboardCapture.tsx",
+        "components/vision/VINScanner.tsx",
+        "components/vision/VisionExamples.tsx",
+        "components/vision/VisionProcessingWrapper.tsx"
+      ]
+    }
+  },
+  "confidenceLevel": 0.5249999999999999,
+  "usedAI": true,
+  "costEstimate": {
+    "inputTokens": 950,
+    "outputTokens": 166
+  }
+}
