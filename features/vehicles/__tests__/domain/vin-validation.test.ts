@@ -5,7 +5,7 @@
  * These will eventually move to features/vehicles/domain/types.ts
  */
 
-import { isValidVIN, parseVINInfo } from '@/lib/domain/types'
+import { isValidVIN, parseVINInfo } from '@/features/vehicles/domain/types'
 
 describe('isValidVIN', () => {
   describe('valid VINs', () => {

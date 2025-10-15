@@ -5,7 +5,7 @@
  * Provides consistent test data across all test suites
  */
 
-import type { Vehicle } from '@/lib/domain/types'
+import type { Vehicle } from '@/features/vehicles/domain/types'
 
 /**
  * Valid mock vehicle with all fields populated

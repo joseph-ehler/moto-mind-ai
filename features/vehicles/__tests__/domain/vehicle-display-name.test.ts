@@ -5,7 +5,7 @@
  * This will eventually move to features/vehicles/domain/types.ts
  */
 
-import { getVehicleDisplayName, type Vehicle } from '@/lib/domain/types'
+import { getVehicleDisplayName, type Vehicle } from '@/features/vehicles/domain/types'
 
 describe('getVehicleDisplayName', () => {
   describe('with display_name set', () => {

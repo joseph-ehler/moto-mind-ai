@@ -9,7 +9,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { withTenantIsolation } from '@/lib/middleware/tenant-context'
 
 import { createClient } from '@supabase/supabase-js'
-import { VehicleContextBuilder } from '@/lib/ai/vehicle-context-builder'
+import { VehicleContextBuilder } from '@/features/vehicles/domain/vehicle-context-builder'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
