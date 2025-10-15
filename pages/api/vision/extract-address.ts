@@ -7,8 +7,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withTenantIsolation } from '@/features/auth'
 
-import { extractAddress } from '../../../lib/vision/address-extractor'
-import { forwardGeocode } from '../../../lib/geocoding-enhanced'
+import { extractAddress } from '@/lib/vision/address-extractor'
+import { forwardGeocode } from '@/lib/geocoding-enhanced'
 
 async function handler(
   req: NextApiRequest,

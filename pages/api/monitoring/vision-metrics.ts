@@ -4,8 +4,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withTenantIsolation } from '@/features/auth'
 
-import { visionMetrics } from '../../../lib/monitoring/vision-metrics'
-import { databaseVisionMetrics } from '../../../lib/monitoring/database-metrics'
+import { visionMetrics } from '@/lib/monitoring/vision-metrics'
+import { databaseVisionMetrics } from '@/lib/monitoring/database-metrics'
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {

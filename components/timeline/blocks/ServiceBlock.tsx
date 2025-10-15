@@ -11,7 +11,7 @@ import {
 } from '../utils/tokens'
 import { resolveVendor } from '../utils/vendor'
 import { resolveEventDate, formatEventDate } from '../utils/date'
-import { ServiceTimelineEvent, isServiceEvent } from '../../../lib/vision/schemas/timeline-events'
+import { ServiceTimelineEvent, isServiceEvent } from '@/lib/vision/schemas/timeline-events'
 
 interface ServiceBlockProps {
   event: TimelineEvent
