@@ -267,7 +267,7 @@ async function analyze(featureName: string): Promise<EnhancedAnalysis> {
   }
   
   // Step 4: Get AI insights
-  console.log('🤖 Requesting Claude analysis...')
+  console.log('🤖 Requesting OpenAI GPT-4 Turbo analysis...')
   const { insights, usage } = await getAIInsights(basicAnalysis, samples, internalImports)
   console.log(`   Tokens: ${usage.inputTokens} in, ${usage.outputTokens} out`)
   
