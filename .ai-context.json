@@ -3,23 +3,26 @@
   "sessionId": "session-1760550159794",
   "startedAt": "2025-10-15T17:42:39.794Z",
   "nextAction": null,
-  "feature": "chat",
-  "phase": "tests",
+  "feature": "to",
+  "phase": "components",
   "files": [
+    ".ai-context.json",
+    ".migration-session.json",
     ".windsurf/context/active.json",
-    "package.json",
-    "scripts/windsurf-tools/README.md",
-    "scripts/windsurf-tools/context-checkpoint.ts",
-    "scripts/windsurf-tools/pattern-library.ts"
+    "components/insights/AskQuestion.tsx",
+    "features/insights/index.ts",
+    "features/insights/ui/AskQuestion.tsx",
+    "features/insights/ui/index.ts",
+    "tsconfig.tsbuildinfo"
   ],
-  "windsurfStatus": "Committed: feat(windsurf-tools): add pattern learning + conte...",
-  "windsurfUpdated": "2025-10-15T21:47:31.321Z",
+  "windsurfStatus": "Committed: feat(insights): migrate to features architecture -...",
+  "windsurfUpdated": "2025-10-15T22:17:20.232Z",
   "codexFeedback": {
-    "command": "npm test features/chat",
-    "result": "Tests pass for `features/chat`. Let me know if you want anything else.\n",
+    "command": "npm run build",
+    "result": "Build stops during the lint step: ESLint can’t resolve the config `next/core-web-vitals` per `.eslintrc.js`. Everything compiles otherwise, but `npm run build` times out because of that failure. You’ll need to add/install the matching ESLint config (usually `eslint-config-next`) or adjust the lint setup before rerunning the build.\n",
     "success": true,
     "suggestions": [],
-    "timestamp": "2025-10-15T21:47:38.032Z"
+    "timestamp": "2025-10-15T22:17:50.638Z"
   },
-  "codexUpdated": "2025-10-15T21:47:38.032Z"
+  "codexUpdated": "2025-10-15T22:17:50.638Z"
 }
