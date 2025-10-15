@@ -13,6 +13,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { execSync } from 'child_process'
+import { getContextBridge } from '../lib/ai/context-bridge'
 
 interface MigrationSession {
   feature: string
@@ -171,9 +172,22 @@ function printSummary(session: MigrationSession) {
   console.log()
 }
 
-async function orchestrateWithAI(featureName: string) {
+async function orchestrateWithAI(featureName: string, useCodex: boolean = false) {
   try {
     console.log('\n🚀 MIGRATION ORCHESTRATOR (AI-ENHANCED)\n')
+    
+    // Step 0: Initialize context bridge for Codex integration
+    if (useCodex) {
+      const bridge = getContextBridge()
+      await bridge.initialize(`Migrate ${featureName} feature`)
+      await bridge.updateFromWindsurf({
+        task: `Migrate ${featureName}`,
+        feature: featureName,
+        phase: 'analysis',
+        status: 'Starting AI-enhanced migration'
+      })
+      console.log('🔗 Context bridge initialized for Windsurf ↔ Codex collaboration\n')
+    }
     
     // Step 1: Capture baseline
     const baseline = await captureBaseline()
@@ -230,9 +244,9 @@ async function orchestrateWithAI(featureName: string) {
   }
 }
 
-async function orchestrate(featureName: string, useAI: boolean = false) {
+async function orchestrate(featureName: string, useAI: boolean = false, useCodex: boolean = false) {
   if (useAI) {
-    return orchestrateWithAI(featureName)
+    return orchestrateWithAI(featureName, useCodex)
   }
   
   try {
@@ -270,13 +284,22 @@ async function orchestrate(featureName: string, useAI: boolean = false) {
 // CLI
 const args = process.argv.slice(2)
 const useAI = args.includes('--ai')
+const useCodex = args.includes('--codex')
 const featureName = args.find(arg => !arg.startsWith('--'))
 
 if (!featureName) {
-  console.error('❌ Usage: npm run migrate <feature-name> [--ai]')
+  console.error('❌ Usage: npm run migrate <feature-name> [--ai] [--codex]')
   console.error('   Example: npm run migrate vision')
-  console.error('   Example: npm run migrate vision --ai  # AI-enhanced')
+  console.error('   Example: npm run migrate vision --ai           # AI-enhanced')
+  console.error('   Example: npm run migrate vision --ai --codex   # AI + Codex collaboration')
   process.exit(1)
 }
 
-orchestrate(featureName, useAI)
+// If using Codex, AI mode is required
+if (useCodex && !useAI) {
+  console.error('❌ --codex requires --ai mode')
+  console.error('   Use: npm run migrate vision --ai --codex')
+  process.exit(1)
+}
+
+orchestrate(featureName, useAI, useCodex)
