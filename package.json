@@ -53,7 +53,7 @@
     "migrate:ai": "npx tsx scripts/migration-toolkit/orchestrate-migration.ts --ai",
     "migrate:codex": "npx tsx scripts/migration-toolkit/orchestrate-migration.ts --ai --codex",
     "migrate:analyze": "npx tsx scripts/migration-toolkit/analyze-feature-complexity.ts",
-    "migrate:analyze:ai": "npx tsx scripts/analyze-code-structure-ai.ts",
+    "migrate:analyze:ai": "npx tsx scripts/migration-toolkit/analyze-code-structure-ai.ts",
     "migrate:predict": "npx tsx scripts/migration-toolkit/predict-migration-issues.ts",
     "migrate:checklist": "npx tsx scripts/migration-toolkit/generate-migration-checklist.ts",
     "migrate:checklist:ai": "npx tsx scripts/migration-toolkit/generate-adaptive-checklist.ts",
