@@ -6,7 +6,9 @@
  */
 
 // Core auth configuration
-export { authOptions } from './config'
+// TEMPORARILY using minimal config without database integration
+// This gets signin working NOW, we'll add database back incrementally
+export { authOptions } from './config-minimal'
 
 // Auth types
 export type {
