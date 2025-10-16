@@ -243,3 +243,5 @@ Built with modern best practices and inspired by elite engineering teams at Verc
 ---
 
 **"Fleet intelligence you can explain, audit, and trust"** 🚗✨
+
+<!-- Trigger redeploy with environment variables -->
