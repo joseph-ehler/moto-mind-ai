@@ -19,11 +19,20 @@
  * - Rollback if anything breaks
  */
 
-import { openai } from '@/lib/clients/openai'
+import OpenAI from 'openai'
 import { readFileSync, writeFileSync, existsSync, mkdirSync, renameSync, readdirSync, statSync } from 'fs'
 import { join, dirname, relative, basename } from 'path'
 import { execSync } from 'child_process'
 import chalk from 'chalk'
+import { config } from 'dotenv'
+
+// Load environment variables
+config({ path: join(process.cwd(), '.env.local') })
+
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+})
 
 // ============================================
 // TYPES
