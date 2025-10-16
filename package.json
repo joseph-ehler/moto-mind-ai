@@ -125,7 +125,8 @@
     "vision:test": "npx tsx lib/vision/tools/test-single-dashboard.ts",
     "db:seed:smartphone": "npx tsx scripts/dev-tools/seed-smartphone.ts",
     "demo:reset": "npm run db:seed:smartphone",
-    "demo:full": "npm run db:migrate && npm run db:seed:smartphone && npm run dev"
+    "demo:full": "npm run db:migrate && npm run db:seed:smartphone && npm run dev",
+    "prepare": "husky"
   },
   "keywords": [
     "fleet",
@@ -233,6 +234,7 @@
     "@types/glob": "^8.1.0",
     "esbuild": "^0.25.10",
     "glob": "^11.0.3",
+    "husky": "^9.1.7",
     "jest-environment-jsdom": "^30.2.0",
     "node-mocks-http": "^1.17.2",
     "tsx": "^4.20.6",

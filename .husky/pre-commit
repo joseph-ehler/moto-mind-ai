@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🛡️  AI Pattern Enforcer - Validating staged files..."
+
+# Run Pattern Enforcer on staged files
+npx tsx scripts/ai-platform/enforce-patterns-ai.ts --validate
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Pattern violations detected!"
+  echo ""
+  echo "💡 Options:"
+  echo "  1. Auto-fix: npm run ai-platform:enforce -- --auto-fix"
+  echo "  2. Review:   cat .ai-patterns.json"
+  echo "  3. Bypass:   git commit --no-verify (not recommended)"
+  echo ""
+  exit 1
+fi
+
+echo "✅ All patterns followed! Commit proceeding..."
