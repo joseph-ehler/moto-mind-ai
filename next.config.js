@@ -6,9 +6,16 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   env: {
+    // Server-side only
     SAMSARA_API_KEY: process.env.SAMSARA_API_KEY,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     DATABASE_URL: process.env.DATABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    
+    // Client-side (NEXT_PUBLIC_* should auto-inline, but explicitly including for Vercel)
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   // Disable file watching to avoid watchpack errors
   webpack: (config, { dev }) => {
