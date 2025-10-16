@@ -1,25 +1,15 @@
 import { getSupabaseServer } from '@/lib/supabase-server'
-import { createClient } from '@supabase/supabase-js'
 import { DatabaseError, NotFoundError, ConflictError } from '@/lib/utils/errors'
 import type { UpdateGarageRequest } from '@/lib/validation/garages'
 import type { Garage } from './getGarages'
-
-// const supabase = createClient(
-//   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-//   process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
 
 export async function updateGarage(
   tenantId: string, 
   garageId: string, 
   updates: UpdateGarageRequest
 ): Promise<Garage> {
+  const supabase = getSupabaseServer()
+  
   try {
     // If this is being set as default, unset other defaults first
     if (updates.is_default) {

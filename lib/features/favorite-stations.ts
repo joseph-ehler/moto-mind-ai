@@ -4,7 +4,6 @@ import { getSupabaseServer } from '@/lib/supabase-server'
  * Analyzes user's fill-up history to suggest frequent stations
  */
 
-import { createClient } from '@supabase/supabase-js'
 
 // const supabase = createClient(
 //   process.env.NEXT_PUBLIC_SUPABASE_URL!,

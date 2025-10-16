@@ -1,3 +1,4 @@
+import { getSupabaseServer } from '@/lib/supabase-server'
 /**
  * Supabase Storage Service for Canonical Vehicle Images
  * 
@@ -5,19 +6,13 @@
  * Optimized for canonical image system with proper naming and organization.
  */
 
-import { createClient } from '@supabase/supabase-js'
 
 // Supabase configuration
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 // Create service role client for server-side operations
-const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
-  }
-})
+const supabase = createClient(supabaseUrl, supabaseServiceKey, 
 
 // Storage configuration
 const VEHICLE_IMAGES_BUCKET = 'vehicle-images'
