@@ -1,6 +1,6 @@
 'use client'
 
-import { signIn, useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { Container, Stack, Heading, Text, Button, Card } from '@/components/design-system'
 import { Chrome, Loader2 } from 'lucide-react'
 import { useState, useEffect } from 'react'
@@ -8,15 +8,31 @@ import { useRouter } from 'next/navigation'
 
 export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false)
-  const { data: session, status } = useSession()
+  const [showContent, setShowContent] = useState(false)
   const router = useRouter()
 
-  // If already signed in, redirect to vehicles
+  // Show content after a short delay (don't wait for session)
   useEffect(() => {
-    if (status === 'authenticated') {
-      router.push('/vehicles')
+    const timer = setTimeout(() => setShowContent(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Try to check session but don't block on it
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch('/api/auth/session')
+        const session = await response.json()
+        if (session?.user) {
+          console.log('[Auth] Already signed in, redirecting...')
+          router.push('/vehicles')
+        }
+      } catch (error) {
+        console.error('[Auth] Session check failed:', error)
+      }
     }
-  }, [status, router])
+    checkSession()
+  }, [router])
 
   const handleGoogleSignIn = async () => {
     try {
@@ -38,7 +54,7 @@ export default function SignInPage() {
   // Direct link as fallback
   const directSignInUrl = '/api/auth/signin/google?callbackUrl=/vehicles'
 
-  if (status === 'loading') {
+  if (!showContent) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
@@ -101,8 +117,8 @@ export default function SignInPage() {
             {/* Debug Info (only in development) */}
             {process.env.NODE_ENV === 'development' && (
               <div className="mt-4 p-4 bg-gray-100 rounded text-xs font-mono">
-                <div>Session Status: {status}</div>
                 <div>Check console for [Auth] logs</div>
+                <div>Button should work, or use fallback link</div>
               </div>
             )}
           </Stack>
