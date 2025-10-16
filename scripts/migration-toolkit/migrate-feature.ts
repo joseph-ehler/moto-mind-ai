@@ -39,10 +39,13 @@ class FeatureMigrationHelper {
   private featureName: string
   private gitRoot: string
   private rl: readline.Interface
+  private startTime: number
+  private estimatedDuration: number = 0
   
   constructor(featureName: string) {
     this.featureName = featureName
     this.gitRoot = process.cwd()
+    this.startTime = Date.now()
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
@@ -442,13 +445,17 @@ class FeatureMigrationHelper {
   }
   
   /**
-   * Step 6: Show summary
+   * Step 6: Show summary and create completion file
    */
   private showSummary(): void {
     console.log('='.repeat(60))
     console.log('✅ MIGRATION COMPLETE')
     console.log('='.repeat(60))
     console.log()
+    
+    // Create completion file for dashboard tracking
+    this.createCompletionFile()
+    
     console.log('Next steps:')
     console.log('1. Review the changes: git status')
     console.log('2. Fix any remaining issues')
@@ -460,6 +467,53 @@ class FeatureMigrationHelper {
     console.log('Check usage: git grep "@/lib/services/' + this.featureName + '"')
     console.log('If empty, safe to delete old directories.')
     console.log()
+  }
+  
+  /**
+   * Create completion file for dashboard tracking
+   */
+  private createCompletionFile(): void {
+    const durationMinutes = Math.round((Date.now() - this.startTime) / 1000 / 60)
+    
+    // Try to get estimated duration from AI analysis
+    const aiAnalysisPath = path.join(this.gitRoot, `.migration-analysis-ai-${this.featureName}.json`)
+    let estimatedMinutes = 240 // Default 4 hours
+    
+    if (fs.existsSync(aiAnalysisPath)) {
+      try {
+        const aiAnalysis = JSON.parse(fs.readFileSync(aiAnalysisPath, 'utf-8'))
+        const estimatedTime = aiAnalysis.aiInsights?.estimatedTime || '4-6 hours'
+        // Parse "X-Y hours" format
+        const match = estimatedTime.match(/(\d+)-(\d+)/)
+        if (match) {
+          const avgHours = (parseInt(match[1]) + parseInt(match[2])) / 2
+          estimatedMinutes = avgHours * 60
+        }
+      } catch (e) {
+        // Use default
+      }
+    }
+    
+    const completionData = {
+      feature: this.featureName,
+      completedAt: new Date().toISOString(),
+      duration: durationMinutes,
+      estimatedDuration: estimatedMinutes,
+      result: 'success'
+    }
+    
+    const completionPath = path.join(this.gitRoot, `.migration-completed-${this.featureName}.json`)
+    
+    try {
+      fs.writeFileSync(completionPath, JSON.stringify(completionData, null, 2), 'utf-8')
+      console.log('📊 Migration metrics saved!')
+      console.log(`   Duration: ${durationMinutes} minutes`)
+      console.log(`   Estimated: ${Math.round(estimatedMinutes / 60)} hours`)
+      console.log(`   Dashboard: https://moto-mind-ai.vercel.app/migrations`)
+      console.log()
+    } catch (e: any) {
+      console.log(`⚠️  Could not save completion file: ${e.message}`)
+    }
   }
   
   /**

@@ -64,6 +64,7 @@
     "migrate:checklist": "npx tsx scripts/migration-toolkit/generate-migration-checklist.ts",
     "migrate:checklist:ai": "npx tsx scripts/migration-toolkit/generate-adaptive-checklist.ts",
     "migrate:complete": "npx tsx scripts/migration-toolkit/analyze-migration-results.ts",
+    "migrate:mark-complete": "npx tsx scripts/migration-toolkit/mark-complete.ts",
     "migrate:learn": "npx tsx scripts/migration-toolkit/detect-patterns.ts && npx tsx scripts/migration-toolkit/improve-estimates.ts",
     "migrate:patterns": "npx tsx scripts/migration-toolkit/detect-patterns.ts",
     "migrate:improve": "npx tsx scripts/migration-toolkit/improve-estimates.ts",

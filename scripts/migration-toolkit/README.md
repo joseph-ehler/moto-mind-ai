@@ -65,6 +65,44 @@ npm run migrate:feature <feature-name>
 4. Create barrel files
 5. Validate build
 6. Update documentation
+7. **✨ Auto-create completion file for dashboard tracking**
+
+**Auto-Tracking:**
+- Automatically tracks migration duration
+- Pulls estimated time from AI analysis
+- Creates `.migration-completed-<feature>.json`
+- Updates dashboard at https://moto-mind-ai.vercel.app/migrations
+
+---
+
+### **2b. Manual Completion Marker** (`mark-complete.ts`) ✨ NEW!
+**Purpose:** Manually mark a migration as complete (for manual migrations)
+
+```bash
+npm run migrate:mark-complete <feature-name> <duration-minutes> [estimated-minutes]
+```
+
+**Example:**
+```bash
+# Mark 'vehicles' as complete: took 45 min, estimated 6 hours (360 min)
+npm run migrate:mark-complete vehicles 45 360
+```
+
+**When to Use:**
+- Migrated a feature manually (outside the script)
+- Want to track metrics in the dashboard
+- Need to update completion data
+
+**Output:**
+```
+✅ Migration marked complete!
+============================================================
+   Feature:   vehicles
+   Duration:  45 minutes
+   Estimated: 6 hours
+   Saved:     5.25 hours
+============================================================
+```
 
 ---
 
