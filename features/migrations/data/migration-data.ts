@@ -213,82 +213,105 @@ export function getCompletedMigrations(): string[] {
 
 /**
  * Calculate migration metrics
+ * Reads directly from completion files which have pre-calculated metrics
  */
 export function calculateMigrationMetrics(feature: string): MigrationMetrics | null {
-  const session = readMigrationSession(feature)
-  const aiAnalysis = readAIAnalysis(feature)
-  const predictions = readPredictions(feature)
+  const completedPath = join(process.cwd(), `.migration-completed-${feature}.json`)
   
-  if (!session || !aiAnalysis) return null
+  if (!existsSync(completedPath)) return null
   
-  // Parse estimated time (e.g., "3-5 hours" -> 240 minutes average)
-  const estimatedHours = aiAnalysis.aiInsights.estimatedTime
-  const hoursMatch = estimatedHours.match(/(\d+)-(\d+)/)
-  const avgEstimatedHours = hoursMatch 
-    ? (parseInt(hoursMatch[1]) + parseInt(hoursMatch[2])) / 2 
-    : 4
-  const estimatedMinutes = avgEstimatedHours * 60
-  
-  // Actual time from session
-  const actualMinutes = session.progress.totalElapsed
-  
-  // Time saved
-  const savedMinutes = estimatedMinutes - actualMinutes
-  
-  // Cost calculations (assume $75/hour developer rate)
-  const hourlyRate = 75
-  const traditionalCost = (estimatedMinutes / 60) * hourlyRate
-  const aiCost = 0.005 // OpenAI analysis cost
-  const actualDevCost = (actualMinutes / 60) * hourlyRate
-  const aiAssistedCost = actualDevCost + aiCost
-  const savedCost = traditionalCost - aiAssistedCost
-  
-  // Quality metrics (from test results - would need to read test output)
-  // For now, using known values from vision migration
-  const testsCreated = 80
-  const testsPassing = 80
-  
-  // AI performance
-  const totalPredictions = predictions?.predictedIssues.length || 7
-  const highProbPredictions = predictions?.predictedIssues.filter(p => p.probability >= 0.75).length || 7
-  const predictionsAccuracy = 1.0 // All predictions were addressed/prevented
-  
-  // ROI calculations
-  const timeROI = savedMinutes / actualMinutes
-  const costROI = savedCost / aiCost
-  
-  return {
-    feature,
-    status: 'complete',
-    duration: {
-      actual: Math.round(actualMinutes * 10) / 10,
-      estimated: estimatedMinutes,
-      savedTime: Math.round(savedMinutes * 10) / 10
-    },
-    costs: {
-      traditional: Math.round(traditionalCost * 100) / 100,
-      aiAssisted: Math.round(aiAssistedCost * 100) / 100,
-      saved: Math.round(savedCost * 100) / 100
-    },
-    quality: {
-      testsCreated,
-      testsPassing,
-      testSuccessRate: testsPassing / testsCreated,
-      buildSuccess: true,
-      issuesPrevented: highProbPredictions,
-      issuesCaught: 0 // No issues caught because they were prevented
-    },
-    aiPerformance: {
-      predictionsAccuracy,
-      hiddenIssuesFound: aiAnalysis.aiInsights.hiddenIssues.length,
-      timeSavedFromPrevention: 30, // Estimated time saved by preventing bugs
-      cost: aiCost
-    },
-    roi: {
-      timeROI: Math.round(timeROI * 10) / 10,
-      costROI: Math.round(costROI),
-      qualityScore: testsPassing / testsCreated
+  try {
+    const completed = JSON.parse(readFileSync(completedPath, 'utf-8'))
+    
+    // If file has pre-calculated metrics, use them directly
+    if (completed.timeSaved !== undefined && completed.costSaved !== undefined) {
+      return {
+        feature: completed.feature,
+        status: 'complete',
+        duration: {
+          actual: completed.duration,
+          estimated: completed.estimatedDuration,
+          savedTime: completed.timeSaved
+        },
+        costs: {
+          traditional: (completed.estimatedDuration / 60) * 75, // $75/hour
+          aiAssisted: (completed.duration / 60) * 75 + 0.01, // duration cost + AI cost
+          saved: completed.costSaved
+        },
+        quality: {
+          testsCreated: completed.testsCreated || 0,
+          testsPassing: completed.testsPassing || 0,
+          testSuccessRate: completed.testsCreated > 0 ? completed.testsPassing / completed.testsCreated : 1,
+          buildSuccess: completed.buildSuccess !== false,
+          issuesPrevented: completed.issuesPrevented || 0,
+          issuesCaught: 0
+        },
+        aiPerformance: {
+          predictionsAccuracy: completed.predictions?.accuracy || 100,
+          hiddenIssuesFound: completed.issuesPrevented || 0,
+          timeSavedFromPrevention: 0,
+          cost: 0.01
+        },
+        roi: {
+          timeROI: Math.round((completed.timeSaved / completed.duration) * 10) / 10,
+          costROI: completed.roi || Math.round(completed.costSaved / 0.01),
+          qualityScore: completed.testsCreated > 0 ? completed.testsPassing / completed.testsCreated : 1
+        }
+      }
     }
+    
+    // Fallback to old calculation logic for legacy files
+    const session = readMigrationSession(feature)
+    const aiAnalysis = readAIAnalysis(feature)
+    
+    if (!session) return null
+    
+    const estimatedMinutes = completed.estimatedDuration
+    const actualMinutes = completed.duration
+    const savedMinutes = estimatedMinutes - actualMinutes
+    const hourlyRate = 75
+    const traditionalCost = (estimatedMinutes / 60) * hourlyRate
+    const aiCost = 0.01
+    const actualDevCost = (actualMinutes / 60) * hourlyRate
+    const aiAssistedCost = actualDevCost + aiCost
+    const savedCost = traditionalCost - aiAssistedCost
+    
+    return {
+      feature: completed.feature,
+      status: 'complete',
+      duration: {
+        actual: actualMinutes,
+        estimated: estimatedMinutes,
+        savedTime: savedMinutes
+      },
+      costs: {
+        traditional: Math.round(traditionalCost * 100) / 100,
+        aiAssisted: Math.round(aiAssistedCost * 100) / 100,
+        saved: Math.round(savedCost * 100) / 100
+      },
+      quality: {
+        testsCreated: completed.testsCreated || 0,
+        testsPassing: completed.testsPassing || 0,
+        testSuccessRate: completed.testsCreated > 0 ? completed.testsPassing / completed.testsCreated : 1,
+        buildSuccess: true,
+        issuesPrevented: completed.issuesPrevented || 0,
+        issuesCaught: 0
+      },
+      aiPerformance: {
+        predictionsAccuracy: 1.0,
+        hiddenIssuesFound: aiAnalysis?.aiInsights.hiddenIssues.length || 0,
+        timeSavedFromPrevention: 0,
+        cost: aiCost
+      },
+      roi: {
+        timeROI: Math.round((savedMinutes / actualMinutes) * 10) / 10,
+        costROI: Math.round(savedCost / aiCost),
+        qualityScore: completed.testsCreated > 0 ? completed.testsPassing / completed.testsCreated : 1
+      }
+    }
+  } catch (e) {
+    console.error(`Error reading metrics for ${feature}:`, e)
+    return null
   }
 }
 
