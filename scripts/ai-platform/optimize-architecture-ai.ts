@@ -386,6 +386,71 @@ function generateReport(report: OptimizationReport) {
 }
 
 // ============================================
+// EXECUTION
+// ============================================
+
+async function executeDuplicateRemoval(report: OptimizationReport): Promise<void> {
+  log('🗑️  Removing duplicate files...', 'info')
+  
+  if (report.exactDuplicates.length === 0) {
+    log('No duplicates to remove!', 'info')
+    return
+  }
+  
+  let removed = 0
+  let kept = 0
+  
+  for (const group of report.exactDuplicates) {
+    // Keep the first file (usually in features/), remove the rest (usually in components/)
+    const [keepFile, ...removeFiles] = group.files.sort((a, b) => {
+      // Prioritize features/ over components/
+      const aInFeatures = a.includes('features/')
+      const bInFeatures = b.includes('features/')
+      if (aInFeatures && !bInFeatures) return -1
+      if (!aInFeatures && bInFeatures) return 1
+      return a.localeCompare(b)
+    })
+    
+    log(`\nKeeping: ${relative(CONFIG.rootDir, keepFile)}`, 'info')
+    
+    for (const file of removeFiles) {
+      try {
+        const relPath = relative(CONFIG.rootDir, file)
+        execSync(`git rm "${file}"`, { stdio: 'pipe' })
+        log(`  ✓ Removed: ${relPath}`, 'success')
+        removed++
+      } catch (error: any) {
+        log(`  ✗ Failed to remove: ${relative(CONFIG.rootDir, file)}`, 'error')
+      }
+    }
+    kept++
+  }
+  
+  log(`\n✓ Cleanup complete!`, 'success')
+  log(`  Kept: ${kept} files`, 'info')
+  log(`  Removed: ${removed} duplicate files`, 'success')
+  log(`  Lines eliminated: ${report.potentialLinesSaved}`, 'success')
+  
+  // Commit the changes
+  try {
+    const commitMsg = `refactor: remove ${removed} duplicate files (${report.potentialLinesSaved} lines eliminated)
+
+Automated cleanup using AI Architecture Optimizer.
+
+Duplicate groups removed: ${report.exactDuplicates.length}
+Files removed: ${removed}
+Lines eliminated: ${report.potentialLinesSaved}
+
+All duplicates were exact matches. Kept versions in features/, removed from components/.`
+    
+    execSync(`git commit -m "${commitMsg}"`, { stdio: 'inherit' })
+    log('\n✓ Changes committed!', 'success')
+  } catch (error: any) {
+    log('\n⚠️  Please commit manually', 'warning')
+  }
+}
+
+// ============================================
 // MAIN
 // ============================================
 
@@ -424,12 +489,25 @@ async function main() {
   const cachePath = join(CONFIG.rootDir, CONFIG.cacheFile)
   writeFileSync(cachePath, JSON.stringify(report, null, 2))
   
-  // Display report
-  generateReport(report)
+  // Display report (unless executing)
+  if (!args.includes('--execute')) {
+    generateReport(report)
+  }
+  
+  // Execute removal if requested
+  if (args.includes('--execute')) {
+    console.log('\n' + '='.repeat(60))
+    console.log(chalk.bold.red('  ⚠️  EXECUTING DUPLICATE REMOVAL'))
+    console.log('='.repeat(60) + '\n')
+    
+    await executeDuplicateRemoval(report)
+  }
   
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
-  log(`\n✓ Analysis complete in ${elapsed}s`, 'success')
-  log(`Report saved to: ${CONFIG.cacheFile}`, 'info')
+  log(`\n✓ ${args.includes('--execute') ? 'Execution' : 'Analysis'} complete in ${elapsed}s`, 'success')
+  if (!args.includes('--execute')) {
+    log(`Report saved to: ${CONFIG.cacheFile}`, 'info')
+  }
 }
 
 main().catch(error => {
