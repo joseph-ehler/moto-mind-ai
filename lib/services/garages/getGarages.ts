@@ -1,17 +1,6 @@
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseServer } from '@/lib/supabase-server'
 import { NotFoundError, DatabaseError } from '@/lib/utils/errors'
 import type { GarageQuery } from '@/lib/validation/garages'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
 
 export interface Garage {
   id: string
@@ -27,6 +16,7 @@ export interface Garage {
 }
 
 export async function getGarages(tenantId: string, query: Partial<GarageQuery> = {}): Promise<Garage[]> {
+  const supabase = getSupabaseServer()
   try {
     // Get all garages and vehicle counts in parallel
     const [garagesResult, countsResult] = await Promise.all([
@@ -76,6 +66,8 @@ export async function getGarages(tenantId: string, query: Partial<GarageQuery> =
 }
 
 export async function getGarageById(tenantId: string, garageId: string): Promise<Garage> {
+  const supabase = getSupabaseServer()
+  
   try {
     const { data, error } = await supabase
       .from('garages')

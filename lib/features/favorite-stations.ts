@@ -1,3 +1,4 @@
+import { getSupabaseServer } from '@/lib/supabase-server'
 /**
  * Favorite Stations Learning
  * Analyzes user's fill-up history to suggest frequent stations
@@ -5,8 +6,8 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+// const supabase = createClient(
+//   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 

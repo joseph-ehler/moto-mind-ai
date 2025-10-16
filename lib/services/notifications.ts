@@ -1,11 +1,12 @@
+import { getSupabaseServer } from '@/lib/supabase-server'
 // MotoMind: Roman-Style Notification Engine (Fixed)
 // Deterministic, rule-based priority system
 
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+// const supabase = createClient(
+//   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+//   process.env.SUPABASE_SERVICE_ROLE_KEY!,
   {
     auth: {
       autoRefreshToken: false,

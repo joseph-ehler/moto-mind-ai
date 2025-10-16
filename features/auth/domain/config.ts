@@ -12,38 +12,11 @@
 import './types' // Import type augmentations
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseServer } from '@/lib/supabase-server'
 
-// Lazy Supabase client creation with validation
-function getSupabaseClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  
-  if (!url || !key) {
-    console.error('[Auth Config] Missing Supabase credentials:', {
-      hasUrl: !!url,
-      hasKey: !!key
-    })
-    throw new Error('Supabase credentials missing - check NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY')
-  }
-  
-  return createClient(url, key, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  })
-}
-
-// Initialize client
-let supabase: any
-try {
-  supabase = getSupabaseClient()
-  console.log('[Auth Config] Supabase client initialized successfully')
-} catch (error) {
-  console.error('[Auth Config] Failed to initialize Supabase:', error)
-  // Create a dummy client that will fail gracefully
-  supabase = createClient('https://dummy.supabase.co', 'dummy-key')
+// Get Supabase client lazily (only when callbacks are called)
+function getSupabase() {
+  return getSupabaseServer()
 }
 
 export const authOptions: NextAuthOptions = {
@@ -76,6 +49,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
+        const supabase = getSupabase()
+        
         if (!user.email) {
           console.error('❌ No email provided during sign-in')
           return false
@@ -148,6 +123,8 @@ export const authOptions: NextAuthOptions = {
     },
     
     async jwt({ token, user, account, trigger }) {
+      const supabase = getSupabase()
+      
       // Initial sign in
       if (account && user && user.email) {
         try {

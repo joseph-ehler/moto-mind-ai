@@ -1,9 +1,10 @@
+import { getSupabaseServer } from '@/lib/supabase-server'
 import { createClient } from '@supabase/supabase-js'
 import { DatabaseError, NotFoundError, ConflictError } from '@/lib/utils/errors'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+// const supabase = createClient(
+//   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+//   process.env.SUPABASE_SERVICE_ROLE_KEY!,
   {
     auth: {
       autoRefreshToken: false,

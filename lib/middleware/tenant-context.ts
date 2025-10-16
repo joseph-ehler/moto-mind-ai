@@ -1,3 +1,4 @@
+import { getSupabaseServer } from '@/lib/supabase-server'
 // Tenant Context Middleware
 // Extracts tenant_id from NextAuth session for database queries
 
@@ -10,9 +11,9 @@ export async function createTenantAwareSupabaseClient(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  // const supabase = createClient(
+  //   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  //   process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       auth: {
         autoRefreshToken: false,
