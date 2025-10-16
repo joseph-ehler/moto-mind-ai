@@ -1,0 +1,936 @@
+{
+  "exactDuplicates": [
+    {
+      "hash": "cfb9ddbfedb97c127155392264106b81",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/UnifiedEventDetail.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/UnifiedEventDetail.tsx"
+      ],
+      "size": 802,
+      "linesSaved": 802
+    },
+    {
+      "hash": "959f01c10df9fb4a70402b3171f4a4d1",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/SimplePhotoModal.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/SimplePhotoModal.tsx"
+      ],
+      "size": 687,
+      "linesSaved": 687
+    },
+    {
+      "hash": "69bb8b8e57ef8dc51a8747247dcf39e9",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/DashboardCaptureModal.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/DashboardCaptureModal.tsx"
+      ],
+      "size": 614,
+      "linesSaved": 614
+    },
+    {
+      "hash": "01902973f7dc9654ccf67b4120400707",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/CameraInterface.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/CameraInterface.tsx"
+      ],
+      "size": 577,
+      "linesSaved": 577
+    },
+    {
+      "hash": "55a56971f5b3caac8930436977662f58",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/UnifiedCameraCapture.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/UnifiedCameraCapture.tsx"
+      ],
+      "size": 572,
+      "linesSaved": 572
+    },
+    {
+      "hash": "082b60cbfe4b9b7ea77db1a2b10bcaf9",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/DataConfirmationV2.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/DataConfirmationV2.tsx"
+      ],
+      "size": 550,
+      "linesSaved": 550
+    },
+    {
+      "hash": "20306697235605225a1ee669770ce724",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/VehicleTimeline.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/VehicleTimeline.tsx"
+      ],
+      "size": 499,
+      "linesSaved": 499
+    },
+    {
+      "hash": "62adebc9285139f1326e9578fc8f9ca2",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/PhotoEditor.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/PhotoEditor.tsx"
+      ],
+      "size": 486,
+      "linesSaved": 486
+    },
+    {
+      "hash": "6ce4c65eaae4f038a86931a322ebdd84",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/DocumentScannerModal.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/DocumentScannerModal.tsx"
+      ],
+      "size": 486,
+      "linesSaved": 486
+    },
+    {
+      "hash": "346553561c345e5151515635aa9a3a87",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/LiveVINScanner.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/LiveVINScanner.tsx"
+      ],
+      "size": 465,
+      "linesSaved": 465
+    },
+    {
+      "hash": "0d589d4b432434ea9899fc9cd7f8d515",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/DocumentConfirmationUnified.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/DocumentConfirmationUnified.tsx"
+      ],
+      "size": 444,
+      "linesSaved": 444
+    },
+    {
+      "hash": "9e4de921a394769456babafe79deca40",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/DocumentConfirmation.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/DocumentConfirmation.tsx"
+      ],
+      "size": 437,
+      "linesSaved": 437
+    },
+    {
+      "hash": "fe8f3bbbd00e5ad50a85a840024b0bea",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/DataConfirmation.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/DataConfirmation.tsx"
+      ],
+      "size": 415,
+      "linesSaved": 415
+    },
+    {
+      "hash": "6474eef080b2aecd7f235b8147141b6d",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/CameraCapture.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/CameraCapture.tsx"
+      ],
+      "size": 396,
+      "linesSaved": 396
+    },
+    {
+      "hash": "b8b19c12af917af7f3158210a62f8977",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/AIProposalReview.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/AIProposalReview.tsx"
+      ],
+      "size": 364,
+      "linesSaved": 364
+    },
+    {
+      "hash": "b38f7f64d1f01cf2b8b8f3fe4644b78c",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/ui/Form 3.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/ui/form 2.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/ui/form.tsx"
+      ],
+      "size": 179,
+      "linesSaved": 358
+    },
+    {
+      "hash": "1562415e5150c0062f56e2688ecb0da6",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/TimelineItem.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/TimelineItem.tsx"
+      ],
+      "size": 340,
+      "linesSaved": 340
+    },
+    {
+      "hash": "47d6a207b047d5a1976a8e2dba25f9df",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/VisionErrorBoundary.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/VisionErrorBoundary.tsx"
+      ],
+      "size": 336,
+      "linesSaved": 336
+    },
+    {
+      "hash": "261ecf5cdca7e05d7ff129dd57ac924b",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/flow-config.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/domain/flow-config.ts"
+      ],
+      "size": 321,
+      "linesSaved": 321
+    },
+    {
+      "hash": "1ffeb59cc1a704dbc2a3438d81cf75a8",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/LocationSection.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/LocationSection.tsx"
+      ],
+      "size": 306,
+      "linesSaved": 306
+    },
+    {
+      "hash": "8954d4648030d057bee0540a78f98a47",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/EventEditModal.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/EventEditModal.tsx"
+      ],
+      "size": 279,
+      "linesSaved": 279
+    },
+    {
+      "hash": "1bd712cf95ca02e2591ee07778803b85",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/VisionExamples.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/VisionExamples.tsx"
+      ],
+      "size": 272,
+      "linesSaved": 272
+    },
+    {
+      "hash": "b339dea0a5ff8d6edb316543b0c26f55",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/PhotoGalleryReview.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/PhotoGalleryReview.tsx"
+      ],
+      "size": 258,
+      "linesSaved": 258
+    },
+    {
+      "hash": "c06b766ff95ac157b5c07b33b5fc793b",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/PhotoCapture.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/PhotoCapture.tsx"
+      ],
+      "size": 253,
+      "linesSaved": 253
+    },
+    {
+      "hash": "e5edb7e302341885e9df5adc73fae95e",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/blocks/DashboardSnapshotBlock.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/blocks/DashboardSnapshotBlock.tsx"
+      ],
+      "size": 246,
+      "linesSaved": 246
+    },
+    {
+      "hash": "55f89ee911735948f8b70e5eb9bb9755",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/TimelineInsights.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/TimelineInsights.tsx"
+      ],
+      "size": 245,
+      "linesSaved": 245
+    },
+    {
+      "hash": "f8dc677a40960ed0892b833c753deb57",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/EventDebugCard.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/EventDebugCard.tsx"
+      ],
+      "size": 244,
+      "linesSaved": 244
+    },
+    {
+      "hash": "32933566f136612932012c222216d5bd",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/pages/api/system/health-optimized.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/pages/api/system/health.ts"
+      ],
+      "size": 240,
+      "linesSaved": 240
+    },
+    {
+      "hash": "5d67b819704e277da427bd908ef69dbf",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/VehicleConfirmation.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/VehicleConfirmation.tsx"
+      ],
+      "size": 235,
+      "linesSaved": 235
+    },
+    {
+      "hash": "0b38c6ffa7f83bc964e09e2fd2dbbe0f",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/MaintenancePredictor.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/MaintenancePredictor.tsx"
+      ],
+      "size": 228,
+      "linesSaved": 228
+    },
+    {
+      "hash": "a1e826b0ea093edaabc69635e2aff22a",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/blocks/PhotoBlock.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/blocks/PhotoBlock.tsx"
+      ],
+      "size": 227,
+      "linesSaved": 227
+    },
+    {
+      "hash": "0058c8faa38f9d985c9420d56c62913e",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/NearbyStationsModal.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/NearbyStationsModal.tsx"
+      ],
+      "size": 226,
+      "linesSaved": 226
+    },
+    {
+      "hash": "9b61b867bff10eab9efaea35bfd5834c",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/FuelReceiptConfirmation.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/FuelReceiptConfirmation.tsx"
+      ],
+      "size": 223,
+      "linesSaved": 223
+    },
+    {
+      "hash": "4705ed713e3fdf033190073a75cadb01",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/VINScanner.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/VINScanner.tsx"
+      ],
+      "size": 221,
+      "linesSaved": 221
+    },
+    {
+      "hash": "d41d8cd98f00b204e9800998ecf8427e",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/auth/data/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/auth/ui/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/data/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/chat/data/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/chat/hooks/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/events/hooks/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/insights/data/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/insights/hooks/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/migrations/hooks/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/migrations/ui/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/next-env.d.ts"
+      ],
+      "size": 22,
+      "linesSaved": 220
+    },
+    {
+      "hash": "f31dade09ba130c199966ea7743f781e",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/TimelineHeader.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/TimelineHeader.tsx"
+      ],
+      "size": 219,
+      "linesSaved": 219
+    },
+    {
+      "hash": "add6cabc3e0b2bd59888eabcef21a554",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/EventCard.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/EventCard.tsx"
+      ],
+      "size": 215,
+      "linesSaved": 215
+    },
+    {
+      "hash": "343413854b97a0e65cae37d876e35473",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/FramingGuide.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/FramingGuide.tsx"
+      ],
+      "size": 204,
+      "linesSaved": 204
+    },
+    {
+      "hash": "3f7009e38e6ad7df63bbf05850203432",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/RoutineDashboardCapture.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/RoutineDashboardCapture.tsx"
+      ],
+      "size": 198,
+      "linesSaved": 198
+    },
+    {
+      "hash": "bc225abf25730cc4586799cb3add9403",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/blocks/RepairBlock.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/blocks/RepairBlock.tsx"
+      ],
+      "size": 189,
+      "linesSaved": 189
+    },
+    {
+      "hash": "1cd1e37e85e9e727a44bf22d8c2ea631",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/VisionProcessingWrapper.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/VisionProcessingWrapper.tsx"
+      ],
+      "size": 186,
+      "linesSaved": 186
+    },
+    {
+      "hash": "abda2be47e3deeaeb17043fc0313c502",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/FavoriteStationsSuggestions.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/FavoriteStationsSuggestions.tsx"
+      ],
+      "size": 185,
+      "linesSaved": 185
+    },
+    {
+      "hash": "324873823d6e1830284deeb730424bc6",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/ProposalField.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/ProposalField.tsx"
+      ],
+      "size": 176,
+      "linesSaved": 176
+    },
+    {
+      "hash": "ae127f1fb84fbd60c4a57725e91fb57c",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/ProcessingScreen.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/ProcessingScreen.tsx"
+      ],
+      "size": 175,
+      "linesSaved": 175
+    },
+    {
+      "hash": "9667b22b1cada2b3268cadcd653803ff",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vehicles/data/decode-vin.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/pages/api/decode-vin.ts"
+      ],
+      "size": 169,
+      "linesSaved": 169
+    },
+    {
+      "hash": "a0495794378fb82e18d761bfd44acfba",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/blocks/AccidentBlock.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/blocks/AccidentBlock.tsx"
+      ],
+      "size": 162,
+      "linesSaved": 162
+    },
+    {
+      "hash": "c160c46954b05d1894d781ad35dc2d64",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/AssociationConfirmation.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/AssociationConfirmation.tsx"
+      ],
+      "size": 159,
+      "linesSaved": 159
+    },
+    {
+      "hash": "14439def18aaf81d027657c5f2aff4d8",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/blocks/InsuranceBlock.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/blocks/InsuranceBlock.tsx"
+      ],
+      "size": 159,
+      "linesSaved": 159
+    },
+    {
+      "hash": "beded6d5f65bb0ff1f0e331f1f91652d",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/app-specific/PDFExportButton.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/ui/PDFExportButton.tsx"
+      ],
+      "size": 154,
+      "linesSaved": 154
+    },
+    {
+      "hash": "07545d1c765aa4b38b3a4ea0fc837d83",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/blocks/InspectionBlock.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/blocks/InspectionBlock.tsx"
+      ],
+      "size": 154,
+      "linesSaved": 154
+    },
+    {
+      "hash": "361e0db9db872723bbb2221d0085b3e4",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/FuelEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/FuelEvent.tsx"
+      ],
+      "size": 153,
+      "linesSaved": 153
+    },
+    {
+      "hash": "872f0e9c491863badec396f7354823cb",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/AssociationNotification.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/AssociationNotification.tsx"
+      ],
+      "size": 151,
+      "linesSaved": 151
+    },
+    {
+      "hash": "eb7a56189527452204e8075659690040",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/UniversalMetadata.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/UniversalMetadata.tsx"
+      ],
+      "size": 151,
+      "linesSaved": 151
+    },
+    {
+      "hash": "2921fc60eccfc10815092f663e5f59b4",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/blocks/FuelBlock.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/blocks/FuelBlock.tsx"
+      ],
+      "size": 146,
+      "linesSaved": 146
+    },
+    {
+      "hash": "f855a86d291c23d6940c4e018e64d49d",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/QualityScoreCard.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/QualityScoreCard.tsx"
+      ],
+      "size": 145,
+      "linesSaved": 145
+    },
+    {
+      "hash": "e0ed5decfd8acb71d8823c750b5b531f",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/blocks/OdometerBlock.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/blocks/OdometerBlock.tsx"
+      ],
+      "size": 139,
+      "linesSaved": 139
+    },
+    {
+      "hash": "8563174c32bd9420ef32150c3278826d",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/OdometerReader.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/OdometerReader.tsx"
+      ],
+      "size": 139,
+      "linesSaved": 139
+    },
+    {
+      "hash": "eb088f2c70a905b318ac7987c2993e0d",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/BulkProcessingProgress.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/BulkProcessingProgress.tsx"
+      ],
+      "size": 131,
+      "linesSaved": 131
+    },
+    {
+      "hash": "4e531b4512c1921b5d8b01564fa75c7b",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/DamageEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/DamageEvent.tsx"
+      ],
+      "size": 126,
+      "linesSaved": 126
+    },
+    {
+      "hash": "64a367fbf3dbaea638516606b1566c6d",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/FuelReceiptCapture.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/FuelReceiptCapture.tsx"
+      ],
+      "size": 123,
+      "linesSaved": 123
+    },
+    {
+      "hash": "b5b5943a17981eef49b6307180366f22",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/ServiceEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/ServiceEvent.tsx"
+      ],
+      "size": 120,
+      "linesSaved": 120
+    },
+    {
+      "hash": "bbcf123435f0b37e3a47c2586aec091b",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/WarningEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/WarningEvent.tsx"
+      ],
+      "size": 120,
+      "linesSaved": 120
+    },
+    {
+      "hash": "79201209beb7a7a670da56f09897da36",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/InlineEditableField.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/InlineEditableField.tsx"
+      ],
+      "size": 120,
+      "linesSaved": 120
+    },
+    {
+      "hash": "35b5652c1db3dfefc0550179b2529f64",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/ModificationEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/ModificationEvent.tsx"
+      ],
+      "size": 116,
+      "linesSaved": 116
+    },
+    {
+      "hash": "6ee2f1676bf9d3c2ac6274e07e40a760",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/TripEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/TripEvent.tsx"
+      ],
+      "size": 114,
+      "linesSaved": 114
+    },
+    {
+      "hash": "263cd8cf6807d2e34eb7b6b3dc1bbec9",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/app-specific/DataQualityPill.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/ui/DataQualityPill.tsx"
+      ],
+      "size": 113,
+      "linesSaved": 113
+    },
+    {
+      "hash": "8a28967581b1ab6d41e9a85d70cfc3fa",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/TimelineStats.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/TimelineStats.tsx"
+      ],
+      "size": 112,
+      "linesSaved": 112
+    },
+    {
+      "hash": "df4fd6879a6229550a2414ff67bd85a8",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/TireEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/TireEvent.tsx"
+      ],
+      "size": 111,
+      "linesSaved": 111
+    },
+    {
+      "hash": "297926aebcb5dffa639e7589b6e2e15f",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/OdometerEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/OdometerEvent.tsx"
+      ],
+      "size": 110,
+      "linesSaved": 110
+    },
+    {
+      "hash": "00ad4478f44c29397a73222974736018",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/hooks/useSuggestedEventType.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/hooks/useSuggestedEventType.ts"
+      ],
+      "size": 108,
+      "linesSaved": 108
+    },
+    {
+      "hash": "63513a84f5f0e1b74c072da37c3b5802",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/ExpenseEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/ExpenseEvent.tsx"
+      ],
+      "size": 103,
+      "linesSaved": 103
+    },
+    {
+      "hash": "eb26e98208fbeb0c0bd809240a0c0a28",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/StepIndicator.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/StepIndicator.tsx"
+      ],
+      "size": 101,
+      "linesSaved": 101
+    },
+    {
+      "hash": "65cd9ea3596bdf68b66e2c5a0e7b4755",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/CarWashEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/CarWashEvent.tsx"
+      ],
+      "size": 100,
+      "linesSaved": 100
+    },
+    {
+      "hash": "be54cf005064e628d7512f536636d9c4",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/TimelineLoadingSkeleton.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/TimelineLoadingSkeleton.tsx"
+      ],
+      "size": 99,
+      "linesSaved": 99
+    },
+    {
+      "hash": "ea1f9521ac8d0fd5867f92b16dbb1c40",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/DataGrid.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/DataGrid.tsx"
+      ],
+      "size": 98,
+      "linesSaved": 98
+    },
+    {
+      "hash": "e7f5f61933f2af1f8e3b5d17ae6df672",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/ConflictWarning.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/ConflictWarning.tsx"
+      ],
+      "size": 93,
+      "linesSaved": 93
+    },
+    {
+      "hash": "5a058b04f50f7c722811e8ee6c83b0c9",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/event-types/DefaultEvent.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/event-types/DefaultEvent.tsx"
+      ],
+      "size": 93,
+      "linesSaved": 93
+    },
+    {
+      "hash": "94e4569fd0b4cc9329dfa5431137d837",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/ImageViewerModal.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/ImageViewerModal.tsx"
+      ],
+      "size": 92,
+      "linesSaved": 92
+    },
+    {
+      "hash": "81fcf238d59ccebd9387f0757e29d5c5",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/Sparkline.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/Sparkline.tsx"
+      ],
+      "size": 92,
+      "linesSaved": 92
+    },
+    {
+      "hash": "2d1190e476b0d28e67a5b4fda1f91866",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/QualityIndicator.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/QualityIndicator.tsx"
+      ],
+      "size": 91,
+      "linesSaved": 91
+    },
+    {
+      "hash": "e0497f3c40507ea796e885be7dba374c",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/SourceImage.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/SourceImage.tsx"
+      ],
+      "size": 91,
+      "linesSaved": 91
+    },
+    {
+      "hash": "d0891b1b7331ae0f330c3ff952cdaf11",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/hooks/useTimelineData.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/hooks/useTimelineData.ts"
+      ],
+      "size": 87,
+      "linesSaved": 87
+    },
+    {
+      "hash": "7dbe99266266e83a6e4bd3188f3dd1b1",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/DocumentScanner.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/DocumentScanner.tsx"
+      ],
+      "size": 85,
+      "linesSaved": 85
+    },
+    {
+      "hash": "274a5f0601da6b7d964a6b5aaea57c2f",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/app-specific/confetti.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/ui/confetti.tsx"
+      ],
+      "size": 83,
+      "linesSaved": 83
+    },
+    {
+      "hash": "8881bca84f0e82753a3d715c5fe36d24",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/ExtractionWarning.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/ExtractionWarning.tsx"
+      ],
+      "size": 81,
+      "linesSaved": 81
+    },
+    {
+      "hash": "371b9d83f267be8a42b0f91fd05248e3",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/EventCardSkeleton.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/EventCardSkeleton.tsx"
+      ],
+      "size": 78,
+      "linesSaved": 78
+    },
+    {
+      "hash": "614164a881d620f8e0c822afc421ca90",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/hooks/useTimelineState.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/hooks/useTimelineState.ts"
+      ],
+      "size": 77,
+      "linesSaved": 77
+    },
+    {
+      "hash": "574086d2dbb06557ed58fa464f4fe934",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/CollapsibleData.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/CollapsibleData.tsx"
+      ],
+      "size": 76,
+      "linesSaved": 76
+    },
+    {
+      "hash": "2a10d0c1341d4e7d48aa48d8f8e51323",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/SuccessScreen.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/SuccessScreen.tsx"
+      ],
+      "size": 74,
+      "linesSaved": 74
+    },
+    {
+      "hash": "23056f88b2f655b45e716feec0aab4f0",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/AlertBox.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/AlertBox.tsx"
+      ],
+      "size": 70,
+      "linesSaved": 70
+    },
+    {
+      "hash": "5907de38afc5011f83f70bbf9e059f95",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/hooks/useRecentEventTypes.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/hooks/useRecentEventTypes.ts"
+      ],
+      "size": 63,
+      "linesSaved": 63
+    },
+    {
+      "hash": "4c024ebdbd9f71f04392b6700ac19d14",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/DataSourceBadge.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/DataSourceBadge.tsx"
+      ],
+      "size": 60,
+      "linesSaved": 60
+    },
+    {
+      "hash": "73cd4361009bba6ebd1b547dc8f829d1",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/LicensePlateScanner.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/LicensePlateScanner.tsx"
+      ],
+      "size": 60,
+      "linesSaved": 60
+    },
+    {
+      "hash": "98ad0ac89906a34c83c6479778ed5275",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/hooks/useTimelineFilters.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/hooks/useTimelineFilters.ts"
+      ],
+      "size": 51,
+      "linesSaved": 51
+    },
+    {
+      "hash": "740ca9c1f0174e01ac84c1f8591a9740",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/vision/VINScanner.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/ui/VINScanner.tsx"
+      ],
+      "size": 50,
+      "linesSaved": 50
+    },
+    {
+      "hash": "dfacc4c805a90259e09c642f97f69944",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/HeroMetric.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/HeroMetric.tsx"
+      ],
+      "size": 47,
+      "linesSaved": 47
+    },
+    {
+      "hash": "827fd40b20182aa4e5456b8588ba7a5b",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/AISummary.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/AISummary.tsx"
+      ],
+      "size": 45,
+      "linesSaved": 45
+    },
+    {
+      "hash": "61e5644f9ea40d12fce595a1bfc4a6d0",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/app-specific/AIBadge.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/ui/AIBadge.tsx"
+      ],
+      "size": 42,
+      "linesSaved": 42
+    },
+    {
+      "hash": "f3d22d65c0c5284d671aa8bc06130414",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/timeline/card-components/StatusBadge.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/timeline/ui/card-components/StatusBadge.tsx"
+      ],
+      "size": 41,
+      "linesSaved": 41
+    },
+    {
+      "hash": "6b5b8273f7402bc07f23a09dca5380e3",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/ConfidenceSection.tsx",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/ui/ConfidenceSection.tsx"
+      ],
+      "size": 37,
+      "linesSaved": 37
+    },
+    {
+      "hash": "da5d39a83fcf0a8c0bacfbd8cec3bc9b",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/data/index.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/vision/hooks/index.ts"
+      ],
+      "size": 17,
+      "linesSaved": 17
+    },
+    {
+      "hash": "bc47704be3bccb40b582d4a953ce1adc",
+      "files": [
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/components/capture/types.ts",
+        "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/features/capture/domain/types.ts"
+      ],
+      "size": 10,
+      "linesSaved": 10
+    }
+  ],
+  "similarFiles": [],
+  "consolidationOpportunities": 0,
+  "potentialLinesSaved": 20611,
+  "potentialFileReduction": 112
+}

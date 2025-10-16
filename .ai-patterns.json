@@ -1,0 +1,623 @@
+{
+  "version": "1.0",
+  "generatedAt": "2025-10-16T03:55:29.081Z",
+  "features": [
+    "assistant",
+    "auth",
+    "capture",
+    "chat",
+    "events",
+    "insights",
+    "migrations",
+    "timeline",
+    "vehicles",
+    "vision"
+  ],
+  "rules": [
+    {
+      "pattern": "ui files",
+      "location": "features/*/ui/",
+      "fileTypes": [
+        ".tsx",
+        ".jsx"
+      ],
+      "examples": [
+        "features/assistant/ui/page.tsx"
+      ],
+      "confidence": 65,
+      "indicators": [
+        "React component exports",
+        "JSX return statements"
+      ]
+    },
+    {
+      "pattern": "domain files",
+      "location": "features/*/domain/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/auth/domain/client.ts",
+        "features/auth/domain/config.ts",
+        "features/auth/domain/index.ts"
+      ],
+      "confidence": 90,
+      "indicators": [
+        "Minimal imports (pure logic)",
+        "Constant exports",
+        "Type/interface definitions"
+      ]
+    },
+    {
+      "pattern": "data files",
+      "location": "features/*/data/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/auth/data/index.ts"
+      ],
+      "confidence": 65,
+      "indicators": []
+    },
+    {
+      "pattern": "hooks files",
+      "location": "features/*/hooks/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/auth/hooks/index.ts",
+        "features/auth/hooks/useAuth.ts",
+        "features/auth/hooks/useHasRole.ts"
+      ],
+      "confidence": 70,
+      "indicators": [
+        "Custom hook exports"
+      ]
+    },
+    {
+      "pattern": "ui files",
+      "location": "features/*/ui/",
+      "fileTypes": [
+        ".tsx",
+        ".jsx"
+      ],
+      "examples": [
+        "features/auth/ui/index.ts"
+      ],
+      "confidence": 65,
+      "indicators": []
+    },
+    {
+      "pattern": "domain files",
+      "location": "features/*/domain/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/capture/domain/flow-config.ts",
+        "features/capture/domain/types.ts"
+      ],
+      "confidence": 70,
+      "indicators": [
+        "Type/interface definitions",
+        "Constant exports",
+        "Minimal imports (pure logic)"
+      ]
+    },
+    {
+      "pattern": "data files",
+      "location": "features/*/data/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/capture/data/index.ts"
+      ],
+      "confidence": 65,
+      "indicators": []
+    },
+    {
+      "pattern": "hooks files",
+      "location": "features/*/hooks/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/capture/hooks/useRecentEventTypes.ts",
+        "features/capture/hooks/useSuggestedEventType.ts"
+      ],
+      "confidence": 60,
+      "indicators": [
+        "Custom hook exports",
+        "React hooks composition"
+      ]
+    },
+    {
+      "pattern": "ui files",
+      "location": "features/*/ui/",
+      "fileTypes": [
+        ".tsx",
+        ".jsx"
+      ],
+      "examples": [
+        "features/capture/ui/AIProposalReview.tsx",
+        "features/capture/ui/AIProposalReview.v2.tsx",
+        "features/capture/ui/AssociationConfirmation.tsx"
+      ],
+      "confidence": 100,
+      "indicators": [
+        "React component exports",
+        "JSX return statements",
+        "React hooks usage"
+      ]
+    },
+    {
+      "pattern": "domain files",
+      "location": "features/*/domain/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/chat/domain/index.ts",
+        "features/chat/domain/types.ts"
+      ],
+      "confidence": 70,
+      "indicators": [
+        "Type/interface definitions",
+        "Minimal imports (pure logic)"
+      ]
+    },
+    {
+      "pattern": "data files",
+      "location": "features/*/data/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/chat/data/index.ts"
+      ],
+      "confidence": 65,
+      "indicators": [
+        "API calls"
+      ]
+    },
+    {
+      "pattern": "hooks files",
+      "location": "features/*/hooks/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/chat/hooks/index.ts"
+      ],
+      "confidence": 55,
+      "indicators": [
+        "Custom hook exports"
+      ]
+    },
+    {
+      "pattern": "ui files",
+      "location": "features/*/ui/",
+      "fileTypes": [
+        ".tsx",
+        ".jsx"
+      ],
+      "examples": [
+        "features/chat/ui/EventCard.tsx",
+        "features/chat/ui/index.ts"
+      ],
+      "confidence": 70,
+      "indicators": [
+        "React component exports",
+        "JSX return statements"
+      ]
+    },
+    {
+      "pattern": "domain files",
+      "location": "features/*/domain/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/events/domain/event-utils.ts",
+        "features/events/domain/index.ts",
+        "features/events/domain/types.ts"
+      ],
+      "confidence": 75,
+      "indicators": [
+        "Minimal imports (pure logic)",
+        "Type/interface definitions"
+      ]
+    },
+    {
+      "pattern": "data files",
+      "location": "features/*/data/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/events/data/index.ts"
+      ],
+      "confidence": 65,
+      "indicators": []
+    },
+    {
+      "pattern": "hooks files",
+      "location": "features/*/hooks/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/events/hooks/index.ts"
+      ],
+      "confidence": 55,
+      "indicators": []
+    },
+    {
+      "pattern": "ui files",
+      "location": "features/*/ui/",
+      "fileTypes": [
+        ".tsx",
+        ".jsx"
+      ],
+      "examples": [
+        "features/events/ui/AIInsights.tsx",
+        "features/events/ui/ChangeHistoryTimeline.tsx",
+        "features/events/ui/CompletionScoreTooltip.tsx"
+      ],
+      "confidence": 100,
+      "indicators": [
+        "React component exports",
+        "JSX return statements",
+        "React hooks usage"
+      ]
+    },
+    {
+      "pattern": "domain files",
+      "location": "features/*/domain/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/insights/domain/index.ts",
+        "features/insights/domain/types.ts"
+      ],
+      "confidence": 70,
+      "indicators": [
+        "Type/interface definitions",
+        "Minimal imports (pure logic)"
+      ]
+    },
+    {
+      "pattern": "data files",
+      "location": "features/*/data/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/insights/data/index.ts"
+      ],
+      "confidence": 65,
+      "indicators": [
+        "Database operations"
+      ]
+    },
+    {
+      "pattern": "hooks files",
+      "location": "features/*/hooks/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/insights/hooks/index.ts"
+      ],
+      "confidence": 55,
+      "indicators": []
+    },
+    {
+      "pattern": "ui files",
+      "location": "features/*/ui/",
+      "fileTypes": [
+        ".tsx",
+        ".jsx"
+      ],
+      "examples": [
+        "features/insights/ui/AskQuestion.tsx",
+        "features/insights/ui/index.ts"
+      ],
+      "confidence": 70,
+      "indicators": [
+        "React component exports",
+        "JSX return statements",
+        "React hooks usage"
+      ]
+    },
+    {
+      "pattern": "domain files",
+      "location": "features/*/domain/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/migrations/domain/index.ts",
+        "features/migrations/domain/roi-calculator.ts"
+      ],
+      "confidence": 70,
+      "indicators": [
+        "Minimal imports (pure logic)",
+        "Type/interface definitions"
+      ]
+    },
+    {
+      "pattern": "data files",
+      "location": "features/*/data/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/migrations/data/index.ts",
+        "features/migrations/data/migration-data.ts"
+      ],
+      "confidence": 70,
+      "indicators": []
+    },
+    {
+      "pattern": "hooks files",
+      "location": "features/*/hooks/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/migrations/hooks/index.ts"
+      ],
+      "confidence": 55,
+      "indicators": []
+    },
+    {
+      "pattern": "ui files",
+      "location": "features/*/ui/",
+      "fileTypes": [
+        ".tsx",
+        ".jsx"
+      ],
+      "examples": [
+        "features/migrations/ui/index.ts"
+      ],
+      "confidence": 65,
+      "indicators": []
+    },
+    {
+      "pattern": "domain files",
+      "location": "features/*/domain/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/timeline/domain/index.ts",
+        "features/timeline/domain/timeline-utils.ts",
+        "features/timeline/domain/types.ts"
+      ],
+      "confidence": 75,
+      "indicators": [
+        "Type/interface definitions",
+        "Minimal imports (pure logic)"
+      ]
+    },
+    {
+      "pattern": "data files",
+      "location": "features/*/data/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/timeline/data/index.ts"
+      ],
+      "confidence": 65,
+      "indicators": []
+    },
+    {
+      "pattern": "hooks files",
+      "location": "features/*/hooks/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/timeline/hooks/useTimelineData.ts",
+        "features/timeline/hooks/useTimelineFilters.ts",
+        "features/timeline/hooks/useTimelineState.ts"
+      ],
+      "confidence": 65,
+      "indicators": [
+        "Custom hook exports",
+        "React hooks composition"
+      ]
+    },
+    {
+      "pattern": "ui files",
+      "location": "features/*/ui/",
+      "fileTypes": [
+        ".tsx",
+        ".jsx"
+      ],
+      "examples": [
+        "features/timeline/ui/EventDebugCard.tsx",
+        "features/timeline/ui/EventEditModal.tsx",
+        "features/timeline/ui/ImageViewerModal.tsx"
+      ],
+      "confidence": 100,
+      "indicators": [
+        "React component exports",
+        "JSX return statements",
+        "React hooks usage"
+      ]
+    },
+    {
+      "pattern": "domain files",
+      "location": "features/*/domain/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/vehicles/domain/canonical-images.ts",
+        "features/vehicles/domain/data-display-showcase.tsx",
+        "features/vehicles/domain/fix-orphaned-vehicles.ts"
+      ],
+      "confidence": 100,
+      "indicators": [
+        "Type/interface definitions",
+        "Constant exports",
+        "Minimal imports (pure logic)"
+      ]
+    },
+    {
+      "pattern": "data files",
+      "location": "features/*/data/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/vehicles/data/[eventId].ts",
+        "features/vehicles/data/[id].ts",
+        "features/vehicles/data/api-validation.ts"
+      ],
+      "confidence": 100,
+      "indicators": [
+        "Database operations",
+        "API calls"
+      ]
+    },
+    {
+      "pattern": "hooks files",
+      "location": "features/*/hooks/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/vehicles/hooks/index.ts",
+        "features/vehicles/hooks/useOptimisticActions.ts",
+        "features/vehicles/hooks/useVehicleEvents.ts"
+      ],
+      "confidence": 70,
+      "indicators": [
+        "Custom hook exports",
+        "React hooks composition"
+      ]
+    },
+    {
+      "pattern": "ui files",
+      "location": "features/*/ui/",
+      "fileTypes": [
+        ".tsx",
+        ".jsx"
+      ],
+      "examples": [
+        "features/vehicles/ui/ActionBar.tsx",
+        "features/vehicles/ui/ChatThreadSidebar.tsx",
+        "features/vehicles/ui/ConversationThreadList.tsx"
+      ],
+      "confidence": 100,
+      "indicators": [
+        "React component exports",
+        "JSX return statements",
+        "React hooks usage"
+      ]
+    },
+    {
+      "pattern": "domain files",
+      "location": "features/*/domain/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/vision/domain/image-validation.ts",
+        "features/vision/domain/index.ts",
+        "features/vision/domain/ocr-processing.ts"
+      ],
+      "confidence": 80,
+      "indicators": [
+        "Type/interface definitions",
+        "Constant exports",
+        "Minimal imports (pure logic)"
+      ]
+    },
+    {
+      "pattern": "data files",
+      "location": "features/*/data/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/vision/data/index.ts"
+      ],
+      "confidence": 65,
+      "indicators": []
+    },
+    {
+      "pattern": "hooks files",
+      "location": "features/*/hooks/",
+      "fileTypes": [
+        ".ts",
+        ".tsx"
+      ],
+      "examples": [
+        "features/vision/hooks/index.ts"
+      ],
+      "confidence": 55,
+      "indicators": [
+        "Custom hook exports"
+      ]
+    },
+    {
+      "pattern": "ui files",
+      "location": "features/*/ui/",
+      "fileTypes": [
+        ".tsx",
+        ".jsx"
+      ],
+      "examples": [
+        "features/vision/ui/DashboardCaptureModal.tsx",
+        "features/vision/ui/DocumentScanner.tsx",
+        "features/vision/ui/DocumentScannerModal.tsx"
+      ],
+      "confidence": 100,
+      "indicators": [
+        "React component exports",
+        "JSX return statements",
+        "React hooks usage"
+      ]
+    }
+  ],
+  "stats": {
+    "totalFiles": 282,
+    "totalPatterns": 37,
+    "featuresAnalyzed": 10
+  }
+}
