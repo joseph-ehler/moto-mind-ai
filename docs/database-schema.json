@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2025-10-16T17:22:34.370Z",
+  "generatedAt": "2025-10-16T17:31:15.995Z",
   "database": "https://ucbbzzoimghnaoihyqbd.supabase.co",
-  "totalTables": 21,
+  "totalTables": 22,
   "tables": [
     {
       "name": "capture_sessions",
@@ -581,6 +581,10 @@
           "definition": "CREATE INDEX idx_conversation_threads_user ON public.conversation_threads USING btree (user_id, updated_at DESC)"
         },
         {
+          "name": "idx_conversation_threads_tenant",
+          "definition": "CREATE INDEX idx_conversation_threads_tenant ON public.conversation_threads USING btree (created_at DESC) WHERE (deleted_at IS NULL)"
+        },
+        {
           "name": "idx_conversation_threads_lookup",
           "definition": "CREATE INDEX idx_conversation_threads_lookup ON public.conversation_threads USING btree (vehicle_id, user_id, last_message_at DESC) WHERE ((is_archived = false) OR (is_archived IS NULL))"
         },
@@ -889,6 +893,14 @@
           "definition": "CREATE INDEX idx_favorite_stations_user_station ON public.favorite_stations USING btree (user_id, station_id)"
         },
         {
+          "name": "idx_favorite_stations_geospatial",
+          "definition": "CREATE INDEX idx_favorite_stations_geospatial ON public.favorite_stations USING btree (user_id, lat, lng) WHERE ((lat IS NOT NULL) AND (lng IS NOT NULL))"
+        },
+        {
+          "name": "idx_favorite_stations_proximity",
+          "definition": "CREATE INDEX idx_favorite_stations_proximity ON public.favorite_stations USING btree (tenant_id, lat, lng) WHERE ((lat IS NOT NULL) AND (lng IS NOT NULL))"
+        },
+        {
           "name": "favorite_stations_pkey",
           "definition": "CREATE UNIQUE INDEX favorite_stations_pkey ON public.favorite_stations USING btree (id)"
         },
@@ -1074,6 +1086,14 @@
         {
           "name": "garages_pkey",
           "definition": "CREATE UNIQUE INDEX garages_pkey ON public.garages USING btree (id)"
+        },
+        {
+          "name": "idx_garages_tenant_name",
+          "definition": "CREATE INDEX idx_garages_tenant_name ON public.garages USING btree (tenant_id, name) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "idx_garages_usage",
+          "definition": "CREATE INDEX idx_garages_usage ON public.garages USING btree (tenant_id, last_used DESC NULLS LAST) WHERE (deleted_at IS NULL)"
         },
         {
           "name": "idx_garages_vehicle_count",
@@ -1276,6 +1296,10 @@
         {
           "name": "idx_location_corrections_extraction_method",
           "definition": "CREATE INDEX idx_location_corrections_extraction_method ON public.location_corrections USING btree (extraction_method)"
+        },
+        {
+          "name": "idx_location_corrections_lookup",
+          "definition": "CREATE INDEX idx_location_corrections_lookup ON public.location_corrections USING btree (source_type, source_id, created_at DESC)"
         }
       ],
       "rowCount": 0,
@@ -1388,6 +1412,14 @@
         {
           "name": "idx_logs_tenant_level_time",
           "definition": "CREATE INDEX idx_logs_tenant_level_time ON public.logs USING btree (tenant_id, level, created_at DESC) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "idx_logs_errors",
+          "definition": "CREATE INDEX idx_logs_errors ON public.logs USING btree (tenant_id, created_at DESC) WHERE (((level)::text = ANY ((ARRAY['error'::character varying, 'fatal'::character varying])::text[])) AND (deleted_at IS NULL))"
+        },
+        {
+          "name": "idx_logs_request_tracking",
+          "definition": "CREATE INDEX idx_logs_request_tracking ON public.logs USING btree (request_id, created_at DESC) WHERE (request_id IS NOT NULL)"
         },
         {
           "name": "idx_logs_request_id",
@@ -1711,6 +1743,14 @@
           "definition": "CREATE INDEX idx_photo_metadata_edit_operations_gin ON public.photo_metadata USING gin (edit_operations)"
         },
         {
+          "name": "idx_photo_metadata_image_lookup",
+          "definition": "CREATE INDEX idx_photo_metadata_image_lookup ON public.photo_metadata USING btree (image_id, tenant_id)"
+        },
+        {
+          "name": "idx_photo_metadata_processing",
+          "definition": "CREATE INDEX idx_photo_metadata_processing ON public.photo_metadata USING btree (tenant_id, captured_at DESC)"
+        },
+        {
           "name": "photo_metadata_pkey",
           "definition": "CREATE UNIQUE INDEX photo_metadata_pkey ON public.photo_metadata USING btree (id)"
         },
@@ -1915,6 +1955,121 @@
       ]
     },
     {
+      "name": "query_performance_log",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "query_hash",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "query_sample",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "execution_time_ms",
+          "dataType": "integer",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "rows_returned",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "user_id",
+          "dataType": "uuid",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "endpoint",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "name": "idx_query_performance_log_endpoint",
+          "definition": "CREATE INDEX idx_query_performance_log_endpoint ON public.query_performance_log USING btree (endpoint, created_at DESC) WHERE (endpoint IS NOT NULL)"
+        },
+        {
+          "name": "query_performance_log_pkey",
+          "definition": "CREATE UNIQUE INDEX query_performance_log_pkey ON public.query_performance_log USING btree (id)"
+        },
+        {
+          "name": "idx_query_performance_log_slow",
+          "definition": "CREATE INDEX idx_query_performance_log_slow ON public.query_performance_log USING btree (execution_time_ms DESC, created_at DESC)"
+        },
+        {
+          "name": "idx_query_performance_log_hash",
+          "definition": "CREATE INDEX idx_query_performance_log_hash ON public.query_performance_log USING btree (query_hash, created_at DESC)"
+        },
+        {
+          "name": "idx_query_performance_log_tenant",
+          "definition": "CREATE INDEX idx_query_performance_log_tenant ON public.query_performance_log USING btree (tenant_id, created_at DESC) WHERE (tenant_id IS NOT NULL)"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "query_performance_log_tenant_access",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "((tenant_id IS NULL) OR (tenant_id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = (auth.uid())::text))))",
+          "withCheck": "((tenant_id IS NULL) OR (tenant_id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = (auth.uid())::text))))"
+        },
+        {
+          "name": "query_performance_log_service_role",
+          "permissive": true,
+          "roles": [
+            "service_role"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
+    },
+    {
       "name": "schema_migrations",
       "columns": [
         {
@@ -1937,6 +2092,13 @@
           "isNullable": true,
           "defaultValue": "now()",
           "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
         }
       ],
       "foreignKeys": [],
@@ -1950,7 +2112,7 @@
           "definition": "CREATE UNIQUE INDEX schema_migrations_filename_key ON public.schema_migrations USING btree (filename)"
         }
       ],
-      "rowCount": 14,
+      "rowCount": 16,
       "rlsEnabled": false,
       "rlsPolicies": []
     },
@@ -2130,6 +2292,10 @@
       ],
       "indexes": [
         {
+          "name": "idx_user_maintenance_prefs_composite",
+          "definition": "CREATE INDEX idx_user_maintenance_prefs_composite ON public.user_maintenance_preferences USING btree (vehicle_id, interval_type)"
+        },
+        {
           "name": "user_maintenance_preferences_pkey",
           "definition": "CREATE UNIQUE INDEX user_maintenance_preferences_pkey ON public.user_maintenance_preferences USING btree (id)"
         },
@@ -2237,6 +2403,14 @@
         }
       ],
       "indexes": [
+        {
+          "name": "idx_user_tenants_composite",
+          "definition": "CREATE INDEX idx_user_tenants_composite ON public.user_tenants USING btree (user_id, tenant_id)"
+        },
+        {
+          "name": "idx_user_tenants_active",
+          "definition": "CREATE INDEX idx_user_tenants_active ON public.user_tenants USING btree (user_id, tenant_id, created_at DESC)"
+        },
         {
           "name": "user_tenants_pkey",
           "definition": "CREATE UNIQUE INDEX user_tenants_pkey ON public.user_tenants USING btree (id)"
@@ -2431,6 +2605,14 @@
         {
           "name": "idx_vehicle_event_audit_logs_vehicle_id",
           "definition": "CREATE INDEX idx_vehicle_event_audit_logs_vehicle_id ON public.vehicle_event_audit_logs USING btree (vehicle_id)"
+        },
+        {
+          "name": "idx_vehicle_event_audit_logs_forensics",
+          "definition": "CREATE INDEX idx_vehicle_event_audit_logs_forensics ON public.vehicle_event_audit_logs USING btree (event_id, tenant_id, created_at DESC)"
+        },
+        {
+          "name": "idx_vehicle_event_audit_logs_tracking",
+          "definition": "CREATE INDEX idx_vehicle_event_audit_logs_tracking ON public.vehicle_event_audit_logs USING btree (tenant_id, created_at DESC)"
         }
       ],
       "rowCount": 0,
@@ -2988,8 +3170,20 @@
           "definition": "CREATE INDEX idx_vehicle_events_tenant_vehicle_type ON public.vehicle_events USING btree (tenant_id, vehicle_id, type, date DESC) WHERE (deleted_at IS NULL)"
         },
         {
+          "name": "idx_vehicle_events_type_date",
+          "definition": "CREATE INDEX idx_vehicle_events_type_date ON public.vehicle_events USING btree (type, date DESC, tenant_id) WHERE (deleted_at IS NULL)"
+        },
+        {
           "name": "idx_vehicle_events_notes",
           "definition": "CREATE INDEX idx_vehicle_events_notes ON public.vehicle_events USING gin (to_tsvector('english'::regconfig, notes)) WHERE (notes IS NOT NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_amount_analysis",
+          "definition": "CREATE INDEX idx_vehicle_events_amount_analysis ON public.vehicle_events USING btree (tenant_id, date DESC, total_amount) WHERE ((deleted_at IS NULL) AND (total_amount IS NOT NULL))"
+        },
+        {
+          "name": "idx_vehicle_events_gallons_tracking",
+          "definition": "CREATE INDEX idx_vehicle_events_gallons_tracking ON public.vehicle_events USING btree (tenant_id, vehicle_id, date DESC, gallons) WHERE ((deleted_at IS NULL) AND (gallons IS NOT NULL))"
         },
         {
           "name": "idx_vehicle_events_ai_context",
@@ -3394,6 +3588,14 @@
           "definition": "CREATE INDEX idx_vehicle_images_event_id ON public.vehicle_images USING btree (event_id)"
         },
         {
+          "name": "idx_vehicle_images_tenant_vehicle",
+          "definition": "CREATE INDEX idx_vehicle_images_tenant_vehicle ON public.vehicle_images USING btree (tenant_id, vehicle_id, created_at DESC)"
+        },
+        {
+          "name": "idx_vehicle_images_processing",
+          "definition": "CREATE INDEX idx_vehicle_images_processing ON public.vehicle_images USING btree (tenant_id, created_at DESC)"
+        },
+        {
           "name": "vehicle_images_pkey",
           "definition": "CREATE UNIQUE INDEX vehicle_images_pkey ON public.vehicle_images USING btree (id)"
         },
@@ -3773,6 +3975,14 @@
           "definition": "CREATE INDEX idx_vehicles_tenant_id ON public.vehicles USING btree (tenant_id)"
         },
         {
+          "name": "idx_vehicles_tenant_make_model",
+          "definition": "CREATE INDEX idx_vehicles_tenant_make_model ON public.vehicles USING btree (tenant_id, make, model, year DESC)"
+        },
+        {
+          "name": "idx_vehicles_garage_lookup",
+          "definition": "CREATE INDEX idx_vehicles_garage_lookup ON public.vehicles USING btree (garage_id, tenant_id) WHERE (garage_id IS NOT NULL)"
+        },
+        {
           "name": "idx_vehicles_garage_id",
           "definition": "CREATE INDEX idx_vehicles_garage_id ON public.vehicles USING btree (garage_id)"
         },
@@ -3913,6 +4123,10 @@
       "foreignKeys": [],
       "indexes": [
         {
+          "name": "idx_vision_accuracy_recent",
+          "definition": "CREATE INDEX idx_vision_accuracy_recent ON public.vision_accuracy USING btree (created_at DESC)"
+        },
+        {
           "name": "vision_accuracy_pkey",
           "definition": "CREATE UNIQUE INDEX vision_accuracy_pkey ON public.vision_accuracy USING btree (id)"
         },
@@ -3927,6 +4141,10 @@
         {
           "name": "idx_vision_accuracy_document_type",
           "definition": "CREATE INDEX idx_vision_accuracy_document_type ON public.vision_accuracy USING btree (document_type)"
+        },
+        {
+          "name": "idx_vision_accuracy_tracking",
+          "definition": "CREATE INDEX idx_vision_accuracy_tracking ON public.vision_accuracy USING btree (created_at DESC)"
         }
       ],
       "rowCount": 0,
@@ -4035,6 +4253,10 @@
         {
           "name": "idx_vision_metrics_success",
           "definition": "CREATE INDEX idx_vision_metrics_success ON public.vision_metrics USING btree (success)"
+        },
+        {
+          "name": "idx_vision_metrics_analysis",
+          "definition": "CREATE INDEX idx_vision_metrics_analysis ON public.vision_metrics USING btree (created_at DESC)"
         }
       ],
       "rowCount": 51,

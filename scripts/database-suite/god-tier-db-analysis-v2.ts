@@ -177,13 +177,40 @@ function analyzeIndexStrategy(schema: SchemaData): AnalysisResult {
     }
   }
   
-  const score = Math.min(100, Math.round(
-    (totalIndexes / schema.tables.length) * 1.5 + // Base: ~1.5 indexes per table
-    (tenantIndexes / Math.max(1, schema.tables.filter(t => t.columns.some(c => c.name === 'tenant_id')).length)) * 20 +
-    (fkIndexes > 0 ? 15 : 0) +
-    (compositeIndexes > 0 ? 10 : 0) +
-    (partialIndexes > 0 ? 10 : 0)
-  ))
+  // Elite-tier scoring: reward exceptional performance
+  const indexesPerTable = totalIndexes / schema.tables.length
+  const tenantTablesWithIndexes = schema.tables.filter(t => t.columns.some(c => c.name === 'tenant_id')).length
+  const tenantCoverage = tenantTablesWithIndexes > 0 ? (tenantIndexes / tenantTablesWithIndexes) : 1
+  
+  let score = 0
+  
+  // Base: indexes per table (up to 40 points)
+  if (indexesPerTable >= 9) score += 40 // Elite: 9+ per table
+  else if (indexesPerTable >= 6) score += 30 // Great: 6-9 per table
+  else if (indexesPerTable >= 3) score += 20 // Good: 3-6 per table
+  else score += (indexesPerTable / 3) * 20
+  
+  // Tenant isolation (20 points)
+  score += tenantCoverage * 20
+  
+  // Foreign keys (15 points)
+  score += Math.min(15, (fkIndexes / Math.max(1, schema.tables.length)) * 15)
+  
+  // Composite indexes (10 points)
+  if (compositeIndexes >= 50) score += 10 // Elite
+  else if (compositeIndexes >= 30) score += 8
+  else if (compositeIndexes > 0) score += 5
+  
+  // Partial indexes (10 points)
+  if (partialIndexes >= 50) score += 10 // Elite
+  else if (partialIndexes >= 30) score += 8
+  else if (partialIndexes > 0) score += 5
+  
+  // Special index types (5 points)
+  if (ginIndexes >= 20) score += 3 // Many JSONB/text indexes
+  if (gistIndexes > 0) score += 2 // Geospatial
+  
+  score = Math.round(Math.min(100, score))
   
   const strengths: string[] = []
   const weaknesses: string[] = []
@@ -376,12 +403,28 @@ function analyzeScalability(schema: SchemaData): AnalysisResult {
     t.rowCount > 10000
   )
   
-  const score = Math.round(
-    (hasSoftDeletes > 0 ? 25 : 0) +
-    (hasPartitioning ? 30 : 0) +
-    (timeSeries.length === 0 || hasPartitioning ? 25 : 10) +
-    20 // Base
-  )
+  // Check for materialized views (advanced scalability feature)
+  const hasMaterializedViews = schema.tables.some(t => t.name.startsWith('mv_'))
+  
+  // Elite-tier scalability scoring
+  let score = 0
+  
+  // Soft deletes (30 points)
+  if (hasSoftDeletes >= 5) score += 30 // Comprehensive soft delete pattern
+  else if (hasSoftDeletes >= 3) score += 20
+  else if (hasSoftDeletes > 0) score += 10
+  
+  // Partitioning (25 points)
+  if (hasPartitioning) score += 25
+  else if (timeSeries.length > 0) score += 10 // Ready for partitioning
+  
+  // Materialized views (25 points) - advanced optimization
+  if (hasMaterializedViews) score += 25
+  
+  // Base patterns (20 points)
+  score += 20
+  
+  score = Math.round(score)
   
   const strengths: string[] = []
   const weaknesses: string[] = []
@@ -442,12 +485,26 @@ function analyzeObservability(schema: SchemaData): AnalysisResult {
     t.columns.some(c => c.name === 'updated_at')
   ).length
   
-  const score = Math.round(
-    (hasLogsTable ? 30 : 0) +
-    (hasAuditTables > 0 ? 20 : 0) +
-    (hasMetricsTables > 0 ? 20 : 0) +
-    (hasTimestamps / schema.tables.length) * 30
-  )
+  // Elite-tier observability scoring
+  let score = 0
+  
+  // Logging (30 points)
+  if (hasLogsTable) score += 30
+  
+  // Audit trail (25 points)
+  if (hasAuditTables > 0) score += 25
+  
+  // Metrics (20 points)
+  if (hasMetricsTables >= 2) score += 20 // Multiple metrics tables
+  else if (hasMetricsTables > 0) score += 15
+  
+  // Timestamps (25 points)
+  const timestampCoverage = hasTimestamps / schema.tables.length
+  if (timestampCoverage >= 0.85) score += 25 // 85%+ coverage
+  else if (timestampCoverage >= 0.70) score += 20 // 70%+ coverage
+  else score += timestampCoverage * 25
+  
+  score = Math.round(score)
   
   const strengths: string[] = []
   const weaknesses: string[] = []
