@@ -3,9 +3,9 @@
     {
       "type": "misplaced_file",
       "severity": "high",
-      "currentPath": ".file-backups/components_vehicle_VehicleRow.tsx",
-      "suggestedPath": "features/vehicles/ui/VehicleRow.tsx",
-      "reason": "The file VehicleRow.tsx is a component related to the vehicle feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ is not aligned with this structure.",
+      "currentPath": ".file-backups/pages_onboard.tsx",
+      "suggestedPath": "features/vehicles/ui/OnboardPage.tsx",
+      "reason": "The file .file-backups/pages_onboard.tsx is related to vehicle onboarding, which is a feature-specific functionality. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. Since this file is related to vehicle onboarding, it should be placed under features/vehicles/ui/.",
       "confidence": 0.95,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -13,10 +13,30 @@
     {
       "type": "misplaced_file",
       "severity": "high",
-      "currentPath": ".file-backups/pages_onboard.tsx",
-      "suggestedPath": "features/vehicles/ui/pages_onboard.tsx",
-      "reason": "The file pages_onboard.tsx is related to vehicle onboarding, which aligns with the vehicles feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ does not adhere to this structure.",
-      "confidence": 0.95,
+      "currentPath": ".file-backups/pages_garage.tsx",
+      "suggestedPath": "features/vehicles/ui/pages_garage.tsx",
+      "reason": "The file pages_garage.tsx appears to be a feature-specific component related to vehicles, as it deals with displaying and managing a list of vehicles in a garage. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. Therefore, this file should be moved to features/vehicles/ui/ to align with the established patterns.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "high",
+      "currentPath": "app/(authenticated)/assistant/page.tsx",
+      "suggestedPath": "features/assistant/ui/page.tsx",
+      "reason": "The file 'page.tsx' appears to be a UI component related to the 'Assistant' feature. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. The current location under 'app/(authenticated)/assistant/' does not align with this structure.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "high",
+      "currentPath": "app/(authenticated)/capture/fuel/page.tsx",
+      "suggestedPath": "features/capture/ui/FuelCapturePage.tsx",
+      "reason": "The file 'page.tsx' under 'app/(authenticated)/capture/fuel/' appears to be a feature-specific component related to the 'capture' feature. According to the project's feature-first architecture, feature components should reside in 'features/[feature]/ui/'.",
+      "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
     },
@@ -1183,9 +1203,9 @@
     {
       "type": "misplaced_file",
       "severity": "medium",
-      "currentPath": ".stable/components_vehicle_VehicleRow.tsx",
+      "currentPath": ".file-backups/components_vehicle_VehicleRow.tsx",
       "suggestedPath": "features/vehicles/ui/VehicleRow.tsx",
-      "reason": "The file 'VehicleRow.tsx' appears to be a UI component related to vehicles. According to the project's feature-first architecture, feature components should be placed in 'features/[feature]/ui/'. Since this component is related to vehicles, it should be located in 'features/vehicles/ui/'.",
+      "reason": "The file VehicleRow.tsx is a component related to vehicles and should be placed under the vehicles feature in the ui directory according to the project's feature-first architecture. The current location in .file-backups is not aligned with the established patterns.",
       "confidence": 0.95,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1193,9 +1213,19 @@
     {
       "type": "misplaced_file",
       "severity": "medium",
-      "currentPath": ".file-backups/pages_garage.tsx",
-      "suggestedPath": "features/vehicles/ui/pages_garage.tsx",
-      "reason": "The file pages_garage.tsx appears to be a feature-specific component related to vehicles. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location, .file-backups/, does not align with this structure.",
+      "currentPath": "app/(authenticated)/insights/page.tsx",
+      "suggestedPath": "features/insights/ui/page.tsx",
+      "reason": "The file 'page.tsx' is part of the 'insights' feature and should be located within the 'features/insights/ui/' directory according to the project's feature-first architecture. The current location under 'app/(authenticated)/insights/' does not align with the established pattern for feature organization.",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": ".stable/components_vehicle_VehicleRow.tsx",
+      "suggestedPath": "features/vehicles/ui/VehicleRow.tsx",
+      "reason": "The file 'VehicleRow.tsx' appears to be a UI component related to vehicles. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. Since this component is related to vehicles, it should be placed in 'features/vehicles/ui/'.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1204,8 +1234,8 @@
       "type": "misplaced_file",
       "severity": "medium",
       "currentPath": ".stable/garage-master.tsx",
-      "suggestedPath": "features/garage/ui/garage-master.tsx",
-      "reason": "The file 'garage-master.tsx' appears to be a feature component related to the 'garage' functionality. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. The current location '.stable/' does not align with this structure.",
+      "suggestedPath": "features/vehicles/ui/garage-master.tsx",
+      "reason": "The file 'garage-master.tsx' appears to be a UI component related to vehicles, as it deals with displaying and managing vehicle data. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. Since this file is related to vehicles, it should be placed in 'features/vehicles/ui/'.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1215,7 +1245,7 @@
       "severity": "medium",
       "currentPath": ".stable/garage-stable.tsx",
       "suggestedPath": "features/vehicles/ui/garage-stable.tsx",
-      "reason": "The file 'garage-stable.tsx' appears to be a UI component related to vehicle management, which aligns with the 'vehicles' feature. According to the project's feature-first architecture, UI components for a specific feature should be located in 'features/[feature]/ui/'.",
+      "reason": "The file 'garage-stable.tsx' appears to be a UI component related to the 'vehicles' feature. According to the project's feature-first architecture, feature components should be placed in 'features/[feature]/ui/'.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1224,8 +1254,8 @@
       "type": "misplaced_file",
       "severity": "medium",
       "currentPath": ".stable/pages_api_upload.ts",
-      "suggestedPath": "features/uploads/api/pages_api_upload.ts",
-      "reason": "The file appears to be an API endpoint related to file uploads, which should be part of a specific feature. According to the project's feature-first architecture, it should be located within a feature directory, such as 'features/uploads/api/'. The current location '.stable/' does not align with the established patterns for feature organization.",
+      "suggestedPath": "features/uploads/api/",
+      "reason": "The file .stable/pages_api_upload.ts is an API endpoint related to file uploads, which aligns with a feature-first architecture. It should be placed under a feature directory, such as features/uploads/api/, to maintain consistency with the project's structure. This ensures that all related logic is grouped together, making it easier to manage and understand.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1234,8 +1264,8 @@
       "type": "misplaced_file",
       "severity": "medium",
       "currentPath": ".stable/pages_api_vehicles.ts",
-      "suggestedPath": "pages/api/vehicles.ts",
-      "reason": "The file .stable/pages_api_vehicles.ts is an API route handler for vehicle-related operations. According to the project's feature-first architecture, API route handlers should be located in the pages/api/ directory, which aligns with Next.js conventions for API routes. The current location under .stable does not adhere to these conventions.",
+      "suggestedPath": "features/vehicles/api/pages_api_vehicles.ts",
+      "reason": "The file is related to the vehicles feature and should be located within the vehicles feature directory according to the project's feature-first architecture. API handlers specific to a feature should reside within the feature's directory structure.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1245,7 +1275,7 @@
       "severity": "medium",
       "currentPath": ".stable/pages_garage.tsx",
       "suggestedPath": "features/vehicles/ui/pages_garage.tsx",
-      "reason": "The file .stable/pages_garage.tsx appears to be a feature-specific component related to vehicle management. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. Since this file is related to vehicles, it should be placed under features/vehicles/ui/.",
+      "reason": "The file .stable/pages_garage.tsx appears to be a UI component related to vehicle management, which should be located within the feature-first architecture under features/vehicles/ui/. This aligns with the established pattern of organizing feature components within their respective feature directories.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1255,7 +1285,7 @@
       "severity": "medium",
       "currentPath": ".stable/pages_onboard.tsx",
       "suggestedPath": "features/onboarding/ui/pages_onboard.tsx",
-      "reason": "The file .stable/pages_onboard.tsx appears to be part of the onboarding feature, as it imports and uses the VehicleOnboardingFlow component. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. Therefore, this file should be moved to the onboarding feature's UI directory.",
+      "reason": "The file .stable/pages_onboard.tsx appears to be part of a feature related to vehicle onboarding. According to the project's feature-first architecture, feature components should be located within the features/[feature]/ui/ directory. The current location under .stable does not align with this structure.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1263,9 +1293,9 @@
     {
       "type": "misplaced_file",
       "severity": "medium",
-      "currentPath": "_archived_showcases/action-bars-showcase.tsx",
-      "suggestedPath": "components/design-system/",
-      "reason": "The file '_archived_showcases/action-bars-showcase.tsx' appears to be a showcase of various action bar components, which aligns with the project's pattern of placing shared components in 'components/design-system/'. This file does not fit into the feature-first architecture as it is not tied to a specific feature but rather demonstrates shared UI components.",
+      "currentPath": "app/(authenticated)/alerts/[id]/page.tsx",
+      "suggestedPath": "features/alerts/ui/page.tsx",
+      "reason": "The file 'page.tsx' is a UI component related to alerts and should be placed under the 'ui' directory of the 'alerts' feature according to the project's feature-first architecture.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1273,9 +1303,9 @@
     {
       "type": "misplaced_file",
       "severity": "medium",
-      "currentPath": "_archived_showcases/cards-showcase.tsx",
-      "suggestedPath": "components/design-system/cards-showcase.tsx",
-      "reason": "The file 'cards-showcase.tsx' demonstrates card components built using the MotoMind Design System. According to the project's architecture, shared components or design system components should be located in 'components/design-system/'. The current location '_archived_showcases/' does not align with the established patterns for component organization.",
+      "currentPath": "app/(authenticated)/alerts/page.tsx",
+      "suggestedPath": "features/alerts/ui/page.tsx",
+      "reason": "The file `page.tsx` under `app/(authenticated)/alerts/` appears to be part of a feature related to alerts. According to the project's feature-first architecture, feature components should be located in `features/[feature]/ui/`. This file seems to be a UI component for the alerts feature and should be moved to `features/alerts/ui/`.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1283,9 +1313,9 @@
     {
       "type": "misplaced_file",
       "severity": "medium",
-      "currentPath": "_archived_showcases/color-system.tsx",
-      "suggestedPath": "components/design-system/",
-      "reason": "The file '_archived_showcases/color-system.tsx' is a component showcasing the color system, which aligns with the design system components. According to the project's architecture, shared components should be located in 'components/design-system/' or 'components/shared/'. Since this file is related to the design system, it should be moved to 'components/design-system/'.",
+      "currentPath": "app/(authenticated)/dashboard/page.tsx",
+      "suggestedPath": "features/dashboard/ui/page.tsx",
+      "reason": "The file 'page.tsx' appears to be a feature component related to the dashboard. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. The current location 'app/(authenticated)/dashboard/' does not align with this structure.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1293,9 +1323,9 @@
     {
       "type": "misplaced_file",
       "severity": "medium",
-      "currentPath": "_archived_showcases/complete-modal-showcase.tsx",
-      "suggestedPath": "features/modals/ui/complete-modal-showcase.tsx",
-      "reason": "The file 'complete-modal-showcase.tsx' demonstrates a modal system using the MotoMind Design System foundation. According to the project's feature-first architecture, feature components should be placed in 'features/[feature]/ui/'. Since this file is related to modals, it should be placed under a 'modals' feature directory within the 'ui' subdirectory.",
+      "currentPath": "app/(authenticated)/events/[id]/loading.tsx",
+      "suggestedPath": "features/events/ui/loading.tsx",
+      "reason": "The file 'loading.tsx' is a UI component related to the 'events' feature. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. The current location under 'app/(authenticated)/events/[id]/' does not align with this structure.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1303,9 +1333,9 @@
     {
       "type": "misplaced_file",
       "severity": "medium",
-      "currentPath": "_archived_showcases/design-rules.tsx",
-      "suggestedPath": "docs/archive/design-rules.tsx",
-      "reason": "The file '_archived_showcases/design-rules.tsx' appears to be documentation related to design system rules and guidelines. According to the project's established patterns, documentation files should be moved to 'docs/archive/'. This file does not fit into the feature-first architecture as it is not a feature component, domain logic, data layer, or hook.",
+      "currentPath": "app/(authenticated)/events/[id]/page.tsx",
+      "suggestedPath": "features/events/ui/EventDetailsPage.tsx",
+      "reason": "The file 'page.tsx' under 'app/(authenticated)/events/[id]/' appears to be a feature-specific component related to events. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1313,9 +1343,9 @@
     {
       "type": "misplaced_file",
       "severity": "medium",
-      "currentPath": "_archived_showcases/design-system-index.tsx",
-      "suggestedPath": "components/design-system/",
-      "reason": "The file '_archived_showcases/design-system-index.tsx' appears to be a central hub for design system documentation and components. According to the project's established patterns, shared components and foundational UI elements should be located in 'components/design-system/'. The current location '_archived_showcases/' suggests it is archived, which may not be appropriate for an active design system index.",
+      "currentPath": "app/(authenticated)/layout.tsx",
+      "suggestedPath": "features/auth/ui/layout.tsx",
+      "reason": "The file 'layout.tsx' is related to authentication and should be part of the 'auth' feature. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1323,39 +1353,9 @@
     {
       "type": "misplaced_file",
       "severity": "medium",
-      "currentPath": "_archived_showcases/design-system.tsx",
-      "suggestedPath": "components/design-system/",
-      "reason": "The file '_archived_showcases/design-system.tsx' appears to be a showcase of design system components, which aligns with the established pattern for shared components. According to the project's architecture, shared components should be located in 'components/design-system/' or 'components/shared/'. The current location '_archived_showcases/' suggests it is an archived or legacy file, but it does not align with the feature-first architecture or the designated areas for shared components.",
-      "confidence": 0.9,
-      "autoFixable": true,
-      "estimatedImpact": "File relocation with import updates"
-    },
-    {
-      "type": "misplaced_file",
-      "severity": "medium",
-      "currentPath": "_archived_showcases/dynamic-demo.tsx",
-      "suggestedPath": "features/vehicles/ui/dynamic-demo.tsx",
-      "reason": "The file 'dynamic-demo.tsx' appears to be a feature component related to vehicles, as it involves dynamic vehicle cards and context-aware intelligence. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. Since this file is currently in '_archived_showcases/', it should be moved to 'features/vehicles/ui/'.",
-      "confidence": 0.9,
-      "autoFixable": true,
-      "estimatedImpact": "File relocation with import updates"
-    },
-    {
-      "type": "misplaced_file",
-      "severity": "medium",
-      "currentPath": "_archived_showcases/elite-surfaces-showcase.tsx",
-      "suggestedPath": "features/elite-surfaces/ui/elite-surfaces-showcase.tsx",
-      "reason": "The file 'elite-surfaces-showcase.tsx' appears to be a feature component showcasing UI elements inspired by major design systems. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. The current location '_archived_showcases/' suggests it is not actively used or maintained, but if it is part of an active feature, it should be moved to the appropriate feature directory.",
-      "confidence": 0.9,
-      "autoFixable": true,
-      "estimatedImpact": "File relocation with import updates"
-    },
-    {
-      "type": "misplaced_file",
-      "severity": "medium",
-      "currentPath": "_archived_showcases/empty-states-showcase.tsx",
-      "suggestedPath": "components/design-system/empty-states-showcase.tsx",
-      "reason": "The file '_archived_showcases/empty-states-showcase.tsx' appears to be a showcase of UI components related to empty states. According to the project's established patterns, shared components or foundational UI components should be located in 'components/design-system/'. This file does not belong to a specific feature and is more aligned with shared UI components.",
+      "currentPath": "app/(authenticated)/profile/page.tsx",
+      "suggestedPath": "features/profile/ui/page.tsx",
+      "reason": "The file 'page.tsx' under 'app/(authenticated)/profile/' appears to be a feature-specific component related to user profiles. According to the project's feature-first architecture, feature components should reside in 'features/[feature]/ui/'. Therefore, this file should be moved to 'features/profile/ui/'.",
       "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1490,6 +1490,15 @@
       "type": "empty_dir",
       "severity": "low",
       "currentPath": "./.swc/plugins/macos_aarch64_18.0.0",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./docs/archive/2025",
       "reason": "Empty directory should be deleted",
       "confidence": 1,
       "autoFixable": true,
@@ -1658,16 +1667,16 @@
       "estimatedImpact": "None - safe to delete"
     }
   ],
-  "totalIssues": 169,
-  "autoFixableCount": 169,
+  "totalIssues": 170,
+  "autoFixableCount": 170,
   "estimatedTime": "85 minutes (automated)",
   "priority": [
     {
       "type": "misplaced_file",
       "severity": "high",
-      "currentPath": ".file-backups/components_vehicle_VehicleRow.tsx",
-      "suggestedPath": "features/vehicles/ui/VehicleRow.tsx",
-      "reason": "The file VehicleRow.tsx is a component related to the vehicle feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ is not aligned with this structure.",
+      "currentPath": ".file-backups/pages_onboard.tsx",
+      "suggestedPath": "features/vehicles/ui/OnboardPage.tsx",
+      "reason": "The file .file-backups/pages_onboard.tsx is related to vehicle onboarding, which is a feature-specific functionality. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. Since this file is related to vehicle onboarding, it should be placed under features/vehicles/ui/.",
       "confidence": 0.95,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
@@ -1675,10 +1684,30 @@
     {
       "type": "misplaced_file",
       "severity": "high",
-      "currentPath": ".file-backups/pages_onboard.tsx",
-      "suggestedPath": "features/vehicles/ui/pages_onboard.tsx",
-      "reason": "The file pages_onboard.tsx is related to vehicle onboarding, which aligns with the vehicles feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ does not adhere to this structure.",
-      "confidence": 0.95,
+      "currentPath": ".file-backups/pages_garage.tsx",
+      "suggestedPath": "features/vehicles/ui/pages_garage.tsx",
+      "reason": "The file pages_garage.tsx appears to be a feature-specific component related to vehicles, as it deals with displaying and managing a list of vehicles in a garage. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. Therefore, this file should be moved to features/vehicles/ui/ to align with the established patterns.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "high",
+      "currentPath": "app/(authenticated)/assistant/page.tsx",
+      "suggestedPath": "features/assistant/ui/page.tsx",
+      "reason": "The file 'page.tsx' appears to be a UI component related to the 'Assistant' feature. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. The current location under 'app/(authenticated)/assistant/' does not align with this structure.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "high",
+      "currentPath": "app/(authenticated)/capture/fuel/page.tsx",
+      "suggestedPath": "features/capture/ui/FuelCapturePage.tsx",
+      "reason": "The file 'page.tsx' under 'app/(authenticated)/capture/fuel/' appears to be a feature-specific component related to the 'capture' feature. According to the project's feature-first architecture, feature components should reside in 'features/[feature]/ui/'.",
+      "confidence": 0.9,
       "autoFixable": true,
       "estimatedImpact": "File relocation with import updates"
     }
