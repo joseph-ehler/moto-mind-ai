@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
+import { createClient } from '@supabase/supabase-js'
+
 /**
  * GET /api/events/[eventId]/related
  * Get related events (previous/next fuel fill-ups with context)

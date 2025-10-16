@@ -7,7 +7,12 @@
 
 import React from 'react'
 import { AlertTriangle, RotateCcw, X, Lightbulb } from 'lucide-react'
-import { Stack, Card, Heading, Text, Button, Modal } from '@/components/design-system'
+import { Stack } from '../../../primitives/Layout'
+import { Card } from '../../../patterns/Card'
+import { Heading } from '../../../primitives/Typography'
+import { Text } from '../../../primitives/Typography'
+import { Button } from '../../../primitives/Button'
+import { Modal } from '../../../feedback/Overlays'
 import { getErrorGuidance } from '../utils/error-messages'
 import type { CaptureType } from '../types'
 

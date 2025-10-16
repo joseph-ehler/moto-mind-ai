@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
+import { createClient } from '@supabase/supabase-js'
 
 /**
  * GET /api/vehicles
@@ -10,14 +10,8 @@ import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware
  * - offset: pagination offset (default 0)
  * - garage_id: filter by garage
  * - search: search make/model/nickname
- * 
- * Auth: Required
- * Tenant: Required
  */
-export const GET = withAuth(async (
-  request: NextRequest,
-  { user, tenant, token }: AuthContext
-) => {
+export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const limit = parseInt(searchParams.get('limit') || '20')
   const offset = parseInt(searchParams.get('offset') || '0')
@@ -25,9 +19,13 @@ export const GET = withAuth(async (
   const search = searchParams.get('search')
 
   try {
-    // Create tenant-scoped Supabase client
-    // RLS policies automatically enforced
-    const supabase = createTenantClient(token, tenant.tenantId)
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    // TODO: Get tenant_id from auth context
+    // For now, this would need to be passed or extracted from session
 
     let query = supabase
       .from('vehicles')
@@ -48,53 +46,30 @@ export const GET = withAuth(async (
     const { data: vehicles, error, count } = await query
 
     if (error) {
-      console.error('[VEHICLES] Fetch error:', {
-        tenantId: tenant.tenantId,
-        userId: user.id,
-        error: error.message,
-      })
+      console.error('Error fetching vehicles:', error)
       return NextResponse.json(
-        { 
-          ok: false,
-          error: {
-            code: 'VEHICLES_FETCH_FAILED',
-            message: 'Failed to fetch vehicles'
-          }
-        },
+        { error: 'Failed to fetch vehicles' },
         { status: 500 }
       )
     }
 
     return NextResponse.json({
-      ok: true,
-      data: {
-        vehicles: vehicles || [],
-        pagination: {
-          total: count || 0,
-          limit,
-          offset,
-          has_more: count ? (offset + limit) < count : false
-        }
+      vehicles: vehicles || [],
+      pagination: {
+        total: count || 0,
+        limit,
+        offset,
+        has_more: count ? (offset + limit) < count : false
       }
     })
   } catch (error) {
-    console.error('[VEHICLES] Unexpected error:', {
-      tenantId: tenant.tenantId,
-      userId: user.id,
-      error,
-    })
+    console.error('Unexpected error:', error)
     return NextResponse.json(
-      { 
-        ok: false,
-        error: {
-          code: 'VEHICLES_INTERNAL_ERROR',
-          message: 'Internal server error'
-        }
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
-})
+}
 
 /**
  * POST /api/vehicles
@@ -108,14 +83,8 @@ export const GET = withAuth(async (
  * - vin: string (optional)
  * - nickname: string (optional)
  * - garage_id: string (optional)
- * 
- * Auth: Required
- * Tenant: Required
  */
-export const POST = withAuth(async (
-  request: NextRequest,
-  { user, tenant, token }: AuthContext
-) => {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { year, make, model, trim, vin, nickname, garage_id } = body
@@ -123,26 +92,31 @@ export const POST = withAuth(async (
     // Validation
     if (!year || !make || !model) {
       return NextResponse.json(
-        { 
-          ok: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: 'Year, make, and model are required',
-            fields: ['year', 'make', 'model']
-          }
-        },
+        { error: 'Year, make, and model are required' },
         { status: 400 }
       )
     }
 
-    // Create tenant-scoped client
-    const supabase = createTenantClient(token, tenant.tenantId)
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    // TODO: Get tenant_id from auth context
+    const tenantId = body.tenant_id // Temporary
+
+    if (!tenantId) {
+      return NextResponse.json(
+        { error: 'Unauthorized - no tenant context' },
+        { status: 401 }
+      )
+    }
 
     // Create vehicle
     const { data: vehicle, error } = await supabase
       .from('vehicles')
       .insert({
-        tenant_id: tenant.tenantId,
+        tenant_id: tenantId,
         year,
         make,
         model,
@@ -155,51 +129,22 @@ export const POST = withAuth(async (
       .single()
 
     if (error) {
-      console.error('[VEHICLES] Create error:', {
-        tenantId: tenant.tenantId,
-        userId: user.id,
-        error: error.message,
-      })
+      console.error('Error creating vehicle:', error)
       return NextResponse.json(
-        { 
-          ok: false,
-          error: {
-            code: 'VEHICLE_CREATE_FAILED',
-            message: 'Failed to create vehicle'
-          }
-        },
+        { error: 'Failed to create vehicle' },
         { status: 500 }
       )
     }
 
-    console.log('[VEHICLES] Created:', {
-      vehicleId: vehicle.id,
-      tenantId: tenant.tenantId,
-      userId: user.id,
-    })
-
     return NextResponse.json(
-      { 
-        ok: true,
-        data: { vehicle }
-      },
+      { vehicle },
       { status: 201 }
     )
   } catch (error) {
-    console.error('[VEHICLES] Unexpected error:', {
-      tenantId: tenant.tenantId,
-      userId: user.id,
-      error,
-    })
+    console.error('Unexpected error:', error)
     return NextResponse.json(
-      { 
-        ok: false,
-        error: {
-          code: 'VEHICLE_INTERNAL_ERROR',
-          message: 'Internal server error'
-        }
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
-})
+}

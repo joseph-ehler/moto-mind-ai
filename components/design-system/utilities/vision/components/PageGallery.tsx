@@ -7,7 +7,10 @@
 
 import React from 'react'
 import { X, GripVertical } from 'lucide-react'
-import { Grid, Stack, Flex, Heading, Text, Button, Card } from '@/components/design-system'
+import { Grid, Stack, Flex } from '../../../primitives/Layout'
+import { Heading, Text } from '../../../primitives/Typography'
+import { Button } from '../../../primitives/Button'
+import { Card } from '../../../patterns/Card'
 import type { CapturedPage } from '../hooks/useBatchCapture'
 
 export interface PageGalleryProps {

@@ -94,13 +94,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Trigger background processing
-    // ELITE: Use environment-aware URL builder (rebrand-proof)
-    const { absoluteApiUrl } = await import('@/lib/utils/api-url')
-    const processUrl = absoluteApiUrl(`/api/vehicles/${vehicleId}/photos/process`)
+    // Use relative URL for same-origin request
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'http://localhost:3005'
     
     console.log(`🚀 Triggering AI processing for image ${photoRecord.id}`)
     
-    fetch(processUrl, {
+    fetch(`${baseUrl}/api/vehicles/${vehicleId}/photos/process`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

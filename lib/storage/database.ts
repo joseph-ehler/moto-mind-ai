@@ -1,7 +1,7 @@
-import { getSupabaseServer } from '@/lib/supabase-server'
 // Backend Database Utilities
 // Basic database connection and health monitoring
 
+import { createClient } from '@supabase/supabase-js'
 
 export interface DatabaseHealth {
   status: 'healthy' | 'degraded' | 'unhealthy'
@@ -18,7 +18,13 @@ export function createDatabaseClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    }
+  )
 }
 
 // Check database health

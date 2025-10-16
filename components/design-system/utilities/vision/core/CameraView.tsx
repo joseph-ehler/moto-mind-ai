@@ -7,7 +7,9 @@
 
 import React from 'react'
 import { Camera, ArrowLeft } from 'lucide-react'
-import { Flex, Button, Text } from '@/components/design-system'
+import { Flex } from '../../../primitives/Layout'
+import { Button } from '../../../primitives/Button'
+import { Text } from '../../../primitives/Typography'
 import type { FrameGuideType } from '../types'
 import { FrameGuide } from './FrameGuide'
 

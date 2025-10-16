@@ -12,7 +12,7 @@ import type {
   ProcessingContext
 } from '../types/document'
 import { getProcessorRegistry } from './ProcessorRegistry'
-import { compressImage, validateImageFile, type CompressionOptions } from '@/components/design-system/utilities/shared/image'
+import { compressImage, validateImageFile, type CompressionOptions } from '../../../utilities/shared/image'
 
 /**
  * Default preprocessing options

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
+import { createClient } from '@supabase/supabase-js'
+
 /**
  * POST /api/garages/[garageId]/vehicles/[vehicleId]
  * Assign a vehicle to a garage

@@ -1,9 +1,18 @@
-import { getSupabaseServer } from '@/lib/supabase-server'
 // MotoMind: Roman-Style Notification Engine (Fixed)
 // Deterministic, rule-based priority system
 
+import { createClient } from '@supabase/supabase-js'
 
-
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+)
 
 // Explicit notification rules (documented, predictable)
 export const NOTIFICATION_RULES = {
@@ -39,7 +48,6 @@ export interface Notification {
 }
 
 export async function generateNotifications(tenantId: string): Promise<Notification[]> {
-  const supabase = getSupabaseServer()
   const notifications: Notification[] = []
 
   try {

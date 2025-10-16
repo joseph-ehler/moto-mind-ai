@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 import { z } from 'zod'
 import { handleApiError, ValidationError, DatabaseError } from '@/lib/utils/errors'
+import { createClient } from '@supabase/supabase-js'
+
 // Event validation schema for the unified vehicle_events table
 const saveEventSchema = z.object({
   vehicle_id: z.string().uuid('Invalid vehicle ID'),
@@ -19,10 +20,7 @@ const saveEventSchema = z.object({
  * 
  * App Router version - migrated from pages/api/events/save.ts
  */
-export const POST = withAuth(async (
-  request: NextRequest,
-  { user, tenant, token }: AuthContext
-) => {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
@@ -32,13 +30,7 @@ export const POST = withAuth(async (
     
     if (!tenantId) {
       return NextResponse.json(
-      { 
-        ok: false,
-        error: {
-          code: 'EVENTS_UNAUTHORIZED_-_NO_TENANT_CONTEXT',
-          message: 'Unauthorized - no tenant context'
-        }
-      },
+        { error: 'Unauthorized - no tenant context' },
         { status: 401 }
       )
     }
@@ -46,7 +38,10 @@ export const POST = withAuth(async (
     // Validate request body
     const eventData = saveEventSchema.parse(body)
     
-    const supabase = createTenantClient(token, tenant.tenantId)
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
     
     // Verify vehicle exists and belongs to tenant
     const { data: vehicle, error: vehicleError } = await supabase
@@ -148,21 +143,14 @@ export const POST = withAuth(async (
     })
 
     return NextResponse.json({
-      ok: true,
-      data: { 
-        success: true,
-        event,
-        message: `${eventData.type} event saved to timeline`
-      }
+      success: true,
+      event,
+      message: `${eventData.type} event saved to timeline`
     }, { status: 201 })
 
   } catch (error) {
-    console.error('[EVENTS] ❌ Error saving event:', {
-      tenantId: tenant.tenantId,
-      userId: user.id,
-      error,
-    })
+    console.error('❌ Error saving event:', error)
     const { status, body } = handleApiError(error, request.url)
     return NextResponse.json(body, { status })
   }
-})
+}

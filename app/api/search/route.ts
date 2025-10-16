@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
+import { createClient } from '@supabase/supabase-js'
+
 /**
  * GET /api/search
  * Universal search across all vehicle data
@@ -12,10 +13,7 @@ import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware
  * - Vehicle filtering
  * - Date range filtering
  */
-export const GET = withAuth(async (
-  request: NextRequest,
-  { user, tenant, token }: AuthContext
-) => {
+export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   
   const query = searchParams.get('q') || ''
@@ -25,19 +23,16 @@ export const GET = withAuth(async (
 
   if (!query || query.length < 2) {
     return NextResponse.json(
-      { 
-        ok: false,
-        error: {
-          code: 'SEARCH_QUERY_MUST_BE_AT_LEAST_2_CHARACTERS',
-          message: 'Query must be at least 2 characters'
-        }
-      },
+      { error: 'Query must be at least 2 characters' },
       { status: 400 }
     )
   }
 
   try {
-    const supabase = createTenantClient(token, tenant.tenantId)
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
 
     const tenantId = request.headers.get('x-tenant-id')
 
@@ -72,19 +67,9 @@ export const GET = withAuth(async (
     const { data: events, error } = await dbQuery
 
     if (error) {
-      console.error('[SEARCH] Error searching events:', {
-      tenantId: tenant.tenantId,
-      userId: user.id,
-      error,
-    })
+      console.error('Error searching events:', error)
       return NextResponse.json(
-      { 
-        ok: false,
-        error: {
-          code: 'SEARCH_SEARCH_FAILED',
-          message: 'Search failed'
-        }
-      },
+        { error: 'Search failed' },
         { status: 500 }
       )
     }
@@ -153,35 +138,23 @@ export const GET = withAuth(async (
     }
 
     return NextResponse.json({
-      ok: true,
-      data: { data: results,
+      data: results,
       meta: {
         query,
         total_results: results.length,
-        filters: { type, vehicle_id: vehicleId  }
-    },
+        filters: { type, vehicle_id: vehicleId },
         limit
       },
       insights
     })
   } catch (error) {
-    console.error('[SEARCH] Unexpected error:', {
-      tenantId: tenant.tenantId,
-      userId: user.id,
-      error,
-    })
+    console.error('Unexpected error:', error)
     return NextResponse.json(
-      { 
-        ok: false,
-        error: {
-          code: 'SEARCH_INTERNAL_SERVER_ERROR',
-          message: 'Internal server error'
-        }
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
-})
+}
 
 function countByField(items: any[], field: string): Record<string, number> {
   const counts: Record<string, number> = {}

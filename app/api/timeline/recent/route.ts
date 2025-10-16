@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
+import { createClient } from '@supabase/supabase-js'
+
 /**
  * GET /api/timeline/recent
  * Get recent activity across all vehicles
@@ -16,10 +17,7 @@ import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware
  * - type: filter by event type
  * - vehicles: comma-separated vehicle IDs or 'all'
  */
-export const GET = withAuth(async (
-  request: NextRequest,
-  { user, tenant, token }: AuthContext
-) => {
+export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   
   const limit = parseInt(searchParams.get('limit') || '20')
@@ -28,7 +26,10 @@ export const GET = withAuth(async (
   const vehiclesParam = searchParams.get('vehicles') || 'all'
 
   try {
-    const supabase = createTenantClient(token, tenant.tenantId)
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
 
     const tenantId = request.headers.get('x-tenant-id')
 
@@ -70,37 +71,26 @@ export const GET = withAuth(async (
     const { data: events, error } = await query
 
     if (error) {
-      console.error('[TIMELINE] Error fetching recent timeline:', {
-      tenantId: tenant.tenantId,
-      userId: user.id,
-      error,
-    })
+      console.error('Error fetching recent timeline:', error)
       return NextResponse.json(
-      { 
-        ok: false,
-        error: {
-          code: 'TIMELINE_FAILED_TO_FETCH_RECENT_ACTIVITY',
-          message: 'Failed to fetch recent activity'
-        }
-      },
+        { error: 'Failed to fetch recent activity' },
         { status: 500 }
       )
     }
 
     if (!events || events.length === 0) {
       return NextResponse.json({
-        ok: true,
         data: {
           events: [],
           summary: {
             total: 0,
             message: `No activity in the last ${days} days`
-          },
-          meta: {
-            days,
-            limit,
-            date_range: { start: startDate, end: new Date().toISOString().split('T')[0] }
           }
+        },
+        meta: {
+          days,
+          limit,
+          date_range: { start: startDate, end: new Date().toISOString().split('T')[0] }
         }
       })
     }
@@ -167,17 +157,15 @@ export const GET = withAuth(async (
     }
 
     if (summary.total_spent > 0) {
-      insights.push(`Total spent: ${summary.total_spent}`)
+      insights.push(`Total spent: $${summary.total_spent}`)
     }
 
     return NextResponse.json({
-      ok: true,
-      data: { data: {
+      data: {
         events: enrichedEvents,
         summary,
         insights
-       }
-    },
+      },
       meta: {
         days,
         limit,
@@ -193,20 +181,10 @@ export const GET = withAuth(async (
       }
     })
   } catch (error) {
-    console.error('[TIMELINE] Unexpected error:', {
-      tenantId: tenant.tenantId,
-      userId: user.id,
-      error,
-    })
+    console.error('Unexpected error:', error)
     return NextResponse.json(
-      { 
-        ok: false,
-        error: {
-          code: 'TIMELINE_INTERNAL_SERVER_ERROR',
-          message: 'Internal server error'
-        }
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
-})
+}

@@ -7,7 +7,10 @@
 
 import React, { useState, useCallback } from 'react'
 import { Camera, Upload } from 'lucide-react'
-import { Stack, Flex, Heading, Text, Button, Modal, Drawer } from '@/components/design-system'
+import { Stack, Flex } from '../../../primitives/Layout'
+import { Heading, Text } from '../../../primitives/Typography'
+import { Button } from '../../../primitives/Button'
+import { Modal, Drawer } from '../../../feedback/Overlays'
 import { UnifiedCameraCapture } from '../core/UnifiedCameraCapture'
 import { PageGallery } from '../components/PageGallery'
 import { useBatchCapture } from '../hooks/useBatchCapture'

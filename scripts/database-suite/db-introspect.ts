@@ -41,15 +41,6 @@ interface TableInfo {
   rlsPolicies: RLSPolicyInfo[]
 }
 
-interface MaterializedViewInfo {
-  name: string
-  definition: string
-  columns: ColumnInfo[]
-  indexes: IndexInfo[]
-  rowCount: number
-  lastRefresh: string | null
-}
-
 interface ColumnInfo {
   name: string
   dataType: string
@@ -89,18 +80,6 @@ async function getTables(): Promise<string[]> {
   }
 
   return data?.map((r: any) => r.table_name) || []
-}
-
-async function getMaterializedViews(): Promise<string[]> {
-  const { data, error } = await supabase.rpc('get_materialized_views')
-
-  if (error) {
-    // Materialized views might not be accessible, that's okay
-    console.warn('⚠️  Could not get materialized views:', error.message)
-    return []
-  }
-
-  return data?.map((r: any) => r.matviewname || r.schemaname) || []
 }
 
 async function getColumns(tableName: string): Promise<ColumnInfo[]> {
@@ -205,31 +184,6 @@ async function introspectTable(tableName: string): Promise<TableInfo> {
   }
 }
 
-async function introspectMaterializedView(viewName: string): Promise<MaterializedViewInfo> {
-  console.log(`📊 Introspecting materialized view ${viewName}...`)
-
-  // Get columns
-  const columns = await getColumns(viewName)
-
-  // Get indexes
-  const indexes = await getIndexes(viewName)
-
-  // Get row count
-  const { count } = await supabase.from(viewName as any).select('*', { count: 'exact', head: true })
-
-  // Get definition and last refresh from pg_matviews
-  const { data: viewData } = await supabase.rpc('get_matview_info', { view_name_param: viewName })
-  
-  return {
-    name: viewName,
-    definition: viewData?.[0]?.definition || '',
-    columns,
-    indexes,
-    rowCount: count || 0,
-    lastRefresh: viewData?.[0]?.last_refresh || null,
-  }
-}
-
 async function auditTenantData() {
   console.log('\n🔍 Auditing tenant data...')
 
@@ -270,21 +224,6 @@ async function main() {
       tableInfos.push(info)
     }
 
-    // Get materialized views
-    const matViews = await getMaterializedViews()
-    console.log(`\nFound ${matViews.length} materialized views\n`)
-
-    // Introspect each materialized view
-    const matViewInfos: MaterializedViewInfo[] = []
-    for (const viewName of matViews) {
-      try {
-        const info = await introspectMaterializedView(viewName)
-        matViewInfos.push(info)
-      } catch (error) {
-        console.warn(`⚠️  Could not introspect ${viewName}:`, error)
-      }
-    }
-
     // Audit tenant data
     const tenantAudit = await auditTenantData()
 
@@ -293,9 +232,7 @@ async function main() {
       generatedAt: new Date().toISOString(),
       database: SUPABASE_URL,
       totalTables: tables.length,
-      totalMaterializedViews: matViews.length,
       tables: tableInfos,
-      materializedViews: matViewInfos,
       tenantDataAudit: tenantAudit,
     }
 
@@ -310,16 +247,8 @@ async function main() {
     // Print summary
     console.log('\n📊 SUMMARY:')
     console.log(`  Tables: ${tables.length}`)
-    console.log(`  Materialized Views: ${matViews.length}`)
     console.log(`  Total Rows: ${tableInfos.reduce((sum, t) => sum + t.rowCount, 0)}`)
     console.log(`  Tables with RLS: ${tableInfos.filter(t => t.rlsEnabled).length}`)
-    
-    if (matViewInfos.length > 0) {
-      console.log('\n📊 MATERIALIZED VIEWS:')
-      matViewInfos.forEach(mv => {
-        console.log(`  ${mv.name}: ${mv.rowCount} rows, ${mv.indexes.length} indexes`)
-      })
-    }
     
     console.log('\n🔒 TENANT DATA AUDIT:')
     tenantAudit.forEach(audit => {

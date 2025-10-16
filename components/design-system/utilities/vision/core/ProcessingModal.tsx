@@ -6,7 +6,11 @@
  */
 
 import React from 'react'
-import { Stack, Card, Heading, Text, Modal } from '@/components/design-system'
+import { Stack } from '../../../primitives/Layout'
+import { Card } from '../../../patterns/Card'
+import { Heading } from '../../../primitives/Typography'
+import { Text } from '../../../primitives/Typography'
+import { Modal } from '../../../feedback/Overlays'
 import type { CaptureType } from '../types'
 
 export interface ProcessingModalProps {

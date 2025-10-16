@@ -1,7 +1,16 @@
-import { getSupabaseServer } from '@/lib/supabase-server'
+import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 
-
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+)
 
 export interface JurisdictionRule {
   id: string
@@ -31,8 +40,6 @@ export interface GarageJurisdictionProfile {
  * Apply jurisdiction rules to a garage and create/update vehicle reminders
  */
 export async function applyJurisdictionToGarage(garageId: string): Promise<GarageJurisdictionProfile | null> {
-  const supabase = getSupabaseServer()
-  
   try {
     console.log(`🏛️ Applying jurisdiction rules to garage: ${garageId}`)
 
@@ -283,8 +290,6 @@ function calculateDueDate(rule: JurisdictionRule): string | null {
  * Get jurisdiction profile for a garage
  */
 export async function getGarageJurisdiction(garageId: string): Promise<GarageJurisdictionProfile | null> {
-  const supabase = getSupabaseServer()
-  
   const { data, error } = await supabase
     .from('garage_jurisdiction_profiles')
     .select('*')

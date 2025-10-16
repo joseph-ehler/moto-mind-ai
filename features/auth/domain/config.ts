@@ -12,12 +12,18 @@
 import './types' // Import type augmentations
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import { getSupabaseServer } from '@/lib/supabase-server'
+import { createClient } from '@supabase/supabase-js'
 
-// Get Supabase client lazily (only when callbacks are called)
-function getSupabase() {
-  return getSupabaseServer()
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+)
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -49,8 +55,6 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
-        const supabase = getSupabase()
-        
         if (!user.email) {
           console.error('❌ No email provided during sign-in')
           return false
@@ -123,8 +127,6 @@ export const authOptions: NextAuthOptions = {
     },
     
     async jwt({ token, user, account, trigger }) {
-      const supabase = getSupabase()
-      
       // Initial sign in
       if (account && user && user.email) {
         try {

@@ -76,10 +76,11 @@ async function onboardHandler(req: NextApiRequest, res: NextApiResponse) {
       console.log('🔍 Decoding VIN for onboarding:', data.vin)
       
       try {
-        // ELITE: Use environment-aware URL builder (rebrand-proof)
-        const { absoluteApiUrl } = await import('@/lib/utils/api-url')
+        const baseUrl = process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}` 
+          : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3005'
         
-        const decodeResponse = await fetch(absoluteApiUrl('/api/decode-vin'), {
+        const decodeResponse = await fetch(`${baseUrl}/api/decode-vin`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ vin: data.vin })
@@ -248,14 +249,15 @@ async function onboardHandler(req: NextApiRequest, res: NextApiResponse) {
     // This runs synchronously but fast (~5-10 seconds)
     console.log('🔄 Triggering spec enhancement for vehicle:', vehicle.id)
     try {
-      // ELITE: Use environment-aware URL builder (rebrand-proof)
-      const { absoluteApiUrl } = await import('@/lib/utils/api-url')
+      const baseUrl = process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}` 
+        : 'http://localhost:3005'
       
       // Add timeout protection - abort after 20 seconds
       const controller = new AbortController()
       const timeout = setTimeout(() => controller.abort(), 20000)
       
-      const specResponse = await fetch(absoluteApiUrl(`/api/vehicles/${vehicle.id}/specs/enhance`), {
+      const specResponse = await fetch(`${baseUrl}/api/vehicles/${vehicle.id}/specs/enhance`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         signal: controller.signal
@@ -270,7 +272,7 @@ async function onboardHandler(req: NextApiRequest, res: NextApiResponse) {
         // Trigger AI enhancement immediately after NHTSA completes
         console.log('🤖 Triggering AI enhancement for vehicle:', vehicle.id)
         try {
-          const aiResponse = await fetch(absoluteApiUrl(`/api/vehicles/${vehicle.id}/specs/enhance-ai`), {
+          const aiResponse = await fetch(`${baseUrl}/api/vehicles/${vehicle.id}/specs/enhance-ai`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }
           })

@@ -1,4 +1,3 @@
-import { getSupabaseServer } from '@/lib/supabase-server'
 /**
  * Production-Grade Authentication Configuration
  * 
@@ -13,11 +12,18 @@ import { getSupabaseServer } from '@/lib/supabase-server'
 import './types' // Import type augmentations
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+)
 
 export const authOptions: NextAuthOptions = {
   providers: [
