@@ -11,10 +11,10 @@
  * @version 1.0.0
  */
 
-const CACHE_VERSION = 'motomind-v1'
-const RUNTIME_CACHE = 'motomind-runtime-v1'
-const IMAGE_CACHE = 'motomind-images-v1'
-const API_CACHE = 'motomind-api-v1'
+const CACHE_VERSION = 'motomind-v2'
+const RUNTIME_CACHE = 'motomind-runtime-v2'
+const IMAGE_CACHE = 'motomind-images-v2'
+const API_CACHE = 'motomind-api-v2'
 
 // Cache configurations
 const CACHE_CONFIG = {
@@ -114,6 +114,12 @@ self.addEventListener('fetch', (event) => {
   
   // Skip Chrome extensions
   if (url.protocol === 'chrome-extension:') {
+    return
+  }
+  
+  // CRITICAL: Skip auth API routes - let them go directly to server
+  // Service worker caching breaks NextAuth
+  if (url.pathname.startsWith('/api/auth')) {
     return
   }
   
