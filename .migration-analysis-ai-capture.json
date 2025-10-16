@@ -1,0 +1,64 @@
+{
+  "featureName": "capture",
+  "componentCount": 35,
+  "totalFiles": 39,
+  "maxNestingDepth": 1,
+  "hasSubdirectories": true,
+  "hasInternalImports": true,
+  "complexityLevel": "high",
+  "estimatedTime": "1.5-2 hours",
+  "similarTo": "timeline",
+  "recommendations": [
+    "🚨 Complex migration - expect challenges with imports",
+    "💡 Follow timeline pattern: create proper type exports first",
+    "💡 Consider direct file imports instead of barrel exports"
+  ],
+  "warnings": [
+    "⚠️  Internal imports detected - will need careful refactoring",
+    "💡 Create index.ts or use absolute imports for internal modules"
+  ],
+  "aiInsights": {
+    "actualComplexity": "high",
+    "hiddenIssues": [
+      "Potential inconsistencies in state management across components",
+      "Complex dependency graph due to internal imports, making isolation for migration harder",
+      "Risk of breaking changes in shared types and interfaces",
+      "Possible duplicate logic in components like AIProposalReview.tsx and AIProposalReview.v2.tsx",
+      "Challenges in maintaining feature parity and UX consistency during migration"
+    ],
+    "recommendations": [
+      "Audit and consolidate shared types and interfaces to ensure consistency",
+      "Refactor to reduce internal dependencies before migration to simplify the process",
+      "Implement comprehensive unit and integration tests to safeguard against regression",
+      "Consider merging similar components or logic to reduce redundancy and simplify the codebase",
+      "Plan for phased migration, starting with leaf nodes in the dependency graph to minimize impact"
+    ],
+    "estimatedTime": "40-60 hours",
+    "reasoning": "Given the high component count, internal imports, and the presence of complex state management and internal dependencies, the migration is expected to be highly complex. The need for careful refactoring of imports, potential for hidden bugs due to shared state and types, and the challenge of maintaining feature parity and UX consistency contribute to the high complexity rating. The estimated time accounts for the need to refactor, test, and ensure that the migrated feature matches the functionality and performance of the original.",
+    "confidence": 0.85,
+    "internalImports": {
+      "count": 13,
+      "files": [
+        "components/capture/AIProposalReview.tsx",
+        "components/capture/AIProposalReview.v2.tsx",
+        "components/capture/CameraInterface.tsx",
+        "components/capture/CaptureEntryModal.tsx",
+        "components/capture/DocumentConfirmation.tsx",
+        "components/capture/DocumentConfirmationUnified.tsx",
+        "components/capture/FuelReceiptCapture.tsx",
+        "components/capture/FuelReceiptConfirmation.tsx",
+        "components/capture/GuidedCaptureFlow.tsx",
+        "components/capture/LocationSection.tsx",
+        "components/capture/PhotoGalleryReview.tsx",
+        "components/capture/ProposalField.tsx",
+        "components/capture/QuickCapturePath.tsx"
+      ]
+    }
+  },
+  "confidenceLevel": 0.85,
+  "usedAI": true,
+  "costEstimate": {
+    "inputTokens": 1533,
+    "outputTokens": 301
+  }
+}

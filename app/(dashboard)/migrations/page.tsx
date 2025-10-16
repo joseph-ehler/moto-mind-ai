@@ -44,7 +44,7 @@ export default function MigrationsPage() {
       })
   }, [])
   
-  if (!visionMetrics) {
+  if (!visionMetrics || !aggregateMetrics) {
     return (
       <Container size="md" useCase="articles">
         <Section spacing="lg">
@@ -57,7 +57,10 @@ export default function MigrationsPage() {
     )
   }
   
-  const remaining = 19 // Total features minus completed
+  // Calculate remaining features dynamically
+  // Count all features in features/ directory minus completed
+  const totalFeatures = 7 // auth, chat, capture, events, timeline, insights, migrations
+  const remaining = totalFeatures - aggregateMetrics.totalMigrations
   
   return (
     <Container 
@@ -238,7 +241,7 @@ export default function MigrationsPage() {
           {/* Projections */}
           <Card>
             <Stack spacing="md">
-              <Heading level="3">Projected Savings (19 Remaining Features)</Heading>
+              <Heading level="3">Projected Savings ({remaining} Remaining Features)</Heading>
               <Grid columns={3} gap="md">
                 <Stack spacing="xs">
                   <Text variant="secondary" size="sm">Estimated Time Savings</Text>
@@ -294,7 +297,7 @@ export default function MigrationsPage() {
                   {visionMetrics.quality.testsCreated} tests created with {formatPercent(visionMetrics.quality.testSuccessRate * 100)} success rate.
                 </Text>
                 <Text>
-                  <strong>Projection:</strong> Applying to 19 remaining features yields estimated savings of{' '}
+                  <strong>Projection:</strong> Applying to {remaining} remaining features yields estimated savings of{' '}
                   <strong>{formatCurrency(visionMetrics.costs.saved * remaining)}</strong> and{' '}
                   <strong>{Math.round((visionMetrics.duration.savedTime * remaining) / 60)} developer hours</strong>.
                 </Text>

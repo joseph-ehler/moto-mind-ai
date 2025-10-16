@@ -1,0 +1,21 @@
+{
+  "featureName": "timeline",
+  "componentCount": 52,
+  "totalFiles": 65,
+  "maxNestingDepth": 1,
+  "hasSubdirectories": true,
+  "hasInternalImports": true,
+  "complexityLevel": "high",
+  "estimatedTime": "1.5-2 hours",
+  "similarTo": "timeline",
+  "recommendations": [
+    "🚨 Complex migration - expect challenges with imports",
+    "💡 Follow timeline pattern: create proper type exports first",
+    "💡 Consider direct file imports instead of barrel exports"
+  ],
+  "warnings": [
+    "⚠️  Internal imports detected - will need careful refactoring",
+    "💡 Create index.ts or use absolute imports for internal modules",
+    "🚨 Large component count - consider splitting into smaller batches"
+  ]
+}

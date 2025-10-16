@@ -187,16 +187,25 @@ export function readPredictions(feature: string): PredictedIssues | null {
 
 /**
  * Get all completed migrations
+ * Automatically discovers all .migration-completed-*.json files
  */
 export function getCompletedMigrations(): string[] {
+  const { readdirSync } = require('fs')
   const completed: string[] = []
-  const features = ['vision', 'auth', 'chat', 'insights', 'explain'] // Add more as needed
   
-  for (const feature of features) {
-    const completedPath = join(process.cwd(), `.migration-completed-${feature}.json`)
-    if (existsSync(completedPath)) {
+  try {
+    const files = readdirSync(process.cwd())
+    const completedFiles = files.filter((f: string) => 
+      f.startsWith('.migration-completed-') && f.endsWith('.json')
+    )
+    
+    for (const file of completedFiles) {
+      // Extract feature name from filename: .migration-completed-{feature}.json
+      const feature = file.replace('.migration-completed-', '').replace('.json', '')
       completed.push(feature)
     }
+  } catch {
+    // Fallback to empty array if directory read fails
   }
   
   return completed
