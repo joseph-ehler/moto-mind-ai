@@ -14,16 +14,19 @@ import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
+// Lazy Supabase client - only create when needed, not at module level
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
     }
-  }
-)
+  )
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -54,6 +57,8 @@ export const authOptions: NextAuthOptions = {
   
   callbacks: {
     async signIn({ user, account, profile }) {
+      const supabase = getSupabase()
+      
       try {
         if (!user.email) {
           console.error('❌ No email provided during sign-in')
@@ -127,6 +132,8 @@ export const authOptions: NextAuthOptions = {
     },
     
     async jwt({ token, user, account, trigger }) {
+      const supabase = getSupabase()
+      
       // Initial sign in
       if (account && user && user.email) {
         try {
