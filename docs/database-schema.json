@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-10-16T17:11:34.757Z",
+  "generatedAt": "2025-10-16T17:22:34.370Z",
   "database": "https://ucbbzzoimghnaoihyqbd.supabase.co",
   "totalTables": 21,
   "tables": [
@@ -214,6 +214,10 @@
       ],
       "indexes": [
         {
+          "name": "idx_capture_sessions_event_id",
+          "definition": "CREATE INDEX idx_capture_sessions_event_id ON public.capture_sessions USING btree (event_id)"
+        },
+        {
           "name": "capture_sessions_pkey",
           "definition": "CREATE UNIQUE INDEX capture_sessions_pkey ON public.capture_sessions USING btree (id)"
         },
@@ -382,6 +386,20 @@
           "isNullable": true,
           "defaultValue": null,
           "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "deleted_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
         }
       ],
       "foreignKeys": [
@@ -394,6 +412,10 @@
         }
       ],
       "indexes": [
+        {
+          "name": "idx_conversation_messages_context_gin",
+          "definition": "CREATE INDEX idx_conversation_messages_context_gin ON public.conversation_messages USING gin (context_references)"
+        },
         {
           "name": "conversation_messages_pkey",
           "definition": "CREATE UNIQUE INDEX conversation_messages_pkey ON public.conversation_messages USING btree (id)"
@@ -523,6 +545,13 @@
           "isNullable": true,
           "defaultValue": null,
           "maxLength": null
+        },
+        {
+          "name": "deleted_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
         }
       ],
       "foreignKeys": [
@@ -535,6 +564,10 @@
         }
       ],
       "indexes": [
+        {
+          "name": "idx_conversation_threads_snapshot_gin",
+          "definition": "CREATE INDEX idx_conversation_threads_snapshot_gin ON public.conversation_threads USING gin (context_snapshot)"
+        },
         {
           "name": "conversation_threads_pkey",
           "definition": "CREATE UNIQUE INDEX conversation_threads_pkey ON public.conversation_threads USING btree (id)"
@@ -825,6 +858,20 @@
           "isNullable": true,
           "defaultValue": "0",
           "maxLength": null
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
         }
       ],
       "foreignKeys": [
@@ -837,6 +884,10 @@
         }
       ],
       "indexes": [
+        {
+          "name": "idx_favorite_stations_user_station",
+          "definition": "CREATE INDEX idx_favorite_stations_user_station ON public.favorite_stations USING btree (user_id, station_id)"
+        },
         {
           "name": "favorite_stations_pkey",
           "definition": "CREATE UNIQUE INDEX favorite_stations_pkey ON public.favorite_stations USING btree (id)"
@@ -1195,6 +1246,13 @@
           "isNullable": false,
           "defaultValue": "now()",
           "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
         }
       ],
       "foreignKeys": [],
@@ -1300,6 +1358,13 @@
           "isNullable": true,
           "defaultValue": "now()",
           "maxLength": null
+        },
+        {
+          "name": "deleted_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
         }
       ],
       "foreignKeys": [
@@ -1312,6 +1377,18 @@
         }
       ],
       "indexes": [
+        {
+          "name": "idx_logs_context_gin",
+          "definition": "CREATE INDEX idx_logs_context_gin ON public.logs USING gin (context)"
+        },
+        {
+          "name": "idx_logs_active",
+          "definition": "CREATE INDEX idx_logs_active ON public.logs USING btree (tenant_id, created_at DESC) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "idx_logs_tenant_level_time",
+          "definition": "CREATE INDEX idx_logs_tenant_level_time ON public.logs USING btree (tenant_id, level, created_at DESC) WHERE (deleted_at IS NULL)"
+        },
         {
           "name": "idx_logs_request_id",
           "definition": "CREATE INDEX idx_logs_request_id ON public.logs USING btree (request_id)"
@@ -1622,8 +1699,16 @@
       ],
       "indexes": [
         {
+          "name": "idx_photo_metadata_quality_issues_gin",
+          "definition": "CREATE INDEX idx_photo_metadata_quality_issues_gin ON public.photo_metadata USING gin (quality_issues)"
+        },
+        {
           "name": "idx_photo_gps_location",
           "definition": "CREATE INDEX idx_photo_gps_location ON public.photo_metadata USING gist (ll_to_earth((gps_latitude)::double precision, (gps_longitude)::double precision)) WHERE ((gps_latitude IS NOT NULL) AND (gps_longitude IS NOT NULL))"
+        },
+        {
+          "name": "idx_photo_metadata_edit_operations_gin",
+          "definition": "CREATE INDEX idx_photo_metadata_edit_operations_gin ON public.photo_metadata USING gin (edit_operations)"
         },
         {
           "name": "photo_metadata_pkey",
@@ -1782,6 +1867,10 @@
       ],
       "indexes": [
         {
+          "name": "idx_profiles_preferences_gin",
+          "definition": "CREATE INDEX idx_profiles_preferences_gin ON public.profiles USING gin (preferences)"
+        },
+        {
           "name": "profiles_pkey",
           "definition": "CREATE UNIQUE INDEX profiles_pkey ON public.profiles USING btree (id)"
         },
@@ -1861,7 +1950,7 @@
           "definition": "CREATE UNIQUE INDEX schema_migrations_filename_key ON public.schema_migrations USING btree (filename)"
         }
       ],
-      "rowCount": 12,
+      "rowCount": 14,
       "rlsEnabled": false,
       "rlsPolicies": []
     },
@@ -1894,6 +1983,13 @@
           "dataType": "boolean",
           "isNullable": true,
           "defaultValue": "true",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
           "maxLength": null
         }
       ],
@@ -2122,6 +2218,13 @@
           "isNullable": true,
           "defaultValue": "now()",
           "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
         }
       ],
       "foreignKeys": [
@@ -2272,6 +2375,13 @@
           "isNullable": false,
           "defaultValue": null,
           "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
         }
       ],
       "foreignKeys": [
@@ -2299,8 +2409,28 @@
       ],
       "indexes": [
         {
+          "name": "idx_vehicle_event_audit_logs_tenant_id",
+          "definition": "CREATE INDEX idx_vehicle_event_audit_logs_tenant_id ON public.vehicle_event_audit_logs USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_vehicle_event_audit_logs_event_id",
+          "definition": "CREATE INDEX idx_vehicle_event_audit_logs_event_id ON public.vehicle_event_audit_logs USING btree (event_id)"
+        },
+        {
+          "name": "idx_vehicle_event_audit_logs_changes_gin",
+          "definition": "CREATE INDEX idx_vehicle_event_audit_logs_changes_gin ON public.vehicle_event_audit_logs USING gin (changes)"
+        },
+        {
+          "name": "idx_vehicle_event_audit_logs_original_gin",
+          "definition": "CREATE INDEX idx_vehicle_event_audit_logs_original_gin ON public.vehicle_event_audit_logs USING gin (original_values)"
+        },
+        {
           "name": "vehicle_event_audit_logs_pkey",
           "definition": "CREATE UNIQUE INDEX vehicle_event_audit_logs_pkey ON public.vehicle_event_audit_logs USING btree (id)"
+        },
+        {
+          "name": "idx_vehicle_event_audit_logs_vehicle_id",
+          "definition": "CREATE INDEX idx_vehicle_event_audit_logs_vehicle_id ON public.vehicle_event_audit_logs USING btree (vehicle_id)"
         }
       ],
       "rowCount": 0,
@@ -2746,6 +2876,22 @@
       ],
       "indexes": [
         {
+          "name": "idx_vehicle_events_payload_gin",
+          "definition": "CREATE INDEX idx_vehicle_events_payload_gin ON public.vehicle_events USING gin (payload)"
+        },
+        {
+          "name": "idx_vehicle_events_products_gin",
+          "definition": "CREATE INDEX idx_vehicle_events_products_gin ON public.vehicle_events USING gin (products)"
+        },
+        {
+          "name": "idx_vehicle_events_vision_confidence_gin",
+          "definition": "CREATE INDEX idx_vehicle_events_vision_confidence_gin ON public.vehicle_events USING gin (vision_confidence_detail)"
+        },
+        {
+          "name": "idx_vehicle_events_receipt_metadata_gin",
+          "definition": "CREATE INDEX idx_vehicle_events_receipt_metadata_gin ON public.vehicle_events USING gin (receipt_metadata)"
+        },
+        {
           "name": "idx_events_notes_fts",
           "definition": "CREATE INDEX idx_events_notes_fts ON public.vehicle_events USING gin (to_tsvector('english'::regconfig, notes)) WHERE ((notes IS NOT NULL) AND (notes <> ''::text))"
         },
@@ -2832,6 +2978,14 @@
         {
           "name": "idx_vehicle_events_date_time",
           "definition": "CREATE INDEX idx_vehicle_events_date_time ON public.vehicle_events USING btree (date, transaction_time)"
+        },
+        {
+          "name": "idx_vehicle_events_validation_results_gin",
+          "definition": "CREATE INDEX idx_vehicle_events_validation_results_gin ON public.vehicle_events USING gin (validation_results)"
+        },
+        {
+          "name": "idx_vehicle_events_tenant_vehicle_type",
+          "definition": "CREATE INDEX idx_vehicle_events_tenant_vehicle_type ON public.vehicle_events USING btree (tenant_id, vehicle_id, type, date DESC) WHERE (deleted_at IS NULL)"
         },
         {
           "name": "idx_vehicle_events_notes",
@@ -3192,6 +3346,14 @@
       ],
       "indexes": [
         {
+          "name": "idx_vehicle_images_detected_text_gin",
+          "definition": "CREATE INDEX idx_vehicle_images_detected_text_gin ON public.vehicle_images USING gin (detected_text)"
+        },
+        {
+          "name": "idx_vehicle_images_vehicle_details_gin",
+          "definition": "CREATE INDEX idx_vehicle_images_vehicle_details_gin ON public.vehicle_images USING gin (vehicle_details)"
+        },
+        {
           "name": "idx_vehicle_images_category",
           "definition": "CREATE INDEX idx_vehicle_images_category ON public.vehicle_images USING btree (ai_category) WHERE (ai_category IS NOT NULL)"
         },
@@ -3214,6 +3376,18 @@
         {
           "name": "idx_vehicle_images_vehicle",
           "definition": "CREATE INDEX idx_vehicle_images_vehicle ON public.vehicle_images USING btree (vehicle_id)"
+        },
+        {
+          "name": "idx_vehicle_images_condition_data_gin",
+          "definition": "CREATE INDEX idx_vehicle_images_condition_data_gin ON public.vehicle_images USING gin (condition_data)"
+        },
+        {
+          "name": "idx_vehicle_images_maintenance_indicators_gin",
+          "definition": "CREATE INDEX idx_vehicle_images_maintenance_indicators_gin ON public.vehicle_images USING gin (maintenance_indicators)"
+        },
+        {
+          "name": "idx_vehicle_images_vehicle_match_gin",
+          "definition": "CREATE INDEX idx_vehicle_images_vehicle_match_gin ON public.vehicle_images USING gin (vehicle_match)"
         },
         {
           "name": "idx_vehicle_images_event_id",
@@ -3383,6 +3557,10 @@
         }
       ],
       "indexes": [
+        {
+          "name": "idx_vehicle_spec_enhancements_data_gin",
+          "definition": "CREATE INDEX idx_vehicle_spec_enhancements_data_gin ON public.vehicle_spec_enhancements USING gin (data)"
+        },
         {
           "name": "vehicle_spec_enhancements_pkey",
           "definition": "CREATE UNIQUE INDEX vehicle_spec_enhancements_pkey ON public.vehicle_spec_enhancements USING btree (id)"
@@ -3723,6 +3901,13 @@
           "isNullable": true,
           "defaultValue": "now()",
           "maxLength": null
+        },
+        {
+          "name": "updated_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
         }
       ],
       "foreignKeys": [],
@@ -3820,6 +4005,13 @@
         },
         {
           "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "updated_at",
           "dataType": "timestamp with time zone",
           "isNullable": true,
           "defaultValue": "now()",

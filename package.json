@@ -110,6 +110,7 @@
     "status:history": "npx tsx scripts/devops-suite/deployment-status.ts history",
     "db:introspect": "npx tsx scripts/database-suite/db-introspect.ts",
     "db:audit-api-alignment": "npx tsx scripts/database-suite/audit-api-database-alignment.ts",
+    "db:god-tier-analysis": "npx tsx scripts/database-suite/god-tier-db-analysis-v2.ts",
     "db:generate-migration": "npx tsx scripts/generate-migration.ts",
     "db:validate": "npx tsx scripts/database-suite/validate.ts",
     "training:label": "node scripts/create-ground-truth-label.js",
