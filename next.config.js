@@ -10,11 +10,12 @@ const nextConfig = {
     SAMSARA_API_KEY: process.env.SAMSARA_API_KEY,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     DATABASE_URL: process.env.DATABASE_URL,
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    // Provide dummy values during build, real values at runtime
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || 'dummy-key-for-build',
     
     // Client-side (NEXT_PUBLIC_* should auto-inline, but explicitly including for Vercel)
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co',
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-anon-key-for-build',
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   // Disable file watching to avoid watchpack errors
