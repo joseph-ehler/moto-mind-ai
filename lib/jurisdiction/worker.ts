@@ -31,6 +31,8 @@ export interface GarageJurisdictionProfile {
  * Apply jurisdiction rules to a garage and create/update vehicle reminders
  */
 export async function applyJurisdictionToGarage(garageId: string): Promise<GarageJurisdictionProfile | null> {
+  const supabase = getSupabaseServer()
+  
   try {
     console.log(`🏛️ Applying jurisdiction rules to garage: ${garageId}`)
 
@@ -281,6 +283,8 @@ function calculateDueDate(rule: JurisdictionRule): string | null {
  * Get jurisdiction profile for a garage
  */
 export async function getGarageJurisdiction(garageId: string): Promise<GarageJurisdictionProfile | null> {
+  const supabase = getSupabaseServer()
+  
   const { data, error } = await supabase
     .from('garage_jurisdiction_profiles')
     .select('*')

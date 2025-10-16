@@ -4,12 +4,6 @@ import { getSupabaseServer } from '@/lib/supabase-server'
  * Analyzes user's fill-up history to suggest frequent stations
  */
 
-
-// const supabase = createClient(
-//   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 export interface FavoriteStation {
   stationName: string
   location: {
@@ -30,6 +24,8 @@ export async function getUserFavoriteStations(
   userId: string,
   limit: number = 5
 ): Promise<FavoriteStation[]> {
+  const supabase = getSupabaseServer()
+  
   try {
     // Query fuel events for this user
     const { data: events, error } = await supabase
@@ -144,9 +140,10 @@ export async function findMatchingFavorite(
   userId: string,
   latitude: number,
   longitude: number,
-  radiusMiles: number = 0.5
+  radiusMiles: number = 0.25
 ): Promise<FavoriteStation | null> {
-  const favorites = await getUserFavoriteStations(userId, 20)
+  const supabase = getSupabaseServer()
+  const favorites = await getUserFavoriteStations(userId, 100)
 
   for (const fav of favorites) {
     const distance = calculateDistanceMiles(
@@ -172,9 +169,10 @@ export async function getSuggestionsNearLocation(
   userId: string,
   latitude: number,
   longitude: number,
-  radiusMiles: number = 25
+  radiusMiles: number = 5
 ): Promise<FavoriteStation[]> {
-  const favorites = await getUserFavoriteStations(userId, 20)
+  const supabase = getSupabaseServer()
+  const favorites = await getUserFavoriteStations(userId, 100)
 
   return favorites
     .map(fav => ({
