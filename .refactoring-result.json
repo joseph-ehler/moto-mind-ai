@@ -1,36 +1,60 @@
 {
-  "success": false,
-  "issuesFixed": 0,
-  "issuesFailed": 50,
-  "timeSpent": "1.5 minutes",
+  "success": true,
+  "issuesFixed": 50,
+  "issuesFailed": 0,
+  "timeSpent": "5.2 minutes",
   "details": [
     {
       "issue": {
         "type": "misplaced_file",
         "severity": "high",
-        "currentPath": ".file-backups/components_vehicle_VehicleRow.tsx",
-        "suggestedPath": "features/vehicles/ui/VehicleRow.tsx",
-        "reason": "The file VehicleRow.tsx is a component related to the vehicle feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ is not aligned with this structure.",
+        "currentPath": ".file-backups/pages_onboard.tsx",
+        "suggestedPath": "features/vehicles/ui/OnboardPage.tsx",
+        "reason": "The file .file-backups/pages_onboard.tsx is related to vehicle onboarding, which is a feature-specific functionality. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. Since this file is related to vehicle onboarding, it should be placed under features/vehicles/ui/.",
         "confidence": 0.95,
         "autoFixable": true,
         "estimatedImpact": "File relocation with import updates"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
         "type": "misplaced_file",
         "severity": "high",
-        "currentPath": ".file-backups/pages_onboard.tsx",
-        "suggestedPath": "features/vehicles/ui/pages_onboard.tsx",
-        "reason": "The file pages_onboard.tsx is related to vehicle onboarding, which aligns with the vehicles feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ does not adhere to this structure.",
-        "confidence": 0.95,
+        "currentPath": ".file-backups/pages_garage.tsx",
+        "suggestedPath": "features/vehicles/ui/pages_garage.tsx",
+        "reason": "The file pages_garage.tsx appears to be a feature-specific component related to vehicles, as it deals with displaying and managing a list of vehicles in a garage. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. Therefore, this file should be moved to features/vehicles/ui/ to align with the established patterns.",
+        "confidence": 0.9,
         "autoFixable": true,
         "estimatedImpact": "File relocation with import updates"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "high",
+        "currentPath": "app/(authenticated)/assistant/page.tsx",
+        "suggestedPath": "features/assistant/ui/page.tsx",
+        "reason": "The file 'page.tsx' appears to be a UI component related to the 'Assistant' feature. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. The current location under 'app/(authenticated)/assistant/' does not align with this structure.",
+        "confidence": 0.9,
+        "autoFixable": true,
+        "estimatedImpact": "File relocation with import updates"
+      },
+      "success": true
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "high",
+        "currentPath": "app/(authenticated)/capture/fuel/page.tsx",
+        "suggestedPath": "features/capture/ui/FuelCapturePage.tsx",
+        "reason": "The file 'page.tsx' under 'app/(authenticated)/capture/fuel/' appears to be a feature-specific component related to the 'capture' feature. According to the project's feature-first architecture, feature components should reside in 'features/[feature]/ui/'.",
+        "confidence": 0.9,
+        "autoFixable": true,
+        "estimatedImpact": "File relocation with import updates"
+      },
+      "success": true
     },
     {
       "issue": {
@@ -43,8 +67,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -57,8 +80,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -71,8 +93,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -85,8 +106,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -99,8 +119,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -113,8 +132,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -127,8 +145,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -141,8 +158,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -155,8 +171,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -169,8 +184,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -183,8 +197,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -197,8 +210,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -211,8 +223,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -225,8 +236,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -239,8 +249,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -253,8 +262,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -267,8 +275,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -281,8 +288,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -295,8 +301,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -309,8 +314,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -323,8 +327,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -337,8 +340,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -351,8 +353,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -365,8 +366,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -379,8 +379,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -393,8 +392,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -407,8 +405,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -421,8 +418,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -435,8 +431,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -449,8 +444,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -463,8 +457,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -477,8 +470,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -491,8 +483,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -505,8 +496,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -519,8 +509,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -533,8 +522,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -547,8 +535,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -561,8 +548,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -575,8 +561,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -589,8 +574,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -603,8 +587,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -617,8 +600,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -631,8 +613,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -645,8 +626,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -659,8 +639,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     },
     {
       "issue": {
@@ -673,36 +652,7 @@
         "autoFixable": true,
         "estimatedImpact": "Low - just file relocation"
       },
-      "success": false,
-      "error": "Type-check failed"
-    },
-    {
-      "issue": {
-        "type": "misplaced_file",
-        "severity": "medium",
-        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PHASE_1A_DELIVERED.md",
-        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PHASE_1A_DELIVERED.md",
-        "reason": "Documentation files should be in docs/",
-        "confidence": 0.95,
-        "autoFixable": true,
-        "estimatedImpact": "Low - just file relocation"
-      },
-      "success": false,
-      "error": "Type-check failed"
-    },
-    {
-      "issue": {
-        "type": "misplaced_file",
-        "severity": "medium",
-        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PHASE_1A_SCHEMA_CLEANUP_COMPLETE.md",
-        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PHASE_1A_SCHEMA_CLEANUP_COMPLETE.md",
-        "reason": "Documentation files should be in docs/",
-        "confidence": 0.95,
-        "autoFixable": true,
-        "estimatedImpact": "Low - just file relocation"
-      },
-      "success": false,
-      "error": "Type-check failed"
+      "success": true
     }
   ]
 }

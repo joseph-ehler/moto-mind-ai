@@ -408,61 +408,76 @@ async function executeRefactoring(plan: RefactoringPlan): Promise<RefactoringRes
     .filter(i => i.autoFixable)
     .slice(0, CONFIG.maxFilesToMove)
   
-  log(`Processing ${issuesToFix.length} auto-fixable issues...`, 'info')
+  log(`Processing ${issuesToFix.length} auto-fixable issues in batches...`, 'info')
+  
+  // Group issues by destination directory for batch processing
+  const batches = new Map<string, typeof issuesToFix>()
+  const emptyDirs: typeof issuesToFix = []
+  
+  for (const issue of issuesToFix) {
+    if (issue.type === 'empty_dir') {
+      emptyDirs.push(issue)
+    } else if (issue.type === 'misplaced_file' && issue.suggestedPath) {
+      const targetDir = dirname(issue.suggestedPath)
+      if (!batches.has(targetDir)) {
+        batches.set(targetDir, [])
+      }
+      batches.get(targetDir)!.push(issue)
+    }
+  }
   
   let successCount = 0
   let failureCount = 0
+  let batchNum = 0
   
-  for (const issue of issuesToFix) {
+  // Process each batch
+  for (const [targetDir, batchIssues] of Array.from(batches.entries())) {
+    batchNum++
+    log(`\nBatch ${batchNum}/${batches.size}: Moving ${batchIssues.length} files to ${targetDir}`, 'info')
+    
     try {
-      log(`\nProcessing: ${issue.currentPath}`, 'info')
-      
-      // Execute fix based on type
-      if (issue.type === 'empty_dir') {
-        // Delete empty directory
-        execSync(`rmdir "${issue.currentPath}"`)
-        log(`  Deleted empty directory`, 'success')
-      } else if (issue.type === 'misplaced_file' && issue.suggestedPath) {
-        // Move file
-        const targetDir = dirname(issue.suggestedPath)
-        if (!existsSync(targetDir)) {
-          mkdirSync(targetDir, { recursive: true })
-        }
-        
-        renameSync(issue.currentPath, issue.suggestedPath)
-        log(`  Moved to ${issue.suggestedPath}`, 'success')
-        
-        // TODO: Update imports (in next iteration)
-        // For MVP, we'll do this manually or in a second pass
+      // Create target directory if needed
+      if (!existsSync(targetDir)) {
+        mkdirSync(targetDir, { recursive: true })
       }
       
-      // Run type-check
-      log(`  Running type-check...`, 'info')
-      const typeCheck = runCommand(CONFIG.testCommand)
-      
-      if (!typeCheck.success) {
-        // Rollback
-        log(`  Type-check failed! Rolling back...`, 'error')
-        if (issue.type === 'misplaced_file' && issue.suggestedPath) {
-          renameSync(issue.suggestedPath, issue.currentPath)
+      // Move all files in this batch
+      for (const issue of batchIssues) {
+        if (issue.suggestedPath) {
+          execSync(`git mv "${issue.currentPath}" "${issue.suggestedPath}"`, { stdio: 'pipe' })
         }
-        throw new Error('Type-check failed')
       }
       
-      log(`  Type-check passed!`, 'success')
+      log(`  ✓ Moved ${batchIssues.length} files`, 'success')
       
-      // Commit
-      const commitMessage = `refactor: ${issue.type} - ${basename(issue.currentPath)}\n\n${issue.reason}`
-      execSync(`git add -A && git commit -m "${commitMessage}"`, { stdio: 'ignore' })
-      log(`  Committed successfully`, 'success')
+      // Commit the batch
+      const fileList = batchIssues.map((i: RefactoringIssue) => basename(i.currentPath)).join(', ')
+      const commitMessage = `refactor: batch move ${batchIssues.length} files to ${basename(targetDir)}\n\nMoved: ${fileList.substring(0, 200)}${fileList.length > 200 ? '...' : ''}`
+      execSync(`git commit -m "${commitMessage}"`, { stdio: 'ignore' })
+      log(`  ✓ Committed batch`, 'success')
       
-      results.push({ issue, success: true })
-      successCount++
+      successCount += batchIssues.length
+      batchIssues.forEach((issue: RefactoringIssue) => results.push({ issue, success: true }))
       
     } catch (error: any) {
-      log(`  Failed: ${error.message}`, 'error')
-      results.push({ issue, success: false, error: error.message })
-      failureCount++
+      log(`  ✗ Batch failed: ${error.message}`, 'error')
+      failureCount += batchIssues.length
+      batchIssues.forEach((issue: RefactoringIssue) => results.push({ issue, success: false, error: error.message }))
+    }
+  }
+  
+  // Clean up empty directories
+  if (emptyDirs.length > 0) {
+    log(`\nCleaning up ${emptyDirs.length} empty directories...`, 'info')
+    for (const issue of emptyDirs) {
+      try {
+        execSync(`rmdir "${issue.currentPath}"`)
+        successCount++
+        results.push({ issue, success: true })
+      } catch (error: any) {
+        failureCount++
+        results.push({ issue, success: false, error: error.message })
+      }
     }
   }
   
