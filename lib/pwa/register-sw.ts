@@ -15,6 +15,13 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     return null
   }
 
+  // TEMPORARILY DISABLED: Service worker was blocking auth API routes
+  // Force unregister any existing service workers
+  console.warn('[PWA] Service Worker DISABLED - unregistering existing workers')
+  await unregisterServiceWorker()
+  return null
+
+  /* ORIGINAL CODE - RE-ENABLE AFTER AUTH WORKS
   try {
     const registration = await navigator.serviceWorker.register('/service-worker.js', {
       scope: '/'
@@ -58,6 +65,7 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     console.error('[PWA] Service Worker registration failed:', error)
     return null
   }
+  */
 }
 
 /**
