@@ -1,9 +1,0 @@
-# Migration Tracker
-# Format: migration_number | applied_date | applied_by | notes
-# Example: 001 | 2025-01-13 | admin | Initial schema
-
-# Add entries as you apply migrations to production
-# This helps track what's been deployed
-
-# Applied Migrations:
-# (none yet)
