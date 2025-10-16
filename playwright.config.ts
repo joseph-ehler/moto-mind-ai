@@ -28,7 +28,8 @@ export default defineConfig({
   // Shared settings for all tests
   use: {
     // Base URL for tests
-    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000',
+    // ELITE: Environment-aware, no hardcoded URLs
+    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005',
 
     // Collect trace when retrying failed test
     trace: 'on-first-retry',
@@ -71,7 +72,7 @@ export default defineConfig({
   // Run local dev server before starting tests
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:3000',
+    url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },

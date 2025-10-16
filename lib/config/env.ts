@@ -21,6 +21,7 @@ const envSchema = z.object({
 
   NEXT_PUBLIC_APP_NAME: z.string().optional(),
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
+  NEXT_PUBLIC_API_URL: z.string().url().optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 
   // Database
@@ -148,6 +149,7 @@ export const config = {
   app: {
     name: process.env.NEXT_PUBLIC_APP_NAME || 'MotoMind',
     url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005',
+    apiUrl: process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005',
     environment: (process.env.NODE_ENV as 'development' | 'test' | 'production') || 'development',
   },
 

@@ -593,33 +593,32 @@ describe('Vehicles API', () => {
   })
 
   it('should list vehicles for authenticated user', async () => {
-    const response = await fetch('http://localhost:3000/api/vehicles', {
+    const response = await fetch(apiUrl('/api/vehicles', { baseUrl: process.env.NEXT_PUBLIC_APP_URL }), {
       headers: {
         'Authorization': `Bearer ${authToken}`
       }
     })
 
     expect(response.status).toBe(200)
-    const json = await response.json()
-    expect(json).toHaveProperty('data')
-    expect(Array.isArray(json.data)).toBe(true)
+    const data = await response.json()
+    expect(data.data).toBeInstanceOf(Array)
   })
 
   it('should reject unauthenticated requests', async () => {
-    const response = await fetch('http://localhost:3000/api/vehicles')
+    const response = await fetch(apiUrl('/api/vehicles', { baseUrl: process.env.NEXT_PUBLIC_APP_URL }))
     expect(response.status).toBe(401)
   })
 
   it('should create a new vehicle', async () => {
-    const response = await fetch('http://localhost:3000/api/vehicles', {
+    const response = await fetch(apiUrl('/api/vehicles', { baseUrl: process.env.NEXT_PUBLIC_APP_URL }), {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${authToken}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        make: 'Toyota',
-        model: 'Camry',
+        make: 'Honda',
+        model: 'Civic',
         year: 2020
       })
     })
@@ -627,11 +626,12 @@ describe('Vehicles API', () => {
     expect(response.status).toBe(201)
     const json = await response.json()
     expect(json.data).toHaveProperty('id')
-    expect(json.data.make).toBe('Toyota')
+    expect(json.data.make).toBe('Honda')
   })
 })
 ```
 
+// ...
 **Create tests for critical routes:**
 - Vehicles CRUD
 - Events CRUD
