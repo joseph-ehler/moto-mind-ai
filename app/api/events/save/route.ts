@@ -149,10 +149,11 @@ export const POST = withAuth(async (
 
     return NextResponse.json({
       ok: true,
-      data: { success: true,
-      event,
-      message: `${eventData.type }
-    } event saved to timeline`
+      data: { 
+        success: true,
+        event,
+        message: `${eventData.type} event saved to timeline`
+      }
     }, { status: 201 })
 
   } catch (error) {

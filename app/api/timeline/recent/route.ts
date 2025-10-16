@@ -89,19 +89,18 @@ export const GET = withAuth(async (
 
     if (!events || events.length === 0) {
       return NextResponse.json({
-      ok: true,
-      data: { data: {
+        ok: true,
+        data: {
           events: [],
           summary: {
             total: 0,
-            message: `No activity in the last ${days }
-    } days`
+            message: `No activity in the last ${days} days`
+          },
+          meta: {
+            days,
+            limit,
+            date_range: { start: startDate, end: new Date().toISOString().split('T')[0] }
           }
-        },
-        meta: {
-          days,
-          limit,
-          date_range: { start: startDate, end: new Date().toISOString().split('T')[0] }
         }
       })
     }

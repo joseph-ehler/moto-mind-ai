@@ -8,7 +8,7 @@ import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware
  */
 export async function DELETE(
   request: NextRequest,
-  { params }): { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   const { id } = params
   const body = await request.json()

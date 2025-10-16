@@ -6,7 +6,7 @@ import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware
  */
 export async function GET(
   request: NextRequest,
-  { params }): { params: { garageId: string } }
+  { params }: { params: { garageId: string } }
 ) {
   const { garageId } = params
 

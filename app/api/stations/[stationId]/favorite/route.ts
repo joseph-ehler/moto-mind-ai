@@ -11,7 +11,7 @@ import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware
  */
 export async function POST(
   request: NextRequest,
-  { params }): { params: { stationId: string } }
+  { params }: { params: { stationId: string } }
 ) {
   const { stationId } = params
 
@@ -91,7 +91,7 @@ export async function POST(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }): { params: { stationId: string } }
+  { params }: { params: { stationId: string } }
 ) {
   const { stationId } = params
 

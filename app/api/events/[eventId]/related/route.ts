@@ -9,7 +9,7 @@ import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware
  */
 export async function GET(
   request: NextRequest,
-  { params }): { params: { eventId: string } }
+  { params }: { params: { eventId: string } }
 ) {
   const { eventId } = params
 
