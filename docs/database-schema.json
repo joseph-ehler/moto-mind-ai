@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2025-10-14T17:37:43.808Z",
+  "generatedAt": "2025-10-16T17:11:34.757Z",
   "database": "https://ucbbzzoimghnaoihyqbd.supabase.co",
-  "totalTables": 19,
+  "totalTables": 21,
   "tables": [
     {
       "name": "capture_sessions",
@@ -256,8 +256,8 @@
             "authenticated"
           ],
           "command": "ALL",
-          "using": "true",
-          "withCheck": "true"
+          "using": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)",
+          "withCheck": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)"
         }
       ]
     },
@@ -727,8 +727,187 @@
             "authenticated"
           ],
           "command": "ALL",
-          "using": "true",
-          "withCheck": "true"
+          "using": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)",
+          "withCheck": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)"
+        }
+      ]
+    },
+    {
+      "name": "favorite_stations",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "user_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "station_id",
+          "dataType": "character varying",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": 255
+        },
+        {
+          "name": "station_name",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 255
+        },
+        {
+          "name": "station_address",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "vendor",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 100
+        },
+        {
+          "name": "lat",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "lng",
+          "dataType": "numeric",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "notes",
+          "dataType": "text",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "favorited_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        },
+        {
+          "name": "last_visited_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "visit_count",
+          "dataType": "integer",
+          "isNullable": true,
+          "defaultValue": "0",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "favorite_stations_pkey",
+          "definition": "CREATE UNIQUE INDEX favorite_stations_pkey ON public.favorite_stations USING btree (id)"
+        },
+        {
+          "name": "favorite_stations_user_id_station_id_key",
+          "definition": "CREATE UNIQUE INDEX favorite_stations_user_id_station_id_key ON public.favorite_stations USING btree (user_id, station_id)"
+        },
+        {
+          "name": "idx_favorite_stations_tenant_id",
+          "definition": "CREATE INDEX idx_favorite_stations_tenant_id ON public.favorite_stations USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_favorite_stations_user_id",
+          "definition": "CREATE INDEX idx_favorite_stations_user_id ON public.favorite_stations USING btree (user_id)"
+        },
+        {
+          "name": "idx_favorite_stations_station_id",
+          "definition": "CREATE INDEX idx_favorite_stations_station_id ON public.favorite_stations USING btree (station_id)"
+        },
+        {
+          "name": "idx_favorite_stations_favorited_at",
+          "definition": "CREATE INDEX idx_favorite_stations_favorited_at ON public.favorite_stations USING btree (favorited_at DESC)"
+        },
+        {
+          "name": "idx_favorite_stations_location",
+          "definition": "CREATE INDEX idx_favorite_stations_location ON public.favorite_stations USING btree (lat, lng)"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "Users can view their own favorites",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "SELECT",
+          "using": "(user_id = auth.uid())",
+          "withCheck": null
+        },
+        {
+          "name": "Users can insert their own favorites",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "INSERT",
+          "using": null,
+          "withCheck": "((user_id = auth.uid()) AND (tenant_id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = (auth.uid())::text))))"
+        },
+        {
+          "name": "Users can update their own favorites",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "UPDATE",
+          "using": "(user_id = auth.uid())",
+          "withCheck": null
+        },
+        {
+          "name": "Users can delete their own favorites",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "DELETE",
+          "using": "(user_id = auth.uid())",
+          "withCheck": null
         }
       ]
     },
@@ -875,8 +1054,39 @@
         }
       ],
       "rowCount": 0,
-      "rlsEnabled": false,
-      "rlsPolicies": []
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "garages_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)",
+          "withCheck": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)"
+        },
+        {
+          "name": "api_garages_user_tenants",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "(tenant_id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = (auth.uid())::text)))",
+          "withCheck": "(tenant_id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = (auth.uid())::text)))"
+        },
+        {
+          "name": "service_role_garages",
+          "permissive": true,
+          "roles": [
+            "service_role"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
+        }
+      ]
     },
     {
       "name": "location_corrections",
@@ -1022,6 +1232,133 @@
           "command": "ALL",
           "using": "true",
           "withCheck": "true"
+        }
+      ]
+    },
+    {
+      "name": "logs",
+      "columns": [
+        {
+          "name": "id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": "gen_random_uuid()",
+          "maxLength": null
+        },
+        {
+          "name": "tenant_id",
+          "dataType": "uuid",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "user_id",
+          "dataType": "uuid",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "level",
+          "dataType": "character varying",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": 20
+        },
+        {
+          "name": "message",
+          "dataType": "text",
+          "isNullable": false,
+          "defaultValue": null,
+          "maxLength": null
+        },
+        {
+          "name": "context",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": "'{}'::jsonb",
+          "maxLength": null
+        },
+        {
+          "name": "source",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 100
+        },
+        {
+          "name": "request_id",
+          "dataType": "character varying",
+          "isNullable": true,
+          "defaultValue": null,
+          "maxLength": 100
+        },
+        {
+          "name": "created_at",
+          "dataType": "timestamp with time zone",
+          "isNullable": true,
+          "defaultValue": "now()",
+          "maxLength": null
+        }
+      ],
+      "foreignKeys": [
+        {
+          "columnName": "tenant_id",
+          "foreignTableName": "tenants",
+          "foreignColumnName": "id",
+          "deleteRule": "CASCADE",
+          "updateRule": "NO ACTION"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_logs_request_id",
+          "definition": "CREATE INDEX idx_logs_request_id ON public.logs USING btree (request_id)"
+        },
+        {
+          "name": "logs_pkey",
+          "definition": "CREATE UNIQUE INDEX logs_pkey ON public.logs USING btree (id)"
+        },
+        {
+          "name": "idx_logs_tenant_id",
+          "definition": "CREATE INDEX idx_logs_tenant_id ON public.logs USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_logs_user_id",
+          "definition": "CREATE INDEX idx_logs_user_id ON public.logs USING btree (user_id)"
+        },
+        {
+          "name": "idx_logs_level",
+          "definition": "CREATE INDEX idx_logs_level ON public.logs USING btree (level)"
+        },
+        {
+          "name": "idx_logs_created_at",
+          "definition": "CREATE INDEX idx_logs_created_at ON public.logs USING btree (created_at DESC)"
+        }
+      ],
+      "rowCount": 0,
+      "rlsEnabled": true,
+      "rlsPolicies": [
+        {
+          "name": "Users can view their tenant's logs",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "SELECT",
+          "using": "(tenant_id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = (auth.uid())::text)))",
+          "withCheck": null
+        },
+        {
+          "name": "Service role can manage all logs",
+          "permissive": true,
+          "roles": [
+            "public"
+          ],
+          "command": "ALL",
+          "using": "((auth.jwt() ->> 'role'::text) = 'service_role'::text)",
+          "withCheck": null
         }
       ]
     },
@@ -1337,14 +1674,54 @@
       "rlsEnabled": true,
       "rlsPolicies": [
         {
+          "name": "photo_metadata_select",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "SELECT",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": null
+        },
+        {
+          "name": "photo_metadata_insert",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "INSERT",
+          "using": null,
+          "withCheck": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))"
+        },
+        {
+          "name": "photo_metadata_update",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "UPDATE",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))"
+        },
+        {
+          "name": "photo_metadata_delete",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "DELETE",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": null
+        },
+        {
           "name": "photo_metadata_tenant_isolation",
           "permissive": true,
           "roles": [
             "authenticated"
           ],
           "command": "ALL",
-          "using": "true",
-          "withCheck": "true"
+          "using": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)",
+          "withCheck": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)"
         }
       ]
     },
@@ -1385,6 +1762,13 @@
           "isNullable": false,
           "defaultValue": "now()",
           "maxLength": null
+        },
+        {
+          "name": "preferences",
+          "dataType": "jsonb",
+          "isNullable": true,
+          "defaultValue": "'{}'::jsonb",
+          "maxLength": null
         }
       ],
       "foreignKeys": [
@@ -1410,14 +1794,34 @@
       "rlsEnabled": true,
       "rlsPolicies": [
         {
-          "name": "allow_all_profiles",
+          "name": "profiles_tenant_isolation",
           "permissive": true,
           "roles": [
             "authenticated"
           ],
           "command": "ALL",
+          "using": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)",
+          "withCheck": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)"
+        },
+        {
+          "name": "api_profiles_own_profile",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "(id = auth.uid())",
+          "withCheck": "(id = auth.uid())"
+        },
+        {
+          "name": "service_role_profiles",
+          "permissive": true,
+          "roles": [
+            "service_role"
+          ],
+          "command": "ALL",
           "using": "true",
-          "withCheck": null
+          "withCheck": "true"
         }
       ]
     },
@@ -1457,7 +1861,7 @@
           "definition": "CREATE UNIQUE INDEX schema_migrations_filename_key ON public.schema_migrations USING btree (filename)"
         }
       ],
-      "rowCount": 3,
+      "rowCount": 12,
       "rlsEnabled": false,
       "rlsPolicies": []
     },
@@ -1504,14 +1908,24 @@
       "rlsEnabled": true,
       "rlsPolicies": [
         {
-          "name": "Service role can insert tenants",
+          "name": "tenants_select",
           "permissive": true,
           "roles": [
-            "service_role"
+            "authenticated"
           ],
-          "command": "INSERT",
-          "using": null,
-          "withCheck": "true"
+          "command": "SELECT",
+          "using": "(((id)::text = current_setting('app.current_tenant_id'::text, true)) OR (id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = current_setting('app.current_user_id'::text, true)))))",
+          "withCheck": null
+        },
+        {
+          "name": "tenants_update",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "UPDATE",
+          "using": "((id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": "((id)::text = current_setting('app.current_tenant_id'::text, true))"
         },
         {
           "name": "allow_all_tenants",
@@ -1522,6 +1936,16 @@
           "command": "ALL",
           "using": "true",
           "withCheck": null
+        },
+        {
+          "name": "Service role can insert tenants",
+          "permissive": true,
+          "roles": [
+            "service_role"
+          ],
+          "command": "INSERT",
+          "using": null,
+          "withCheck": "true"
         }
       ]
     },
@@ -1638,6 +2062,26 @@
           "command": "ALL",
           "using": "true",
           "withCheck": "true"
+        },
+        {
+          "name": "api_user_maintenance_prefs",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "((user_id = auth.uid()) AND (vehicle_id IN ( SELECT vehicles.id\n   FROM vehicles\n  WHERE (vehicles.tenant_id IN ( SELECT user_tenants.tenant_id\n           FROM user_tenants\n          WHERE (user_tenants.user_id = (auth.uid())::text))))))",
+          "withCheck": "((user_id = auth.uid()) AND (vehicle_id IN ( SELECT vehicles.id\n   FROM vehicles\n  WHERE (vehicles.tenant_id IN ( SELECT user_tenants.tenant_id\n           FROM user_tenants\n          WHERE (user_tenants.user_id = (auth.uid())::text))))))"
+        },
+        {
+          "name": "service_role_user_maintenance_prefs",
+          "permissive": true,
+          "roles": [
+            "service_role"
+          ],
+          "command": "ALL",
+          "using": "true",
+          "withCheck": "true"
         }
       ]
     },
@@ -1711,7 +2155,27 @@
       "rlsEnabled": true,
       "rlsPolicies": [
         {
-          "name": "Service role can insert user_tenants",
+          "name": "user_tenants_select",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "SELECT",
+          "using": "((user_id = current_setting('app.current_user_id'::text, true)) OR ((tenant_id)::text = current_setting('app.current_tenant_id'::text, true)))",
+          "withCheck": null
+        },
+        {
+          "name": "user_tenants_tenant_isolation",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)",
+          "withCheck": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)"
+        },
+        {
+          "name": "user_tenants_service_role_insert",
           "permissive": true,
           "roles": [
             "service_role"
@@ -1719,16 +2183,6 @@
           "command": "INSERT",
           "using": null,
           "withCheck": "true"
-        },
-        {
-          "name": "user_tenants_select",
-          "permissive": true,
-          "roles": [
-            "public"
-          ],
-          "command": "SELECT",
-          "using": "((auth.uid())::text = user_id)",
-          "withCheck": null
         }
       ]
     },
@@ -1853,14 +2307,14 @@
       "rlsEnabled": true,
       "rlsPolicies": [
         {
-          "name": "allow_all_audit",
+          "name": "vehicle_event_audit_logs_tenant_isolation",
           "permissive": true,
           "roles": [
             "authenticated"
           ],
           "command": "ALL",
-          "using": "true",
-          "withCheck": null
+          "using": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)",
+          "withCheck": "(tenant_id = (current_setting('app.current_tenant_id'::text, true))::uuid)"
         }
       ]
     },
@@ -2408,25 +2862,135 @@
           "definition": "CREATE INDEX idx_events_vehicle_type ON public.vehicle_events USING btree (vehicle_id, type) WHERE (deleted_at IS NULL)"
         },
         {
+          "name": "idx_vehicle_events_tenant_id",
+          "definition": "CREATE INDEX idx_vehicle_events_tenant_id ON public.vehicle_events USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_vehicle_events_vehicle_id",
+          "definition": "CREATE INDEX idx_vehicle_events_vehicle_id ON public.vehicle_events USING btree (vehicle_id)"
+        },
+        {
+          "name": "idx_vehicle_events_type",
+          "definition": "CREATE INDEX idx_vehicle_events_type ON public.vehicle_events USING btree (type)"
+        },
+        {
+          "name": "idx_vehicle_events_tenant_date",
+          "definition": "CREATE INDEX idx_vehicle_events_tenant_date ON public.vehicle_events USING btree (tenant_id, date DESC)"
+        },
+        {
+          "name": "idx_vehicle_events_tenant_vehicle_date",
+          "definition": "CREATE INDEX idx_vehicle_events_tenant_vehicle_date ON public.vehicle_events USING btree (tenant_id, vehicle_id, date DESC)"
+        },
+        {
+          "name": "idx_vehicle_events_tenant_type_date",
+          "definition": "CREATE INDEX idx_vehicle_events_tenant_type_date ON public.vehicle_events USING btree (tenant_id, type, date DESC)"
+        },
+        {
+          "name": "idx_vehicle_events_vendor_lower",
+          "definition": "CREATE INDEX idx_vehicle_events_vendor_lower ON public.vehicle_events USING btree (lower(vendor))"
+        },
+        {
+          "name": "idx_vehicle_events_display_vendor_lower",
+          "definition": "CREATE INDEX idx_vehicle_events_display_vendor_lower ON public.vehicle_events USING btree (lower(display_vendor))"
+        },
+        {
+          "name": "idx_vehicle_events_station_address",
+          "definition": "CREATE INDEX idx_vehicle_events_station_address ON public.vehicle_events USING gin (station_address gin_trgm_ops)"
+        },
+        {
+          "name": "idx_vehicle_events_geocoded_lat",
+          "definition": "CREATE INDEX idx_vehicle_events_geocoded_lat ON public.vehicle_events USING btree (geocoded_lat)"
+        },
+        {
+          "name": "idx_vehicle_events_geocoded_lng",
+          "definition": "CREATE INDEX idx_vehicle_events_geocoded_lng ON public.vehicle_events USING btree (geocoded_lng)"
+        },
+        {
+          "name": "idx_vehicle_events_lat_lng",
+          "definition": "CREATE INDEX idx_vehicle_events_lat_lng ON public.vehicle_events USING btree (geocoded_lat, geocoded_lng)"
+        },
+        {
+          "name": "idx_vehicle_events_deleted_at",
+          "definition": "CREATE INDEX idx_vehicle_events_deleted_at ON public.vehicle_events USING btree (deleted_at) WHERE (deleted_at IS NULL)"
+        },
+        {
           "name": "idx_events_timeline",
           "definition": "CREATE INDEX idx_events_timeline ON public.vehicle_events USING btree (vehicle_id, date DESC, type) INCLUDE (total_amount, miles, vendor, display_summary) WHERE (deleted_at IS NULL)"
         },
         {
           "name": "vehicle_events_tenant_id_idx",
           "definition": "CREATE INDEX vehicle_events_tenant_id_idx ON public.vehicle_events USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_vehicle_events_tenant_active",
+          "definition": "CREATE INDEX idx_vehicle_events_tenant_active ON public.vehicle_events USING btree (tenant_id, date DESC) WHERE (deleted_at IS NULL)"
+        },
+        {
+          "name": "idx_vehicle_events_tenant_amounts",
+          "definition": "CREATE INDEX idx_vehicle_events_tenant_amounts ON public.vehicle_events USING btree (tenant_id, date, total_amount, gallons) WHERE (deleted_at IS NULL)"
         }
       ],
       "rowCount": 0,
       "rlsEnabled": true,
       "rlsPolicies": [
         {
-          "name": "vehicle_events_tenant_isolation",
+          "name": "vehicle_events_select",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "SELECT",
+          "using": "(((tenant_id)::text = current_setting('app.current_tenant_id'::text, true)) AND (deleted_at IS NULL))",
+          "withCheck": null
+        },
+        {
+          "name": "vehicle_events_insert",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "INSERT",
+          "using": null,
+          "withCheck": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))"
+        },
+        {
+          "name": "vehicle_events_update",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "UPDATE",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))"
+        },
+        {
+          "name": "vehicle_events_delete",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "DELETE",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": null
+        },
+        {
+          "name": "api_vehicle_events_user_tenants",
           "permissive": true,
           "roles": [
             "authenticated"
           ],
           "command": "ALL",
-          "using": "(deleted_at IS NULL)",
+          "using": "(tenant_id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = (auth.uid())::text)))",
+          "withCheck": "(tenant_id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = (auth.uid())::text)))"
+        },
+        {
+          "name": "service_role_vehicle_events",
+          "permissive": true,
+          "roles": [
+            "service_role"
+          ],
+          "command": "ALL",
+          "using": "true",
           "withCheck": "true"
         }
       ]
@@ -2680,14 +3244,44 @@
       "rlsEnabled": true,
       "rlsPolicies": [
         {
-          "name": "vehicle_images_tenant_isolation",
+          "name": "vehicle_images_select",
           "permissive": true,
           "roles": [
             "authenticated"
           ],
-          "command": "ALL",
-          "using": "true",
-          "withCheck": "true"
+          "command": "SELECT",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": null
+        },
+        {
+          "name": "vehicle_images_insert",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "INSERT",
+          "using": null,
+          "withCheck": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))"
+        },
+        {
+          "name": "vehicle_images_update",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "UPDATE",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))"
+        },
+        {
+          "name": "vehicle_images_delete",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "DELETE",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": null
         }
       ]
     },
@@ -3001,6 +3595,10 @@
           "definition": "CREATE INDEX idx_vehicles_tenant_id ON public.vehicles USING btree (tenant_id)"
         },
         {
+          "name": "idx_vehicles_garage_id",
+          "definition": "CREATE INDEX idx_vehicles_garage_id ON public.vehicles USING btree (garage_id)"
+        },
+        {
           "name": "idx_vehicles_hero_image",
           "definition": "CREATE INDEX idx_vehicles_hero_image ON public.vehicles USING btree (hero_image_url) WHERE (hero_image_url IS NOT NULL)"
         },
@@ -3013,10 +3611,60 @@
       "rlsEnabled": true,
       "rlsPolicies": [
         {
-          "name": "vehicles_tenant_isolation",
+          "name": "vehicles_select",
           "permissive": true,
           "roles": [
             "authenticated"
+          ],
+          "command": "SELECT",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": null
+        },
+        {
+          "name": "vehicles_insert",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "INSERT",
+          "using": null,
+          "withCheck": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))"
+        },
+        {
+          "name": "vehicles_update",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "UPDATE",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))"
+        },
+        {
+          "name": "vehicles_delete",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "DELETE",
+          "using": "((tenant_id)::text = current_setting('app.current_tenant_id'::text, true))",
+          "withCheck": null
+        },
+        {
+          "name": "api_vehicles_user_tenants",
+          "permissive": true,
+          "roles": [
+            "authenticated"
+          ],
+          "command": "ALL",
+          "using": "(tenant_id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = (auth.uid())::text)))",
+          "withCheck": "(tenant_id IN ( SELECT user_tenants.tenant_id\n   FROM user_tenants\n  WHERE (user_tenants.user_id = (auth.uid())::text)))"
+        },
+        {
+          "name": "service_role_vehicles",
+          "permissive": true,
+          "roles": [
+            "service_role"
           ],
           "command": "ALL",
           "using": "true",
