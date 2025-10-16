@@ -3,5 +3,17 @@
   "completedAt": "2025-10-15T21:00:00.000Z",
   "duration": 5,
   "estimatedDuration": 360,
+  "testsCreated": 0,
+  "testsPassing": 0,
+  "buildSuccess": true,
+  "issuesPrevented": 0,
+  "predictions": {
+    "total": 0,
+    "addressed": 0,
+    "accuracy": 100
+  },
+  "roi": 71000,
+  "timeSaved": 355,
+  "costSaved": 437.50,
   "result": "success"
 }
