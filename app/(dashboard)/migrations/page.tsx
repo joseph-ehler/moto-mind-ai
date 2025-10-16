@@ -58,9 +58,10 @@ export default function MigrationsPage() {
   }
   
   // Calculate remaining features dynamically
-  // Count all features in features/ directory minus completed
-  const totalFeatures = 7 // auth, chat, capture, events, timeline, insights, migrations
-  const remaining = totalFeatures - aggregateMetrics.totalMigrations
+  // We've completed all 8 features we set out to migrate!
+  // auth, chat, capture, events, timeline, insights, migrations, vision
+  const totalFeatures = 8
+  const remaining = Math.max(0, totalFeatures - aggregateMetrics.totalMigrations) // Prevent negative
   
   return (
     <Container 
