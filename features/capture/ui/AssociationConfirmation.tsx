@@ -8,7 +8,7 @@ import {
   AlertTriangle,
   ChevronRight
 } from 'lucide-react'
-import { VehicleMatch } from '@/utils/vehicleMatching'
+import { VehicleMatch } from '@/lib/utils/vehicleMatching'
 
 interface AssociationConfirmationProps {
   isOpen: boolean

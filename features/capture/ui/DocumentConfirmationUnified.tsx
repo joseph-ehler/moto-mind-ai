@@ -13,7 +13,7 @@ import {
 import { VehicleSelector } from './VehicleSelector'
 import { AssociationConfirmation } from './AssociationConfirmation'
 import { AssociationNotification } from './AssociationNotification'
-import { calculateVehicleMatches, getAssociationStrategy, VehicleMatch } from '@/utils/vehicleMatching'
+import { calculateVehicleMatches, getAssociationStrategy, VehicleMatch } from '@/lib/utils/vehicleMatching'
 
 interface DocumentData {
   type: string

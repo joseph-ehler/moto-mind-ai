@@ -19,9 +19,9 @@ import { AIInsights } from '@/features/events/ui/AIInsights'
 import { EventAchievements } from '@/features/events/ui/EventAchievements'
 // import { ShareableReceiptCard } from '@/features/events/ui/ShareableReceiptCard' // PAUSED - needs work
 import type { EventData, ChangeEntry } from '@/types/event'
-import { formatDateWithoutTimezone, generateEventPDF } from '@/utils/eventUtils'
-import { buildFinancialFields, buildLocationFields, buildReceiptFields, buildVehicleFields, getFieldValue } from '@/utils/eventFieldBuilders'
-// import { shareImage } from '@/utils/shareAsImage' // PAUSED - needs work
+import { formatDateWithoutTimezone, generateEventPDF } from '@/lib/utils/eventUtils'
+import { buildFinancialFields, buildLocationFields, buildReceiptFields, buildVehicleFields, getFieldValue } from '@/lib/utils/eventFieldBuilders'
+// import { shareImage } from '@/lib/utils/shareAsImage' // PAUSED - needs work
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { SkeletonInsightCard, SkeletonAchievementCard, SkeletonDataSection } from '@/components/ui/SkeletonLoader'
 

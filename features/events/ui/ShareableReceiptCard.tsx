@@ -7,7 +7,7 @@
 'use client'
 
 import type { EventData } from '@/types/event'
-import { formatDateWithoutTimezone } from '@/utils/eventUtils'
+import { formatDateWithoutTimezone } from '@/lib/utils/eventUtils'
 
 interface ShareableReceiptCardProps {
   event: EventData

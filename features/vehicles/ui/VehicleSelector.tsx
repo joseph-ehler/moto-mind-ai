@@ -9,7 +9,7 @@ import {
   CheckCircle,
   HelpCircle
 } from 'lucide-react'
-import { VehicleMatch } from '@/utils/vehicleMatching'
+import { VehicleMatch } from '@/lib/utils/vehicleMatching'
 
 interface VehicleSelectorProps {
   isOpen: boolean

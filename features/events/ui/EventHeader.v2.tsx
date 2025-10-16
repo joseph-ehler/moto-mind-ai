@@ -24,7 +24,7 @@ import {
 } from 'lucide-react'
 import { Flex, Text, Stack, Heading } from '@/components/design-system'
 import { FilePreview, type PreviewFile } from '@/components/design-system/utilities/FilePreview'
-import { formatDateWithoutTimezone } from '@/utils/eventUtils'
+import { formatDateWithoutTimezone } from '@/lib/utils/eventUtils'
 
 interface EventHeaderV2Props {
   event: any
