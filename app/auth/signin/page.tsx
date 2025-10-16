@@ -39,11 +39,18 @@ export default function SignInPage() {
       console.log('[Auth] Signin button clicked')
       setIsLoading(true)
       
+      // Set timeout in case signIn hangs
+      const timeout = setTimeout(() => {
+        console.warn('[Auth] SignIn timeout - redirecting manually')
+        window.location.href = '/api/auth/signin/google?callbackUrl=/vehicles'
+      }, 3000) // 3 second timeout
+      
       const result = await signIn('google', { 
         callbackUrl: '/vehicles',
         redirect: true 
       })
       
+      clearTimeout(timeout)
       console.log('[Auth] SignIn result:', result)
     } catch (error) {
       console.error('[Auth] SignIn error:', error)
