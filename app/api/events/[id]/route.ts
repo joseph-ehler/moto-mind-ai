@@ -157,3 +157,159 @@ export async function GET(
     )
   }
 }
+
+/**
+ * PATCH /api/events/[id]
+ * Update an event (partial update with change tracking)
+ * 
+ * RESTful way to update - replaces /api/events/[id]/edit
+ * 
+ * Body:
+ * - Any fields to update
+ * - edit_reason: required for tracking (optional)
+ */
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params
+
+  try {
+    const body = await request.json()
+    const { edit_reason, ...changes } = body
+
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    // Fetch current event
+    const { data: currentEvent, error: fetchError } = await supabase
+      .from('vehicle_events')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if (fetchError || !currentEvent) {
+      return NextResponse.json(
+        { error: 'Event not found' },
+        { status: 404 }
+      )
+    }
+
+    // Build update object
+    const updates: any = {
+      edited_at: new Date().toISOString(),
+      ...changes
+    }
+
+    // Track changes if reason provided
+    if (edit_reason) {
+      updates.edit_reason = edit_reason
+
+      const changeEntry = {
+        edited_at: new Date().toISOString(),
+        reason: edit_reason,
+        changes: Object.entries(changes).map(([field, newValue]) => ({
+          field,
+          old_value: currentEvent[field],
+          new_value: newValue
+        }))
+      }
+
+      const existingChanges = currentEvent.edit_changes || []
+      updates.edit_changes = [...existingChanges, changeEntry]
+    }
+
+    // Update event
+    const { data: updatedEvent, error: updateError } = await supabase
+      .from('vehicle_events')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (updateError) {
+      console.error('Error updating event:', updateError)
+      return NextResponse.json(
+        { error: 'Failed to update event' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      event: updatedEvent,
+      message: 'Event updated successfully'
+    })
+  } catch (error) {
+    console.error('Unexpected error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+/**
+ * DELETE /api/events/[id]
+ * Soft delete an event (sets deleted_at)
+ * 
+ * RESTful way to delete - replaces /api/events/[id]/delete
+ * 
+ * Body (optional):
+ * - reason: deletion reason for tracking
+ */
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params
+
+  try {
+    const body = await request.json().catch(() => ({}))
+    const { reason } = body
+
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    // Soft delete (set deleted_at timestamp)
+    const { data: event, error } = await supabase
+      .from('vehicle_events')
+      .update({
+        deleted_at: new Date().toISOString(),
+        deletion_reason: reason || 'No reason provided'
+      })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error deleting event:', error)
+      return NextResponse.json(
+        { error: 'Failed to delete event' },
+        { status: 500 }
+      )
+    }
+
+    if (!event) {
+      return NextResponse.json(
+        { error: 'Event not found' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Event deleted successfully. Can be restored within 30 days.',
+      event
+    })
+  } catch (error) {
+    console.error('Unexpected error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
