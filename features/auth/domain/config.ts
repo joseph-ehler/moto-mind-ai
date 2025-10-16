@@ -14,16 +14,37 @@ import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
+// Lazy Supabase client creation with validation
+function getSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  
+  if (!url || !key) {
+    console.error('[Auth Config] Missing Supabase credentials:', {
+      hasUrl: !!url,
+      hasKey: !!key
+    })
+    throw new Error('Supabase credentials missing - check NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY')
+  }
+  
+  return createClient(url, key, {
     auth: {
       autoRefreshToken: false,
       persistSession: false
     }
-  }
-)
+  })
+}
+
+// Initialize client
+let supabase: any
+try {
+  supabase = getSupabaseClient()
+  console.log('[Auth Config] Supabase client initialized successfully')
+} catch (error) {
+  console.error('[Auth Config] Failed to initialize Supabase:', error)
+  // Create a dummy client that will fail gracefully
+  supabase = createClient('https://dummy.supabase.co', 'dummy-key')
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
