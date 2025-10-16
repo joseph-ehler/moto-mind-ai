@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * PATCH /api/events/[id]/edit
  * Updates an event with change tracking
@@ -9,7 +8,7 @@ import { createClient } from '@supabase/supabase-js'
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }): { params: { id: string } }
 ) {
   const { id } = params
   const body = await request.json()

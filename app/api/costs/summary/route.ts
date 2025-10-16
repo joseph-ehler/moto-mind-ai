@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/costs/summary
  * Get comprehensive spending summary with analytics
@@ -18,7 +17,10 @@ import { createClient } from '@supabase/supabase-js'
  * - start_date: custom start date
  * - end_date: custom end date
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (
+  request: NextRequest,
+  { user, tenant, token }: AuthContext
+) => {
   const searchParams = request.nextUrl.searchParams
   
   const period = searchParams.get('period') || 'month'
@@ -27,10 +29,7 @@ export async function GET(request: NextRequest) {
   const endDate = searchParams.get('end_date')
 
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = createTenantClient(token, tenant.tenantId)
 
     const tenantId = request.headers.get('x-tenant-id')
 
@@ -94,19 +93,31 @@ export async function GET(request: NextRequest) {
     const { data: events, error } = await query
 
     if (error) {
-      console.error('Error fetching cost data:', error)
+      console.error('[COSTS] Error fetching cost data:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
       return NextResponse.json(
-        { error: 'Failed to fetch cost summary' },
+      { 
+        ok: false,
+        error: {
+          code: 'COSTS_FAILED_TO_FETCH_COST_SUMMARY',
+          message: 'Failed to fetch cost summary'
+        }
+      },
         { status: 500 }
       )
     }
 
     if (!events || events.length === 0) {
       return NextResponse.json({
-        data: {
+      ok: true,
+      data: { data: {
           period,
           total: 0,
-          breakdown: {},
+          breakdown: { }
+    },
           trends: {},
           insights: []
         },
@@ -162,7 +173,8 @@ export async function GET(request: NextRequest) {
     const insights = generateCostInsights(total, breakdown, trends, events, period)
 
     return NextResponse.json({
-      data: {
+      ok: true,
+      data: { data: {
         period,
         total: Math.round(total * 100) / 100,
         breakdown: {
@@ -171,7 +183,8 @@ export async function GET(request: NextRequest) {
           repairs: Math.round(breakdown.repairs * 100) / 100,
           inspection: Math.round(breakdown.inspection * 100) / 100,
           other: Math.round(breakdown.other * 100) / 100
-        },
+         }
+    },
         by_vehicle: vehicleBreakdown,
         by_month: monthlyBreakdown,
         trends,
@@ -189,13 +202,23 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('[COSTS] Unexpected error:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        ok: false,
+        error: {
+          code: 'COSTS_INTERNAL_SERVER_ERROR',
+          message: 'Internal server error'
+        }
+      },
       { status: 500 }
     )
   }
-}
+})
 
 // ELITE: Helper functions for intelligence
 

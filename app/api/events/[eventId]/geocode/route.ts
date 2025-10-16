@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * POST /api/events/[eventId]/geocode
  * Geocode the event's location from address/vendor
@@ -12,7 +11,7 @@ import { createClient } from '@supabase/supabase-js'
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { eventId: string } }
+  { params }): { params: { eventId: string } }
 ) {
   const { eventId } = params
 

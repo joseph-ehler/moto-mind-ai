@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/stations
  * List fuel stations with intelligent defaults
@@ -18,7 +17,10 @@ import { createClient } from '@supabase/supabase-js'
  * - radius: number (miles, default 10)
  * - limit: number (default 20)
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (
+  request: NextRequest,
+  { user, tenant, token }: AuthContext
+) => {
   const searchParams = request.nextUrl.searchParams
   
   const favorites = searchParams.get('favorites') === 'true'
@@ -29,10 +31,7 @@ export async function GET(request: NextRequest) {
   const limit = parseInt(searchParams.get('limit') || '20')
 
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = createTenantClient(token, tenant.tenantId)
 
     // TODO: Get tenant_id from auth context
     const tenantId = request.headers.get('x-tenant-id') // Temporary
@@ -63,9 +62,19 @@ export async function GET(request: NextRequest) {
     const { data: events, error } = await query
 
     if (error) {
-      console.error('Error fetching station events:', error)
+      console.error('[STATIONS] Error fetching station events:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
       return NextResponse.json(
-        { error: 'Failed to fetch stations' },
+      { 
+        ok: false,
+        error: {
+          code: 'STATIONS_FAILED_TO_FETCH_STATIONS',
+          message: 'Failed to fetch stations'
+        }
+      },
         { status: 500 }
       )
     }
@@ -149,7 +158,8 @@ export async function GET(request: NextRequest) {
 
     // ELITE: Rich response with meta and insights
     return NextResponse.json({
-      data: limitedStations,
+      ok: true,
+      data: { data: limitedStations,
       meta: {
         total: limitedStations.length,
         total_available: stations.length,
@@ -157,7 +167,8 @@ export async function GET(request: NextRequest) {
           favorites,
           nearby,
           radius: nearby ? radius : null
-        }
+         }
+    }
       },
       insights: {
         most_visited: limitedStations[0],
@@ -170,13 +181,23 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('[STATIONS] Unexpected error:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        ok: false,
+        error: {
+          code: 'STATIONS_INTERNAL_SERVER_ERROR',
+          message: 'Internal server error'
+        }
+      },
       { status: 500 }
     )
   }
-}
+})
 
 // ELITE: Helper functions for intelligence
 

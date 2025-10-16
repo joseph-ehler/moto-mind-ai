@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/stations/favorites
  * List user's favorite stations
@@ -11,19 +10,25 @@ import { createClient } from '@supabase/supabase-js'
  * - Recent activity
  * - Actionable insights
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (
+  request: NextRequest,
+  { user, tenant, token }: AuthContext
+) => {
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = createTenantClient(token, tenant.tenantId)
 
     const userId = request.headers.get('x-user-id')
     const tenantId = request.headers.get('x-tenant-id')
 
     if (!userId) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+      { 
+        ok: false,
+        error: {
+          code: 'STATIONS_UNAUTHORIZED',
+          message: 'Unauthorized'
+        }
+      },
         { status: 401 }
       )
     }
@@ -38,18 +43,26 @@ export async function GET(request: NextRequest) {
     if (favError) {
       console.error('Error fetching favorites:', favError)
       return NextResponse.json(
-        { error: 'Failed to fetch favorite stations' },
+      { 
+        ok: false,
+        error: {
+          code: 'STATIONS_FAILED_TO_FETCH_FAVORITE_STATIONS',
+          message: 'Failed to fetch favorite stations'
+        }
+      },
         { status: 500 }
       )
     }
 
     if (!favorites || favorites.length === 0) {
       return NextResponse.json({
-        data: [],
+      ok: true,
+      data: { data: [],
         meta: {
           total: 0,
           message: 'No favorite stations yet'
-        }
+         }
+    }
       })
     }
 
@@ -118,18 +131,30 @@ export async function GET(request: NextRequest) {
     enrichedFavorites.sort((a, b) => b.stats.visit_count - a.stats.visit_count)
 
     return NextResponse.json({
-      data: enrichedFavorites,
+      ok: true,
+      data: { data: enrichedFavorites,
       meta: {
         total: enrichedFavorites.length,
         active_favorites: enrichedFavorites.filter(f => f.insights.is_active).length,
         regular_stations: enrichedFavorites.filter(f => f.insights.is_regular).length
-      }
+       }
+    }
     })
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('[STATIONS] Unexpected error:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        ok: false,
+        error: {
+          code: 'STATIONS_INTERNAL_SERVER_ERROR',
+          message: 'Internal server error'
+        }
+      },
       { status: 500 }
     )
   }
-}
+})

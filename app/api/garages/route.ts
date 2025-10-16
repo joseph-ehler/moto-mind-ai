@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 import { z } from 'zod'
 
 const createGarageSchema = z.object({
@@ -17,17 +17,17 @@ const createGarageSchema = z.object({
  * - offset: pagination offset (default 0)
  * - search: search by name
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (
+  request: NextRequest,
+  { user, tenant, token }: AuthContext
+) => {
   const searchParams = request.nextUrl.searchParams
   const limit = parseInt(searchParams.get('limit') || '20')
   const offset = parseInt(searchParams.get('offset') || '0')
   const search = searchParams.get('search')
 
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = createTenantClient(token, tenant.tenantId)
 
     // TODO: Get tenant_id from auth context
 
@@ -48,30 +48,52 @@ export async function GET(request: NextRequest) {
     const { data: garages, error, count } = await query
 
     if (error) {
-      console.error('Error fetching garages:', error)
+      console.error('[GARAGES] Error fetching garages:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
       return NextResponse.json(
-        { error: 'Failed to fetch garages' },
+      { 
+        ok: false,
+        error: {
+          code: 'GARAGES_FAILED_TO_FETCH_GARAGES',
+          message: 'Failed to fetch garages'
+        }
+      },
         { status: 500 }
       )
     }
 
     return NextResponse.json({
-      garages: garages || [],
+      ok: true,
+      data: { garages: garages || [],
       pagination: {
         total: count || 0,
         limit,
         offset,
         has_more: count ? (offset + limit) < count : false
-      }
+       }
+    }
     })
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('[GARAGES] Unexpected error:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        ok: false,
+        error: {
+          code: 'GARAGES_INTERNAL_SERVER_ERROR',
+          message: 'Internal server error'
+        }
+      },
       { status: 500 }
     )
   }
-}
+})
 
 /**
  * POST /api/garages
@@ -81,22 +103,28 @@ export async function GET(request: NextRequest) {
  * - name: garage name (required)
  * - description: garage description (optional)
  */
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (
+  request: NextRequest,
+  { user, tenant, token }: AuthContext
+) => {
   try {
     const body = await request.json()
     const garageData = createGarageSchema.parse(body)
 
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = createTenantClient(token, tenant.tenantId)
 
     // TODO: Get tenant_id from auth context
     const tenantId = body.tenant_id
 
     if (!tenantId) {
       return NextResponse.json(
-        { error: 'Unauthorized - no tenant context' },
+      { 
+        ok: false,
+        error: {
+          code: 'GARAGES_UNAUTHORIZED_-_NO_TENANT_CONTEXT',
+          message: 'Unauthorized - no tenant context'
+        }
+      },
         { status: 401 }
       )
     }
@@ -113,15 +141,27 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Error creating garage:', error)
+      console.error('[GARAGES] Error creating garage:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
       return NextResponse.json(
-        { error: 'Failed to create garage' },
+      { 
+        ok: false,
+        error: {
+          code: 'GARAGES_FAILED_TO_CREATE_GARAGE',
+          message: 'Failed to create garage'
+        }
+      },
         { status: 500 }
       )
     }
 
-    return NextResponse.json(
-      { garage },
+    return NextResponse.json({
+      ok: true,
+      data: { garage  }
+    },
       { status: 201 }
     )
   } catch (error) {
@@ -132,10 +172,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.error('Unexpected error:', error)
+    console.error('[GARAGES] Unexpected error:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        ok: false,
+        error: {
+          code: 'GARAGES_INTERNAL_SERVER_ERROR',
+          message: 'Internal server error'
+        }
+      },
       { status: 500 }
     )
   }
-}
+})

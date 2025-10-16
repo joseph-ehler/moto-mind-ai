@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/events/[eventId]/related
  * Get related events (previous/next fuel fill-ups with context)
@@ -10,7 +9,7 @@ import { createClient } from '@supabase/supabase-js'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { eventId: string } }
+  { params }): { params: { eventId: string } }
 ) {
   const { eventId } = params
 

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/stations/[stationId]/events
  * Get all fuel-ups at a specific station with enriched context
@@ -20,7 +19,7 @@ import { createClient } from '@supabase/supabase-js'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { stationId: string } }
+  { params }): { params: { stationId: string } }
 ) {
   const { stationId } = params
   const searchParams = request.nextUrl.searchParams

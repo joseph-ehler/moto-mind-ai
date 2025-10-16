@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * DELETE /api/events/[id]/delete
  * Soft deletes an event (sets deleted_at timestamp)
@@ -9,7 +8,7 @@ import { createClient } from '@supabase/supabase-js'
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }): { params: { id: string } }
 ) {
   const { id } = params
   const body = await request.json()

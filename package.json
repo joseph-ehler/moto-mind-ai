@@ -32,6 +32,8 @@
     "db:schema-diff": "npx tsx scripts/database-suite/diff.ts",
     "db:seed": "npx tsx scripts/dev-tools/seed.ts",
     "db:apply-rls": "npx tsx scripts/database-suite/apply-rls-simple.ts",
+    "migrate:routes": "npx tsx scripts/migrate-routes-to-auth.ts",
+    "migrate:routes:dry": "npx tsx scripts/migrate-routes-to-auth.ts --dry-run",
     "supabase:admin": "npx tsx scripts/database-suite/supabase-admin-v2.ts",
     "supabase:admin:old": "npx tsx scripts/database-suite/supabase-admin.ts",
     "repo:analyze": "npx tsx scripts/dev-tools/repo-analyze.ts",

@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * POST /api/garages/[garageId]/vehicles/[vehicleId]
  * Assign a vehicle to a garage
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { garageId: string; vehicleId: string } }
+  { params }): { params: { garageId: string; vehicleId: string } }
 ) {
   const { garageId, vehicleId } = params
 
@@ -76,7 +75,7 @@ export async function POST(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { garageId: string; vehicleId: string } }
+  { params }): { params: { garageId: string; vehicleId: string } }
 ) {
   const { garageId, vehicleId } = params
 

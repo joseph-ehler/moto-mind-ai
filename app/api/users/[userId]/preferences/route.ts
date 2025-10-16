@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/users/[userId]/preferences
  * Get user preferences
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }): { params: { userId: string } }
 ) {
   const { userId } = params
 
@@ -48,7 +47,7 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }): { params: { userId: string } }
 ) {
   const { userId } = params
 

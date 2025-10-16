@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/timeline/recent
  * Get recent activity across all vehicles
@@ -17,7 +16,10 @@ import { createClient } from '@supabase/supabase-js'
  * - type: filter by event type
  * - vehicles: comma-separated vehicle IDs or 'all'
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (
+  request: NextRequest,
+  { user, tenant, token }: AuthContext
+) => {
   const searchParams = request.nextUrl.searchParams
   
   const limit = parseInt(searchParams.get('limit') || '20')
@@ -26,10 +28,7 @@ export async function GET(request: NextRequest) {
   const vehiclesParam = searchParams.get('vehicles') || 'all'
 
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = createTenantClient(token, tenant.tenantId)
 
     const tenantId = request.headers.get('x-tenant-id')
 
@@ -71,20 +70,32 @@ export async function GET(request: NextRequest) {
     const { data: events, error } = await query
 
     if (error) {
-      console.error('Error fetching recent timeline:', error)
+      console.error('[TIMELINE] Error fetching recent timeline:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
       return NextResponse.json(
-        { error: 'Failed to fetch recent activity' },
+      { 
+        ok: false,
+        error: {
+          code: 'TIMELINE_FAILED_TO_FETCH_RECENT_ACTIVITY',
+          message: 'Failed to fetch recent activity'
+        }
+      },
         { status: 500 }
       )
     }
 
     if (!events || events.length === 0) {
       return NextResponse.json({
-        data: {
+      ok: true,
+      data: { data: {
           events: [],
           summary: {
             total: 0,
-            message: `No activity in the last ${days} days`
+            message: `No activity in the last ${days }
+    } days`
           }
         },
         meta: {
@@ -157,15 +168,17 @@ export async function GET(request: NextRequest) {
     }
 
     if (summary.total_spent > 0) {
-      insights.push(`Total spent: $${summary.total_spent}`)
+      insights.push(`Total spent: ${summary.total_spent}`)
     }
 
     return NextResponse.json({
-      data: {
+      ok: true,
+      data: { data: {
         events: enrichedEvents,
         summary,
         insights
-      },
+       }
+    },
       meta: {
         days,
         limit,
@@ -181,10 +194,20 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('[TIMELINE] Unexpected error:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        ok: false,
+        error: {
+          code: 'TIMELINE_INTERNAL_SERVER_ERROR',
+          message: 'Internal server error'
+        }
+      },
       { status: 500 }
     )
   }
-}
+})

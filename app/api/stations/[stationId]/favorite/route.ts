@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * POST /api/stations/[stationId]/favorite
  * Mark a station as favorite
@@ -12,7 +11,7 @@ import { createClient } from '@supabase/supabase-js'
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { stationId: string } }
+  { params }): { params: { stationId: string } }
 ) {
   const { stationId } = params
 
@@ -92,7 +91,7 @@ export async function POST(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { stationId: string } }
+  { params }): { params: { stationId: string } }
 ) {
   const { stationId } = params
 

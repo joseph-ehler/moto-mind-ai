@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/vehicles/[vehicleId]/insights
  * Get comprehensive intelligence and insights for a vehicle
@@ -15,7 +14,7 @@ import { createClient } from '@supabase/supabase-js'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { vehicleId: string } }
+  { params }): { params: { vehicleId: string } }
 ) {
   const { vehicleId } = params
 

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/events
  * Search/list events across all vehicles (GLOBAL)
@@ -14,7 +13,10 @@ import { createClient } from '@supabase/supabase-js'
  * - limit: number of results (default 20)
  * - offset: pagination offset (default 0)
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (
+  request: NextRequest,
+  { user, tenant, token }: AuthContext
+) => {
   const searchParams = request.nextUrl.searchParams
   
   const vehicleId = searchParams.get('vehicle_id')
@@ -26,10 +28,7 @@ export async function GET(request: NextRequest) {
   const offset = parseInt(searchParams.get('offset') || '0')
 
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = createTenantClient(token, tenant.tenantId)
 
     // TODO: Get tenant_id from auth context and filter by it
 
@@ -75,21 +74,33 @@ export async function GET(request: NextRequest) {
     const { data: events, error, count } = await query
 
     if (error) {
-      console.error('Error fetching events:', error)
+      console.error('[EVENTS] Error fetching events:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
       return NextResponse.json(
-        { error: 'Failed to fetch events' },
+      { 
+        ok: false,
+        error: {
+          code: 'EVENTS_FAILED_TO_FETCH_EVENTS',
+          message: 'Failed to fetch events'
+        }
+      },
         { status: 500 }
       )
     }
 
     return NextResponse.json({
-      events: events || [],
+      ok: true,
+      data: { events: events || [],
       pagination: {
         total: count || 0,
         limit,
         offset,
         has_more: count ? (offset + limit) < count : false
-      },
+       }
+    },
       filters: {
         vehicle_id: vehicleId,
         type,
@@ -99,10 +110,20 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('[EVENTS] Unexpected error:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        ok: false,
+        error: {
+          code: 'EVENTS_INTERNAL_SERVER_ERROR',
+          message: 'Internal server error'
+        }
+      },
       { status: 500 }
     )
   }
-}
+})

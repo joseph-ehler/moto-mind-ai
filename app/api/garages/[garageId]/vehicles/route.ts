@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/garages/[garageId]/vehicles
  * List all vehicles in a garage
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { garageId: string } }
+  { params }): { params: { garageId: string } }
 ) {
   const { garageId } = params
 

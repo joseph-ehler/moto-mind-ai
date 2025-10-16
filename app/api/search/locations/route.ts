@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * GET /api/search/locations
  * Search for events near a location
@@ -12,7 +11,10 @@ import { createClient } from '@supabase/supabase-js'
  * - Distance sorting
  * - Event clustering by location
  */
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (
+  request: NextRequest,
+  { user, tenant, token }: AuthContext
+) => {
   const searchParams = request.nextUrl.searchParams
   
   const lat = searchParams.get('lat')
@@ -23,16 +25,19 @@ export async function GET(request: NextRequest) {
 
   if (!lat || !lng) {
     return NextResponse.json(
-      { error: 'Latitude and longitude are required' },
+      { 
+        ok: false,
+        error: {
+          code: 'SEARCH_LATITUDE_AND_LONGITUDE_ARE_REQUIRED',
+          message: 'Latitude and longitude are required'
+        }
+      },
       { status: 400 }
     )
   }
 
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supabase = createTenantClient(token, tenant.tenantId)
 
     const tenantId = request.headers.get('x-tenant-id')
     const userLat = parseFloat(lat)
@@ -62,9 +67,19 @@ export async function GET(request: NextRequest) {
     const { data: events, error } = await dbQuery
 
     if (error) {
-      console.error('Error searching locations:', error)
+      console.error('[SEARCH] Error searching locations:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
       return NextResponse.json(
-        { error: 'Location search failed' },
+      { 
+        ok: false,
+        error: {
+          code: 'SEARCH_LOCATION_SEARCH_FAILED',
+          message: 'Location search failed'
+        }
+      },
         { status: 500 }
       )
     }
@@ -92,9 +107,11 @@ export async function GET(request: NextRequest) {
     const locationClusters = clusterByLocation(eventsWithDistance)
 
     return NextResponse.json({
-      data: eventsWithDistance,
+      ok: true,
+      data: { data: eventsWithDistance,
       meta: {
-        search_center: { lat: userLat, lng: userLng },
+        search_center: { lat: userLat, lng: userLng  }
+    },
         radius_miles: radius,
         total_results: eventsWithDistance.length,
         address: address || 'Custom coordinates'
@@ -110,13 +127,23 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('[SEARCH] Unexpected error:', {
+      tenantId: tenant.tenantId,
+      userId: user.id,
+      error,
+    })
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        ok: false,
+        error: {
+          code: 'SEARCH_INTERNAL_SERVER_ERROR',
+          message: 'Internal server error'
+        }
+      },
       { status: 500 }
     )
   }
-}
+})
 
 // ELITE: Haversine distance formula
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {

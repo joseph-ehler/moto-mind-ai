@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
+import { withAuth, createTenantClient, type AuthContext } from '@/lib/middleware'
 /**
  * POST /api/events/[eventId]/restore
  * Restore a soft-deleted event (clears deleted_at)
@@ -9,7 +8,7 @@ import { createClient } from '@supabase/supabase-js'
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { eventId: string } }
+  { params }): { params: { eventId: string } }
 ) {
   const { eventId } = params
 
