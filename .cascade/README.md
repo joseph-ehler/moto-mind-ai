@@ -13,6 +13,15 @@ This file tells AI tools like Windsurf to:
 3. **Follow patterns** - Use the same structure and conventions
 4. **Validate after** - Run checks to ensure quality
 
+### `TOOL_CHECKLIST.md` ⭐ NEW!
+**Quick reference checklist** for Cascade (me!) to use before ANY work.
+
+Contains:
+- Pre-flight checklist (what to do before building)
+- Tool reference table (all 13 tools with commands)
+- Critical reminders (don't forget to use the tools!)
+- Why it matters (10-20x productivity gains!)
+
 ## Why This Exists
 
 AI tools are powerful but can generate code that doesn't fit your codebase:
