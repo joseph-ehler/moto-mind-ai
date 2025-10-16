@@ -14,7 +14,7 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useUser } from '@/lib/hooks/useUser'
 import { getFeatureVariant, features } from '@/lib/config/features'
 
@@ -89,10 +89,10 @@ export function FeatureVariant({
   const { variant } = useFeatureVariant(featureId)
 
   if (variant === 'treatment') {
-    return <>{treatment}</>
+    return React.createElement(React.Fragment, null, treatment)
   }
 
-  return <>{control}</>
+  return React.createElement(React.Fragment, null, control)
 }
 
 /**

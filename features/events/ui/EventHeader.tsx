@@ -176,6 +176,8 @@ export function EventHeader({ event, onBack, onShare, onExport }: EventHeaderPro
           </Text>
         </div>
       )}
+        </div>
+      </div>
     </div>
   )
 }

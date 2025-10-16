@@ -1,0 +1,1692 @@
+{
+  "issues": [
+    {
+      "type": "misplaced_file",
+      "severity": "high",
+      "currentPath": ".file-backups/components_vehicle_VehicleRow.tsx",
+      "suggestedPath": "features/vehicles/ui/VehicleRow.tsx",
+      "reason": "The file VehicleRow.tsx is a component related to the vehicle feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ is not aligned with this structure.",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "high",
+      "currentPath": ".file-backups/pages_onboard.tsx",
+      "suggestedPath": "features/vehicles/ui/pages_onboard.tsx",
+      "reason": "The file pages_onboard.tsx is related to vehicle onboarding, which aligns with the vehicles feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ does not adhere to this structure.",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/.windsurf-context.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/.windsurf-context.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/ACCESSIBILITY_BUILT_IN.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/ACCESSIBILITY_BUILT_IN.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/AI-INTEGRATION-COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/AI-INTEGRATION-COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/AI-INTEGRATION-SHOWCASE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/AI-INTEGRATION-SHOWCASE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/API_ENDPOINTS_AUDIT.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/API_ENDPOINTS_AUDIT.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/API_ORGANIZATION_TRANSFORMATION.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/API_ORGANIZATION_TRANSFORMATION.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/BOOTSTRAPPING_STRATEGY_DECISION.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/BOOTSTRAPPING_STRATEGY_DECISION.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CARDS_AND_MODALS_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CARDS_AND_MODALS_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CASCADE-COMPLETE-REPORT.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CASCADE-COMPLETE-REPORT.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CASCADE-PROGRESS-REPORT.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CASCADE-PROGRESS-REPORT.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CLEAN_STRUCTURE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CLEAN_STRUCTURE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CODEBASE_ORGANIZATION_ANALYSIS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CODEBASE_ORGANIZATION_ANALYSIS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CODEBASE_TAXONOMY_AUDIT.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CODEBASE_TAXONOMY_AUDIT.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/COMPLETE-EVENT-TYPES-IMPLEMENTATION.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/COMPLETE-EVENT-TYPES-IMPLEMENTATION.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/COMPLETE_MODAL_SYSTEM_SUMMARY.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/COMPLETE_MODAL_SYSTEM_SUMMARY.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/COMPONENT_ORGANIZATION.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/COMPONENT_ORGANIZATION.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CONSOLIDATION_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CONSOLIDATION_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CONTRIBUTING.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CONTRIBUTING.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DEPENDENCY_AUDIT_FINDINGS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DEPENDENCY_AUDIT_FINDINGS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DEPLOYMENT-CHECKLIST.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DEPLOYMENT-CHECKLIST.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DEPLOYMENT_FIX_STRATEGY.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DEPLOYMENT_FIX_STRATEGY.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DEPLOYMENT_MONITORING_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DEPLOYMENT_MONITORING_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DEPLOYMENT_STATUS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DEPLOYMENT_STATUS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DESIGN_SYSTEM_AUDIT.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DESIGN_SYSTEM_AUDIT.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DESIGN_SYSTEM_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DESIGN_SYSTEM_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DESIGN_SYSTEM_STATUS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DESIGN_SYSTEM_STATUS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DIRECTORY_STRUCTURE 2.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DIRECTORY_STRUCTURE 2.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DIRECTORY_STRUCTURE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DIRECTORY_STRUCTURE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DOCUMENT-TRANSPARENCY-SOLUTION.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DOCUMENT-TRANSPARENCY-SOLUTION.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DOCUMENT_PROCESSING_VALIDATION_PLAN.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DOCUMENT_PROCESSING_VALIDATION_PLAN.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/ENDPOINT_RESTORATION_PLAN.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/ENDPOINT_RESTORATION_PLAN.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/ERROR_BOUNDARIES_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/ERROR_BOUNDARIES_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/FEATURE_FLAGS_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/FEATURE_FLAGS_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/FINAL_RESTORATION_SUCCESS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/FINAL_RESTORATION_SUCCESS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/GROUNDED_VISION_STRATEGY.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/GROUNDED_VISION_STRATEGY.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/HONEST_CORRECTED_ASSESSMENT.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/HONEST_CORRECTED_ASSESSMENT.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/HONEST_DEPLOYMENT_ASSESSMENT.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/HONEST_DEPLOYMENT_ASSESSMENT.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/HONEST_FUNCTIONAL_ASSESSMENT.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/HONEST_FUNCTIONAL_ASSESSMENT.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/INTEGRATION-INSTRUCTIONS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/INTEGRATION-INSTRUCTIONS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/LOCATION_INTELLIGENCE_QUICKSTART.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/LOCATION_INTELLIGENCE_QUICKSTART.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/LOCATION_INTELLIGENCE_STATUS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/LOCATION_INTELLIGENCE_STATUS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/MACOS_NOTIFICATION_FIX.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/MACOS_NOTIFICATION_FIX.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/MIGRATION_CLEANUP_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/MIGRATION_CLEANUP_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/MONITORING_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/MONITORING_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/NUCLEAR-DEPLOYMENT-GUIDE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/NUCLEAR-DEPLOYMENT-GUIDE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/ORIGINAL_DESIGN_LANGUAGE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/ORIGINAL_DESIGN_LANGUAGE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PHASE_1A_DELIVERED.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PHASE_1A_DELIVERED.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PHASE_1A_SCHEMA_CLEANUP_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PHASE_1A_SCHEMA_CLEANUP_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PHASE_1B_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PHASE_1B_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PHASE_1C_READY.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PHASE_1C_READY.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PRODUCTION-DEPLOYMENT-GUIDE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PRODUCTION-DEPLOYMENT-GUIDE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PRODUCTION_DEPLOYMENT_CHECKLIST.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PRODUCTION_DEPLOYMENT_CHECKLIST.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PRODUCTION_DEPLOYMENT_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PRODUCTION_DEPLOYMENT_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PRODUCTION_DEPLOYMENT_SUCCESS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PRODUCTION_DEPLOYMENT_SUCCESS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PWA_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PWA_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/README 2.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/README 2.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/README.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/README.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/README_NEXT_STEPS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/README_NEXT_STEPS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/REFACTORING_PLAN.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/REFACTORING_PLAN.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/RESTORATION_COMPLETE_SUCCESS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/RESTORATION_COMPLETE_SUCCESS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/RESTORATION_WEEK_1_PLAN.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/RESTORATION_WEEK_1_PLAN.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/ROADMAP_STATUS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/ROADMAP_STATUS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/RO_DESIGN_TRANSFORMATION.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/RO_DESIGN_TRANSFORMATION.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/SECURITY_TRANSFORMATION_SUMMARY.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/SECURITY_TRANSFORMATION_SUMMARY.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/SIMPLE_SERVICE_RECEIPT_VALIDATION.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/SIMPLE_SERVICE_RECEIPT_VALIDATION.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/SYSTEMATIC_VALIDATION_RESULTS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/SYSTEMATIC_VALIDATION_RESULTS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/TESTING_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/TESTING_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/TIMELINE-SYSTEM-IMPLEMENTATION.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/TIMELINE-SYSTEM-IMPLEMENTATION.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/TIMESTAMP-DECISION.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/TIMESTAMP-DECISION.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/TOOLS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/TOOLS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/TOP-TIER-IMPLEMENTATION-COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/TOP-TIER-IMPLEMENTATION-COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/URGENT_FIX_APPLIED.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/URGENT_FIX_APPLIED.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VALIDATION_FOUNDATION_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VALIDATION_FOUNDATION_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VALIDATION_ROADMAP.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VALIDATION_ROADMAP.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VALUE_HYPOTHESIS_TEST.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VALUE_HYPOTHESIS_TEST.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VEHICLE_CRUD_ANALYSIS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VEHICLE_CRUD_ANALYSIS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VERCEL_DEPLOYMENT.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VERCEL_DEPLOYMENT.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VISION_ARCHITECTURE_TRANSFORMATION.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VISION_ARCHITECTURE_TRANSFORMATION.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VISION_CONSOLIDATION_PLAN.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VISION_CONSOLIDATION_PLAN.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VISION_CONSOLIDATION_REFINED.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VISION_CONSOLIDATION_REFINED.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VISION_DEPLOYMENT_CHECKLIST.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VISION_DEPLOYMENT_CHECKLIST.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VISION_FILES_ANALYSIS.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VISION_FILES_ANALYSIS.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/VISION_SCHEMA_STANDARDIZATION_COMPLETE.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/VISION_SCHEMA_STANDARDIZATION_COMPLETE.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/check-existing-tables.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/check-existing-tables.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/check-vehicle-columns.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/check-vehicle-columns.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/debug-vehicle-names.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/debug-vehicle-names.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/fix-deps.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/fix-deps.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/fix-fuel-depot-address.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/fix-fuel-depot-address.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/swr-debug-analysis.md",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/swr-debug-analysis.md",
+      "reason": "Documentation files should be in docs/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-after-schema-setup.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-after-schema-setup.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-all-endpoints.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-all-endpoints.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-build-fix.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-build-fix.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-complete-crud.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-complete-crud.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-db-connection.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-db-connection.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-delete-dialog-display.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-delete-dialog-display.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-document-integration.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-document-integration.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-edit-modal-data.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-edit-modal-data.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-end-to-end-workflow.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-end-to-end-workflow.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-final-edit-modal-fixes.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-final-edit-modal-fixes.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-final-vehicle-list.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-final-vehicle-list.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-frontend-crud-workflow.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-frontend-crud-workflow.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-garage-assignment.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-garage-assignment.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-garage-navigation.html",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-garage-navigation.html",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-imports.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-imports.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-improved-delete-display.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-improved-delete-display.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-modal-fixes.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-modal-fixes.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-redesigned-vehicle-cards.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-redesigned-vehicle-cards.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-refactored-api.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-refactored-api.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-service-receipt-manual.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-service-receipt-manual.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-storage.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-storage.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-vehicle-creation-final.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-vehicle-creation-final.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-vehicle-updates.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-vehicle-updates.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-vision-baseline-simple.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-vision-baseline-simple.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-vision-corrected.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-vision-corrected.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-vision-endpoint.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-vision-endpoint.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/test-with-available-samples.js",
+      "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/tests/legacy/test-with-available-samples.js",
+      "reason": "Test files should be in tests/",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "Low - just file relocation"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": ".stable/components_vehicle_VehicleRow.tsx",
+      "suggestedPath": "features/vehicles/ui/VehicleRow.tsx",
+      "reason": "The file 'VehicleRow.tsx' appears to be a UI component related to vehicles. According to the project's feature-first architecture, feature components should be placed in 'features/[feature]/ui/'. Since this component is related to vehicles, it should be located in 'features/vehicles/ui/'.",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": ".file-backups/pages_garage.tsx",
+      "suggestedPath": "features/vehicles/ui/pages_garage.tsx",
+      "reason": "The file pages_garage.tsx appears to be a feature-specific component related to vehicles. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location, .file-backups/, does not align with this structure.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": ".stable/garage-master.tsx",
+      "suggestedPath": "features/garage/ui/garage-master.tsx",
+      "reason": "The file 'garage-master.tsx' appears to be a feature component related to the 'garage' functionality. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. The current location '.stable/' does not align with this structure.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": ".stable/garage-stable.tsx",
+      "suggestedPath": "features/vehicles/ui/garage-stable.tsx",
+      "reason": "The file 'garage-stable.tsx' appears to be a UI component related to vehicle management, which aligns with the 'vehicles' feature. According to the project's feature-first architecture, UI components for a specific feature should be located in 'features/[feature]/ui/'.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": ".stable/pages_api_upload.ts",
+      "suggestedPath": "features/uploads/api/pages_api_upload.ts",
+      "reason": "The file appears to be an API endpoint related to file uploads, which should be part of a specific feature. According to the project's feature-first architecture, it should be located within a feature directory, such as 'features/uploads/api/'. The current location '.stable/' does not align with the established patterns for feature organization.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": ".stable/pages_api_vehicles.ts",
+      "suggestedPath": "pages/api/vehicles.ts",
+      "reason": "The file .stable/pages_api_vehicles.ts is an API route handler for vehicle-related operations. According to the project's feature-first architecture, API route handlers should be located in the pages/api/ directory, which aligns with Next.js conventions for API routes. The current location under .stable does not adhere to these conventions.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": ".stable/pages_garage.tsx",
+      "suggestedPath": "features/vehicles/ui/pages_garage.tsx",
+      "reason": "The file .stable/pages_garage.tsx appears to be a feature-specific component related to vehicle management. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. Since this file is related to vehicles, it should be placed under features/vehicles/ui/.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": ".stable/pages_onboard.tsx",
+      "suggestedPath": "features/onboarding/ui/pages_onboard.tsx",
+      "reason": "The file .stable/pages_onboard.tsx appears to be part of the onboarding feature, as it imports and uses the VehicleOnboardingFlow component. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. Therefore, this file should be moved to the onboarding feature's UI directory.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "_archived_showcases/action-bars-showcase.tsx",
+      "suggestedPath": "components/design-system/",
+      "reason": "The file '_archived_showcases/action-bars-showcase.tsx' appears to be a showcase of various action bar components, which aligns with the project's pattern of placing shared components in 'components/design-system/'. This file does not fit into the feature-first architecture as it is not tied to a specific feature but rather demonstrates shared UI components.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "_archived_showcases/cards-showcase.tsx",
+      "suggestedPath": "components/design-system/cards-showcase.tsx",
+      "reason": "The file 'cards-showcase.tsx' demonstrates card components built using the MotoMind Design System. According to the project's architecture, shared components or design system components should be located in 'components/design-system/'. The current location '_archived_showcases/' does not align with the established patterns for component organization.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "_archived_showcases/color-system.tsx",
+      "suggestedPath": "components/design-system/",
+      "reason": "The file '_archived_showcases/color-system.tsx' is a component showcasing the color system, which aligns with the design system components. According to the project's architecture, shared components should be located in 'components/design-system/' or 'components/shared/'. Since this file is related to the design system, it should be moved to 'components/design-system/'.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "_archived_showcases/complete-modal-showcase.tsx",
+      "suggestedPath": "features/modals/ui/complete-modal-showcase.tsx",
+      "reason": "The file 'complete-modal-showcase.tsx' demonstrates a modal system using the MotoMind Design System foundation. According to the project's feature-first architecture, feature components should be placed in 'features/[feature]/ui/'. Since this file is related to modals, it should be placed under a 'modals' feature directory within the 'ui' subdirectory.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "_archived_showcases/design-rules.tsx",
+      "suggestedPath": "docs/archive/design-rules.tsx",
+      "reason": "The file '_archived_showcases/design-rules.tsx' appears to be documentation related to design system rules and guidelines. According to the project's established patterns, documentation files should be moved to 'docs/archive/'. This file does not fit into the feature-first architecture as it is not a feature component, domain logic, data layer, or hook.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "_archived_showcases/design-system-index.tsx",
+      "suggestedPath": "components/design-system/",
+      "reason": "The file '_archived_showcases/design-system-index.tsx' appears to be a central hub for design system documentation and components. According to the project's established patterns, shared components and foundational UI elements should be located in 'components/design-system/'. The current location '_archived_showcases/' suggests it is archived, which may not be appropriate for an active design system index.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "_archived_showcases/design-system.tsx",
+      "suggestedPath": "components/design-system/",
+      "reason": "The file '_archived_showcases/design-system.tsx' appears to be a showcase of design system components, which aligns with the established pattern for shared components. According to the project's architecture, shared components should be located in 'components/design-system/' or 'components/shared/'. The current location '_archived_showcases/' suggests it is an archived or legacy file, but it does not align with the feature-first architecture or the designated areas for shared components.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "_archived_showcases/dynamic-demo.tsx",
+      "suggestedPath": "features/vehicles/ui/dynamic-demo.tsx",
+      "reason": "The file 'dynamic-demo.tsx' appears to be a feature component related to vehicles, as it involves dynamic vehicle cards and context-aware intelligence. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. Since this file is currently in '_archived_showcases/', it should be moved to 'features/vehicles/ui/'.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "_archived_showcases/elite-surfaces-showcase.tsx",
+      "suggestedPath": "features/elite-surfaces/ui/elite-surfaces-showcase.tsx",
+      "reason": "The file 'elite-surfaces-showcase.tsx' appears to be a feature component showcasing UI elements inspired by major design systems. According to the project's feature-first architecture, feature components should be located in 'features/[feature]/ui/'. The current location '_archived_showcases/' suggests it is not actively used or maintained, but if it is part of an active feature, it should be moved to the appropriate feature directory.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "medium",
+      "currentPath": "_archived_showcases/empty-states-showcase.tsx",
+      "suggestedPath": "components/design-system/empty-states-showcase.tsx",
+      "reason": "The file '_archived_showcases/empty-states-showcase.tsx' appears to be a showcase of UI components related to empty states. According to the project's established patterns, shared components or foundational UI components should be located in 'components/design-system/'. This file does not belong to a specific feature and is more aligned with shared UI components.",
+      "confidence": 0.9,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./migrations/archive",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./migrations/seeds",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./migrations/rollback",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./.windsurf/staging",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./test-receipts",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./forms",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./app/(authenticated)/vehicles/[id]/capture/[eventType]",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./app/(authenticated)/documents",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./patterns",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./features/capture/ui/sections",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./features/capture/ui/modals",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./features/capture/ui/steps",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./features/timeline/__tests__/data",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./.swc/plugins/v7_macos_aarch64_0.106.15",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./.swc/plugins/macos_aarch64_18.0.0",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./feedback",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./primitives",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./utilities",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./components/auth",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./components/fleet",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./components/design-system/utilities/file-upload/__tests__",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./components/design-system/tokens",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./components/onboarding",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./lib/domain/vehicles",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./lib/services/vehicles",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./test-images",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./pages/capture",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./pages/admin",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./pages/api/vehicles/[id]/specs",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./pages/api/vehicles/[id]/events/[eventId]",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./pages/api/vehicles/[id]/photos",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./pages/vehicles/[id]",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    },
+    {
+      "type": "empty_dir",
+      "severity": "low",
+      "currentPath": "./tokens",
+      "reason": "Empty directory should be deleted",
+      "confidence": 1,
+      "autoFixable": true,
+      "estimatedImpact": "None - safe to delete"
+    }
+  ],
+  "totalIssues": 169,
+  "autoFixableCount": 169,
+  "estimatedTime": "85 minutes (automated)",
+  "priority": [
+    {
+      "type": "misplaced_file",
+      "severity": "high",
+      "currentPath": ".file-backups/components_vehicle_VehicleRow.tsx",
+      "suggestedPath": "features/vehicles/ui/VehicleRow.tsx",
+      "reason": "The file VehicleRow.tsx is a component related to the vehicle feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ is not aligned with this structure.",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    },
+    {
+      "type": "misplaced_file",
+      "severity": "high",
+      "currentPath": ".file-backups/pages_onboard.tsx",
+      "suggestedPath": "features/vehicles/ui/pages_onboard.tsx",
+      "reason": "The file pages_onboard.tsx is related to vehicle onboarding, which aligns with the vehicles feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ does not adhere to this structure.",
+      "confidence": 0.95,
+      "autoFixable": true,
+      "estimatedImpact": "File relocation with import updates"
+    }
+  ],
+  "safetyChecks": [
+    "Run type-check after each change",
+    "Commit after each successful change",
+    "Limit to 50 files per run",
+    "Rollback on any test failure"
+  ]
+}

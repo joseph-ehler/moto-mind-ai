@@ -1,0 +1,708 @@
+{
+  "success": false,
+  "issuesFixed": 0,
+  "issuesFailed": 50,
+  "timeSpent": "1.5 minutes",
+  "details": [
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "high",
+        "currentPath": ".file-backups/components_vehicle_VehicleRow.tsx",
+        "suggestedPath": "features/vehicles/ui/VehicleRow.tsx",
+        "reason": "The file VehicleRow.tsx is a component related to the vehicle feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ is not aligned with this structure.",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "File relocation with import updates"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "high",
+        "currentPath": ".file-backups/pages_onboard.tsx",
+        "suggestedPath": "features/vehicles/ui/pages_onboard.tsx",
+        "reason": "The file pages_onboard.tsx is related to vehicle onboarding, which aligns with the vehicles feature. According to the project's feature-first architecture, feature components should be located in features/[feature]/ui/. The current location in .file-backups/ does not adhere to this structure.",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "File relocation with import updates"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/.windsurf-context.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/.windsurf-context.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/ACCESSIBILITY_BUILT_IN.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/ACCESSIBILITY_BUILT_IN.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/AI-INTEGRATION-COMPLETE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/AI-INTEGRATION-COMPLETE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/AI-INTEGRATION-SHOWCASE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/AI-INTEGRATION-SHOWCASE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/API_ENDPOINTS_AUDIT.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/API_ENDPOINTS_AUDIT.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/API_ORGANIZATION_TRANSFORMATION.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/API_ORGANIZATION_TRANSFORMATION.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/BOOTSTRAPPING_STRATEGY_DECISION.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/BOOTSTRAPPING_STRATEGY_DECISION.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CARDS_AND_MODALS_COMPLETE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CARDS_AND_MODALS_COMPLETE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CASCADE-COMPLETE-REPORT.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CASCADE-COMPLETE-REPORT.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CASCADE-PROGRESS-REPORT.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CASCADE-PROGRESS-REPORT.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CLEAN_STRUCTURE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CLEAN_STRUCTURE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CODEBASE_ORGANIZATION_ANALYSIS.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CODEBASE_ORGANIZATION_ANALYSIS.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CODEBASE_TAXONOMY_AUDIT.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CODEBASE_TAXONOMY_AUDIT.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/COMPLETE-EVENT-TYPES-IMPLEMENTATION.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/COMPLETE-EVENT-TYPES-IMPLEMENTATION.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/COMPLETE_MODAL_SYSTEM_SUMMARY.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/COMPLETE_MODAL_SYSTEM_SUMMARY.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/COMPONENT_ORGANIZATION.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/COMPONENT_ORGANIZATION.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CONSOLIDATION_COMPLETE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CONSOLIDATION_COMPLETE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/CONTRIBUTING.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/CONTRIBUTING.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DEPENDENCY_AUDIT_FINDINGS.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DEPENDENCY_AUDIT_FINDINGS.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DEPLOYMENT-CHECKLIST.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DEPLOYMENT-CHECKLIST.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DEPLOYMENT_FIX_STRATEGY.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DEPLOYMENT_FIX_STRATEGY.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DEPLOYMENT_MONITORING_COMPLETE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DEPLOYMENT_MONITORING_COMPLETE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DEPLOYMENT_STATUS.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DEPLOYMENT_STATUS.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DESIGN_SYSTEM_AUDIT.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DESIGN_SYSTEM_AUDIT.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DESIGN_SYSTEM_COMPLETE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DESIGN_SYSTEM_COMPLETE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DESIGN_SYSTEM_STATUS.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DESIGN_SYSTEM_STATUS.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DIRECTORY_STRUCTURE 2.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DIRECTORY_STRUCTURE 2.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DIRECTORY_STRUCTURE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DIRECTORY_STRUCTURE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DOCUMENT-TRANSPARENCY-SOLUTION.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DOCUMENT-TRANSPARENCY-SOLUTION.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/DOCUMENT_PROCESSING_VALIDATION_PLAN.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/DOCUMENT_PROCESSING_VALIDATION_PLAN.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/ENDPOINT_RESTORATION_PLAN.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/ENDPOINT_RESTORATION_PLAN.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/ERROR_BOUNDARIES_COMPLETE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/ERROR_BOUNDARIES_COMPLETE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/FEATURE_FLAGS_COMPLETE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/FEATURE_FLAGS_COMPLETE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/FINAL_RESTORATION_SUCCESS.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/FINAL_RESTORATION_SUCCESS.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/GROUNDED_VISION_STRATEGY.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/GROUNDED_VISION_STRATEGY.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/HONEST_CORRECTED_ASSESSMENT.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/HONEST_CORRECTED_ASSESSMENT.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/HONEST_DEPLOYMENT_ASSESSMENT.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/HONEST_DEPLOYMENT_ASSESSMENT.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/HONEST_FUNCTIONAL_ASSESSMENT.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/HONEST_FUNCTIONAL_ASSESSMENT.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/INTEGRATION-INSTRUCTIONS.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/INTEGRATION-INSTRUCTIONS.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/LOCATION_INTELLIGENCE_QUICKSTART.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/LOCATION_INTELLIGENCE_QUICKSTART.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/LOCATION_INTELLIGENCE_STATUS.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/LOCATION_INTELLIGENCE_STATUS.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/MACOS_NOTIFICATION_FIX.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/MACOS_NOTIFICATION_FIX.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/MIGRATION_CLEANUP_COMPLETE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/MIGRATION_CLEANUP_COMPLETE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/MONITORING_COMPLETE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/MONITORING_COMPLETE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/NUCLEAR-DEPLOYMENT-GUIDE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/NUCLEAR-DEPLOYMENT-GUIDE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/ORIGINAL_DESIGN_LANGUAGE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/ORIGINAL_DESIGN_LANGUAGE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PHASE_1A_DELIVERED.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PHASE_1A_DELIVERED.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    },
+    {
+      "issue": {
+        "type": "misplaced_file",
+        "severity": "medium",
+        "currentPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/PHASE_1A_SCHEMA_CLEANUP_COMPLETE.md",
+        "suggestedPath": "/Users/josephehler/Desktop/Desktop/apps/motomind-ai/docs/archive/2025/PHASE_1A_SCHEMA_CLEANUP_COMPLETE.md",
+        "reason": "Documentation files should be in docs/",
+        "confidence": 0.95,
+        "autoFixable": true,
+        "estimatedImpact": "Low - just file relocation"
+      },
+      "success": false,
+      "error": "Type-check failed"
+    }
+  ]
+}
