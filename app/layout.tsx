@@ -1,4 +1,5 @@
 import './globals.css'
+import { SessionProvider } from '@/app/providers'
 
 export const metadata = {
   title: 'MotoMind - Fresh Start',
@@ -12,7 +13,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SessionProvider>
+          {children}
+        </SessionProvider>
+      </body>
     </html>
   )
 }
