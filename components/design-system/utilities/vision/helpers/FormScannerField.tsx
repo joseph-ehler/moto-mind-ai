@@ -9,9 +9,7 @@
 
 import React, { useState } from 'react'
 import { Camera } from 'lucide-react'
-import { Stack } from '../../../primitives/Layout'
-import { Button } from '../../../primitives/Button'
-import { Text } from '../../../primitives/Typography'
+import { Stack, Button, Text } from '@/components/design-system'
 import { VINScanner } from '../scanners/VINScanner'
 import type { VINData } from '../scanners/VINScanner'
 

@@ -1,9 +1,33 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "🛡️  AI Pattern Enforcer - Validating staged files..."
+echo "🛡️  MotoMind Quality Checks - Validating staged files..."
+echo ""
 
-# Run Pattern Enforcer on staged files
+# Check 1: Hardcoded URLs
+echo "🔍 Checking for hardcoded URLs..."
+if git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$' | xargs grep -l "http://localhost\|https://motomind\.app" 2>/dev/null | grep -v "^docs/\|^scripts/\|test\|spec"; then
+  echo ""
+  echo "❌ Hardcoded URLs detected in staged files!"
+  echo "Use apiUrl() from @/lib/utils/api-url instead"
+  echo ""
+  exit 1
+fi
+echo "✅ No hardcoded URLs"
+
+# Check 2: Non-barrel imports
+echo "🎯 Checking for non-barrel imports..."
+if git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx)$' | xargs grep -l "from '../.*primitives\|from '../.*patterns\|from '../.*feedback" 2>/dev/null | grep -v "^components/design-system/index"; then
+  echo ""
+  echo "❌ Non-barrel imports detected!"
+  echo "Use: import { Component } from '@/components/design-system'"
+  echo ""
+  exit 1
+fi
+echo "✅ All imports use barrel exports"
+
+# Check 3: AI Pattern Enforcer
+echo "🛡️  Running AI Pattern Enforcer..."
 npx tsx scripts/ai-platform/enforce-patterns-ai.ts --validate
 
 if [ $? -ne 0 ]; then
@@ -18,4 +42,5 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "✅ All patterns followed! Commit proceeding..."
+echo ""
+echo "✅ All quality checks passed! Commit proceeding..."

@@ -8,11 +8,7 @@
 
 import React from 'react'
 import { Camera, Upload } from 'lucide-react'
-import { Stack, Flex } from '../../../primitives/Layout'
-import { Heading } from '../../../primitives/Typography'
-import { Text } from '../../../primitives/Typography'
-import { Button } from '../../../primitives/Button'
-import { Modal, Drawer } from '../../../feedback/Overlays'
+import { Stack, Flex, Heading, Text, Button, Modal, Drawer } from '@/components/design-system'
 import type { CaptureType } from '../types'
 
 export interface ChoiceModalProps {
