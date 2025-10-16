@@ -1,0 +1,127 @@
+{
+  "timestamp": "2025-09-26T00:49:58.977Z",
+  "remaining_issues": [
+    {
+      "category": "Schema Migrations Table",
+      "issues": [
+        "Missing filename column in schema_migrations table",
+        "Migration tracking incomplete"
+      ],
+      "priority": "HIGH"
+    },
+    {
+      "category": "Orphaned Vehicle References",
+      "issues": [
+        "5 vehicles reference deleted garages",
+        "Need proper garage assignment or cleanup"
+      ],
+      "priority": "HIGH"
+    },
+    {
+      "category": "Missing Audit Columns",
+      "issues": [
+        "Some tables missing created_at/updated_at timestamps",
+        "Inconsistent soft delete implementation"
+      ],
+      "priority": "MEDIUM"
+    },
+    {
+      "category": "Performance Optimization",
+      "issues": [
+        "Missing indexes on frequently queried columns",
+        "No query performance monitoring"
+      ],
+      "priority": "MEDIUM"
+    },
+    {
+      "category": "Data Validation",
+      "issues": [
+        "Missing CHECK constraints for data integrity",
+        "No enum validation for status fields"
+      ],
+      "priority": "LOW"
+    }
+  ],
+  "consolidation_phases": [
+    {
+      "phase": "Phase 1: Fix Schema Migrations Table",
+      "description": "Add missing filename column and fix migration tracking",
+      "migrations": [
+        "ALTER TABLE schema_migrations ADD COLUMN IF NOT EXISTS filename TEXT;",
+        "UPDATE schema_migrations SET filename = version || '.sql' WHERE filename IS NULL;",
+        "ALTER TABLE schema_migrations ALTER COLUMN filename SET NOT NULL;"
+      ],
+      "validation_queries": [
+        "SELECT COUNT(*) FROM schema_migrations WHERE filename IS NOT NULL;",
+        "SELECT filename FROM schema_migrations ORDER BY version;"
+      ],
+      "risk_level": "LOW"
+    },
+    {
+      "phase": "Phase 2: Fix Orphaned Vehicle References",
+      "description": "Create \"Unassigned\" garage and reassign orphaned vehicles",
+      "migrations": [
+        "INSERT INTO garages (id, tenant_id, name, address, is_default) VALUES (gen_random_uuid(), '550e8400-e29b-41d4-a716-446655440000', 'Unassigned', 'Temporary holding for vehicles without garages', false) ON CONFLICT DO NOTHING;",
+        "UPDATE vehicles SET garage_id = (SELECT id FROM garages WHERE name = 'Unassigned' LIMIT 1) WHERE garage_id NOT IN (SELECT id FROM garages);"
+      ],
+      "validation_queries": [
+        "SELECT COUNT(*) FROM vehicles v LEFT JOIN garages g ON v.garage_id = g.id WHERE g.id IS NULL;",
+        "SELECT COUNT(*) FROM garages WHERE name = 'Unassigned';"
+      ],
+      "risk_level": "LOW"
+    },
+    {
+      "phase": "Phase 3: Standardize Audit Columns",
+      "description": "Ensure all tables have consistent audit timestamps and soft delete",
+      "migrations": [
+        "ALTER TABLE garages ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;",
+        "ALTER TABLE vehicle_images ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;",
+        "COMMENT ON COLUMN garages.deleted_at IS 'Soft delete timestamp for data recovery';"
+      ],
+      "validation_queries": [
+        "SELECT table_name, column_name FROM information_schema.columns WHERE column_name IN ('created_at', 'updated_at', 'deleted_at') AND table_schema = 'public' ORDER BY table_name;"
+      ],
+      "risk_level": "LOW"
+    },
+    {
+      "phase": "Phase 4: Add Performance Indexes",
+      "description": "Add critical indexes for query performance",
+      "migrations": [
+        "CREATE INDEX IF NOT EXISTS idx_vehicles_display_name ON vehicles(display_name);",
+        "CREATE INDEX IF NOT EXISTS idx_garages_tenant_name ON garages(tenant_id, name);",
+        "CREATE INDEX IF NOT EXISTS idx_vehicle_images_vehicle_type ON vehicle_images(vehicle_id, image_type);"
+      ],
+      "validation_queries": [
+        "SELECT indexname, tablename FROM pg_indexes WHERE schemaname = 'public' ORDER BY tablename;"
+      ],
+      "risk_level": "LOW"
+    },
+    {
+      "phase": "Phase 5: Add Data Validation Constraints",
+      "description": "Add CHECK constraints for data integrity",
+      "migrations": [
+        "ALTER TABLE vehicles ADD CONSTRAINT IF NOT EXISTS chk_vehicles_display_name_not_empty CHECK (length(trim(display_name)) > 0);",
+        "ALTER TABLE garages ADD CONSTRAINT IF NOT EXISTS chk_garages_name_not_empty CHECK (length(trim(name)) > 0);",
+        "ALTER TABLE reminders ADD CONSTRAINT IF NOT EXISTS chk_reminders_status CHECK (status IN ('open', 'scheduled', 'done', 'dismissed'));"
+      ],
+      "validation_queries": [
+        "SELECT conname, contype FROM pg_constraint WHERE contype = 'c' AND connamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public');"
+      ],
+      "risk_level": "LOW"
+    }
+  ],
+  "expected_outcomes": {
+    "database_quality_score": "8.5/10 (up from current 5.2/10)",
+    "health_check_improvements": [
+      "All health checks should pass",
+      "Zero orphaned vehicles",
+      "Complete migration tracking",
+      "Consistent audit trails across all tables"
+    ],
+    "performance_gains": [
+      "Faster vehicle name searches with display_name index",
+      "Improved garage queries with tenant+name index",
+      "Better image queries with vehicle+type index"
+    ]
+  }
+}

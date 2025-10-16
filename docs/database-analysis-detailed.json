@@ -1,0 +1,500 @@
+{
+  "timestamp": "2025-09-25T23:58:22.723Z",
+  "migration_files": [
+    "000_base_schema.sql",
+    "001_rls_policies.sql",
+    "002_indexes_constraints.sql",
+    "003_usage_tracking.sql",
+    "004_smartphone_ingestion.sql",
+    "006_vehicle_photos.sql",
+    "007_supabase_storage_policies.sql",
+    "008_vehicle_onboarding_fields.sql",
+    "009_vehicle_images_table.sql",
+    "010_garage_performance_indexes.sql",
+    "011_fix_vehicle_images_table.sql",
+    "011_jurisdiction_system.sql",
+    "012_reminders_table.sql",
+    "020_events_stream.sql",
+    "021_reminders_dedupe.sql",
+    "022_garage_default_column.sql",
+    "029_fix_schema_migrations.sql",
+    "030_vehicle_display_name.sql"
+  ],
+  "tables": {
+    "vehicles": {
+      "row_count": 5,
+      "sample_data": [
+        {
+          "id": "fb7832b3-2218-4bb0-8696-8e27b8a172bc",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "label": "2022 CHRYSLER 300",
+          "make": "CHRYSLER",
+          "model": "300",
+          "vin": "2C3CCADG7NH116370",
+          "baseline_fuel_mpg": null,
+          "baseline_service_interval_miles": 5000,
+          "notes": null,
+          "created_at": "2025-09-25T12:36:55.827678+00:00",
+          "updated_at": "2025-09-25T23:49:25.541453+00:00",
+          "nickname": "2022 CHRYSLER 300",
+          "garage_id": "0687b6ef-193c-44a1-abaa-436a96ba7fe5",
+          "enrichment": {
+            "year": 2022,
+            "engine": {
+              "cylinders": 6,
+              "fuel_type": "Gasoline"
+            },
+            "body_class": "Sedan/Saloon",
+            "drivetrain": "RWD/Rear-Wheel Drive",
+            "manufactured": {
+              "state": "ONTARIO",
+              "country": "CANADA"
+            },
+            "transmission": "Automatic"
+          },
+          "service_intervals": {},
+          "smart_defaults": {
+            "baseline_mpg": 22,
+            "service_intervals": {
+              "oil_change_miles": 5000,
+              "tire_rotation_miles": 7500,
+              "brake_inspection_miles": 10000
+            },
+            "maintenance_schedule": []
+          },
+          "deleted_at": null,
+          "photo_url": null,
+          "hero_image_url": null,
+          "display_name": "2022 CHRYSLER 300"
+        },
+        {
+          "id": "9e412dca-7d8f-4410-a2b1-3d3042369a4d",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "label": "2013 CHEVROLET Captiva Sport",
+          "make": "CHEVROLET",
+          "model": "Captiva Sport",
+          "vin": "3GNAL4EK7DS559435",
+          "baseline_fuel_mpg": null,
+          "baseline_service_interval_miles": 5000,
+          "notes": null,
+          "created_at": "2025-09-25T06:48:12.496001+00:00",
+          "updated_at": "2025-09-25T23:44:00.144623+00:00",
+          "nickname": "2013 CHEVROLET Captiva Sport",
+          "garage_id": "709a1a50-1409-4224-b8ad-0f3b004bd365",
+          "enrichment": {
+            "trim": "LTZ",
+            "year": 2013,
+            "engine": {
+              "model": "LEA - Flex Fuel (Gas/Alc), Aluminum, High Output",
+              "cylinders": 4,
+              "fuel_type": "Gasoline"
+            },
+            "body_class": "Sport Utility Vehicle (SUV)/Multi-Purpose Vehicle (MPV)",
+            "drivetrain": "FWD/Front-Wheel Drive",
+            "manufactured": {
+              "state": "COAHUILA",
+              "country": "MEXICO"
+            },
+            "transmission": "Unknown"
+          },
+          "service_intervals": {},
+          "smart_defaults": {
+            "baseline_mpg": 28,
+            "service_intervals": {
+              "oil_change_miles": 5000,
+              "tire_rotation_miles": 7500,
+              "brake_inspection_miles": 10000
+            },
+            "maintenance_schedule": [
+              {
+                "type": "timing_belt",
+                "priority": "high",
+                "due_miles": 100000
+              },
+              {
+                "type": "coolant_flush",
+                "priority": "medium",
+                "due_miles": 60000
+              },
+              {
+                "type": "transmission_service",
+                "priority": "medium",
+                "due_miles": 60000
+              },
+              {
+                "type": "brake_fluid",
+                "priority": "medium",
+                "due_miles": 30000
+              }
+            ]
+          },
+          "deleted_at": null,
+          "photo_url": null,
+          "hero_image_url": "https://ucbbzzoimghnaoihyqbd.supabase.co/storage/v1/object/public/vehicle-images/vehicle-photos/3GNAL4EK7DS559435-1758782882841.png",
+          "display_name": "2013 CHEVROLET Captiva Sport"
+        },
+        {
+          "id": "cf1e58a5-d456-4a17-ae82-273ef0e65f9d",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "label": "Daily Driver",
+          "make": "Honda",
+          "model": "Civic",
+          "vin": "1HGBH41JXMN109186",
+          "baseline_fuel_mpg": 32,
+          "baseline_service_interval_miles": 5000,
+          "notes": "2018 Honda Civic LX - reliable daily driver",
+          "created_at": "2025-09-25T19:56:14.113623+00:00",
+          "updated_at": "2025-09-25T23:44:00.144623+00:00",
+          "nickname": null,
+          "garage_id": "1fc77789-7786-4cdb-9f19-411e28f75ace",
+          "enrichment": {},
+          "service_intervals": {},
+          "smart_defaults": {},
+          "deleted_at": null,
+          "photo_url": null,
+          "hero_image_url": null,
+          "display_name": "Daily Driver"
+        },
+        {
+          "id": "3096e8a9-c688-4b3f-a648-9f732afca661",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "label": "Work Truck",
+          "make": "Ford",
+          "model": "F-150",
+          "vin": "1FTFW1ET5DFC10312",
+          "baseline_fuel_mpg": 22,
+          "baseline_service_interval_miles": 7500,
+          "notes": "2020 Ford F-150 XLT - work truck",
+          "created_at": "2025-09-25T19:56:14.365753+00:00",
+          "updated_at": "2025-09-25T23:44:00.144623+00:00",
+          "nickname": null,
+          "garage_id": "1fc77789-7786-4cdb-9f19-411e28f75ace",
+          "enrichment": {},
+          "service_intervals": {},
+          "smart_defaults": {},
+          "deleted_at": null,
+          "photo_url": null,
+          "hero_image_url": null,
+          "display_name": "Work Truck"
+        },
+        {
+          "id": "44c582bc-f078-40e7-a27d-300a8139b729",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "label": "2019 Tesla Model 3",
+          "make": "Tesla",
+          "model": "Model 3",
+          "vin": "5YJ3E1EA4KF123456",
+          "baseline_fuel_mpg": null,
+          "baseline_service_interval_miles": 12500,
+          "notes": "2019 Tesla Model 3 Standard Range Plus",
+          "created_at": "2025-09-25T19:56:14.535079+00:00",
+          "updated_at": "2025-09-25T23:44:00.144623+00:00",
+          "nickname": null,
+          "garage_id": "1fc77789-7786-4cdb-9f19-411e28f75ace",
+          "enrichment": {},
+          "service_intervals": {},
+          "smart_defaults": {},
+          "deleted_at": null,
+          "photo_url": null,
+          "hero_image_url": null,
+          "display_name": "2019 Tesla Model 3"
+        }
+      ],
+      "column_analysis": {
+        "total_columns": 20,
+        "nullable_columns": 6,
+        "has_timestamps": true,
+        "has_tenant_id": true,
+        "has_soft_delete": true,
+        "foreign_key_columns": [
+          "tenant_id",
+          "garage_id"
+        ]
+      }
+    },
+    "garages": {
+      "row_count": 4,
+      "sample_data": [
+        {
+          "id": "709a1a50-1409-4224-b8ad-0f3b004bd365",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "name": "Garage at Starke",
+          "address": "Starke, Florida, US",
+          "lat": 29.9447560659028,
+          "lng": -82.1200978000748,
+          "timezone": "America/New_York",
+          "meta": {},
+          "created_at": "2025-09-24T05:37:27.489063+00:00",
+          "updated_at": "2025-09-24T05:37:27.489063+00:00",
+          "is_default": false
+        },
+        {
+          "id": "2719e991-f936-4c24-8a52-a4774dceef5f",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "name": "My Garage",
+          "address": "123 Main St, Anytown, FL 32000",
+          "lat": 29.6516,
+          "lng": -82.3248,
+          "timezone": "America/New_York",
+          "meta": {},
+          "created_at": "2025-09-25T19:54:41.503427+00:00",
+          "updated_at": "2025-09-25T19:54:41.503427+00:00",
+          "is_default": true
+        },
+        {
+          "id": "1fc77789-7786-4cdb-9f19-411e28f75ace",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "name": "My Garage",
+          "address": "123 Main St, Anytown, FL 32000",
+          "lat": 29.6516,
+          "lng": -82.3248,
+          "timezone": "America/New_York",
+          "meta": {},
+          "created_at": "2025-09-25T19:56:13.95862+00:00",
+          "updated_at": "2025-09-25T19:56:13.95862+00:00",
+          "is_default": true
+        },
+        {
+          "id": "0687b6ef-193c-44a1-abaa-436a96ba7fe5",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "name": "Unassigned",
+          "address": "Temporary holding for vehicles without garages",
+          "lat": null,
+          "lng": null,
+          "timezone": "America/Los_Angeles",
+          "meta": {},
+          "created_at": "2025-09-25T23:48:25.867388+00:00",
+          "updated_at": "2025-09-25T23:48:25.867388+00:00",
+          "is_default": false
+        }
+      ],
+      "column_analysis": {
+        "total_columns": 11,
+        "nullable_columns": 2,
+        "has_timestamps": true,
+        "has_tenant_id": true,
+        "has_soft_delete": false,
+        "foreign_key_columns": [
+          "tenant_id"
+        ]
+      }
+    },
+    "vehicle_events": {
+      "row_count": 1,
+      "sample_data": [
+        {
+          "id": "cebf0766-78fa-40d0-8d92-d96d33057cec",
+          "vehicle_id": "cf1e58a5-d456-4a17-ae82-273ef0e65f9d",
+          "type": "odometer",
+          "date": "2025-06-17",
+          "miles": 52000,
+          "payload": {
+            "note": "Old odometer reading for testing stale notification"
+          },
+          "created_at": "2025-09-25T20:15:52.745372+00:00"
+        }
+      ],
+      "column_analysis": {
+        "total_columns": 7,
+        "nullable_columns": 0,
+        "has_timestamps": false,
+        "has_tenant_id": false,
+        "has_soft_delete": false,
+        "foreign_key_columns": [
+          "vehicle_id"
+        ]
+      }
+    },
+    "reminders": {
+      "row_count": 4,
+      "sample_data": [
+        {
+          "id": "5cc0d7a1-cf57-46ef-bf65-1c8b44bfec43",
+          "vehicle_id": "cf1e58a5-d456-4a17-ae82-273ef0e65f9d",
+          "title": "Oil change overdue",
+          "description": "Last oil change was 6 months ago. Engine damage risk.",
+          "category": "maintenance",
+          "priority": "high",
+          "due_date": "2024-08-15",
+          "due_miles": null,
+          "status": "open",
+          "source": "user",
+          "dedupe_key": "25602eccce4e96115e24adff45697871",
+          "created_at": "2025-09-25T20:15:43.898018+00:00",
+          "updated_at": "2025-09-25T20:15:43.898018+00:00"
+        },
+        {
+          "id": "6c705b79-27ed-4b9e-8056-913e212afa66",
+          "vehicle_id": "cf1e58a5-d456-4a17-ae82-273ef0e65f9d",
+          "title": "Registration renewal",
+          "description": "Vehicle registration expires in 12 days.",
+          "category": "registration",
+          "priority": "medium",
+          "due_date": "2025-10-07",
+          "due_miles": null,
+          "status": "open",
+          "source": "user",
+          "dedupe_key": "1afec7e66c0f0035c71f90d6ea733a99",
+          "created_at": "2025-09-25T20:15:51.221624+00:00",
+          "updated_at": "2025-09-25T20:15:51.221624+00:00"
+        },
+        {
+          "id": "490ceaf5-b2b6-4c58-8c94-bceaf971db2f",
+          "vehicle_id": "3096e8a9-c688-4b3f-a648-9f732afca661",
+          "title": "Brake inspection overdue",
+          "description": "Brake pads need immediate inspection for safety.",
+          "category": "maintenance",
+          "priority": "high",
+          "due_date": null,
+          "due_miles": 45000,
+          "status": "open",
+          "source": "user",
+          "dedupe_key": "b5efb47cb3127b4f2921854ab06263fb",
+          "created_at": "2025-09-25T20:15:51.697412+00:00",
+          "updated_at": "2025-09-25T20:15:51.697412+00:00"
+        },
+        {
+          "id": "a05d9503-2b9b-4768-897d-b73cea0c361d",
+          "vehicle_id": "44c582bc-f078-40e7-a27d-300a8139b729",
+          "title": "Tire rotation due",
+          "description": "Rotate tires for even wear pattern.",
+          "category": "maintenance",
+          "priority": "medium",
+          "due_date": null,
+          "due_miles": 55000,
+          "status": "open",
+          "source": "user",
+          "dedupe_key": "f38890adf92548266e56681a10b0faa7",
+          "created_at": "2025-09-25T20:15:52.418021+00:00",
+          "updated_at": "2025-09-25T20:15:52.418021+00:00"
+        }
+      ],
+      "column_analysis": {
+        "total_columns": 13,
+        "nullable_columns": 2,
+        "has_timestamps": true,
+        "has_tenant_id": false,
+        "has_soft_delete": false,
+        "foreign_key_columns": [
+          "vehicle_id"
+        ]
+      }
+    },
+    "vehicle_images": {
+      "row_count": 1,
+      "sample_data": [
+        {
+          "id": "c937ee09-6c4c-4eec-b4a1-e1867d709205",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "vehicle_id": "9e412dca-7d8f-4410-a2b1-3d3042369a4d",
+          "storage_path": "3GNAL4EK7DS559435-1758782882841.png",
+          "public_url": "https://ucbbzzoimghnaoihyqbd.supabase.co/storage/v1/object/public/vehicle-images/vehicle-photos/3GNAL4EK7DS559435-1758782882841.png",
+          "filename": "3GNAL4EK7DS559435-1758782882841.png",
+          "image_type": "hero",
+          "is_primary": true,
+          "created_at": "2025-09-25T06:48:12.620276+00:00"
+        }
+      ],
+      "column_analysis": {
+        "total_columns": 9,
+        "nullable_columns": 0,
+        "has_timestamps": false,
+        "has_tenant_id": true,
+        "has_soft_delete": false,
+        "foreign_key_columns": [
+          "tenant_id",
+          "vehicle_id"
+        ]
+      }
+    },
+    "schema_migrations": {
+      "row_count": 13,
+      "sample_data": [
+        {
+          "version": "000_base_schema.sql",
+          "applied_at": "2025-09-24T03:30:58.160322+00:00"
+        },
+        {
+          "version": "001_rls_policies.sql",
+          "applied_at": "2025-09-24T03:32:17.201026+00:00"
+        },
+        {
+          "version": "002_indexes_constraints.sql",
+          "applied_at": "2025-09-24T03:33:12.09624+00:00"
+        },
+        {
+          "version": "003_usage_tracking.sql",
+          "applied_at": "2025-09-24T03:33:12.417632+00:00"
+        },
+        {
+          "version": "004_smartphone_ingestion.sql",
+          "applied_at": "2025-09-24T03:33:12.744408+00:00"
+        }
+      ],
+      "column_analysis": {
+        "total_columns": 2,
+        "nullable_columns": 0,
+        "has_timestamps": false,
+        "has_tenant_id": false,
+        "has_soft_delete": false,
+        "foreign_key_columns": []
+      }
+    }
+  },
+  "technical_debt": [
+    "Migration 003_usage_tracking.sql: Schema evolution - column added after initial creation",
+    "Migration 004_smartphone_ingestion.sql: Schema evolution - column added after initial creation",
+    "Migration 006_vehicle_photos.sql: Schema evolution - column added after initial creation",
+    "Migration 008_vehicle_onboarding_fields.sql: Schema evolution - column added after initial creation",
+    "Migration 011_jurisdiction_system.sql: Table created without tenant_id for multi-tenancy",
+    "Migration 011_jurisdiction_system.sql: Schema evolution - column added after initial creation",
+    "Migration 020_events_stream.sql: Table created without tenant_id for multi-tenancy",
+    "Migration 021_reminders_dedupe.sql: Table created without tenant_id for multi-tenancy",
+    "Migration 022_garage_default_column.sql: Schema evolution - column added after initial creation",
+    "Migration 029_fix_schema_migrations.sql: Schema evolution - column added after initial creation",
+    "Migration 030_vehicle_display_name.sql: Schema evolution - column added after initial creation",
+    "garages: Missing soft delete capability (deleted_at)",
+    "vehicle_events: Missing created_at/updated_at timestamps",
+    "vehicle_events: Missing tenant_id for multi-tenancy isolation",
+    "vehicle_events: Missing soft delete capability (deleted_at)",
+    "reminders: Missing tenant_id for multi-tenancy isolation",
+    "reminders: Missing soft delete capability (deleted_at)",
+    "vehicle_images: Missing created_at/updated_at timestamps",
+    "vehicle_images: Missing soft delete capability (deleted_at)"
+  ],
+  "data_quality_issues": [
+    "vehicles: Inconsistent naming - both 'label' and 'display_name' columns exist",
+    "vehicles: Inconsistent naming - both 'nickname' and 'display_name' columns exist"
+  ],
+  "recommendations": [
+    "=== IMMEDIATE PRIORITIES ===",
+    "1. Standardize timestamps: Add created_at, updated_at to all tables",
+    "2. Implement multi-tenancy: Add tenant_id to all user data tables",
+    "3. Add soft delete: Implement deleted_at for data recovery",
+    "4. Resolve naming conflicts: Standardize on display_name vs label/nickname",
+    "",
+    "=== PERFORMANCE & SCALABILITY ===",
+    "5. Add database indexes on foreign keys and query patterns",
+    "6. Implement connection pooling (PgBouncer) for high concurrency",
+    "7. Set up read replicas for reporting and analytics queries",
+    "8. Add database monitoring and query performance tracking",
+    "",
+    "=== DATA INTEGRITY ===",
+    "9. Add CHECK constraints for enum-like fields (status, category, etc)",
+    "10. Implement proper CASCADE/RESTRICT on foreign key relationships",
+    "11. Add unique constraints where business logic requires uniqueness",
+    "12. Validate JSONB schemas for structured data in payload columns",
+    "",
+    "=== OBSERVABILITY & MONITORING ===",
+    "13. Implement row-level security (RLS) policies for tenant isolation",
+    "14. Add database health checks and automated alerts",
+    "15. Set up query performance monitoring and slow query logging",
+    "16. Implement automated backup verification and recovery testing",
+    "",
+    "=== ARCHITECTURE IMPROVEMENTS ===",
+    "17. Consider event sourcing for vehicle_events table",
+    "18. Implement proper audit trails for sensitive data changes",
+    "19. Add database-level data validation and constraints",
+    "20. Plan for horizontal scaling with proper partitioning strategies"
+  ]
+}

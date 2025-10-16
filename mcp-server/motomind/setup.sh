@@ -15,8 +15,8 @@ echo "║                                                           ║"
 echo "╚═══════════════════════════════════════════════════════════╝"
 echo ""
 
-# Get absolute path to project root
-PROJECT_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+# Get absolute path to project root (2 levels up from this script)
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 MCP_SERVER_PATH="$PROJECT_ROOT/mcp-server/motomind"
 
 echo "📂 Project root: $PROJECT_ROOT"

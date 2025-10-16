@@ -1,0 +1,80 @@
+{
+  "timestamp": "2025-09-26T01:10:22.415Z",
+  "critical_issues": [
+    {
+      "issue": "Audit table PK type inconsistency",
+      "severity": "CRITICAL",
+      "impact": "Data corruption risk, ORM conflicts, ETL failures",
+      "fix_required": "Investigate audit_log vs audit_logs tables, consolidate to single canonical structure"
+    },
+    {
+      "issue": "Unresolved vehicle photo field duplication",
+      "severity": "HIGH",
+      "impact": "Storage waste, data inconsistency, developer confusion",
+      "fix_required": "Complete photo field consolidation that was claimed as done"
+    },
+    {
+      "issue": "Materialized view refresh strategy undefined",
+      "severity": "HIGH",
+      "impact": "Stale health scores, incorrect \"one glance = status\" data",
+      "fix_required": "Define automated refresh strategy or manual procedures"
+    },
+    {
+      "issue": "Index proliferation without analysis",
+      "severity": "MEDIUM",
+      "impact": "Write amplification, storage bloat, maintenance overhead",
+      "fix_required": "Analyze actual query patterns, prune redundant indexes"
+    }
+  ],
+  "index_analysis": [
+    {
+      "table": "reminders",
+      "redundant_indexes": [
+        "idx_reminders_actionable(tenant_id, status, due_date)",
+        "idx_reminders_tenant_status(tenant_id, status)",
+        "idx_reminders_tenant_due_date(tenant_id, due_date)",
+        "idx_reminders_status_due(status, due_date)",
+        "idx_reminders_due_date(due_date)",
+        "idx_reminders_due_miles(due_miles)"
+      ],
+      "recommended_action": "Keep idx_reminders_actionable, analyze pg_stat_statements for others"
+    },
+    {
+      "table": "vehicle_images",
+      "redundant_indexes": [
+        "idx_vehicle_images_vehicle_id",
+        "idx_vehicle_images_vehicle_type(vehicle_id, image_type)"
+      ],
+      "recommended_action": "If always filtering by tenant first, prefer tenant-aware indexes"
+    },
+    {
+      "table": "vehicles",
+      "redundant_indexes": [
+        "idx_vehicles_hero_image_url",
+        "idx_vehicles_photo_url"
+      ],
+      "recommended_action": "Consolidate to single photo field, drop redundant indexes"
+    }
+  ],
+  "security_gaps": [
+    {
+      "gap": "RLS policy verification",
+      "verification_needed": "Confirm RLS enabled and policies active on all tenant tables"
+    },
+    {
+      "gap": "tenant_id NOT NULL enforcement",
+      "verification_needed": "Verify tenant_id is NOT NULL on vehicle_events, reminders, audit tables"
+    },
+    {
+      "gap": "Application tenant context",
+      "verification_needed": "Test that application properly sets tenant context for RLS"
+    }
+  ],
+  "materialized_view_issues": [
+    {
+      "view": "vehicle_health_scores",
+      "problem": "No defined refresh strategy",
+      "solution": "Implement automated refresh or document manual procedures with staleness indicators"
+    }
+  ]
+}

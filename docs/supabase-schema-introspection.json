@@ -1,0 +1,1389 @@
+{
+  "timestamp": "2025-09-26T00:02:54.035Z",
+  "database_name": "postgres",
+  "schema_name": "public",
+  "tables": [
+    {
+      "table_name": "vehicles",
+      "table_type": "BASE TABLE",
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 1,
+          "is_primary_key": true,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "tenant_id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 2,
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "foreign_table": "tenants",
+          "foreign_column": "id"
+        },
+        {
+          "column_name": "label",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 3,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "make",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 4,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "model",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 5,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "vin",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 6,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "baseline_fuel_mpg",
+          "data_type": "integer",
+          "is_nullable": true,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 7,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "baseline_service_interval_miles",
+          "data_type": "integer",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 8,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "notes",
+          "data_type": "text",
+          "is_nullable": true,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 9,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 10,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "updated_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 11,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "nickname",
+          "data_type": "text",
+          "is_nullable": true,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 12,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "garage_id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 13,
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "foreign_table": "garages",
+          "foreign_column": "id"
+        },
+        {
+          "column_name": "enrichment",
+          "data_type": "jsonb",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 14,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "service_intervals",
+          "data_type": "jsonb",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 15,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "smart_defaults",
+          "data_type": "jsonb",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 16,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "deleted_at",
+          "data_type": "unknown",
+          "is_nullable": true,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 17,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "photo_url",
+          "data_type": "unknown",
+          "is_nullable": true,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 18,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "hero_image_url",
+          "data_type": "text",
+          "is_nullable": true,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 19,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "display_name",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 20,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        }
+      ],
+      "indexes": [],
+      "constraints": [],
+      "row_count": 5,
+      "table_size_bytes": 0,
+      "sample_data": [
+        {
+          "id": "fb7832b3-2218-4bb0-8696-8e27b8a172bc",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "label": "2022 CHRYSLER 300",
+          "make": "CHRYSLER",
+          "model": "300",
+          "vin": "2C3CCADG7NH116370",
+          "baseline_fuel_mpg": null,
+          "baseline_service_interval_miles": 5000,
+          "notes": null,
+          "created_at": "2025-09-25T12:36:55.827678+00:00",
+          "updated_at": "2025-09-25T23:49:25.541453+00:00",
+          "nickname": "2022 CHRYSLER 300",
+          "garage_id": "0687b6ef-193c-44a1-abaa-436a96ba7fe5",
+          "enrichment": {
+            "year": 2022,
+            "engine": {
+              "cylinders": 6,
+              "fuel_type": "Gasoline"
+            },
+            "body_class": "Sedan/Saloon",
+            "drivetrain": "RWD/Rear-Wheel Drive",
+            "manufactured": {
+              "state": "ONTARIO",
+              "country": "CANADA"
+            },
+            "transmission": "Automatic"
+          },
+          "service_intervals": {},
+          "smart_defaults": {
+            "baseline_mpg": 22,
+            "service_intervals": {
+              "oil_change_miles": 5000,
+              "tire_rotation_miles": 7500,
+              "brake_inspection_miles": 10000
+            },
+            "maintenance_schedule": []
+          },
+          "deleted_at": null,
+          "photo_url": null,
+          "hero_image_url": null,
+          "display_name": "2022 CHRYSLER 300"
+        },
+        {
+          "id": "9e412dca-7d8f-4410-a2b1-3d3042369a4d",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "label": "2013 CHEVROLET Captiva Sport",
+          "make": "CHEVROLET",
+          "model": "Captiva Sport",
+          "vin": "3GNAL4EK7DS559435",
+          "baseline_fuel_mpg": null,
+          "baseline_service_interval_miles": 5000,
+          "notes": null,
+          "created_at": "2025-09-25T06:48:12.496001+00:00",
+          "updated_at": "2025-09-25T23:44:00.144623+00:00",
+          "nickname": "2013 CHEVROLET Captiva Sport",
+          "garage_id": "709a1a50-1409-4224-b8ad-0f3b004bd365",
+          "enrichment": {
+            "trim": "LTZ",
+            "year": 2013,
+            "engine": {
+              "model": "LEA - Flex Fuel (Gas/Alc), Aluminum, High Output",
+              "cylinders": 4,
+              "fuel_type": "Gasoline"
+            },
+            "body_class": "Sport Utility Vehicle (SUV)/Multi-Purpose Vehicle (MPV)",
+            "drivetrain": "FWD/Front-Wheel Drive",
+            "manufactured": {
+              "state": "COAHUILA",
+              "country": "MEXICO"
+            },
+            "transmission": "Unknown"
+          },
+          "service_intervals": {},
+          "smart_defaults": {
+            "baseline_mpg": 28,
+            "service_intervals": {
+              "oil_change_miles": 5000,
+              "tire_rotation_miles": 7500,
+              "brake_inspection_miles": 10000
+            },
+            "maintenance_schedule": [
+              {
+                "type": "timing_belt",
+                "priority": "high",
+                "due_miles": 100000
+              },
+              {
+                "type": "coolant_flush",
+                "priority": "medium",
+                "due_miles": 60000
+              },
+              {
+                "type": "transmission_service",
+                "priority": "medium",
+                "due_miles": 60000
+              },
+              {
+                "type": "brake_fluid",
+                "priority": "medium",
+                "due_miles": 30000
+              }
+            ]
+          },
+          "deleted_at": null,
+          "photo_url": null,
+          "hero_image_url": "https://ucbbzzoimghnaoihyqbd.supabase.co/storage/v1/object/public/vehicle-images/vehicle-photos/3GNAL4EK7DS559435-1758782882841.png",
+          "display_name": "2013 CHEVROLET Captiva Sport"
+        },
+        {
+          "id": "cf1e58a5-d456-4a17-ae82-273ef0e65f9d",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "label": "Daily Driver",
+          "make": "Honda",
+          "model": "Civic",
+          "vin": "1HGBH41JXMN109186",
+          "baseline_fuel_mpg": 32,
+          "baseline_service_interval_miles": 5000,
+          "notes": "2018 Honda Civic LX - reliable daily driver",
+          "created_at": "2025-09-25T19:56:14.113623+00:00",
+          "updated_at": "2025-09-25T23:44:00.144623+00:00",
+          "nickname": null,
+          "garage_id": "1fc77789-7786-4cdb-9f19-411e28f75ace",
+          "enrichment": {},
+          "service_intervals": {},
+          "smart_defaults": {},
+          "deleted_at": null,
+          "photo_url": null,
+          "hero_image_url": null,
+          "display_name": "Daily Driver"
+        }
+      ]
+    },
+    {
+      "table_name": "garages",
+      "table_type": "BASE TABLE",
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 1,
+          "is_primary_key": true,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "tenant_id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 2,
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "foreign_table": "tenants",
+          "foreign_column": "id"
+        },
+        {
+          "column_name": "name",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 3,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "address",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 4,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "lat",
+          "data_type": "numeric",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 5,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "lng",
+          "data_type": "numeric",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 6,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "timezone",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 7,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "meta",
+          "data_type": "jsonb",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 8,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 9,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "updated_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 10,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "is_default",
+          "data_type": "boolean",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 11,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        }
+      ],
+      "indexes": [],
+      "constraints": [],
+      "row_count": 4,
+      "table_size_bytes": 0,
+      "sample_data": [
+        {
+          "id": "709a1a50-1409-4224-b8ad-0f3b004bd365",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "name": "Garage at Starke",
+          "address": "Starke, Florida, US",
+          "lat": 29.9447560659028,
+          "lng": -82.1200978000748,
+          "timezone": "America/New_York",
+          "meta": {},
+          "created_at": "2025-09-24T05:37:27.489063+00:00",
+          "updated_at": "2025-09-24T05:37:27.489063+00:00",
+          "is_default": false
+        },
+        {
+          "id": "2719e991-f936-4c24-8a52-a4774dceef5f",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "name": "My Garage",
+          "address": "123 Main St, Anytown, FL 32000",
+          "lat": 29.6516,
+          "lng": -82.3248,
+          "timezone": "America/New_York",
+          "meta": {},
+          "created_at": "2025-09-25T19:54:41.503427+00:00",
+          "updated_at": "2025-09-25T19:54:41.503427+00:00",
+          "is_default": true
+        },
+        {
+          "id": "1fc77789-7786-4cdb-9f19-411e28f75ace",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "name": "My Garage",
+          "address": "123 Main St, Anytown, FL 32000",
+          "lat": 29.6516,
+          "lng": -82.3248,
+          "timezone": "America/New_York",
+          "meta": {},
+          "created_at": "2025-09-25T19:56:13.95862+00:00",
+          "updated_at": "2025-09-25T19:56:13.95862+00:00",
+          "is_default": true
+        }
+      ]
+    },
+    {
+      "table_name": "vehicle_events",
+      "table_type": "BASE TABLE",
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 1,
+          "is_primary_key": true,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "vehicle_id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 2,
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "foreign_table": "vehicles",
+          "foreign_column": "id"
+        },
+        {
+          "column_name": "type",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 3,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "date",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 4,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "miles",
+          "data_type": "integer",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 5,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "payload",
+          "data_type": "jsonb",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 6,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 7,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        }
+      ],
+      "indexes": [],
+      "constraints": [],
+      "row_count": 1,
+      "table_size_bytes": 0,
+      "sample_data": [
+        {
+          "id": "cebf0766-78fa-40d0-8d92-d96d33057cec",
+          "vehicle_id": "cf1e58a5-d456-4a17-ae82-273ef0e65f9d",
+          "type": "odometer",
+          "date": "2025-06-17",
+          "miles": 52000,
+          "payload": {
+            "note": "Old odometer reading for testing stale notification"
+          },
+          "created_at": "2025-09-25T20:15:52.745372+00:00"
+        }
+      ]
+    },
+    {
+      "table_name": "reminders",
+      "table_type": "BASE TABLE",
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 1,
+          "is_primary_key": true,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "vehicle_id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 2,
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "foreign_table": "vehicles",
+          "foreign_column": "id"
+        },
+        {
+          "column_name": "title",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 3,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "description",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 4,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "category",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 5,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "priority",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 6,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "due_date",
+          "data_type": "text",
+          "is_nullable": true,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 7,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "due_miles",
+          "data_type": "integer",
+          "is_nullable": true,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 8,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "status",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 9,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "source",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 10,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "dedupe_key",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 11,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 12,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "updated_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 13,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        }
+      ],
+      "indexes": [],
+      "constraints": [],
+      "row_count": 4,
+      "table_size_bytes": 0,
+      "sample_data": [
+        {
+          "id": "5cc0d7a1-cf57-46ef-bf65-1c8b44bfec43",
+          "vehicle_id": "cf1e58a5-d456-4a17-ae82-273ef0e65f9d",
+          "title": "Oil change overdue",
+          "description": "Last oil change was 6 months ago. Engine damage risk.",
+          "category": "maintenance",
+          "priority": "high",
+          "due_date": "2024-08-15",
+          "due_miles": null,
+          "status": "open",
+          "source": "user",
+          "dedupe_key": "25602eccce4e96115e24adff45697871",
+          "created_at": "2025-09-25T20:15:43.898018+00:00",
+          "updated_at": "2025-09-25T20:15:43.898018+00:00"
+        },
+        {
+          "id": "6c705b79-27ed-4b9e-8056-913e212afa66",
+          "vehicle_id": "cf1e58a5-d456-4a17-ae82-273ef0e65f9d",
+          "title": "Registration renewal",
+          "description": "Vehicle registration expires in 12 days.",
+          "category": "registration",
+          "priority": "medium",
+          "due_date": "2025-10-07",
+          "due_miles": null,
+          "status": "open",
+          "source": "user",
+          "dedupe_key": "1afec7e66c0f0035c71f90d6ea733a99",
+          "created_at": "2025-09-25T20:15:51.221624+00:00",
+          "updated_at": "2025-09-25T20:15:51.221624+00:00"
+        },
+        {
+          "id": "490ceaf5-b2b6-4c58-8c94-bceaf971db2f",
+          "vehicle_id": "3096e8a9-c688-4b3f-a648-9f732afca661",
+          "title": "Brake inspection overdue",
+          "description": "Brake pads need immediate inspection for safety.",
+          "category": "maintenance",
+          "priority": "high",
+          "due_date": null,
+          "due_miles": 45000,
+          "status": "open",
+          "source": "user",
+          "dedupe_key": "b5efb47cb3127b4f2921854ab06263fb",
+          "created_at": "2025-09-25T20:15:51.697412+00:00",
+          "updated_at": "2025-09-25T20:15:51.697412+00:00"
+        }
+      ]
+    },
+    {
+      "table_name": "vehicle_images",
+      "table_type": "BASE TABLE",
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 1,
+          "is_primary_key": true,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "tenant_id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 2,
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "foreign_table": "tenants",
+          "foreign_column": "id"
+        },
+        {
+          "column_name": "vehicle_id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 3,
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "foreign_table": "vehicles",
+          "foreign_column": "id"
+        },
+        {
+          "column_name": "storage_path",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 4,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "public_url",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 5,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "filename",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 6,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "image_type",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 7,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "is_primary",
+          "data_type": "boolean",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 8,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 9,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        }
+      ],
+      "indexes": [],
+      "constraints": [],
+      "row_count": 1,
+      "table_size_bytes": 0,
+      "sample_data": [
+        {
+          "id": "c937ee09-6c4c-4eec-b4a1-e1867d709205",
+          "tenant_id": "550e8400-e29b-41d4-a716-446655440000",
+          "vehicle_id": "9e412dca-7d8f-4410-a2b1-3d3042369a4d",
+          "storage_path": "3GNAL4EK7DS559435-1758782882841.png",
+          "public_url": "https://ucbbzzoimghnaoihyqbd.supabase.co/storage/v1/object/public/vehicle-images/vehicle-photos/3GNAL4EK7DS559435-1758782882841.png",
+          "filename": "3GNAL4EK7DS559435-1758782882841.png",
+          "image_type": "hero",
+          "is_primary": true,
+          "created_at": "2025-09-25T06:48:12.620276+00:00"
+        }
+      ]
+    },
+    {
+      "table_name": "schema_migrations",
+      "table_type": "BASE TABLE",
+      "columns": [
+        {
+          "column_name": "version",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 1,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "applied_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 2,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        }
+      ],
+      "indexes": [],
+      "constraints": [],
+      "row_count": 13,
+      "table_size_bytes": 0,
+      "sample_data": [
+        {
+          "version": "000_base_schema.sql",
+          "applied_at": "2025-09-24T03:30:58.160322+00:00"
+        },
+        {
+          "version": "001_rls_policies.sql",
+          "applied_at": "2025-09-24T03:32:17.201026+00:00"
+        },
+        {
+          "version": "002_indexes_constraints.sql",
+          "applied_at": "2025-09-24T03:33:12.09624+00:00"
+        }
+      ]
+    },
+    {
+      "table_name": "tenants",
+      "table_type": "BASE TABLE",
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 1,
+          "is_primary_key": true,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "name",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 2,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "kind",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 3,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "plan_name",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 4,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "stripe_customer_id",
+          "data_type": "unknown",
+          "is_nullable": true,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 5,
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "foreign_table": "stripe_customers",
+          "foreign_column": "id"
+        },
+        {
+          "column_name": "stripe_subscription_id",
+          "data_type": "unknown",
+          "is_nullable": true,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 6,
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "foreign_table": "stripe_subscriptions",
+          "foreign_column": "id"
+        },
+        {
+          "column_name": "subscription_status",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 7,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 8,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "updated_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 9,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        }
+      ],
+      "indexes": [],
+      "constraints": [],
+      "row_count": 1,
+      "table_size_bytes": 0,
+      "sample_data": [
+        {
+          "id": "550e8400-e29b-41d4-a716-446655440000",
+          "name": "Demo Fleet Operations",
+          "kind": "org",
+          "plan_name": "team",
+          "stripe_customer_id": null,
+          "stripe_subscription_id": null,
+          "subscription_status": "active",
+          "created_at": "2025-09-24T03:47:27.65654+00:00",
+          "updated_at": "2025-09-24T03:47:27.65654+00:00"
+        }
+      ]
+    },
+    {
+      "table_name": "notifications",
+      "table_type": "BASE TABLE",
+      "columns": [],
+      "indexes": [],
+      "constraints": [],
+      "row_count": 0,
+      "table_size_bytes": 0,
+      "sample_data": []
+    },
+    {
+      "table_name": "usage_tracking",
+      "table_type": "BASE TABLE",
+      "columns": [],
+      "indexes": [],
+      "constraints": [],
+      "row_count": 0,
+      "table_size_bytes": 0,
+      "sample_data": []
+    },
+    {
+      "table_name": "vehicle_current_mileage",
+      "table_type": "BASE TABLE",
+      "columns": [
+        {
+          "column_name": "vehicle_id",
+          "data_type": "uuid",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 1,
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "foreign_table": "vehicles",
+          "foreign_column": "id"
+        },
+        {
+          "column_name": "miles",
+          "data_type": "integer",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 2,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "date",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 3,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "text",
+          "is_nullable": false,
+          "column_default": null,
+          "character_maximum_length": null,
+          "numeric_precision": null,
+          "numeric_scale": null,
+          "ordinal_position": 4,
+          "is_primary_key": false,
+          "is_foreign_key": false
+        }
+      ],
+      "indexes": [],
+      "constraints": [],
+      "row_count": 1,
+      "table_size_bytes": 0,
+      "sample_data": [
+        {
+          "vehicle_id": "cf1e58a5-d456-4a17-ae82-273ef0e65f9d",
+          "miles": 52000,
+          "date": "2025-06-17",
+          "created_at": "2025-09-25T20:15:52.745372+00:00"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "from_table": "vehicles",
+      "from_column": "tenant_id",
+      "to_table": "tenants",
+      "to_column": "id",
+      "constraint_name": "fk_vehicles_tenant_id"
+    },
+    {
+      "from_table": "vehicles",
+      "from_column": "garage_id",
+      "to_table": "garages",
+      "to_column": "id",
+      "constraint_name": "fk_vehicles_garage_id"
+    },
+    {
+      "from_table": "garages",
+      "from_column": "tenant_id",
+      "to_table": "tenants",
+      "to_column": "id",
+      "constraint_name": "fk_garages_tenant_id"
+    },
+    {
+      "from_table": "vehicle_events",
+      "from_column": "vehicle_id",
+      "to_table": "vehicles",
+      "to_column": "id",
+      "constraint_name": "fk_vehicle_events_vehicle_id"
+    },
+    {
+      "from_table": "reminders",
+      "from_column": "vehicle_id",
+      "to_table": "vehicles",
+      "to_column": "id",
+      "constraint_name": "fk_reminders_vehicle_id"
+    },
+    {
+      "from_table": "vehicle_images",
+      "from_column": "tenant_id",
+      "to_table": "tenants",
+      "to_column": "id",
+      "constraint_name": "fk_vehicle_images_tenant_id"
+    },
+    {
+      "from_table": "vehicle_images",
+      "from_column": "vehicle_id",
+      "to_table": "vehicles",
+      "to_column": "id",
+      "constraint_name": "fk_vehicle_images_vehicle_id"
+    },
+    {
+      "from_table": "tenants",
+      "from_column": "stripe_customer_id",
+      "to_table": "stripe_customers",
+      "to_column": "id",
+      "constraint_name": "fk_tenants_stripe_customer_id"
+    },
+    {
+      "from_table": "tenants",
+      "from_column": "stripe_subscription_id",
+      "to_table": "stripe_subscriptions",
+      "to_column": "id",
+      "constraint_name": "fk_tenants_stripe_subscription_id"
+    },
+    {
+      "from_table": "vehicle_current_mileage",
+      "from_column": "vehicle_id",
+      "to_table": "vehicles",
+      "to_column": "id",
+      "constraint_name": "fk_vehicle_current_mileage_vehicle_id"
+    }
+  ],
+  "summary": {
+    "total_tables": 10,
+    "total_columns": 75,
+    "total_indexes": 0,
+    "total_constraints": 0,
+    "total_rows": 30,
+    "database_size_mb": 0
+  }
+}
