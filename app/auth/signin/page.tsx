@@ -42,7 +42,16 @@ export default function SignInPage() {
       // Set timeout in case signIn hangs
       const timeout = setTimeout(() => {
         console.warn('[Auth] SignIn timeout - redirecting manually')
-        window.location.href = '/api/auth/signin/google?callbackUrl=/vehicles'
+        console.log('[Auth] Target URL:', '/api/auth/signin/google?callbackUrl=/vehicles')
+        
+        // Force redirect with reload
+        try {
+          window.location.assign('/api/auth/signin/google?callbackUrl=/vehicles')
+        } catch (error) {
+          console.error('[Auth] Redirect failed:', error)
+          // Try alternative method
+          window.location.href = '/api/auth/signin/google?callbackUrl=/vehicles'
+        }
       }, 3000) // 3 second timeout
       
       const result = await signIn('google', { 
@@ -104,7 +113,7 @@ export default function SignInPage() {
             </Button>
 
             {/* Fallback Direct Link */}
-            <div className="text-center">
+            <div className="text-center space-y-2">
               <Text size="sm" className="text-gray-500">
                 Button not working?{' '}
                 <a 
@@ -112,6 +121,24 @@ export default function SignInPage() {
                   className="text-blue-600 hover:underline font-medium"
                 >
                   Click here to sign in
+                </a>
+              </Text>
+              <Text size="xs" className="text-gray-400">
+                Debug:{' '}
+                <a
+                  href="/api/auth/providers"
+                  target="_blank"
+                  className="text-blue-500 hover:underline"
+                >
+                  Check providers
+                </a>
+                {' | '}
+                <a
+                  href="/api/auth/csrf"
+                  target="_blank"
+                  className="text-blue-500 hover:underline"
+                >
+                  Check CSRF
                 </a>
               </Text>
             </div>
