@@ -8,6 +8,10 @@ yarn-error.log*
 .next/
 out/
 
+# Legacy Pages Router (DO NOT USE - we use App Router only)
+# All API routes should be in app/api/, not pages/api/
+pages/api/
+
 # Production
 build/
 dist/
