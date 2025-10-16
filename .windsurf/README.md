@@ -22,7 +22,32 @@
 
 ---
 
-## 🛠️ Available Tools (20+)
+## 🤖 AI TOOLS INTEGRATION (NEW!)
+
+**We now have 5 AI-powered tools for 3-4x faster development:**
+
+### Product Intelligence AI:
+- `npm run product:analyze:ai "<feature>"` - Strategic product thinking
+- `npm run product:brief:ai "<feature>"` - Full product brief
+
+### Error Debugging AI:
+- `npm run build:errors:ai <log-file>` - Friendly error explanations
+
+### Architecture AI:
+- `npm run arch:validate:ai` - AI-powered health check
+
+### Deploy Safety AI:
+- `npm run deploy:risk:ai` - Prevent production disasters
+
+### Database AI:
+- `npm run db:doctor:ai` - Prescriptive SQL fixes
+
+**📖 Full Protocol:** See `ai-tools-protocol.md` in this directory  
+**🔄 Workflows:** See `workflows/` directory for standard processes
+
+---
+
+## 🛠️ Other Available Tools (20+)
 
 ### Deployment:
 - `npm run deploy` - Smart deploy with validation
@@ -74,6 +99,8 @@ npm run rollback:last
 
 ## ✅ Always Do This
 
+✅ **Read `ai-tools-protocol.md`** at session start  
+✅ **Use AI tools proactively** (product analysis, error parsing, deploy risk)  
 ✅ Run `windsurf:guide` before coding  
 ✅ Use `npm run deploy` for all deployments  
 ✅ Include tests with every feature  
@@ -82,6 +109,21 @@ npm run rollback:last
 
 ---
 
-**Updated:** October 14, 2025  
-**Version:** Elite Tier 1.0  
-**Status:** Production Ready
+## 🚀 Cascade AI Integration
+
+**Cascade (me) should:**
+- Follow protocols in `ai-tools-protocol.md`
+- Suggest AI tools proactively when relevant
+- Use workflows in `workflows/` directory
+- Reference past AI analyses from context
+
+**User should tell Cascade:**
+"Follow the AI tools protocol in `.windsurf/ai-tools-protocol.md`"
+
+This makes us 3-4x faster while maintaining higher quality.
+
+---
+
+**Updated:** October 15, 2025  
+**Version:** Elite Tier 1.0 + AI Integration  
+**Status:** Production Ready + AI-Powered

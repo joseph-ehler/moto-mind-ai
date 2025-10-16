@@ -11,6 +11,7 @@
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:ai": "jest scripts/__tests__/ai-integrations.test.ts --testTimeout=60000",
     "test:security": "jest --config=tests/security/jest.config.js",
     "test:security:ci": "jest --config=tests/security/jest.config.js --ci --coverage=false",
     "test:isolation": "jest tests/isolation",
