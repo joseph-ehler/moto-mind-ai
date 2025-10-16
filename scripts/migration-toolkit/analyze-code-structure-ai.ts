@@ -9,7 +9,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { execSync } from 'child_process'
-import { callOpenAI, parseOpenAIJSON } from '../lib/ai/openai-client'
+import { getOpenAIAnalysis } from '../shared/ai-helper'
 
 interface BasicAnalysis {
   featureName: string
@@ -194,20 +194,19 @@ Respond with JSON:
 Be specific and concrete. Focus on migration-relevant insights.`
 
   try {
-    const response = await callOpenAI({
-      model: 'gpt-4-turbo-preview', // Will auto-upgrade to GPT-5 when available
-      messages: [
-        { 
-          role: 'system', 
-          content: 'You are an expert code analyzer. Respond only with valid JSON matching the requested schema.' 
-        },
-        { role: 'user', content: prompt }
-      ],
-      max_tokens: 2000,
-      temperature: 0.2
+    const result = await getOpenAIAnalysis<AIInsights>({
+      role: 'expert code analyzer specializing in feature migrations',
+      task: 'Analyze this code structure for migration complexity and predict potential issues',
+      data: {
+        featureName,
+        basicAnalysis,
+        codeSamples: samples,
+        internalImports
+      },
+      format: 'JSON matching the schema: { "actualComplexity": "low|medium|high", "hiddenIssues": string[], "recommendations": string[], "estimatedTime": "X-Y hours", "reasoning": string, "confidence": number }'
     })
     
-    const insights = parseOpenAIJSON<AIInsights>(response)
+    const insights = result.analysis
     
     // Add internal import info if detected
     if (internalImports.count > 0) {
@@ -217,8 +216,8 @@ Be specific and concrete. Focus on migration-relevant insights.`
     return {
       insights,
       usage: {
-        inputTokens: response.usage.prompt_tokens,
-        outputTokens: response.usage.completion_tokens
+        inputTokens: result.tokens.input,
+        outputTokens: result.tokens.output
       }
     }
   } catch (error) {

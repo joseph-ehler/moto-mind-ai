@@ -10,26 +10,10 @@ import {
   ExternalLink
 } from 'lucide-react'
 import Link from 'next/link'
+import type { EventData } from '../domain'
 
 export interface EventCardProps {
-  eventData: {
-    event_id: string
-    event_type: string
-    event_date: string
-    event_summary?: string
-    event_location?: string
-    event_cost?: number
-    event_gallons?: number
-    event_miles?: number
-    event_vendor?: string
-    event_weather?: {
-      temperature_f?: number
-      condition?: string
-      precipitation_mm?: number
-      windspeed_mph?: number
-      humidity_percent?: number
-    }
-  }
+  eventData: EventData
 }
 
 export function EventCard({ eventData }: EventCardProps) {
