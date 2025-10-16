@@ -29,12 +29,17 @@ import {
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { readFile, access } from 'fs/promises';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const execAsync = promisify(exec);
 
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 // Project root (where package.json is)
-const PROJECT_ROOT = join(__dirname, '../../..');
+const PROJECT_ROOT = join(__dirname, '../..');
 
 /**
  * Execute a command in the project root
