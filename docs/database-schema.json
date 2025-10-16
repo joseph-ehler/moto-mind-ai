@@ -1,7 +1,8 @@
 {
-  "generatedAt": "2025-10-16T17:31:15.995Z",
+  "generatedAt": "2025-10-16T17:36:55.713Z",
   "database": "https://ucbbzzoimghnaoihyqbd.supabase.co",
   "totalTables": 22,
+  "totalMaterializedViews": 2,
   "tables": [
     {
       "name": "capture_sessions",
@@ -2112,7 +2113,7 @@
           "definition": "CREATE UNIQUE INDEX schema_migrations_filename_key ON public.schema_migrations USING btree (filename)"
         }
       ],
-      "rowCount": 16,
+      "rowCount": 17,
       "rlsEnabled": false,
       "rlsPolicies": []
     },
@@ -4273,6 +4274,46 @@
           "withCheck": null
         }
       ]
+    }
+  ],
+  "materializedViews": [
+    {
+      "name": "mv_tenant_summary",
+      "definition": " SELECT t.id AS tenant_id,\n    t.name AS tenant_name,\n    count(DISTINCT v.id) AS vehicle_count,\n    count(DISTINCT ve.id) AS event_count,\n    count(DISTINCT g.id) AS garage_count,\n    sum(ve.total_amount) AS lifetime_spend,\n    max(ve.date) AS last_activity\n   FROM (((tenants t\n     LEFT JOIN vehicles v ON ((v.tenant_id = t.id)))\n     LEFT JOIN vehicle_events ve ON (((ve.tenant_id = t.id) AND (ve.deleted_at IS NULL))))\n     LEFT JOIN garages g ON (((g.tenant_id = t.id) AND (g.deleted_at IS NULL))))\n  GROUP BY t.id, t.name;",
+      "columns": [],
+      "indexes": [
+        {
+          "name": "idx_mv_tenant_summary_unique",
+          "definition": "CREATE UNIQUE INDEX idx_mv_tenant_summary_unique ON public.mv_tenant_summary USING btree (tenant_id)"
+        },
+        {
+          "name": "idx_mv_tenant_summary_activity",
+          "definition": "CREATE INDEX idx_mv_tenant_summary_activity ON public.mv_tenant_summary USING btree (last_activity DESC NULLS LAST)"
+        }
+      ],
+      "rowCount": 1,
+      "lastRefresh": null
+    },
+    {
+      "name": "mv_vehicle_event_stats",
+      "definition": " SELECT tenant_id,\n    vehicle_id,\n    type,\n    date_trunc('month'::text, date) AS month,\n    count(*) AS event_count,\n    sum(total_amount) AS total_spent,\n    sum(gallons) AS total_gallons,\n    avg(total_amount) AS avg_amount,\n    min(date) AS first_event,\n    max(date) AS last_event\n   FROM vehicle_events\n  WHERE (deleted_at IS NULL)\n  GROUP BY tenant_id, vehicle_id, type, (date_trunc('month'::text, date));",
+      "columns": [],
+      "indexes": [
+        {
+          "name": "idx_mv_vehicle_event_stats_unique",
+          "definition": "CREATE UNIQUE INDEX idx_mv_vehicle_event_stats_unique ON public.mv_vehicle_event_stats USING btree (tenant_id, vehicle_id, type, month)"
+        },
+        {
+          "name": "idx_mv_vehicle_event_stats_tenant",
+          "definition": "CREATE INDEX idx_mv_vehicle_event_stats_tenant ON public.mv_vehicle_event_stats USING btree (tenant_id, month DESC)"
+        },
+        {
+          "name": "idx_mv_vehicle_event_stats_vehicle",
+          "definition": "CREATE INDEX idx_mv_vehicle_event_stats_vehicle ON public.mv_vehicle_event_stats USING btree (vehicle_id, month DESC)"
+        }
+      ],
+      "rowCount": 0,
+      "lastRefresh": null
     }
   ],
   "tenantDataAudit": [

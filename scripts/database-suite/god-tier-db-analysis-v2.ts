@@ -31,6 +31,14 @@ interface SchemaData {
     rlsPolicies: any[]
     rowCount: number
   }>
+  materializedViews?: Array<{
+    name: string
+    definition: string
+    columns: any[]
+    indexes: any[]
+    rowCount: number
+    lastRefresh: string | null
+  }>
 }
 
 interface AnalysisResult {
@@ -404,7 +412,8 @@ function analyzeScalability(schema: SchemaData): AnalysisResult {
   )
   
   // Check for materialized views (advanced scalability feature)
-  const hasMaterializedViews = schema.tables.some(t => t.name.startsWith('mv_'))
+  const materializedViewCount = schema.materializedViews?.length || 0
+  const hasMaterializedViews = materializedViewCount > 0
   
   // Elite-tier scalability scoring
   let score = 0
@@ -434,6 +443,9 @@ function analyzeScalability(schema: SchemaData): AnalysisResult {
   }
   if (hasPartitioning) {
     strengths.push('Table partitioning implemented')
+  }
+  if (hasMaterializedViews) {
+    strengths.push(`${materializedViewCount} materialized views for instant aggregations`)
   }
   
   if (largeTables.length > 0 && !hasPartitioning) {
