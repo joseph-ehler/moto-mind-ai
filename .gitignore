@@ -79,3 +79,6 @@ AFTER-CODE-CHECKLIST.md
 # Temporary Vercel env file (created by env:check)
 .env.vercel.local
 .vercel
+
+# Generated migration SQL files
+.migrations-output/

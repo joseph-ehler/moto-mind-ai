@@ -24,6 +24,7 @@
     "protect:check": "node scripts/windsurf-protection.js check",
     "db:migrate": "npx tsx scripts/database-suite/migrate.ts",
     "db:migrate:old": "npx tsx scripts/run-migrations.ts",
+    "db:generate-sql": "npx tsx scripts/database-suite/generate-migration-sql.ts",
     "db:smart-migrate": "npx tsx scripts/smart-migrate.ts",
     "db:test-migration": "npx tsx scripts/test-migration.ts",
     "db:storage": "npx tsx scripts/database-suite/storage-manager.ts",
