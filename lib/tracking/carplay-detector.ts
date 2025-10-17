@@ -29,8 +29,6 @@ export interface CarConnectionSignals {
     carWiFi: boolean
     /** Current display mode */
     displayMode: 'carplay' | 'android-auto' | 'normal'
-    /** Car WiFi network SSID if available */
-    networkSSID: string | null
     /** Screen resolution matches known CarPlay specs */
     screenResolution: { matches: boolean; type: string }
   }
@@ -44,6 +42,20 @@ export interface CarConnectionSignals {
     /** Human-readable reasons for the confidence level */
     reasons: string[]
   }
+}
+
+/**
+ * Last known successful car connection for learning patterns
+ */
+interface LastConnection {
+  /** When the connection occurred */
+  timestamp: number
+  /** Type of connection */
+  connectionType: 'wired' | 'wireless'
+  /** Confidence score at time of connection */
+  confidence: number
+  /** Which signals were present */
+  activeSignals: string[]
 }
 
 type ConnectionChangeCallback = (connected: boolean, signals: CarConnectionSignals) => void
@@ -70,6 +82,12 @@ export class EnhancedCarPlayDetector {
   private previousState: CarConnectionSignals | null = null
   private listeners: ConnectionChangeCallback[] = []
   private monitoringInterval: NodeJS.Timeout | null = null
+  private lastConnection: LastConnection | null = null
+  
+  constructor() {
+    // Load last known connection from localStorage
+    this.loadLastConnection()
+  }
   
   /**
    * Detect current car connection status with all available signals
@@ -83,7 +101,6 @@ export class EnhancedCarPlayDetector {
       carBluetooth: await this.isConnectedToCarBluetooth(),
       carWiFi: await this.isConnectedToCarWiFi(),
       displayMode: await this.detectDisplayMode(),
-      networkSSID: await this.getWiFiSSID(),
       screenResolution: this.checkCarPlayResolution()
     }
     
@@ -92,6 +109,22 @@ export class EnhancedCarPlayDetector {
     
     // Calculate confidence
     const confidence = this.calculateConfidence(signals, connectionType)
+    
+    // Boost confidence if similar to last successful connection
+    if (this.isSimilarToLastConnection(signals, connectionType)) {
+      confidence.score = Math.min(100, confidence.score + 10)
+      confidence.reasons.push('Similar to previous car connection')
+      
+      // Recalculate level with boosted score
+      if (confidence.score >= 80) confidence.level = 'very-high'
+      else if (confidence.score >= 60) confidence.level = 'high'
+      else if (confidence.score >= 40) confidence.level = 'medium'
+    }
+    
+    // Save this connection if confidence is high
+    if (confidence.level === 'high' || confidence.level === 'very-high') {
+      this.saveLastConnection(signals, connectionType, confidence.score)
+    }
     
     return {
       connectionType,
@@ -194,37 +227,43 @@ export class EnhancedCarPlayDetector {
     let score = 0
     const reasons: string[] = []
     
-    // Display mode is strongest signal (40 points)
+    // TIER 1: Most Reliable Signals (65 points total)
+    
+    // Display mode is strongest signal (50 points)
     if (signals.displayMode === 'carplay') {
-      score += 40
+      score += 50
       reasons.push('CarPlay display mode detected')
     } else if (signals.displayMode === 'android-auto') {
-      score += 40
+      score += 50
       reasons.push('Android Auto display mode detected')
     }
     
-    // Car-specific Bluetooth (25 points)
-    if (signals.carBluetooth) {
-      score += 25
-      reasons.push('Connected to car Bluetooth')
-    }
-    
-    // Car WiFi network (20 points for wireless)
-    if (signals.carWiFi && connectionType === 'wireless') {
-      score += 20
-      reasons.push('Connected to car WiFi')
-    }
-    
-    // Charging (20 points for wired)
-    if (signals.charging && connectionType === 'wired') {
-      score += 20
-      reasons.push('Device charging via USB')
-    }
-    
-    // CarPlay-specific screen resolution (15 points)
+    // Screen resolution match (15 points)
     if (signals.screenResolution.matches) {
       score += 15
       reasons.push(`CarPlay resolution detected (${signals.screenResolution.type})`)
+    }
+    
+    // TIER 2: Wired Connection Indicator (30 points)
+    
+    // Charging via USB (30 points for wired)
+    if (signals.charging && connectionType === 'wired') {
+      score += 30
+      reasons.push('Device charging via USB')
+    }
+    
+    // TIER 3: Helpful Hints (15 points total)
+    
+    // Media session active (10 points)
+    if (signals.carBluetooth) {
+      score += 10
+      reasons.push('Car audio system detected')
+    }
+    
+    // WiFi connection (10 points for wireless)
+    if (signals.carWiFi && connectionType === 'wireless') {
+      score += 10
+      reasons.push('Connected via WiFi (possible car network)')
     }
     
     // Determine level
@@ -258,42 +297,44 @@ export class EnhancedCarPlayDetector {
   }
   
   /**
-   * Check if connected to car Bluetooth device
+   * Check if connected to car audio (simplified)
+   * 
+   * Note: Web Bluetooth API requires user interaction and won't work automatically.
+   * Instead, we infer car connection from other reliable signals.
+   * This method is kept for future enhancement with user-initiated pairing.
    */
   private async isConnectedToCarBluetooth(): Promise<boolean> {
-    if (typeof navigator === 'undefined' || !('bluetooth' in navigator)) {
-      return false
-    }
+    if (typeof navigator === 'undefined') return false
     
     try {
-      // Try to get paired devices
-      const devices = await (navigator.bluetooth as any).getDevices()
+      // Check if media session is active (indicates audio playing)
+      if ('mediaSession' in navigator) {
+        const mediaSession = (navigator as any).mediaSession
+        if (mediaSession?.playbackState === 'playing') {
+          return true
+        }
+      }
       
-      // Look for car-related device names
-      const carKeywords = [
-        'car', 'auto', 'vehicle',
-        // Car manufacturers
-        'honda', 'toyota', 'ford', 'chevy', 'chevrolet', 
-        'tesla', 'bmw', 'mercedes', 'audi', 'lexus',
-        'mazda', 'nissan', 'subaru', 'volkswagen', 'vw',
-        'hyundai', 'kia', 'volvo', 'jeep', 'ram',
-        // Car audio systems
-        'carplay', 'android auto', 'sync', 'uconnect',
-        'infotainment', 'audio', 'multimedia'
-      ]
+      // Check for audio context (indicates audio output)
+      if ('AudioContext' in window || 'webkitAudioContext' in window) {
+        // Audio is being used, might be car audio
+        // This is a weak signal, so we'll use it cautiously
+        return false // Disabled for now as too unreliable
+      }
       
-      return devices.some((device: any) => {
-        const name = device.name?.toLowerCase() || ''
-        return carKeywords.some(keyword => name.includes(keyword))
-      })
+      return false
     } catch (error) {
-      console.warn('[CarPlayDetector] Bluetooth detection failed:', error)
+      console.warn('[CarPlayDetector] Audio detection failed:', error)
       return false
     }
   }
   
   /**
-   * Check if connected to car WiFi network
+   * Check if connected to car WiFi network (simplified)
+   * 
+   * Note: Browsers don't expose WiFi SSID for privacy.
+   * We check if on WiFi (not cellular) and not charging,
+   * which suggests wireless CarPlay/Android Auto.
    */
   private async isConnectedToCarWiFi(): Promise<boolean> {
     if (typeof navigator === 'undefined' || !navigator.onLine) {
@@ -308,46 +349,27 @@ export class EnhancedCarPlayDetector {
       
       if (!connection) return false
       
-      // If connected via WiFi with specific patterns
-      if (connection.effectiveType === 'wifi' || 
-          connection.type === 'wifi') {
-        
-        // Try to detect car WiFi SSID patterns
-        const ssid = await this.getWiFiSSID()
-        if (ssid) {
-          const carWiFiPatterns = [
-            'carplay', 'androidauto', 'tesla', 'bmw', 'mercedes',
-            'audi', 'lexus', 'toyota', 'honda', 'ford', 'sync',
-            'uconnect', 'mylink', 'entune', 'infotainment'
-          ]
-          
-          return carWiFiPatterns.some(pattern => 
-            ssid.toLowerCase().includes(pattern)
-          )
-        }
-      }
+      // Check if on WiFi (not cellular)
+      const isWiFi = 
+        connection.effectiveType === 'wifi' ||
+        connection.type === 'wifi' ||
+        // Sometimes reported as 'ethernet' on car systems
+        connection.type === 'ethernet'
       
-      return false
+      if (!isWiFi) return false
+      
+      // If on WiFi AND not charging, likely wireless CarPlay
+      // (wired would be charging via USB)
+      try {
+        const battery = await (navigator.getBattery as any)()
+        const notCharging = !battery.charging
+        return isWiFi && notCharging
+      } catch {
+        // Battery API not available, just return WiFi status
+        return isWiFi
+      }
     } catch {
       return false
-    }
-  }
-  
-  /**
-   * Get WiFi SSID if available (limited browser support)
-   */
-  private async getWiFiSSID(): Promise<string | null> {
-    try {
-      // Some Android browsers expose this
-      const connection = (navigator as any).connection
-      if (connection && connection.ssid) {
-        return connection.ssid
-      }
-      
-      // Not available in most browsers for privacy
-      return null
-    } catch {
-      return null
     }
   }
   
@@ -445,5 +467,89 @@ export class EnhancedCarPlayDetector {
         console.error('[CarPlayDetector] Listener error:', error)
       }
     })
+  }
+  
+  // ========================================
+  // PRIVATE: Connection Memory
+  // ========================================
+  
+  /**
+   * Load last known connection from localStorage
+   */
+  private loadLastConnection(): void {
+    if (typeof window === 'undefined') return
+    
+    try {
+      const stored = localStorage.getItem('carplay_last_connection')
+      if (stored) {
+        this.lastConnection = JSON.parse(stored)
+      }
+    } catch (error) {
+      console.warn('[CarPlayDetector] Failed to load last connection:', error)
+    }
+  }
+  
+  /**
+   * Save current connection as last known successful connection
+   */
+  private saveLastConnection(
+    signals: any,
+    connectionType: 'wired' | 'wireless' | 'unknown',
+    confidence: number
+  ): void {
+    if (typeof window === 'undefined') return
+    
+    // Get list of active signals
+    const activeSignals = Object.keys(signals).filter(key => {
+      const value = signals[key]
+      return value === true || (typeof value === 'object' && value?.matches === true)
+    })
+    
+    this.lastConnection = {
+      timestamp: Date.now(),
+      connectionType: connectionType === 'unknown' ? 'wireless' : connectionType,
+      confidence,
+      activeSignals
+    }
+    
+    try {
+      localStorage.setItem(
+        'carplay_last_connection',
+        JSON.stringify(this.lastConnection)
+      )
+    } catch (error) {
+      console.warn('[CarPlayDetector] Failed to save last connection:', error)
+    }
+  }
+  
+  /**
+   * Check if current signals are similar to last successful connection
+   */
+  private isSimilarToLastConnection(
+    currentSignals: any,
+    currentConnectionType: string
+  ): boolean {
+    if (!this.lastConnection) return false
+    
+    // Only consider recent connections (within 24 hours)
+    const timeSinceLastConnection = Date.now() - this.lastConnection.timestamp
+    const oneDayMs = 24 * 60 * 60 * 1000
+    if (timeSinceLastConnection > oneDayMs) return false
+    
+    // Check if connection type matches
+    const typeMatches = currentConnectionType === this.lastConnection.connectionType
+    if (!typeMatches) return false
+    
+    // Check if at least 2 of the same signals are active
+    const currentActiveSignals = Object.keys(currentSignals).filter(key => {
+      const value = currentSignals[key]
+      return value === true || (typeof value === 'object' && value?.matches === true)
+    })
+    
+    const matchingSignals = this.lastConnection.activeSignals.filter(signal =>
+      currentActiveSignals.includes(signal)
+    )
+    
+    return matchingSignals.length >= 2
   }
 }
