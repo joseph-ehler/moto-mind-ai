@@ -21,10 +21,23 @@ console.log('[NextAuth] Config check:', {
 })
 
 const authOptions: NextAuthOptions = {
+  // Use JWT strategy (not database sessions) for better OAuth compatibility
+  session: {
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      // Force consent screen and account selection to avoid OAuth state issues
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     }),
     CredentialsProvider({
       id: 'credentials',
@@ -87,6 +100,17 @@ const authOptions: NextAuthOptions = {
   ...(process.env.NEXTAUTH_URL && { 
     url: process.env.NEXTAUTH_URL 
   }),
+  events: {
+    async signIn(message) {
+      console.log('[NextAuth] 🔐 Sign-in event:', message.user?.email)
+    },
+    async signOut(message) {
+      console.log('[NextAuth] 🚪 Sign-out event:', message.token?.email || 'unknown')
+    },
+    async session(message) {
+      console.log('[NextAuth] 📝 Session event:', message.session?.user?.email)
+    },
+  },
   callbacks: {
     async signIn({ user, account, profile }) {
       console.log('[NextAuth] SignIn callback:', { 
@@ -94,14 +118,15 @@ const authOptions: NextAuthOptions = {
         provider: account?.provider 
       })
       
-      // ✅ Track login method
+      // ✅ Track login method (non-blocking - don't fail login if this fails)
       if (user?.email) {
         try {
           const method = account?.provider === 'google' ? 'google' : 'credentials'
           await trackLogin(user.email, method)
           console.log('[NextAuth] ✅ Login tracked:', user.email, method)
         } catch (error) {
-          console.error('[NextAuth] ❌ Failed to track login:', error)
+          console.error('[NextAuth] ❌ Failed to track login (non-critical):', error)
+          // Don't throw - allow login to proceed even if tracking fails
         }
       }
       

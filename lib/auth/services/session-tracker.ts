@@ -116,11 +116,18 @@ export async function trackSession(
       .single()
 
     if (error || !newSession) {
+      // Log the error but DON'T throw - session tracking should never break login
       console.error('[SESSION] Failed to create session:', error)
-      throw new Error('Failed to create session')
+      console.error('[SESSION] This is non-critical - user can still use the app')
+      
+      // Return a fallback session ID
+      return {
+        sessionId: 'fallback-' + Date.now(),
+        deviceId: finalDeviceId
+      }
     }
 
-    console.log(`[SESSION] Tracked session for user ${userId} from ${location?.city || 'Unknown'}`)
+    console.log(`[SESSION] ✅ Tracked session for user ${userId} from ${location?.city || 'Unknown'}`)
 
     return {
       sessionId: newSession.id,
@@ -128,8 +135,15 @@ export async function trackSession(
     }
 
   } catch (error) {
+    // CRITICAL: Never throw errors from session tracking - it should never break login
     console.error('[SESSION] Track session error:', error)
-    throw error
+    console.error('[SESSION] Returning fallback - user can still proceed')
+    
+    // Return fallback values
+    return {
+      sessionId: 'error-fallback-' + Date.now(),
+      deviceId: deviceId || generateDeviceId()
+    }
   }
 }
 
