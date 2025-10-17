@@ -41,23 +41,10 @@ export default function ActiveSessionsPage() {
   const [error, setError] = useState<string>('')
   const [isTerminating, setIsTerminating] = useState(false)
   const [terminatingId, setTerminatingId] = useState<string | null>(null)
-  const [currentDeviceId, setCurrentDeviceId] = useState<string>('')
 
   // Get user ID from session
   const { data: session } = useSession()
   const userId = session?.user?.email || ''
-
-  useEffect(() => {
-    // Get device ID from cookie
-    const deviceId = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('device_id='))
-      ?.split('=')[1]
-    
-    if (deviceId) {
-      setCurrentDeviceId(deviceId)
-    }
-  }, [])
 
   useEffect(() => {
     if (userId) {
@@ -77,15 +64,8 @@ export default function ActiveSessionsPage() {
 
       const data = await response.json()
 
-      // Mark current session by device_id
-      const sessionsWithCurrent = data.sessions.map((s: Session) => ({
-        ...s,
-        isCurrent: s.deviceInfo.deviceName && currentDeviceId ? 
-          s.id.includes(currentDeviceId) || s.deviceInfo.deviceName === 'Current Device' :
-          false
-      }))
-
-      setSessions(sessionsWithCurrent)
+      // API already marks current session correctly - just use it
+      setSessions(data.sessions)
     } catch (error) {
       console.error('Failed to fetch sessions:', error)
       setError('Failed to load sessions')
@@ -185,8 +165,8 @@ export default function ActiveSessionsPage() {
                 </CardContent>
               </Card>
 
-              {/* Sign Out All Button */}
-              {sessions.length > 1 && (
+              {/* Sign Out All Button - Only show if there are other devices */}
+              {sessions.filter(s => !s.isCurrent).length > 0 && (
                 <div className="flex justify-end">
                   <Button
                     variant="destructive"
@@ -199,7 +179,7 @@ export default function ActiveSessionsPage() {
                         Signing out...
                       </>
                     ) : (
-                      `Sign out all other devices (${sessions.length - 1})`
+                      `Sign out all other devices (${sessions.filter(s => !s.isCurrent).length})`
                     )}
                   </Button>
                 </div>
