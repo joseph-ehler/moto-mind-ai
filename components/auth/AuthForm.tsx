@@ -26,6 +26,7 @@ import { Mail, Loader2 } from 'lucide-react'
 import { PasswordInput } from './PasswordInput'
 import { WelcomeBack } from './ui/WelcomeBack'
 import { RateLimitMessage } from './ui/RateLimitMessage'
+import { CheckEmailState } from './ui/CheckEmailState'
 import { registerUser } from '@/lib/auth/services/user-registration'
 import { validatePassword } from '@/lib/auth/services/password-service'
 import { useLastLogin, saveLastLoginMethod } from '@/lib/auth/hooks/useLastLogin'
@@ -47,6 +48,7 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [magicLinkSent, setMagicLinkSent] = useState(false)
+  const [magicLinkExpiry, setMagicLinkExpiry] = useState<Date | null>(null)
   const [rateLimited, setRateLimited] = useState<{
     active: boolean
     retryAfterMinutes: number
@@ -115,6 +117,8 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
       } else {
         saveLastLoginMethod(email, 'email')
         saveLastUserEmail(email)
+        // Set expiry to 15 minutes from now
+        setMagicLinkExpiry(new Date(Date.now() + 15 * 60000))
         setMagicLinkSent(true)
       }
     } catch (err) {
@@ -209,29 +213,28 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
   if (magicLinkSent) {
     return (
       <Card>
-        <CardHeader className="text-center space-y-4">
-          <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Mail className="h-6 w-6 text-primary" />
-          </div>
-          <CardTitle>Check your email</CardTitle>
-          <CardDescription className="text-base">
-            We sent a magic link to <strong>{email}</strong>
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground text-center">
-            Click the link in the email to sign in. The link expires in 10 minutes.
-          </p>
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => {
-              setMagicLinkSent(false)
-              setEmail('')
+        <CardContent className="pt-6">
+          <CheckEmailState
+            email={email}
+            expiresAt={magicLinkExpiry || new Date(Date.now() + 15 * 60000)}
+            onResend={async () => {
+              // Resend magic link
+              await handleMagicLink({ preventDefault: () => {} } as React.FormEvent)
             }}
-          >
-            Send another link
-          </Button>
+            resendCooldown={60}
+          />
+          <div className="mt-6 text-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setMagicLinkSent(false)
+                setMagicLinkExpiry(null)
+              }}
+            >
+              Use a different sign-in method
+            </Button>
+          </div>
         </CardContent>
       </Card>
     )
