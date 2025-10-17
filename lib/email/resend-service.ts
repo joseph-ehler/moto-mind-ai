@@ -8,11 +8,23 @@
 import { Resend } from 'resend'
 import type { EmailConfig, EmailSendResult } from './types'
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 // Default "from" address (configured in Resend dashboard)
 const DEFAULT_FROM = process.env.RESEND_FROM_EMAIL || 'MotoMind AI <noreply@send.motomind.ai>'
+
+// Lazy initialize Resend client (only when API key is available)
+let resend: Resend | null = null
+
+function getResendClient(): Resend | null {
+  if (!process.env.RESEND_API_KEY) {
+    return null
+  }
+  
+  if (!resend) {
+    resend = new Resend(process.env.RESEND_API_KEY)
+  }
+  
+  return resend
+}
 
 /**
  * Send an email via Resend
@@ -37,8 +49,10 @@ export async function sendEmail(config: Omit<EmailConfig, 'from'> & { from?: str
       }
     }
 
-    // Check if Resend is configured
-    if (!process.env.RESEND_API_KEY) {
+    // Get Resend client (returns null if API key not configured)
+    const client = getResendClient()
+    
+    if (!client) {
       console.error('[Email] RESEND_API_KEY not configured')
       
       // In development, log email instead of failing
@@ -62,13 +76,13 @@ export async function sendEmail(config: Omit<EmailConfig, 'from'> & { from?: str
     }
 
     // Send email via Resend
-    const response = await resend.emails.send({
+    const response = await client.emails.send({
       from: config.from || DEFAULT_FROM,
       to: Array.isArray(config.to) ? config.to : [config.to],
       subject: config.subject,
       html: config.html,
       text: config.text,
-      reply_to: config.replyTo,
+      replyTo: config.replyTo,
       cc: config.cc,
       bcc: config.bcc,
     })
