@@ -9,7 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { createClient } from '@/lib/supabase/server'
+import { getSupabaseClient } from '@/lib/supabase/client'
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get Supabase client
-    const supabase = createClient()
+    const supabase = getSupabaseClient()
 
     // Get user ID from email
     const { data: userData, error: userError } = await supabase
