@@ -43,6 +43,7 @@ export class SmartVehicleTracker {
     avgSpeed: 0,
     pointsRecorded: 0,
     batteryLevel: 1,
+    isCharging: false,
     isOnline: navigator.onLine,
     error: null
   }
@@ -421,7 +422,10 @@ export class SmartVehicleTracker {
         dischargingTime: battery.dischargingTime
       }
 
-      this.updateState({ batteryLevel: battery.level })
+      this.updateState({ 
+        batteryLevel: battery.level,
+        isCharging: battery.charging
+      })
 
       // Adjust update interval based on battery
       this.adjustForBattery()
@@ -435,6 +439,7 @@ export class SmartVehicleTracker {
 
       battery.addEventListener('chargingchange', () => {
         this.battery!.charging = battery.charging
+        this.updateState({ isCharging: battery.charging })
         this.adjustForBattery()
       })
 

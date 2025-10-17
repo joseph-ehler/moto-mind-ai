@@ -105,6 +105,7 @@ export interface TrackingState {
   avgSpeed: number // m/s
   pointsRecorded: number
   batteryLevel: number // 0-1
+  isCharging: boolean // Whether device is currently charging
   isOnline: boolean
   error: string | null
 }

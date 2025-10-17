@@ -6,7 +6,7 @@
 
 'use client'
 
-import { Navigation, Clock, Gauge, MapPin, Battery, Wifi, WifiOff } from 'lucide-react'
+import { Navigation, Clock, Gauge, Activity, Battery, BatteryCharging, Wifi, WifiOff } from 'lucide-react'
 import { Card, Grid, Stack, Text } from '@/components/design-system'
 import { formatDistance, formatDuration, formatSpeed } from '@/lib/tracking/utils'
 import type { TrackingState } from '@/lib/tracking/types'
@@ -24,6 +24,7 @@ export function TripStats({ state }: TripStatsProps) {
     currentLocation,
     pointsRecorded,
     batteryLevel,
+    isCharging,
     isOnline
   } = state
 
@@ -95,13 +96,19 @@ export function TripStats({ state }: TripStatsProps) {
           <div className="flex items-center gap-4">
             {/* Battery */}
             <div className="flex items-center gap-2">
-              <Battery
-                className={`h-4 w-4 ${
-                  batteryLevel < 0.2 ? 'text-red-500' : 'text-muted-foreground'
-                }`}
-              />
+              {isCharging ? (
+                <BatteryCharging
+                  className="h-4 w-4 text-green-500"
+                />
+              ) : (
+                <Battery
+                  className={`h-4 w-4 ${
+                    batteryLevel < 0.2 ? 'text-red-500' : 'text-muted-foreground'
+                  }`}
+                />
+              )}
               <Text className="text-sm">
-                {Math.round(batteryLevel * 100)}%
+                {Math.round(batteryLevel * 100)}%{isCharging && ' ⚡'}
               </Text>
             </div>
 
