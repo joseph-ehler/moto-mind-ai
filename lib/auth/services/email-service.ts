@@ -7,8 +7,24 @@
 
 import { Resend } from 'resend'
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy initialize Resend client (server-side only)
+let resend: Resend | null = null
+
+function getResendClient(): Resend {
+  if (typeof window !== 'undefined') {
+    throw new Error('Email service can only be used on the server side')
+  }
+  
+  if (!resend) {
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      throw new Error('RESEND_API_KEY is not configured')
+    }
+    resend = new Resend(apiKey)
+  }
+  
+  return resend
+}
 
 /**
  * Email configuration
@@ -28,7 +44,7 @@ export async function sendMagicLinkEmail(params: {
   try {
     const { to, url } = params
 
-    await resend.emails.send({
+    await getResendClient().emails.send({
       from: EMAIL_CONFIG.from,
       to,
       subject: 'Sign in to MotoMind',
@@ -55,7 +71,7 @@ export async function sendVerificationEmail(params: {
   try {
     const { to, url } = params
 
-    await resend.emails.send({
+    await getResendClient().emails.send({
       from: EMAIL_CONFIG.from,
       to,
       subject: 'Verify your MotoMind account',
@@ -82,7 +98,7 @@ export async function sendPasswordResetEmail(params: {
   try {
     const { to, resetUrl } = params
 
-    await resend.emails.send({
+    await getResendClient().emails.send({
       from: EMAIL_CONFIG.from,
       to,
       subject: 'Reset your MotoMind password',
