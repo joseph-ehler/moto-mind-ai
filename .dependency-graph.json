@@ -1,0 +1,42 @@
+{
+  "timestamp": "2025-10-17T00:21:06.432Z",
+  "stats": {
+    "totalFiles": 1203,
+    "totalImports": 444,
+    "circularCount": 3,
+    "violationCount": 0
+  },
+  "circularDependencies": [
+    {
+      "cycle": [
+        "archive/components-old/timeline/UnifiedEventDetail.tsx",
+        "archive/components-old/timeline/VehicleTimeline.tsx",
+        "archive/components-old/timeline/UnifiedEventDetail.tsx"
+      ],
+      "description": "Circular dependency: 3 files",
+      "severity": "critical",
+      "suggestedFix": "Consider removing import from UnifiedEventDetail.tsx to VehicleTimeline.tsx"
+    },
+    {
+      "cycle": [
+        "components/design-system/forms/FormFields.tsx",
+        "components/design-system/utilities/Search.tsx",
+        "components/design-system/forms/FormFields.tsx"
+      ],
+      "description": "Circular dependency: 3 files",
+      "severity": "critical",
+      "suggestedFix": "Consider removing import from FormFields.tsx to Search.tsx"
+    },
+    {
+      "cycle": [
+        "components/design-system/utilities/Search.tsx",
+        "components/design-system/forms/Combobox.tsx",
+        "components/design-system/utilities/Search.tsx"
+      ],
+      "description": "Circular dependency: 3 files",
+      "severity": "critical",
+      "suggestedFix": "Consider removing import from Combobox.tsx to Search.tsx"
+    }
+  ],
+  "violations": []
+}

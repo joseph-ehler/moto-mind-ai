@@ -1,0 +1,359 @@
+/**
+ * Elite Layout System - Debug & Advanced CSS
+ * 
+ * CSS utilities for advanced layout features:
+ * - Visual debugging
+ * - Container queries
+ * - Subgrid support
+ * - Performance optimizations
+ */
+
+/* ============================================================================
+   VISUAL DEBUGGING STYLES
+   ============================================================================ */
+
+.debug-mode * {
+  outline: 1px solid rgba(255, 0, 0, 0.2) !important;
+}
+
+.debug-grid {
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.debug-spacing * {
+  box-shadow: 
+    0 0 0 1px rgba(255, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(0, 255, 0, 0.3);
+}
+
+/* Grid debugging */
+.debug-grid > * {
+  background-color: rgba(255, 255, 0, 0.1);
+  border: 1px dashed rgba(255, 0, 255, 0.3);
+}
+
+/* Container debugging */
+.debug-mode .container-query {
+  outline: 2px solid rgba(0, 255, 0, 0.5) !important;
+  position: relative;
+}
+
+.debug-mode .container-query::before {
+  content: 'Container Query';
+  position: absolute;
+  top: -20px;
+  left: 0;
+  background: rgba(0, 255, 0, 0.8);
+  color: white;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-family: monospace;
+  z-index: 1000;
+}
+
+/* ============================================================================
+   CONTAINER QUERIES SUPPORT
+   ============================================================================ */
+
+/* Container query utilities */
+.container-query {
+  container-type: inline-size;
+}
+
+.container-query-size {
+  container-type: size;
+}
+
+.container-query-block {
+  container-type: block-size;
+}
+
+/* Responsive container classes */
+@container (min-width: 320px) {
+  .cq-sm\:block { display: block; }
+  .cq-sm\:flex { display: flex; }
+  .cq-sm\:grid { display: grid; }
+  .cq-sm\:hidden { display: none; }
+}
+
+@container (min-width: 480px) {
+  .cq-md\:block { display: block; }
+  .cq-md\:flex { display: flex; }
+  .cq-md\:grid { display: grid; }
+  .cq-md\:hidden { display: none; }
+  .cq-md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@container (min-width: 640px) {
+  .cq-lg\:block { display: block; }
+  .cq-lg\:flex { display: flex; }
+  .cq-lg\:grid { display: grid; }
+  .cq-lg\:hidden { display: none; }
+  .cq-lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* ============================================================================
+   SUBGRID SUPPORT
+   ============================================================================ */
+
+.subgrid {
+  display: subgrid;
+}
+
+.subgrid-cols {
+  grid-template-columns: subgrid;
+}
+
+.subgrid-rows {
+  grid-template-rows: subgrid;
+}
+
+/* Subgrid fallback for browsers that don't support it */
+@supports not (grid-template-columns: subgrid) {
+  .subgrid {
+    display: grid;
+  }
+  
+  .subgrid-cols {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  }
+  
+  .subgrid-rows {
+    grid-template-rows: auto;
+  }
+}
+
+/* ============================================================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================================================ */
+
+/* GPU acceleration for smooth animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize rendering for large grids */
+.optimized-grid {
+  contain: layout style paint;
+}
+
+.optimized-grid > * {
+  contain: layout style;
+}
+
+/* Virtual scrolling optimization */
+.virtual-scroll {
+  overflow: auto;
+  will-change: scroll-position;
+}
+
+.virtual-item {
+  contain: strict;
+  content-visibility: auto;
+  contain-intrinsic-size: 200px;
+}
+
+/* ============================================================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================================================ */
+
+/* Focus management */
+.focus-management {
+  isolation: isolate;
+}
+
+.focus-management:focus-within {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Skip links */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #3b82f6;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .motion-safe {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .debug-grid {
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.5) 1px, transparent 1px);
+  }
+}
+
+/* ============================================================================
+   MASONRY LAYOUT SUPPORT
+   ============================================================================ */
+
+.masonry-layout {
+  column-fill: balance;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* Fallback for browsers without column support */
+@supports not (column-count: 1) {
+  .masonry-layout {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE TYPOGRAPHY
+   ============================================================================ */
+
+/* Fluid typography that scales with container */
+.fluid-text {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  line-height: 1.6;
+}
+
+.fluid-heading {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  line-height: 1.2;
+}
+
+/* Container-based typography */
+@container (min-width: 320px) {
+  .cq-text-sm { font-size: 0.875rem; }
+  .cq-text-base { font-size: 1rem; }
+}
+
+@container (min-width: 480px) {
+  .cq-text-lg { font-size: 1.125rem; }
+  .cq-text-xl { font-size: 1.25rem; }
+}
+
+@container (min-width: 640px) {
+  .cq-text-2xl { font-size: 1.5rem; }
+  .cq-text-3xl { font-size: 1.875rem; }
+}
+
+/* ============================================================================
+   PRINT OPTIMIZATIONS
+   ============================================================================ */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-break-before {
+    page-break-before: always;
+  }
+  
+  .print-break-after {
+    page-break-after: always;
+  }
+  
+  .print-no-break {
+    page-break-inside: avoid;
+  }
+  
+  /* Optimize grid for print */
+  .print-grid {
+    display: block !important;
+  }
+  
+  .print-grid > * {
+    display: block !important;
+    margin-bottom: 1rem;
+  }
+}
+
+/* ============================================================================
+   DARK MODE SUPPORT
+   ============================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  .debug-grid {
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  }
+  
+  .debug-mode * {
+    outline-color: rgba(255, 255, 255, 0.3) !important;
+  }
+}
+
+/* ============================================================================
+   EXPERIMENTAL FEATURES
+   ============================================================================ */
+
+/* CSS Anchor Positioning (when supported) */
+@supports (anchor-name: --anchor) {
+  .anchor-element {
+    anchor-name: --anchor;
+  }
+  
+  .positioned-element {
+    position: absolute;
+    position-anchor: --anchor;
+    top: anchor(bottom);
+    left: anchor(left);
+  }
+}
+
+/* View Transitions API (when supported) */
+@supports (view-transition-name: slide) {
+  .view-transition {
+    view-transition-name: slide;
+  }
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+/* Aspect ratio utilities */
+.aspect-golden { aspect-ratio: 1.618 / 1; }
+.aspect-photo { aspect-ratio: 4 / 3; }
+.aspect-cinema { aspect-ratio: 21 / 9; }
+
+/* Grid utilities */
+.grid-dense { grid-auto-flow: dense; }
+.grid-column { grid-auto-flow: column; }
+.grid-row { grid-auto-flow: row; }
+
+/* Flexbox utilities */
+.flex-basis-0 { flex-basis: 0; }
+.flex-basis-auto { flex-basis: auto; }
+.flex-basis-full { flex-basis: 100%; }
+
+/* Container utilities */
+.contain-layout { contain: layout; }
+.contain-style { contain: style; }
+.contain-paint { contain: paint; }
+.contain-size { contain: size; }
+.contain-strict { contain: strict; }

@@ -10,8 +10,22 @@ import '@testing-library/jest-dom'
 // Mock environment variables
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
+process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key'
 process.env.OPENAI_API_KEY = 'sk-test-key'
+process.env.RESEND_API_KEY = 're_test_key_123'
+process.env.RESEND_FROM_EMAIL = 'test@motomind.ai'
+process.env.NEXTAUTH_URL = 'http://localhost:3005'
+process.env.NEXTAUTH_SECRET = 'test-secret-that-is-at-least-32-characters-long'
 process.env.NODE_ENV = 'test'
+
+// Mock Resend
+jest.mock('resend', () => ({
+  Resend: jest.fn().mockImplementation(() => ({
+    emails: {
+      send: jest.fn().mockResolvedValue({ id: 'test-email-id' })
+    }
+  }))
+}))
 
 // Mock window.matchMedia (only in browser environment)
 if (typeof window !== 'undefined') {

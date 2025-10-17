@@ -1,0 +1,1021 @@
+/**
+ * MotoMind Design System
+ * 
+ * Complete design system built on shadcn/ui + Tailwind
+ * 
+ * USAGE:
+ * import { Button, Card, MetricCard, ds } from '@/components/design-system'
+ */
+
+// ============================================================================
+// DESIGN TOKENS & UTILITIES
+// ============================================================================
+
+export {
+  designSystem as ds,
+  componentVariants as cv,
+  layoutPatterns as layout,
+  semanticPatterns as patterns,
+  cn,
+  buildComponentClass
+} from '@/lib/design-system'
+
+// Design System Rules
+export { designSystemRules } from '@/lib/design-system/rules'
+
+// ============================================================================
+// ENHANCED COMPONENTS
+// ============================================================================
+
+// ============================================================================
+// PRIMITIVES - Foundational Components
+// ============================================================================
+
+// Buttons
+export { Button, ButtonGroup } from './primitives/Button'
+
+// ============================================================================
+// PATTERNS - Composed Components
+// ============================================================================
+
+// Heroes
+export {
+  MarketingHero,
+  PageHero,
+  DashboardHero,
+  FeatureHero,
+  EmptyStateHero,
+  EntityHero
+} from './patterns/Heroes'
+export type {
+  MarketingHeroProps,
+  PageHeroProps,
+  DashboardHeroProps,
+  FeatureHeroProps,
+  EmptyStateHeroProps,
+  EntityHeroProps,
+  EntityChip,
+  EntityHeroColor,
+  EntityHeroSize,
+  StatusBadge,
+  QuickAction,
+  EntityMetric,
+  Breadcrumb
+} from './patterns/Heroes'
+
+// Section Headers
+export { 
+  SectionHeader,
+  CardSectionHeader,
+  PageSectionHeader,
+  SectionHeaderWithAction,
+  SectionHeaderWithBadge,
+  SectionHeaderWithIcon,
+  DividerSectionHeader,
+  CompactSectionHeader,
+  SectionHeaderWithTabs,
+  SectionHeaderWithActions,
+  SectionHeaderWithBack,
+  SectionHeaderWithSearch
+} from './patterns/SectionHeaders'
+export type { 
+  SectionHeaderProps,
+  CardSectionHeaderProps,
+  PageSectionHeaderProps,
+  SectionHeaderWithActionProps,
+  SectionHeaderWithBadgeProps,
+  SectionHeaderWithIconProps,
+  DividerSectionHeaderProps,
+  CompactSectionHeaderProps,
+  SectionHeaderWithTabsProps,
+  SectionHeaderWithActionsProps,
+  SectionHeaderWithBackProps,
+  SectionHeaderWithSearchProps
+} from './patterns/SectionHeaders'
+
+// ============================================================================
+// UTILITIES - Specialized Components
+// ============================================================================
+
+// Action Bars
+export {
+  ModalActionBar,
+  BulkActionBar
+} from './utilities/ActionBars'
+
+export type {
+  ModalActionBarProps,
+  BulkActionBarProps
+} from './utilities/ActionBars'
+
+// FORMS - Form Components
+// ============================================================================
+
+// Enhanced Form Fields (shadcn/ui + MotoMind patterns)
+export { Input, Textarea } from './forms/FormFields'
+export type { InputProps, TextareaProps } from './forms/FormFields'
+
+// Enhanced Combobox (shadcn/ui Command + Popover + MotoMind patterns)
+export { Combobox } from './forms/Combobox'
+export type { ComboboxProps, ComboboxOption } from './forms/Combobox'
+
+// Enhanced Checkbox & RadioGroup (shadcn/ui + MotoMind patterns)
+export { Checkbox, RadioGroup } from './forms/CheckboxRadio'
+export type { CheckboxProps, RadioGroupProps, RadioOption } from './forms/CheckboxRadio'
+
+// Enhanced Switch & Slider
+export { Switch, Slider } from './forms/SwitchSlider'
+export type { SwitchProps, SliderProps } from './forms/SwitchSlider'
+
+// Enhanced DatePicker & DateRangePicker (shadcn/ui Calendar + MotoMind patterns)
+export { DatePicker, DateRangePicker } from './forms/DatePicker'
+export type { DatePickerProps, DateRangePickerProps } from './forms/DatePicker'
+// List Components (Beautiful, responsive lists)
+export { 
+  List, 
+  ListItem,
+  CheckList,
+  SelectList,
+  ActionList,
+  DescriptionList,
+  TimelineList,
+  PropertyList,
+  GroupedList,
+  StepList,
+  ContactList,
+  MenuList
+} from './patterns/List'
+export type {
+  ListProps,
+  ListItemComponentProps,
+  CheckListProps,
+  SelectListProps,
+  ActionListProps,
+  ActionListItem,
+  DescriptionListProps,
+  TimelineListProps,
+  TimelineItemData,
+  PropertyListProps,
+  PropertyListItem,
+  GroupedListProps,
+  GroupedListSection,
+  StepListProps,
+  StepListItem,
+  ContactListProps,
+  ContactListItem,
+  MenuListProps,
+  MenuListItem
+} from './patterns/List'
+
+// Calendar Component (Maintenance Scheduling) - Phase 1 & 2
+export { 
+  Calendar,
+  EventCard,
+  AddToCalendarButton,
+  MonthView,
+  AgendaView,
+  EventFormModal,
+  RecurrenceSelector,
+  MAINTENANCE_TYPES
+} from './Calendar'
+export type {
+  CalendarProps,
+  MaintenanceEvent,
+  MaintenanceType,
+  CalendarViewProps,
+  EventFormData,
+  RecurrenceConfig
+} from './Calendar'
+
+// Enhanced FileUpload (MotoMind patterns)
+export { FileUpload } from './utilities/FileUpload'
+export type { FileUploadProps, FileUploadVariant } from './utilities/FileUpload'
+
+// Enhanced FilePreview (MotoMind patterns)
+export { FilePreview, detectFileType } from './FilePreview'
+export type { 
+  FilePreviewProps, 
+  PreviewFile, 
+  Annotation, 
+  FileType,
+  AIVisionData,
+  AIProcessingStatus
+} from './FilePreview'
+
+// Enhanced ColorPicker (MotoMind patterns)
+export { ColorPicker } from './forms/ColorPicker'
+export type { ColorPickerProps } from './forms/ColorPicker'
+
+// Enhanced TimePicker (MotoMind patterns)
+export { TimePicker } from './forms/TimePicker'
+export type { TimePickerProps } from './forms/TimePicker'
+
+// Enhanced Rating (MotoMind patterns)
+export { Rating } from './forms/Rating'
+export type { RatingProps } from './forms/Rating'
+
+// Enhanced PasswordInput (MotoMind patterns)
+export { PasswordInput } from './forms/PasswordInput'
+export type { PasswordInputProps } from './forms/PasswordInput'
+
+// Enhanced PhoneInput (MotoMind patterns)
+export { PhoneInput } from './forms/PhoneInput'
+export type { PhoneInputProps } from './forms/PhoneInput'
+
+// Enhanced OTPInput (MotoMind patterns)
+export { OTPInput } from './forms/OTPInput'
+export type { OTPInputProps } from './forms/OTPInput'
+
+// Enhanced NumberInput (MotoMind patterns)
+export { NumberInput } from './forms/NumberInput'
+export type { NumberInputProps } from './forms/NumberInput'
+
+// Form Section (MotoMind patterns)
+export { FormSection, FormSectionGroup } from './forms/FormSection'
+export type { FormSectionProps, FormSectionGroupProps } from './forms/FormSection'
+
+// Search System (MotoMind patterns)
+export { 
+  SearchBar, 
+  AdvancedSearch, 
+  SearchResults, 
+  GlobalSearch,
+  useSearch,
+  useIsMobile,
+  useIsTablet,
+  useIsTouch
+} from './utilities/Search'
+export type { 
+  SearchBarProps, 
+  SearchSuggestion,
+  AdvancedSearchProps,
+  SearchFilter,
+  SearchResultsProps,
+  SearchResult,
+  GlobalSearchProps,
+  UseSearchOptions,
+  UseSearchReturn
+} from './utilities/Search'
+
+// Re-export shadcn/ui form components (raw versions if needed)
+export { Checkbox as ShadcnCheckbox } from '@/components/ui/checkbox'
+export { RadioGroup as ShadcnRadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+export { Switch as ShadcnSwitch } from '@/components/ui/switch'
+export { Slider as ShadcnSlider } from '@/components/ui/slider'
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+export {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+
+// Empty States
+export {
+  EmptyState,
+  SearchEmptyState,
+  ErrorEmptyState,
+  FirstTimeEmptyState,
+  CompactEmptyState,
+  PermissionDeniedEmptyState,
+  OfflineEmptyState,
+  IllustrationEmptyState,
+  SmartEmptyState,
+  EnhancedErrorEmptyState,
+  EmptyStateIllustrations
+} from './patterns/EmptyStates'
+export type {
+  EmptyStateProps,
+  SearchEmptyStateProps,
+  ErrorEmptyStateProps,
+  FirstTimeEmptyStateProps,
+  CompactEmptyStateProps,
+  PermissionDeniedEmptyStateProps,
+  OfflineEmptyStateProps,
+  IllustrationEmptyStateProps,
+  SmartEmptyStateProps,
+  EnhancedErrorProps
+} from './patterns/EmptyStates'
+
+// Loading States & Skeletons
+export {
+  Spinner,
+  Skeleton,
+  CardSkeleton,
+  ListSkeleton,
+  TableSkeleton,
+  InlineLoader,
+  LoadingOverlay,
+  ProgressBar,
+  DotsLoader,
+  PulseLoader,
+  // Elite features
+  SmartLoader,
+  SkeletonTransition,
+  DelayedSpinner,
+  LoadingWithRetry,
+  // Skeleton presets
+  ProfileSkeleton,
+  DashboardSkeleton,
+  CommentSkeleton,
+  GallerySkeleton,
+  // App-specific
+  VehicleCardSkeleton,
+  MaintenanceListSkeleton,
+  EventTimelineSkeleton,
+  // Composer
+  SkeletonAvatar,
+  SkeletonText,
+  SkeletonButton,
+  // Context
+  LoadingProvider,
+  useLoading,
+  // Suspense
+  SuspenseFallback,
+  // Tracking
+  TrackedSkeleton
+} from './feedback/LoadingStates'
+export type {
+  SpinnerProps,
+  SkeletonProps,
+  CardSkeletonProps,
+  ListSkeletonProps,
+  TableSkeletonProps,
+  InlineLoaderProps,
+  LoadingOverlayProps,
+  ProgressBarProps,
+  DotsLoaderProps,
+  PulseLoaderProps,
+  SmartLoaderProps,
+  SkeletonTransitionProps,
+  DelayedSpinnerProps,
+  LoadingWithRetryProps,
+  TrackedSkeletonProps
+} from './feedback/LoadingStates'
+
+// Toast Notifications
+export {
+  Toast,
+  ToastContainer,
+  ToastProvider,
+  useToast,
+  usePromiseToast,
+  RichToast,
+  CompactToast,
+  ProgressToast,
+  usePersistentToast,
+  GroupedToast,
+  useToastQueue
+} from './feedback/ToastNotifications'
+export type {
+  ToastVariant,
+  ToastPosition,
+  ToastAction,
+  Toast as ToastType,
+  ToastProps,
+  ToastContainerProps,
+  ToastProviderProps,
+  RichToastProps,
+  CompactToastProps,
+  ProgressToastProps,
+  ToastGroup
+} from './feedback/ToastNotifications'
+
+// Stats/Metrics Cards
+export {
+  StatCard,
+  TrendIndicator,
+  Sparkline,
+  MetricWithSparkline,
+  ComparisonCard,
+  ProgressMetric,
+  MultiMetricCard,
+  KPICard,
+  StatGroup,
+  AnimatedCounter,
+  // Elite features
+  AreaChartCard,
+  BarChartCard,
+  RadialProgress,
+  GaugeChart,
+  TimeRangeSelector,
+  DistributionCard,
+  RealTimeStat,
+  HeatmapCard,
+  DeltaStat,
+  CompositeDashboardCard,
+  // Final polish
+  EmptyStatState,
+  StatCardWithRefresh,
+  exportData,
+  formatters,
+  MetricComparison,
+  ResponsiveStatGrid
+} from './patterns/StatsCards'
+export type {
+  TrendDirection,
+  TrendData,
+  ThresholdConfig,
+  StatCardProps,
+  TrendIndicatorProps,
+  SparklineProps,
+  MetricWithSparklineProps,
+  ComparisonCardProps,
+  ProgressMetricProps,
+  MultiMetricItem,
+  MultiMetricCardProps,
+  KPICardProps,
+  StatGroupProps,
+  AnimatedCounterProps,
+  AreaChartCardProps,
+  BarChartCardProps,
+  RadialProgressProps,
+  GaugeChartProps,
+  TimeRange,
+  TimeRangeSelectorProps,
+  DistributionCardProps,
+  RealTimeStatProps,
+  HeatmapCellProps,
+  HeatmapCardProps,
+  DeltaStatProps,
+  CompositeDashboardCardProps,
+  EmptyStatStateProps,
+  StatCardWithRefreshProps,
+  MetricComparisonProps,
+  ResponsiveStatGridProps
+} from './patterns/StatsCards'
+
+// Navigation Components
+export {
+  Breadcrumbs,
+  Pagination,
+  Tabs as NavigationTabs,
+  VerticalTabs,
+  Stepper,
+  // Elite features
+  SidebarNavigation,
+  QuickLinks,
+  ProgressNav,
+  ContextMenu,
+  PageHeader,
+  // Responsive Nav Bars
+  TopNav,
+  BottomNav,
+  MobileMenu,
+  ResponsiveNav,
+  // Mega Menu
+  MegaMenu,
+  // Command Palette
+  CommandPalette,
+  useCommandPalette,
+  // Table of Contents
+  TableOfContents,
+  useTableOfContents,
+  // Scroll Progress
+  ScrollProgress,
+  CircularScrollProgress,
+  // Back to Top
+  BackToTop
+} from './patterns/Navigation'
+export type {
+  BreadcrumbItem,
+  BreadcrumbsProps,
+  PaginationProps,
+  TabItem,
+  TabsProps as NavigationTabsProps,
+  VerticalTabsProps,
+  StepItem,
+  StepperProps,
+  SidebarItem,
+  SidebarNavigationProps,
+  QuickLink,
+  QuickLinksProps,
+  ProgressNavProps,
+  ContextMenuItem,
+  ContextMenuProps,
+  PageHeaderProps,
+  TopNavItem,
+  TopNavProps,
+  BottomNavItem,
+  BottomNavProps,
+  MobileMenuProps,
+  ResponsiveNavProps,
+  MegaMenuColumn,
+  MegaMenuProps,
+  CommandItem,
+  CommandPaletteProps,
+  TocHeading,
+  TableOfContentsProps,
+  ScrollProgressProps,
+  CircularScrollProgressProps,
+  BackToTopProps
+} from './patterns/Navigation'
+
+// Notifications & Alerts
+export {
+  Alert as InlineAlert,
+  Badge as NotificationBadge,
+  NotificationCenter,
+  NotificationBell,
+  SystemBanner
+} from './feedback/Notifications'
+export type {
+  AlertProps as InlineAlertProps,
+  AlertVariant,
+  BadgeProps as NotificationBadgeProps,
+  Notification,
+  NotificationPriority,
+  NotificationCenterProps,
+  NotificationBellProps,
+  SystemBannerProps
+} from './feedback/Notifications'
+
+// Data Display
+export {
+  DataTable,
+  SimpleList,
+  Timeline
+} from './patterns/DataDisplay'
+export type {
+  Column,
+  DataTableProps,
+  ListItem,
+  SimpleListProps,
+  TimelineItem,
+  TimelineProps
+} from './patterns/DataDisplay'
+
+// Overlays (Primary System - Use These!)
+export {
+  Modal,
+  Drawer,
+  Popover,
+  Tooltip,
+  FormModal,
+  ConfirmationModal,
+  AlertModal
+} from './feedback/Overlays'
+export type {
+  ModalProps,
+  DrawerProps,
+  PopoverProps,
+  TooltipProps,
+  FormModalProps,
+  ConfirmationModalProps,
+  AlertModalProps
+} from './feedback/Overlays'
+
+// Loading Skeletons (Elite - Simple versions for overlays)
+export {
+  Skeleton as OverlaySkeleton,
+  SkeletonText as OverlaySkeletonText,
+  SkeletonHeading as OverlaySkeletonHeading,
+  SkeletonCircle as OverlaySkeletonCircle,
+  SkeletonButton as OverlaySkeletonButton,
+  SkeletonImage as OverlaySkeletonImage,
+  SkeletonForm as OverlaySkeletonForm,
+  SkeletonCard as OverlaySkeletonCard,
+  SkeletonList as OverlaySkeletonList,
+  SkeletonTable as OverlaySkeletonTable,
+  SkeletonOverlay
+} from './feedback/LoadingSkeleton'
+
+// Elite Overlay Utilities & Hooks
+export {
+  useResponsiveSize,
+  useBreakpoint as useOverlayBreakpoint,
+  useScreenReaderAnnouncement,
+  useKeyboardShortcut,
+  formatShortcut,
+  useResizeObserver
+} from './feedback/overlay-utils'
+export type {
+  ResponsiveBreakpoints
+} from './feedback/overlay-utils'
+
+// Elite TypeScript Types
+export type {
+  OverlaySize,
+  DrawerPosition,
+  EnhancedDrawerProps,
+  DefaultDrawerProps,
+  FormDrawerProps,
+  DetailDrawerProps,
+  MediaDrawerProps,
+  DataDrawerProps,
+  EnhancedModalProps,
+  DrawerContentProps
+} from './feedback/overlay-types'
+export {
+  isFormDrawer,
+  isMediaDrawer,
+  isDataDrawer
+} from './feedback/overlay-types'
+
+// Cards (Legacy - to be deprecated)
+export { 
+  ClickableCard,
+  MetricCard as LegacyMetricCard, 
+  StatusCard, 
+  CardGrid 
+} from './patterns/Card'
+
+// Cards System (New - Comprehensive)
+export {
+  BaseCard,
+  InteractiveCard,
+  ColoredCard,
+  MetricCard,
+  FeatureCard,
+  AlertCard,
+  ProductCard,
+  TestimonialCard
+} from './patterns/Cards'
+export type {
+  BaseCardProps,
+  InteractiveCardProps,
+  ColoredCardProps,
+  MetricCardProps,
+  FeatureCardProps,
+  AlertCardProps,
+  ProductCardProps,
+  TestimonialCardProps
+} from './patterns/Cards'
+
+// Layout System
+export {
+  Container,
+  Grid,
+  Flex,
+  Stack,
+  Section,
+  Columns,
+  AspectRatio,
+  SidebarLayout,
+  DashboardLayout,
+  HeroLayout
+} from './primitives/Layout'
+
+// Elite-Tier Advanced Layout
+export {
+  AdvancedGrid,
+  GridItem,
+  ContainerQuery,
+  useBreakpoint,
+  DebugLayout,
+  VirtualizedGrid,
+  AccessibleLayout,
+  HolyGrailLayout,
+  MasonryLayout,
+  Responsive,
+  Mobile,
+  Tablet,
+  Desktop
+} from './patterns/AdvancedLayout'
+
+// Performance Monitoring
+export {
+  layoutPerformance,
+  globalPerformanceAnalyzer,
+  useLayoutPerformance,
+  PerformanceDebugger
+} from '@/lib/design-system/layout-performance'
+
+// Enhanced Typography System (aliased to avoid conflicts)
+export {
+  DisplayText,
+  Prose,
+  Label as TypographyLabel,
+  Caption,
+  Overline,
+  ResponsiveText,
+  TypographyShowcase,
+  Text as EnhancedText  // Alias the enhanced Text component
+} from './primitives/Typography'
+
+// Typography Design Tokens
+export { responsiveTypography } from '@/lib/design-system/typography'
+
+// Elite Typography System
+export {
+  VariableFontText,
+  AdaptiveText,
+  ReadingModeProvider,
+  ReadingModeSelector,
+  PerformanceMonitoredText,
+  ContextualTypography,
+  SmartParagraph,
+  TypographyPerformanceDashboard,
+  EliteTypographyShowcase,
+  useReadingMode
+} from './primitives/EliteTypography'
+
+// Elite Typography Tokens & Utils
+export { eliteTypography } from '@/lib/design-system/elite-typography'
+
+// Surfaces
+export { 
+  Surface,
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter
+} from './primitives/Surfaces'
+
+// Surface Design Tokens
+export { surfaces } from '@/lib/design-system/surfaces'
+
+// Color System with Built-in Accessibility
+export {
+  ColoredBox,
+  PrimaryBox,
+  DestructiveBox,
+  SecondaryBox,
+  MutedBox,
+  AccentBox
+} from './primitives/ColoredBox'
+
+// Old Modal System (DEPRECATED - Use Modal, FormModal, etc. from Overlays instead!)
+// @deprecated Use Modal, Drawer, FormModal, ConfirmationModal, AlertModal from Overlays
+export {
+  BaseModal as LegacyBaseModal,
+  ContentModal as LegacyContentModal,
+  AlertModal as LegacyAlertModal,
+  FormModal as LegacyFormModal,
+  ConfirmationModal as LegacyConfirmationModal,
+  Drawer as LegacyDrawer
+} from './feedback/Modals'
+export type {
+  BaseModalProps as LegacyBaseModalProps,
+  ContentModalProps as LegacyContentModalProps,
+  AlertModalProps as LegacyAlertModalProps,
+  FormModalProps as LegacyFormModalProps,
+  ConfirmationModalProps as LegacyConfirmationModalProps,
+  DrawerProps as LegacyDrawerProps
+} from './feedback/Modals'
+
+// Modal System (Complete - Production modals)
+export {
+  BaseModalShell,
+  SimpleFormModal,
+  BlockFormModal,
+  FullWidthModal,
+  AlertModalSystem,
+  ConfirmationModalSystem
+} from './feedback/ModalSystem'
+export type {
+  BaseModalShellProps,
+  SimpleFormModalProps,
+  BlockFormModalProps,
+  FullWidthModalProps,
+  AlertModalSystemProps,
+  ConfirmationModalSystemProps,
+  ModalSectionConfig
+} from './feedback/ModalSystem'
+
+// Modal Internal Components
+export {
+  ModalSection,
+  ModalFormField,
+  ModalHeader,
+  ModalContent,
+  ModalActions,
+  ModalAlert,
+  ModalDivider,
+  ModalEmptyState
+} from './feedback/ModalInternals'
+export type {
+  ModalSectionProps,
+  ModalFormFieldProps,
+  ModalHeaderProps,
+  ModalContentProps,
+  ModalActionsProps,
+  ModalAlertProps,
+  ModalEmptyStateProps
+} from './feedback/ModalInternals'
+
+// Elite Surfaces System
+export {
+  AppleGlassSurface,
+  MaterialYouSurface,
+  SophisticatedDepthSurface,
+  AdaptiveSurface,
+  PremiumInteractionSurface,
+  IntelligentContentSurface,
+  PresetSurface,
+  EliteSurfacesShowcase
+} from './primitives/EliteSurfaces'
+
+// Elite Surface Design Tokens
+export { eliteSurfaces } from '@/lib/design-system/elite-surfaces'
+
+// ============================================================================
+// SHADCN/UI RE-EXPORTS (for convenience)
+// ============================================================================
+
+// Core shadcn components (unchanged)
+// Note: Input and Textarea now use our custom design system components
+export { Label } from '@/components/ui/label'
+export { Badge } from '@/components/ui/badge'
+export { Alert, AlertDescription } from '@/components/ui/alert'
+export { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
+// Accordion - Collapsible content sections
+export {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion'
+
+// Avatar - User profile images
+export {
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from '@/components/ui/avatar'
+
+// Separator - Visual divider (also exported as Divider)
+export { Separator, Separator as Divider } from '@/components/ui/separator'
+
+// Dropdown Menu - Context menus and dropdown actions
+export {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+
+// Table - Data tables with sorting, filtering, pagination
+export {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
+
+// Progress - Progress indicators
+export { Progress } from '@/components/ui/progress'
+
+// Sheet - Slide-in panels (similar to Drawer but from shadcn)
+export {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+} from '@/components/ui/sheet'
+
+// Command - Command palette & search (used by Combobox, also standalone)
+export {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem as ShadcnCommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut
+} from '@/components/ui/command'
+
+// Navigation Menu - Complex navigation menus with dropdowns
+export {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+  navigationMenuTriggerStyle
+} from '@/components/ui/navigation-menu'
+
+// Breadcrumb - Navigation breadcrumbs (Note: We also have enhanced Breadcrumbs in Navigation)
+export {
+  Breadcrumb as ShadcnBreadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem as ShadcnBreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
+
+// Shadcn Dialog (renamed to avoid conflict with our Dialog)
+export { 
+  Dialog as ShadcnDialog, 
+  DialogContent as ShadcnDialogContent, 
+  DialogDescription as ShadcnDialogDescription, 
+  DialogTitle as ShadcnDialogTitle, 
+  DialogTrigger as ShadcnDialogTrigger 
+} from '@/components/ui/dialog'
+
+// ============================================================================
+// BASIC COMPONENTS (for compatibility)
+// ============================================================================
+
+import React from 'react'
+import { cn } from '@/lib/design-system'
+import { designSystem as ds } from '@/lib/design-system'
+
+// Simple Heading component
+interface HeadingProps {
+  children: React.ReactNode
+  level?: 'hero' | 'title' | 'subtitle'
+  className?: string
+}
+
+export function Heading({ children, level = 'title', className }: HeadingProps) {
+  const Component = level === 'hero' ? 'h1' : level === 'title' ? 'h2' : 'h3'
+  
+  // Only apply default color if no text color class is provided
+  const hasTextColor = className?.includes('text-')
+  
+  return (
+    <Component className={cn(
+      ds.typography.patterns[level],
+      // Default color only if not overridden - allows parent foreground to work
+      !hasTextColor && (level === 'hero' ? 'text-gray-900' : 'text-gray-800'),
+      className
+    )}>
+      {children}
+    </Component>
+  )
+}
+
+// Simple Text component (hydration-safe)
+interface TextProps {
+  children: React.ReactNode
+  size?: 'xl' | 'lg' | 'md' | 'sm' | 'xs'
+  variant?: 'body' | 'caption'
+  className?: string
+}
+
+export function Text({ children, size, variant = 'body', className }: TextProps) {
+  // Simple, consistent classes that won't cause hydration issues
+  const sizeClasses = {
+    xl: 'text-xl',
+    lg: 'text-lg', 
+    md: 'text-base',
+    sm: 'text-sm',
+    xs: 'text-xs'
+  }
+  
+  // Only apply default color if no text color class is provided
+  const hasTextColor = className?.includes('text-')
+  
+  return (
+    <p className={cn(
+      'leading-relaxed',
+      size ? sizeClasses[size] : 'text-base',
+      // Default color only if not overridden - allows parent foreground to work
+      !hasTextColor && (variant === 'body' ? 'text-gray-700' : 'text-gray-600'),
+      className
+    )}>
+      {children}
+    </p>
+  )
+}
+
+// ============================================================================
+// DESIGN SYSTEM TYPES
+// ============================================================================
+
+export type {
+  DesignSystem,
+  ComponentVariants,
+  LayoutPatterns,
+  SemanticPatterns
+} from '@/lib/design-system'

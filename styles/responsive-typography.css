@@ -1,0 +1,395 @@
+/**
+ * Responsive Typography CSS
+ * 
+ * Elite-tier typography utilities with fluid scaling,
+ * optimal reading experience, and accessibility features
+ */
+
+/* ============================================================================
+   FLUID TYPOGRAPHY UTILITIES
+   ============================================================================ */
+
+/* Display sizes */
+.text-display-xl {
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  line-height: 0.9;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+
+.text-display-lg {
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  line-height: 0.9;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.text-display-md {
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  line-height: 1.0;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.text-display-sm {
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1.0;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* Heading sizes */
+.text-heading-h1 {
+  font-size: clamp(1.875rem, 4vw, 2.25rem);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.text-heading-h2 {
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.text-heading-h3 {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.text-heading-h4 {
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* Body text sizes */
+.text-body-xl {
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.text-body-lg {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.text-body-md {
+  font-size: clamp(1rem, 1vw, 1rem);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.text-body-sm {
+  font-size: clamp(0.875rem, 1vw, 0.875rem);
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.text-body-xs {
+  font-size: clamp(0.75rem, 1vw, 0.75rem);
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* UI text sizes */
+.text-ui-button {
+  font-size: clamp(1rem, 1vw, 1rem);
+  line-height: 1.0;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.text-ui-label {
+  font-size: clamp(0.875rem, 1vw, 0.875rem);
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}
+
+.text-ui-caption {
+  font-size: clamp(0.75rem, 1vw, 0.8125rem);
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.text-ui-overline {
+  font-size: clamp(0.6875rem, 1vw, 0.75rem);
+  line-height: 1.0;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ============================================================================
+   READING OPTIMIZATION
+   ============================================================================ */
+
+/* Optimal line lengths */
+.max-w-reading-narrow { max-width: 45ch; }
+.max-w-reading-optimal { max-width: 65ch; }
+.max-w-reading-wide { max-width: 75ch; }
+.max-w-reading-caption { max-width: 40ch; }
+.max-w-reading-heading { max-width: 40ch; }
+.max-w-reading-button { max-width: 20ch; }
+
+/* Line height variations */
+.leading-display { line-height: 0.9; }
+.leading-heading { line-height: 1.2; }
+.leading-body { line-height: 1.5; }
+.leading-body-relaxed { line-height: 1.6; }
+.leading-body-loose { line-height: 1.75; }
+.leading-ui { line-height: 1.0; }
+
+/* ============================================================================
+   CONTAINER-BASED TYPOGRAPHY
+   ============================================================================ */
+
+/* Typography that scales with container size */
+@container (min-width: 320px) {
+  .cq-text-sm { 
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  .cq-text-base { 
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+@container (min-width: 480px) {
+  .cq-text-lg { 
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+  .cq-text-xl { 
+    font-size: 1.25rem;
+    line-height: 1.6;
+  }
+}
+
+@container (min-width: 640px) {
+  .cq-text-2xl { 
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+  .cq-text-3xl { 
+    font-size: 1.875rem;
+    line-height: 1.2;
+  }
+}
+
+/* ============================================================================
+   ACCESSIBILITY FEATURES
+   ============================================================================ */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .text-display-xl,
+  .text-display-lg,
+  .text-display-md,
+  .text-heading-h1,
+  .text-heading-h2,
+  .text-heading-h3 {
+    font-weight: 800;
+  }
+  
+  .text-body-xl,
+  .text-body-lg,
+  .text-body-md {
+    font-weight: 500;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .text-animate {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Focus indicators for interactive text */
+.text-interactive:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================================================================
+   SEMANTIC TEXT STYLES
+   ============================================================================ */
+
+/* Page structure */
+.text-page-title { @apply text-display-lg; }
+.text-section-title { @apply text-heading-h1; }
+.text-subsection-title { @apply text-heading-h2; }
+.text-component-title { @apply text-heading-h3; }
+
+/* Content types */
+.text-hero { @apply text-display-xl; }
+.text-lead { @apply text-body-xl font-medium; }
+.text-body { @apply text-body-md; }
+.text-caption { @apply text-body-sm text-gray-600; }
+
+/* UI elements */
+.text-button { @apply text-ui-button; }
+.text-label { @apply text-ui-label; }
+.text-help { @apply text-body-xs text-gray-500; }
+
+/* Navigation */
+.text-nav-link { @apply text-body-md font-medium; }
+.text-breadcrumb { @apply text-body-sm text-gray-500; }
+
+/* Data display */
+.text-metric-value { @apply text-display-md font-bold; }
+.text-metric-label { @apply text-ui-label text-gray-600; }
+.text-table-header { @apply text-ui-label font-semibold; }
+.text-table-cell { @apply text-body-sm; }
+
+/* ============================================================================
+   PROSE STYLES (FOR LONG-FORM CONTENT)
+   ============================================================================ */
+
+.prose-responsive {
+  max-width: 65ch;
+}
+
+.prose-responsive h1 {
+  @apply text-heading-h1 mt-8 mb-4;
+}
+
+.prose-responsive h2 {
+  @apply text-heading-h2 mt-6 mb-3;
+}
+
+.prose-responsive h3 {
+  @apply text-heading-h3 mt-6 mb-3;
+}
+
+.prose-responsive p {
+  @apply text-body-md mb-6 max-w-reading-optimal;
+}
+
+.prose-responsive ul,
+.prose-responsive ol {
+  @apply mb-6;
+}
+
+.prose-responsive li {
+  @apply text-body-md mb-2 max-w-reading-optimal;
+}
+
+.prose-responsive a {
+  @apply text-blue-600 no-underline hover:underline;
+}
+
+.prose-responsive blockquote {
+  @apply text-body-lg italic border-l-4 border-gray-300 pl-6 my-6;
+}
+
+.prose-responsive code {
+  @apply text-body-sm bg-gray-100 px-2 py-1 rounded font-mono;
+}
+
+.prose-responsive pre {
+  @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-6;
+}
+
+/* ============================================================================
+   GRADIENT TEXT EFFECTS
+   ============================================================================ */
+
+.text-gradient-primary {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============================================================================
+   RESPONSIVE UTILITIES
+   ============================================================================ */
+
+/* Hide text at different breakpoints */
+.text-sm-hidden { @apply sm:hidden; }
+.text-md-hidden { @apply md:hidden; }
+.text-lg-hidden { @apply lg:hidden; }
+
+/* Show text only at specific breakpoints */
+.text-sm-only { @apply sm:inline md:hidden; }
+.text-md-only { @apply hidden md:inline lg:hidden; }
+.text-lg-only { @apply hidden lg:inline; }
+
+/* Truncate text with ellipsis */
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+  .text-display-xl,
+  .text-display-lg,
+  .text-display-md {
+    font-size: 24pt !important;
+    line-height: 1.2 !important;
+  }
+  
+  .text-heading-h1 { font-size: 18pt !important; }
+  .text-heading-h2 { font-size: 16pt !important; }
+  .text-heading-h3 { font-size: 14pt !important; }
+  
+  .text-body-xl,
+  .text-body-lg,
+  .text-body-md { font-size: 12pt !important; }
+  
+  .text-body-sm,
+  .text-body-xs { font-size: 10pt !important; }
+  
+  /* Ensure good contrast for printing */
+  .text-gradient-primary,
+  .text-gradient-success,
+  .text-gradient-warning {
+    -webkit-text-fill-color: initial;
+    color: #000 !important;
+  }
+}

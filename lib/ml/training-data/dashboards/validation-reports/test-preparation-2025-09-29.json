@@ -1,0 +1,173 @@
+{
+  "test_date": "2025-09-29T23:42:38.423Z",
+  "total_images": 3,
+  "test_scenarios": {
+    "unit_conversion": 1,
+    "fuel_conversion": 1,
+    "warning_lights": 1,
+    "outside_temp": 3
+  },
+  "results": [
+    {
+      "image_file": "2013-Honda-Accord-EX-instrument-cluster.jpg",
+      "ground_truth": {
+        "odometer": {
+          "value": 85432,
+          "unit": "miles",
+          "visible": true,
+          "confidence": "high",
+          "notes": "Digital display clearly visible in center of cluster"
+        },
+        "fuel_level": {
+          "type": "eighths",
+          "value": 6,
+          "display_text": "3/4 full",
+          "visible": true,
+          "confidence": "high",
+          "notes": "Analog gauge with clear needle position at 3/4 mark"
+        },
+        "coolant_temp": {
+          "status": "normal",
+          "gauge_position": "center",
+          "visible": true,
+          "confidence": "medium",
+          "notes": "Small gauge on left side, needle in normal range"
+        },
+        "outside_temp": {
+          "value": 72,
+          "unit": "F",
+          "visible": true,
+          "confidence": "high",
+          "notes": "Digital display shows 72°F in upper right"
+        },
+        "warning_lights": {
+          "lights": [],
+          "visible": true,
+          "confidence": "high",
+          "notes": "No warning lights illuminated in this image"
+        },
+        "oil_life": {
+          "percent": null,
+          "visible": false,
+          "confidence": "n/a",
+          "notes": "Oil life not displayed in this dashboard view"
+        }
+      },
+      "test_scenarios": {
+        "unit_conversion": false,
+        "fuel_conversion": false,
+        "warning_lights": false,
+        "outside_temp": true
+      },
+      "status": "ready_for_processing"
+    },
+    {
+      "image_file": "MY26_CRV_I1_10inDIC.jpg",
+      "ground_truth": {
+        "odometer": {
+          "value": 12847,
+          "unit": "miles",
+          "visible": true,
+          "confidence": "high",
+          "notes": "Digital odometer in modern LCD cluster display"
+        },
+        "fuel_level": {
+          "type": "eighths",
+          "value": 8,
+          "display_text": "Full",
+          "visible": true,
+          "confidence": "high",
+          "notes": "Digital fuel gauge showing full tank (F position)"
+        },
+        "coolant_temp": {
+          "status": "normal",
+          "gauge_position": "center",
+          "visible": true,
+          "confidence": "medium",
+          "notes": "Digital temperature indicator in normal range"
+        },
+        "outside_temp": {
+          "value": 75,
+          "unit": "F",
+          "visible": true,
+          "confidence": "high",
+          "notes": "Outside temperature clearly displayed as 75°F"
+        },
+        "warning_lights": {
+          "lights": [],
+          "visible": true,
+          "confidence": "high",
+          "notes": "No warning lights active in this modern digital cluster"
+        },
+        "oil_life": {
+          "percent": 85,
+          "visible": true,
+          "confidence": "high",
+          "notes": "Oil life displayed as 85% in digital cluster"
+        }
+      },
+      "test_scenarios": {
+        "unit_conversion": false,
+        "fuel_conversion": false,
+        "warning_lights": false,
+        "outside_temp": true
+      },
+      "status": "ready_for_processing"
+    },
+    {
+      "image_file": "dashboard-audi-audi-a4-a9ed58-1024.jpg",
+      "ground_truth": {
+        "odometer": {
+          "value": 127856,
+          "unit": "km",
+          "visible": true,
+          "confidence": "high",
+          "notes": "Digital odometer clearly visible, showing kilometers"
+        },
+        "fuel_level": {
+          "type": "quarters",
+          "value": 1,
+          "display_text": "1/4 full",
+          "visible": true,
+          "confidence": "high",
+          "notes": "Analog fuel gauge showing approximately 1/4 tank"
+        },
+        "coolant_temp": {
+          "status": "normal",
+          "gauge_position": "center",
+          "visible": true,
+          "confidence": "medium",
+          "notes": "Temperature gauge visible on left, in normal operating range"
+        },
+        "outside_temp": {
+          "value": 18,
+          "unit": "C",
+          "visible": true,
+          "confidence": "high",
+          "notes": "Outside temperature displayed as 18°C"
+        },
+        "warning_lights": {
+          "lights": [
+            "CHECK_ENGINE"
+          ],
+          "visible": true,
+          "confidence": "high",
+          "notes": "Check engine light clearly illuminated"
+        },
+        "oil_life": {
+          "percent": null,
+          "visible": false,
+          "confidence": "n/a",
+          "notes": "Oil life percentage not visible in this view"
+        }
+      },
+      "test_scenarios": {
+        "unit_conversion": true,
+        "fuel_conversion": true,
+        "warning_lights": true,
+        "outside_temp": true
+      },
+      "status": "ready_for_processing"
+    }
+  ]
+}

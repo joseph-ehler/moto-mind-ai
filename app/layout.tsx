@@ -1,4 +1,4 @@
-import './globals.css'
+import '@/styles/globals.css'
 import { SessionProvider } from '@/app/providers'
 
 export const metadata = {
