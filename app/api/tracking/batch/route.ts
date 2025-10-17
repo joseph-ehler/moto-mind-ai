@@ -45,26 +45,29 @@ export async function POST(request: NextRequest) {
     // Get Supabase client
     const supabase = getSupabaseClient()
 
-    // Get user ID from email
-    const { data: userData, error: userError } = await supabase
-      .from('users')
+    // Get user ID from auth.users by email
+    const { data: authUser, error: userError } = await supabase
+      .from('auth.users')
       .select('id')
       .eq('email', session.user.email)
       .single()
 
-    if (userError || !userData) {
+    if (userError || !authUser) {
+      console.error('[API] User lookup failed:', userError)
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
       )
     }
 
+    const userId = authUser.id
+
     // Check if tracking session exists
     let { data: trackingSession, error: sessionError } = await supabase
       .from('tracking_sessions')
       .select('id')
       .eq('session_id', sessionId)
-      .eq('user_id', userData.id)
+      .eq('user_id', userId)
       .single()
 
     // Create session if it doesn't exist
@@ -73,7 +76,7 @@ export async function POST(request: NextRequest) {
         .from('tracking_sessions')
         .insert({
           session_id: sessionId,
-          user_id: userData.id,
+          user_id: userId,
           start_time: new Date(points[0].timestamp).toISOString(),
           status: 'active'
         })
