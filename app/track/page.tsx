@@ -27,6 +27,7 @@ export default function TrackPage() {
   const [trackingState, setTrackingState] = useState<TrackingState | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [permissionGranted, setPermissionGranted] = useState<boolean | null>(null)
+  const [initError, setInitError] = useState<string | null>(null)
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -39,49 +40,66 @@ export default function TrackPage() {
   useEffect(() => {
     if (status !== 'authenticated') return
 
-    try {
-      const newTracker = new SmartVehicleTracker({
-        autoStart: false,
-        batteryAware: true,
-        offlineSupport: true,
-        keepAwake: true,
-        highAccuracy: true,
-        updateInterval: 1000
-      })
+    const initTracker = async () => {
+      try {
+        setInitError(null)
+        
+        const newTracker = new SmartVehicleTracker({
+          autoStart: false,
+          batteryAware: false, // Disable for iOS compatibility
+          offlineSupport: false, // Disable for iOS compatibility
+          keepAwake: false, // Not supported on iOS
+          highAccuracy: true,
+          updateInterval: 1000
+        })
 
-      // Listen to state changes
-      newTracker.on('state-change', (state: TrackingState) => {
-        setTrackingState(state)
-        if (state.error) {
-          setError(state.error)
-        }
-      })
+        // Give it a moment to initialize
+        await new Promise(resolve => setTimeout(resolve, 100))
 
-      // Listen to location updates
-      newTracker.on('location', (location: LocationPoint) => {
-        console.log('[Track] Location update:', location)
-      })
+        // Listen to state changes
+        newTracker.on('state-change', (state: TrackingState) => {
+          setTrackingState(state)
+          if (state.error) {
+            setError(state.error)
+          }
+        })
 
-      // Listen to crash detection
-      newTracker.on('crash', (crash: CrashDetection) => {
-        console.error('[Track] 💥 CRASH DETECTED:', crash)
-        alert(`🚨 CRASH DETECTED!\nSeverity: ${crash.severity}\nAcceleration: ${crash.acceleration.toFixed(2)}G`)
-      })
+        // Listen to location updates
+        newTracker.on('location', (location: LocationPoint) => {
+          console.log('[Track] Location update:', location)
+        })
 
-      // Listen to events
-      newTracker.on('event', (event: any) => {
-        console.log('[Track] Event:', event)
-      })
+        // Listen to crash detection
+        newTracker.on('crash', (crash: CrashDetection) => {
+          console.error('[Track] 💥 CRASH DETECTED:', crash)
+          alert(`🚨 CRASH DETECTED!\nSeverity: ${crash.severity}\nAcceleration: ${crash.acceleration.toFixed(2)}G`)
+        })
 
-      setTracker(newTracker)
-      setTrackingState(newTracker.getState())
+        // Listen to events
+        newTracker.on('event', (event: any) => {
+          console.log('[Track] Event:', event)
+        })
 
-      return () => {
-        newTracker.destroy()
+        setTracker(newTracker)
+        setTrackingState(newTracker.getState())
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to initialize tracker'
+        console.error('[Track] Init error:', err)
+        setInitError(errorMsg)
+        setError(errorMsg)
       }
-    } catch (err) {
-      console.error('[Track] Failed to initialize tracker:', err)
-      setError(err instanceof Error ? err.message : 'Failed to initialize tracker')
+    }
+
+    initTracker()
+
+    return () => {
+      if (tracker) {
+        try {
+          tracker.destroy()
+        } catch (err) {
+          console.error('[Track] Cleanup error:', err)
+        }
+      }
     }
   }, [status])
 
@@ -195,11 +213,26 @@ export default function TrackPage() {
             </Alert>
           )}
 
-          {/* Error Alert */}
-          {error && (
+          {/* Initialization Error Alert */}
+          {initError && (
             <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription>
+                <strong>Initialization Error (iOS Debug):</strong><br />
+                {initError}
+                <br /><br />
+                <strong>Details:</strong> Check if location permissions are enabled and try refreshing the page.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Error Alert */}
+          {error && !initError && (
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription>
+                {error}
+              </AlertDescription>
             </Alert>
           )}
 
