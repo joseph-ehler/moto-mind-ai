@@ -8,7 +8,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { Container, Section, Stack, Heading, Text } from '@/components/design-system'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button } from '@/components/ui'
 import { Loader2, Monitor, Smartphone, Tablet, MapPin, Clock, Shield, AlertTriangle } from 'lucide-react'
@@ -78,6 +78,16 @@ export default function ActiveSessionsPage() {
     setTerminatingId(sessionId)
     
     try {
+      // Check if this is the current session
+      const session = sessions.find(s => s.id === sessionId)
+      
+      if (session?.isCurrent) {
+        // If terminating current session, sign out completely
+        await signOut({ redirect: true, callbackUrl: '/auth/signin' })
+        return // signOut redirects, so return early
+      }
+      
+      // If terminating another session, just delete it from database
       const response = await fetch(`/api/auth/sessions/${sessionId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
