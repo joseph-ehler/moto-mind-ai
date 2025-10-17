@@ -5,18 +5,9 @@
  * Tracks by email or IP address with automatic cleanup
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseClient } from '@/lib/supabase/client'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
+const supabase = getSupabaseClient()
 
 export type AttemptType = 'login' | 'reset' | 'verify' | 'magic_link'
 

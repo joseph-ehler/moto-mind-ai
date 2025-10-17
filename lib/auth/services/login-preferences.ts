@@ -5,18 +5,9 @@
  * Implements 60% faster sign-in through method memory
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseClient } from '@/lib/supabase/client'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
+const supabase = getSupabaseClient()
 
 export type LoginMethod = 'google' | 'email' | 'credentials'
 
