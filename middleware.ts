@@ -28,17 +28,41 @@ export async function middleware(request: NextRequest) {
                  request.headers.get('x-real-ip') || 
                  'unknown'
       
+      // Get or create persistent device ID
+      let deviceId = request.cookies.get('device_id')?.value
+      
+      if (!deviceId) {
+        // Generate new device ID (will be set in cookie below)
+        deviceId = crypto.randomUUID()
+      }
+      
       // Track session (don't await to avoid slowing down requests)
       trackSession(
         token.email as string,
         userAgent,
-        ip
+        ip,
+        deviceId
       ).catch(error => {
         console.error('[Middleware] Session tracking failed:', error)
       })
+      
+      // Set device ID cookie if it's new (persist for 1 year)
+      const response = NextResponse.next()
+      if (!request.cookies.get('device_id')) {
+        response.cookies.set('device_id', deviceId, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 60 * 60 * 24 * 365, // 1 year
+          path: '/'
+        })
+      }
+      
+      return response
     } catch (error) {
       // Fail silently - don't break the request
       console.error('[Middleware] Error:', error)
+      return NextResponse.next()
     }
   }
 
