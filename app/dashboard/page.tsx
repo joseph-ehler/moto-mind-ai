@@ -7,7 +7,14 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <TopNav />
       
-      <Container size="lg" useCase="dashboard">
+      <Container 
+        size="lg" 
+        useCase="analytics_views"
+        override={{
+          reason: "Dashboard requires wider layout for cards and analytics widgets",
+          approvedBy: "Dashboard Design"
+        }}
+      >
         <Section spacing="xl">
           <Stack spacing="xl" className="py-8">
             <div>
