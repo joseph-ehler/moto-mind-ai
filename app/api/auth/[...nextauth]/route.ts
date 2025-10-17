@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+import { trackLogin } from '@/lib/auth/services/login-preferences'
 
 // Log env vars (without exposing secrets)
 console.log('[NextAuth] Config check:', {
@@ -29,6 +30,18 @@ const handler = NextAuth({
   callbacks: {
     async signIn({ user, account, profile }) {
       console.log('[NextAuth] SignIn callback:', { user: user?.email, account: account?.provider })
+      
+      // ✅ Track login in our custom table
+      if (user?.email) {
+        try {
+          await trackLogin(user.email, 'google')
+          console.log('[NextAuth] ✅ Login tracked for:', user.email)
+        } catch (error) {
+          console.error('[NextAuth] ❌ Failed to track login:', error)
+          // Don't fail the login if tracking fails
+        }
+      }
+      
       return true
     },
     async redirect({ url, baseUrl }) {
@@ -37,6 +50,13 @@ const handler = NextAuth({
       if (url.startsWith('/')) return `${baseUrl}${url}`
       if (url.startsWith(baseUrl)) return url
       return baseUrl
+    },
+    async session({ session, token }) {
+      // Add user ID to session for tracking
+      if (session.user && token.sub) {
+        (session.user as any).id = token.sub
+      }
+      return session
     },
   },
 })
