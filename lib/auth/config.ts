@@ -19,6 +19,7 @@ import { sendMagicLinkEmail } from './services/email-service'
 import { getUserCredentials } from './services/user-registration'
 import { verifyPassword } from './services/password-service'
 import { trackLogin, type LoginMethod } from './services/login-preferences'
+import { checkRateLimit, recordAttempt, clearRateLimits } from './services/rate-limiter'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -78,6 +79,15 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
+          // Check rate limit FIRST
+          const rateLimit = await checkRateLimit(credentials.email, 'login')
+          
+          if (!rateLimit.allowed) {
+            throw new Error(
+              `Too many login attempts. Please try again in ${rateLimit.retryAfterMinutes} minutes.`
+            )
+          }
+
           // Get user credentials from database
           const userCreds = await getUserCredentials(credentials.email)
 
@@ -92,8 +102,13 @@ export const authOptions: NextAuthOptions = {
           )
 
           if (!isValid) {
+            // Record failed attempt
+            await recordAttempt(credentials.email, 'login')
             throw new Error('Invalid email or password')
           }
+
+          // Success - clear rate limits
+          await clearRateLimits(credentials.email)
 
           // Return user object (will be passed to JWT callback)
           return {
@@ -103,6 +118,11 @@ export const authOptions: NextAuthOptions = {
           }
         } catch (error) {
           console.error('[AUTH] Credentials authorization failed:', error)
+          // Record failed attempt (if not a rate limit error)
+          const errorMessage = error instanceof Error ? error.message : ''
+          if (credentials?.email && !errorMessage.includes('Too many')) {
+            await recordAttempt(credentials.email, 'login').catch(() => {})
+          }
           return null
         }
       },

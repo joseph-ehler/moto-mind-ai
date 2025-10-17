@@ -25,6 +25,7 @@ import {
 import { Mail, Loader2 } from 'lucide-react'
 import { PasswordInput } from './PasswordInput'
 import { WelcomeBack } from './ui/WelcomeBack'
+import { RateLimitMessage } from './ui/RateLimitMessage'
 import { registerUser } from '@/lib/auth/services/user-registration'
 import { validatePassword } from '@/lib/auth/services/password-service'
 import { useLastLogin, saveLastLoginMethod } from '@/lib/auth/hooks/useLastLogin'
@@ -45,6 +46,11 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [magicLinkSent, setMagicLinkSent] = useState(false)
+  const [rateLimited, setRateLimited] = useState<{
+    active: boolean
+    retryAfterMinutes: number
+    type: 'login' | 'reset' | 'verify' | 'magic_link'
+  } | null>(null)
 
   // Track last login method
   const { lastMethod, loading: loadingLastMethod } = useLastLogin(email)
@@ -93,6 +99,7 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
     e.preventDefault()
     setIsLoading(true)
     setError('')
+    setRateLimited(null)
 
     try {
       const result = await signIn('credentials', {
@@ -103,7 +110,18 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
       })
 
       if (result?.error) {
-        setError('Invalid email or password')
+        // Check if it's a rate limit error
+        if (result.error.includes('Too many')) {
+          const match = result.error.match(/(\d+) minutes/)
+          const minutes = match ? parseInt(match[1]) : 15
+          setRateLimited({
+            active: true,
+            retryAfterMinutes: minutes,
+            type: 'login'
+          })
+        } else {
+          setError('Invalid email or password')
+        }
       } else if (result?.url) {
         saveLastLoginMethod(email, 'credentials')
         window.location.href = result.url
@@ -359,9 +377,22 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
             </div>
           </div>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {rateLimited?.active && (
+            <RateLimitMessage 
+              retryAfterMinutes={rateLimited.retryAfterMinutes}
+              type={rateLimited.type}
+            />
+          )}
 
-          <Button type="submit" className="w-full" disabled={isLoading || !email || !password}>
+          {error && !rateLimited?.active && (
+            <p className="text-sm text-destructive">{error}</p>
+          )}
+
+          <Button 
+            type="submit" 
+            className="w-full" 
+            disabled={isLoading || !email || !password || rateLimited?.active}
+          >
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isLoading ? 'Signing in...' : 'Sign In'}
           </Button>
