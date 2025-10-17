@@ -12,11 +12,12 @@ The system uses 5 different signals to detect car connection:
 
 | Signal | Points | Indicates |
 |--------|--------|-----------|
-| Display Mode (CarPlay/Android Auto) | 40 | App running in car display |
-| Car Bluetooth | 25 | Connected to car audio system |
-| Car WiFi (wireless) | 20 | Connected to car network |
-| Charging (wired) | 20 | Plugged into car USB |
-| CarPlay Resolution | 15 | Screen matches car display specs |
+| Display Mode (CarPlay/Android Auto) | 50 | App running in car display |
+| Screen Resolution | 15 | Display matches CarPlay specs |
+| Charging (wired) | 30 | Plugged into car USB |
+| Car Audio | 10 | Media session active |
+| WiFi (wireless) | 10 | Connected via WiFi (not cellular) |
+| **Repeat Connection Boost** | +10 | Similar to last 24h connection |
 
 ### Confidence Scoring
 
@@ -38,6 +39,31 @@ Total confidence score (0-100) determines connection level:
 - Device charging + (CarPlay display OR car Bluetooth)
 - USB cable to car
 - More reliable but less convenient
+
+### Connection Memory (Learning Feature)
+
+The system remembers your last successful car connection for 24 hours:
+
+**What it learns:**
+- Connection type (wireless or wired)
+- Which signals were present
+- Confidence level achieved
+- Time of connection
+
+**How it helps:**
+- **+10 confidence boost** when you reconnect with similar signals
+- Reduces false negatives on subsequent connections
+- Adapts to your specific car's behavior
+- Automatically forgets old connections after 24 hours
+
+**Example:**
+```
+First connection: Display mode + charging = 80 points (very-high)
+(System saves this pattern)
+
+Second connection (same day): Display mode + charging = 80 + 10 = 90 points
+Reason: "Similar to previous car connection"
+```
 
 ## Usage
 
@@ -229,11 +255,23 @@ console.log(localStorage.getItem('carplay_autostart'))
 
 ## Known Limitations
 
-1. **Privacy:** WiFi SSID not accessible in most browsers
-2. **Bluetooth:** Requires user permission on first use
-3. **iOS:** No Web Bluetooth support
-4. **Battery API:** May not work in all browsers
-5. **False Positives:** Bluetooth devices with "car" in name
+1. **WiFi SSID:** Browsers don't expose network names for privacy
+   - Detection relies on checking if connected to WiFi (vs cellular)
+   
+2. **Bluetooth API:** Requires explicit user permission
+   - Detection uses media session as proxy instead
+   - Less reliable than true Bluetooth detection
+   
+3. **iOS Safari:** Limited API support
+   - No Web Bluetooth API
+   - Battery API may not always be available
+   
+4. **Display Mode:** Only reliable when actually in CarPlay/Android Auto
+   - Regular browser won't show display mode
+   
+5. **First Connection:** May have lower confidence
+   - System learns your car over time
+   - Subsequent connections are more accurate
 
 ## Best Practices
 
