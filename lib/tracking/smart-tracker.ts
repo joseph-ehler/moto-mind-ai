@@ -82,38 +82,68 @@ export class SmartVehicleTracker {
    * Initialize tracker
    */
   private async init(): Promise<void> {
-    // Check browser support
-    const support = checkBrowserSupport()
-    if (!support.geolocation) {
-      throw new Error('Geolocation API not supported')
+    try {
+      // Check browser support
+      const support = checkBrowserSupport()
+      if (!support.geolocation) {
+        console.error('[SmartTracker] Geolocation API not supported')
+        this.updateState({ 
+          status: 'error',
+          error: 'Geolocation not supported on this device'
+        })
+        return
+      }
+
+      // Initialize offline sync
+      if (this.options.offlineSupport) {
+        try {
+          await this.offlineSync.init()
+        } catch (err) {
+          console.warn('[SmartTracker] Offline sync init failed:', err)
+          // Continue without offline support
+        }
+      }
+
+      // Setup battery monitoring
+      if (this.options.batteryAware && support.battery) {
+        try {
+          await this.setupBatteryMonitoring()
+        } catch (err) {
+          console.warn('[SmartTracker] Battery monitoring failed:', err)
+          // Continue without battery awareness
+        }
+      }
+
+      // Setup auto-start detection
+      if (this.options.autoStart) {
+        try {
+          this.setupAutoStart()
+        } catch (err) {
+          console.warn('[SmartTracker] Auto-start setup failed:', err)
+          // Continue without auto-start
+        }
+      }
+
+      // Setup network monitoring
+      if (typeof window !== 'undefined') {
+        window.addEventListener('online', this.handleOnline)
+        window.addEventListener('offline', this.handleOffline)
+      }
+
+      // Setup motion detector callbacks
+      this.motionDetector.on('crash-detected', (crash: CrashDetection) => {
+        crash.location = this.state.currentLocation || undefined
+        this.handleCrashDetected(crash)
+      })
+
+      console.log('[SmartTracker] Initialized')
+    } catch (err) {
+      console.error('[SmartTracker] Initialization failed:', err)
+      this.updateState({
+        status: 'error',
+        error: err instanceof Error ? err.message : 'Initialization failed'
+      })
     }
-
-    // Initialize offline sync
-    if (this.options.offlineSupport) {
-      await this.offlineSync.init()
-    }
-
-    // Setup battery monitoring
-    if (this.options.batteryAware && support.battery) {
-      await this.setupBatteryMonitoring()
-    }
-
-    // Setup auto-start detection
-    if (this.options.autoStart) {
-      this.setupAutoStart()
-    }
-
-    // Setup network monitoring
-    window.addEventListener('online', this.handleOnline)
-    window.addEventListener('offline', this.handleOffline)
-
-    // Setup motion detector callbacks
-    this.motionDetector.on('crash-detected', (crash: CrashDetection) => {
-      crash.location = this.state.currentLocation || undefined
-      this.handleCrashDetected(crash)
-    })
-
-    console.log('[SmartTracker] Initialized')
   }
 
   /**
