@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * useAutoCapture Hook
  * Manages auto-capture detection, countdown, and triggering

@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * useKeyboardShortcuts Hook
  * Manages keyboard shortcuts and focus trap for camera modal

@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Hook to use Web Worker for image compression
  * 
