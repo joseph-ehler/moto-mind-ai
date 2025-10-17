@@ -20,15 +20,24 @@ export interface LocationInfo {
  */
 export async function getLocationFromIP(ipAddress: string): Promise<LocationInfo | null> {
   try {
-    // Skip for localhost/private IPs
-    if (!ipAddress || ipAddress === '127.0.0.1' || ipAddress.startsWith('192.168.') || ipAddress.startsWith('10.')) {
+    // Skip for localhost/private IPs (both IPv4 and IPv6)
+    if (
+      !ipAddress || 
+      ipAddress === 'unknown' ||
+      ipAddress === '127.0.0.1' || 
+      ipAddress === '::1' ||              // IPv6 localhost
+      ipAddress === '::ffff:127.0.0.1' || // IPv4-mapped IPv6 localhost
+      ipAddress.startsWith('192.168.') || 
+      ipAddress.startsWith('10.') ||
+      ipAddress.startsWith('172.')        // Private range 172.16.0.0 - 172.31.255.255
+    ) {
       return {
-        country: 'Local',
-        countryCode: 'local',
-        city: 'Localhost',
-        region: '',
-        timezone: '',
-        flag: '🏠'
+        country: 'Local Development',
+        countryCode: 'localhost',
+        city: 'Local Machine',
+        region: 'Development',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        flag: '💻'
       }
     }
 
