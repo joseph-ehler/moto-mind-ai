@@ -336,11 +336,16 @@ export class ParkingMemory {
    * Format distance for display
    * 
    * @param meters Distance in meters
-   * @returns Formatted distance string (e.g., "150 m" or "1.2 km")
+   * @returns Formatted distance string (e.g., "150 meters" or "1.2 km")
    */
   formatDistance(meters: number): string {
+    if (meters < 10) {
+      // Very close - show in feet for clarity
+      const feet = Math.round(meters * 3.28084)
+      return `${feet} feet`
+    }
     if (meters < 1000) {
-      return `${Math.round(meters)} m`
+      return `${Math.round(meters)} meters`
     }
     return `${(meters / 1000).toFixed(1)} km`
   }
