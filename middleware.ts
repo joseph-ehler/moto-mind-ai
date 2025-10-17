@@ -12,22 +12,59 @@ import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
 export async function middleware(request: NextRequest) {
-  // ALWAYS create response first - we need to return it no matter what
-  const response = NextResponse.next()
-  
   const token = await getToken({ 
     req: request,
     secret: process.env.NEXTAUTH_SECRET
   })
 
-  // Get or create persistent device ID (for ALL requests, not just authenticated)
+  const { pathname } = request.nextUrl
+  const isAuthenticated = !!token
+
+  // Define public routes that don't require authentication
+  const publicRoutes = [
+    '/auth/signin',
+    '/auth/signup',
+    '/auth/verify-request',
+    '/auth/verify-email',
+    '/auth/error',
+    '/auth/callback',
+    '/',
+  ]
+
+  // Define protected routes that require authentication
+  const protectedRoutes = [
+    '/dashboard',
+    '/settings',
+    '/vehicles',
+    '/support',
+    '/account',
+  ]
+
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
+
+  // CRITICAL: Protect routes from unauthenticated access
+  if (!isAuthenticated && isProtectedRoute) {
+    console.log('[Middleware] 🚫 Unauthorized access attempt to:', pathname)
+    const signInUrl = new URL('/auth/signin', request.url)
+    signInUrl.searchParams.set('callbackUrl', pathname)
+    return NextResponse.redirect(signInUrl)
+  }
+
+  // Redirect authenticated users away from auth pages
+  if (isAuthenticated && pathname.startsWith('/auth/signin')) {
+    console.log('[Middleware] ↪️  Authenticated user redirected from signin to dashboard')
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  // Create response for session tracking
+  const response = NextResponse.next()
+
+  // Get or create persistent device ID (for ALL requests)
   let deviceId = request.cookies.get('device_id')?.value
   
   if (!deviceId) {
-    // Generate new device ID
     deviceId = crypto.randomUUID()
-    
-    // CRITICAL: Set cookie on response
     response.cookies.set('device_id', deviceId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -35,16 +72,12 @@ export async function middleware(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 365, // 1 year
       path: '/'
     })
-    
     console.log('[Middleware] 🆕 Generated new device_id:', deviceId)
-  } else {
-    console.log('[Middleware] ✅ Using existing device_id:', deviceId)
   }
 
   // Track session for authenticated users
-  if (token && token.email) {
+  if (isAuthenticated && token.email) {
     try {
-      // Import dynamically to avoid edge runtime issues
       const { trackSession } = await import('@/lib/auth/services/session-tracker')
       
       const userAgent = request.headers.get('user-agent') || ''
@@ -52,7 +85,6 @@ export async function middleware(request: NextRequest) {
                  request.headers.get('x-real-ip') || 
                  'unknown'
       
-      // Track session (don't await to avoid slowing down requests)
       trackSession(
         token.email as string,
         userAgent,
@@ -62,12 +94,10 @@ export async function middleware(request: NextRequest) {
         console.error('[Middleware] Session tracking failed:', error)
       })
     } catch (error) {
-      // Fail silently - don't break the request
       console.error('[Middleware] Session tracking error:', error)
     }
   }
 
-  // ALWAYS return the same response object (with cookie if it was set)
   return response
 }
 
