@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from '@/components/ui'
 import { ControlPanel } from '@/components/tracking/ControlPanel'
 import { TripStats } from '@/components/tracking/TripStats'
 import { Speedometer } from '@/components/tracking/Speedometer'
+import { CarPlayBanner } from '@/components/tracking/CarPlayBanner'
 import { SmartVehicleTracker } from '@/lib/tracking'
 import type { TrackingState, LocationPoint, CrashDetection } from '@/lib/tracking/types'
 import { AlertTriangle, CheckCircle2, XCircle } from 'lucide-react'
@@ -165,6 +166,13 @@ export default function TrackPage() {
               Real-time GPS tracking with automatic crash detection
             </Text>
           </div>
+
+          {/* CarPlay/Android Auto Detection Banner */}
+          <CarPlayBanner
+            onAutoStart={handleStart}
+            isTracking={trackingState?.status === 'active'}
+            minimumConfidence="medium"
+          />
 
           {/* Permission Alert */}
           {permissionGranted === false && (
