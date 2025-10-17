@@ -8,7 +8,7 @@
  * @module lib/tracking/parking-memory
  */
 
-import { createBrowserClient } from '@supabase/ssr'
+import { createClient } from '@/lib/clients/supabase-browser'
 
 /**
  * Parking spot location with metadata
@@ -98,10 +98,7 @@ interface GeocodingResult {
  * ```
  */
 export class ParkingMemory {
-  private supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  private supabase = createClient()
   
   /**
    * Save a new parking spot
