@@ -1502,8 +1502,7 @@ export const exportData = {
     const csv = [
       headers.join(','),
       ...data.map(row => headers.map(h => row[h]).join(','))
-    ].join('
-')
+    ].join('\n')
     
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
