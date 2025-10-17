@@ -29,12 +29,9 @@ CREATE TABLE IF NOT EXISTS logs (
   ip_address INET,
   
   -- Timestamp
-  timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   
   -- No soft delete for logs (hard delete after retention period)
-  
-  -- Indexes inline for performance
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- ============================================================================
@@ -42,17 +39,17 @@ CREATE TABLE IF NOT EXISTS logs (
 -- ============================================================================
 
 -- Tenant + timestamp (most common query)
-CREATE INDEX idx_logs_tenant_timestamp 
-  ON logs(tenant_id, timestamp DESC);
+CREATE INDEX idx_logs_tenant_created 
+  ON logs(tenant_id, created_at DESC);
 
 -- Level filtering (error monitoring)
-CREATE INDEX idx_logs_level_timestamp 
-  ON logs(level, timestamp DESC) 
+CREATE INDEX idx_logs_level_created 
+  ON logs(level, created_at DESC) 
   WHERE level IN ('error', 'fatal');
 
 -- User activity tracking
-CREATE INDEX idx_logs_user_timestamp 
-  ON logs(user_id, timestamp DESC) 
+CREATE INDEX idx_logs_user_created 
+  ON logs(user_id, created_at DESC) 
   WHERE user_id IS NOT NULL;
 
 -- Context search (GIN index for JSONB)
@@ -93,7 +90,7 @@ DECLARE
   deleted_count INTEGER;
 BEGIN
   DELETE FROM logs
-  WHERE timestamp < NOW() - INTERVAL '30 days';
+  WHERE created_at < NOW() - INTERVAL '30 days';
   
   GET DIAGNOSTICS deleted_count = ROW_COUNT;
   
