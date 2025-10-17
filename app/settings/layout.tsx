@@ -10,7 +10,8 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Container, Section, Stack, Heading } from '@/components/design-system'
 import { Button } from '@/components/ui'
-import { User, Shield, Bell, Key } from 'lucide-react'
+import { User, Shield, Bell, Key, ArrowLeft } from 'lucide-react'
+import { UserMenu } from '@/components/layout/UserMenu'
 
 const settingsTabs = [
   {
@@ -48,6 +49,23 @@ export default function SettingsLayout({
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Top Navigation Bar */}
+      <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center justify-between px-4">
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                <span className="hidden sm:inline">Back to Dashboard</span>
+              </Button>
+            </Link>
+            <div className="h-6 w-px bg-border hidden sm:block" />
+            <span className="font-semibold hidden sm:inline">Settings</span>
+          </div>
+          <UserMenu />
+        </div>
+      </div>
+
       <Container size="md" useCase="articles">
         <Section spacing="xl">
           <div className="py-12">
