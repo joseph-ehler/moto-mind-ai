@@ -7,25 +7,16 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { requireUserServer } from '@/lib/auth/current-user'
 import { getSupabaseClient } from '@/lib/supabase/client'
 
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
-    const session = await getServerSession(authOptions)
+    // Get authenticated user (throws if not authenticated)
+    const user = await requireUserServer()
     
-    console.log('[API] Session:', JSON.stringify(session, null, 2))
-    console.log('[API] Session user:', session?.user)
-    console.log('[API] Session user id:', (session?.user as any)?.id)
-    
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    console.log('[API] User:', user.email)
+    console.log('[API] User ID:', user.id)
 
     const body = await request.json()
     const { sessionId, points } = body
@@ -50,25 +41,14 @@ export async function POST(request: NextRequest) {
     // Get Supabase client
     const supabase = getSupabaseClient()
 
-    // Use NextAuth user ID from session
-    const userId = (session.user as any).id
-    
-    if (!userId) {
-      console.error('[API] No user ID in session')
-      return NextResponse.json(
-        { error: 'Invalid session - no user ID' },
-        { status: 400 }
-      )
-    }
-
-    console.log('[API] Processing tracking batch for user:', userId, session.user.email)
+    console.log('[API] Processing tracking batch for user:', user.id, user.email)
 
     // Check if tracking session exists
     let { data: trackingSession, error: sessionError } = await supabase
       .from('tracking_sessions')
       .select('id')
       .eq('session_id', sessionId)
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single()
 
     // Create session if it doesn't exist
@@ -77,7 +57,7 @@ export async function POST(request: NextRequest) {
         .from('tracking_sessions')
         .insert({
           session_id: sessionId,
-          user_id: userId,
+          user_id: user.id,
           start_time: new Date(points[0].timestamp).toISOString(),
           status: 'active'
         })

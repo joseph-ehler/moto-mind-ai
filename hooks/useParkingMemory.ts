@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useSession } from 'next-auth/react'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
 import { ParkingMemory, type ParkingSpot, type SaveParkingSpotOptions } from '@/lib/tracking/parking-memory'
 
 /**
@@ -29,14 +29,14 @@ import { ParkingMemory, type ParkingSpot, type SaveParkingSpotOptions } from '@/
  * ```
  */
 export function useParkingMemory() {
-  const { data: session } = useSession()
+  const { user, isLoading: isAuthLoading } = useCurrentUser()
   const [activeSpot, setActiveSpot] = useState<ParkingSpot | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const parkingMemoryRef = useRef<ParkingMemory | null>(null)
   
-  // Get user ID from NextAuth session
-  const userId = (session?.user as any)?.id
+  // Get user ID from unified auth helper
+  const userId = user?.id
   
   // Initialize ParkingMemory instance
   useEffect(() => {
@@ -250,14 +250,14 @@ export function useParkingMemory() {
  * ```
  */
 export function useParkingHistory(limit: number = 10) {
-  const { data: session } = useSession()
+  const { user, isLoading: isAuthLoading } = useCurrentUser()
   const [history, setHistory] = useState<ParkingSpot[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const parkingMemoryRef = useRef<ParkingMemory | null>(null)
   
-  // Get user ID from NextAuth session
-  const userId = (session?.user as any)?.id
+  // Get user ID from unified auth helper
+  const userId = user?.id
   
   // Initialize ParkingMemory instance
   useEffect(() => {
