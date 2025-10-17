@@ -20,18 +20,27 @@ ALTER TABLE conversation_threads ENABLE ROW LEVEL SECURITY;
 -- ============================================================================
 
 -- vehicle_spec_enhancements
-ALTER TABLE IF EXISTS vehicle_spec_enhancements ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS vehicle_spec_service_role ON vehicle_spec_enhancements
-  FOR ALL TO service_role USING (true) WITH CHECK (true);
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'vehicle_spec_enhancements') THEN
+    ALTER TABLE vehicle_spec_enhancements ENABLE ROW LEVEL SECURITY;
+    
+    DROP POLICY IF EXISTS vehicle_spec_service_role ON vehicle_spec_enhancements;
+    CREATE POLICY vehicle_spec_service_role ON vehicle_spec_enhancements
+      FOR ALL TO service_role USING (true) WITH CHECK (true);
+  END IF;
+END $$;
 
 -- schema_migrations (internal table - restrict access)
 ALTER TABLE schema_migrations ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS schema_migrations_service_role ON schema_migrations
+DROP POLICY IF EXISTS schema_migrations_service_role ON schema_migrations;
+CREATE POLICY schema_migrations_service_role ON schema_migrations
   FOR ALL TO service_role USING (true) WITH CHECK (true);
 
 -- spatial_ref_sys (PostGIS system table - read-only for authenticated)
 ALTER TABLE spatial_ref_sys ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS spatial_ref_sys_read ON spatial_ref_sys
+DROP POLICY IF EXISTS spatial_ref_sys_read ON spatial_ref_sys;
+CREATE POLICY spatial_ref_sys_read ON spatial_ref_sys
   FOR SELECT TO authenticated, anon USING (true);
 
 -- ============================================================================
