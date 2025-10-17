@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Elite-Tier Layout System
  * 

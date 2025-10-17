@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Elite Typography Components
  * 
