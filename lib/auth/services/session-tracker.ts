@@ -11,7 +11,6 @@
 import { getSupabaseClient } from '@/lib/supabase/client'
 import { parseUserAgent, type DeviceInfo } from '../utils/device-parser'
 import { getLocationFromIP, type LocationInfo } from '../utils/geo-location'
-import { randomBytes } from 'crypto'
 
 const supabase = getSupabaseClient()
 
@@ -28,10 +27,15 @@ export interface SessionData {
 }
 
 /**
- * Generate a unique device ID
+ * Generate a unique device ID using Web Crypto API (edge-compatible)
  */
 function generateDeviceId(): string {
-  return randomBytes(16).toString('hex')
+  // Use crypto.randomUUID() which works in both Node and Edge runtime
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID()
+  }
+  // Fallback: generate from timestamp + random
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`
 }
 
 /**

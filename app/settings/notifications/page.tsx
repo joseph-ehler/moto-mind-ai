@@ -5,15 +5,28 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button } from '@/components/ui'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui'
-import { Mail, Bell, Shield, Loader2 } from 'lucide-react'
+import { Mail, Bell, Shield, Loader2, CheckCircle2 } from 'lucide-react'
+
+interface NotificationSettings {
+  emailNotifications: boolean
+  securityAlerts: boolean
+  newDeviceLogin: boolean
+  unusualActivity: boolean
+  passwordChanged: boolean
+  sessionExpired: boolean
+}
 
 export default function NotificationsSettingsPage() {
+  const { data: session } = useSession()
   const [isSaving, setIsSaving] = useState(false)
-  const [settings, setSettings] = useState({
+  const [isLoading, setIsLoading] = useState(true)
+  const [saveSuccess, setSaveSuccess] = useState(false)
+  const [settings, setSettings] = useState<NotificationSettings>({
     emailNotifications: true,
     securityAlerts: true,
     newDeviceLogin: true,
@@ -22,8 +35,58 @@ export default function NotificationsSettingsPage() {
     sessionExpired: false,
   })
 
+  useEffect(() => {
+    if (session?.user?.email) {
+      fetchPreferences()
+    }
+  }, [session])
+
+  const fetchPreferences = async () => {
+    try {
+      const response = await fetch('/api/user/notifications')
+      if (!response.ok) throw new Error('Failed to fetch preferences')
+      
+      const data = await response.json()
+      setSettings(data.preferences)
+    } catch (error) {
+      console.error('Failed to fetch preferences:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const handleToggle = (key: keyof typeof settings) => {
     setSettings(prev => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  const handleSave = async () => {
+    setIsSaving(true)
+    setSaveSuccess(false)
+    
+    try {
+      const response = await fetch('/api/user/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preferences: settings })
+      })
+      
+      if (!response.ok) throw new Error('Failed to save')
+      
+      setSaveSuccess(true)
+      setTimeout(() => setSaveSuccess(false), 3000)
+    } catch (error) {
+      console.error('Failed to save preferences:', error)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    )
   }
 
   return (
@@ -147,11 +210,17 @@ export default function NotificationsSettingsPage() {
       </Card>
 
       {/* Save Button */}
-      <div className="flex justify-end">
-        <Button onClick={() => setIsSaving(true)} disabled={isSaving}>
+      <div className="flex items-center justify-end gap-3">
+        <Button onClick={handleSave} disabled={isSaving}>
           {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isSaving ? 'Saving...' : 'Save Preferences'}
+          {!isSaving && saveSuccess && <CheckCircle2 className="mr-2 h-4 w-4" />}
+          {isSaving ? 'Saving...' : saveSuccess ? 'Saved!' : 'Save Preferences'}
         </Button>
+        {saveSuccess && (
+          <span className="text-sm text-green-600 font-medium">
+            Preferences saved
+          </span>
+        )}
       </div>
 
       {/* Info */}

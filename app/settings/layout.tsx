@@ -48,7 +48,7 @@ export default function SettingsLayout({
 
   return (
     <div className="min-h-screen bg-background">
-      <Container size="lg" useCase="articles">
+      <Container size="md" useCase="articles">
         <Section spacing="xl">
           <div className="py-12">
             <Stack spacing="xl">
