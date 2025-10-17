@@ -7,19 +7,10 @@
  * @module lib/auth/services/token-service
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseClient } from '@/lib/supabase/client'
 import { randomBytes } from 'crypto'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
+const supabase = getSupabaseClient()
 
 export type TokenType = 'email-verification' | 'password-reset' | 'magic-link'
 

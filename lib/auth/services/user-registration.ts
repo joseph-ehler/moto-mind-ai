@@ -5,21 +5,12 @@
  * Integrates with existing NextAuth + Supabase tenant system
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseClient } from '@/lib/supabase/client'
 import { hashPassword } from './password-service'
 import { sendEmailVerification } from './email-verification'
 
 // Service role client (has full access, bypasses RLS)
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-)
+const supabaseAdmin = getSupabaseClient()
 
 /**
  * User registration data

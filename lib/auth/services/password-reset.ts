@@ -11,18 +11,9 @@
 import { createVerificationToken, verifyAndConsumeToken } from './token-service'
 import { sendPasswordResetEmail } from './email-service'
 import { hashPassword } from './password-service'
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseClient } from '@/lib/supabase/client'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
+const supabase = getSupabaseClient()
 
 interface ResetResult {
   success: boolean
