@@ -62,15 +62,18 @@ export async function trackSession(
     // Generate device ID if not provided
     const finalDeviceId = deviceId || generateDeviceId()
 
-    // Check if session exists
-    const { data: existingSession } = await supabase
+    // Check if session exists (get most recent if multiple exist)
+    const { data: existingSessions } = await supabase
       .from('sessions')
-      .select('id')
+      .select('id, created_at')
       .eq('user_id', userId)
       .eq('device_id', finalDeviceId)
-      .single()
+      .order('created_at', { ascending: false })
+      .limit(1)
 
-    if (existingSession) {
+    if (existingSessions && existingSessions.length > 0) {
+      const existingSession = existingSessions[0]
+      
       // Update existing session
       await supabase
         .from('sessions')
@@ -82,6 +85,8 @@ export async function trackSession(
           location_flag: location?.flag
         })
         .eq('id', existingSession.id)
+
+      console.log(`[SESSION] ♻️  Updated existing session for ${userId}`)
 
       return {
         sessionId: existingSession.id,
