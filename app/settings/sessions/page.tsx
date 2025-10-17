@@ -8,6 +8,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import { Container, Section, Stack, Heading, Text } from '@/components/design-system'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button } from '@/components/ui'
 import { Loader2, Monitor, Smartphone, Tablet, MapPin, Clock, Shield, AlertTriangle } from 'lucide-react'
@@ -37,20 +38,31 @@ interface Session {
 export default function ActiveSessionsPage() {
   const [sessions, setSessions] = useState<Session[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string>('')
   const [isTerminating, setIsTerminating] = useState(false)
   const [terminatingId, setTerminatingId] = useState<string | null>(null)
 
-  // Mock user ID - in production, get from auth session
-  const userId = 'current-user-id'
-  const currentSessionId = 'current-session-id'
+  // Get user ID from session
+  const { data: session } = useSession()
+  const userId = session?.user?.email || ''
+  const currentSessionId = 'current-session-id' // TODO: Get from session
 
   useEffect(() => {
-    fetchSessions()
-  }, [])
+    if (userId) {
+      fetchSessions()
+    }
+  }, [userId])
 
   const fetchSessions = async () => {
+    if (!userId) return
+
     try {
       const response = await fetch(`/api/auth/sessions?userId=${userId}`)
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch sessions')
+      }
+
       const data = await response.json()
 
       // Mark current session
@@ -62,6 +74,7 @@ export default function ActiveSessionsPage() {
       setSessions(sessionsWithCurrent)
     } catch (error) {
       console.error('Failed to fetch sessions:', error)
+      setError('Failed to load sessions')
     } finally {
       setIsLoading(false)
     }
