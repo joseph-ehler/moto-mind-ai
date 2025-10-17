@@ -20,7 +20,7 @@ if (!fs.existsSync(outputDir)) {
 
 // These migrations need to be applied
 const pendingMigrations = [
-  '20251016_12_logs_table.sql'
+  '20251016_14_fix_security_issues.sql'
 ]
 
 console.log('\n📝 GENERATING MIGRATION SQL\n')
