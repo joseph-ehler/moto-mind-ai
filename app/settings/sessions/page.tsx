@@ -221,23 +221,21 @@ export default function ActiveSessionsPage() {
                         </div>
 
                         {/* Sign Out Button */}
-                        {!session.isCurrent && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleTerminateSession(session.id)}
-                            disabled={terminatingId === session.id}
-                          >
-                            {terminatingId === session.id ? (
-                              <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Signing out...
-                              </>
-                            ) : (
-                              'Sign out'
-                            )}
-                          </Button>
-                        )}
+                        <Button
+                          variant={session.isCurrent ? "destructive" : "outline"}
+                          size="sm"
+                          onClick={() => handleTerminateSession(session.id)}
+                          disabled={terminatingId === session.id}
+                        >
+                          {terminatingId === session.id ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Signing out...
+                            </>
+                          ) : (
+                            session.isCurrent ? 'Sign out of this device' : 'Sign out'
+                          )}
+                        </Button>
                       </div>
                     </CardHeader>
 
