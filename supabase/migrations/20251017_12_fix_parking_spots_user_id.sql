@@ -15,13 +15,22 @@ DROP POLICY IF EXISTS "Users can delete their own parking spots" ON parking_spot
 DROP INDEX IF EXISTS idx_parking_spots_user_id;
 DROP INDEX IF EXISTS idx_parking_spots_user_active;
 
--- Drop foreign key constraint (NextAuth users aren't in auth.users table)
+-- Drop foreign key constraints
+-- NextAuth users aren't in auth.users table
 ALTER TABLE parking_spots 
   DROP CONSTRAINT IF EXISTS parking_spots_user_id_fkey;
+
+-- Session IDs from tracking are TEXT, not UUID
+ALTER TABLE parking_spots 
+  DROP CONSTRAINT IF EXISTS parking_spots_session_id_fkey;
 
 -- Change user_id column type from UUID to TEXT
 ALTER TABLE parking_spots 
   ALTER COLUMN user_id TYPE TEXT USING user_id::TEXT;
+
+-- Change session_id column type from UUID to TEXT (to match tracking_sessions)
+ALTER TABLE parking_spots 
+  ALTER COLUMN session_id TYPE TEXT USING session_id::TEXT;
 
 -- Recreate indexes
 CREATE INDEX idx_parking_spots_user_id ON parking_spots(user_id);
