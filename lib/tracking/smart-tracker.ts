@@ -393,10 +393,13 @@ export class SmartVehicleTracker {
       })
 
       if (!response.ok) {
-        throw new Error('Sync failed')
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        console.error('[SmartTracker] Sync failed:', response.status, errorData)
+        throw new Error(`Sync failed: ${response.status} - ${JSON.stringify(errorData)}`)
       }
 
-      console.log(`[SmartTracker] Synced ${points.length} points`)
+      const result = await response.json()
+      console.log(`[SmartTracker] ✅ Synced ${points.length} points`, result)
     } catch (error) {
       // Put points back in buffer for retry
       this.locationBuffer.unshift(...points)
