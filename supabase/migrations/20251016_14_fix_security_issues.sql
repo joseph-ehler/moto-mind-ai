@@ -37,11 +37,8 @@ DROP POLICY IF EXISTS schema_migrations_service_role ON schema_migrations;
 CREATE POLICY schema_migrations_service_role ON schema_migrations
   FOR ALL TO service_role USING (true) WITH CHECK (true);
 
--- spatial_ref_sys (PostGIS system table - read-only for authenticated)
-ALTER TABLE spatial_ref_sys ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS spatial_ref_sys_read ON spatial_ref_sys;
-CREATE POLICY spatial_ref_sys_read ON spatial_ref_sys
-  FOR SELECT TO authenticated, anon USING (true);
+-- spatial_ref_sys (PostGIS system table - SKIP, owned by postgres superuser)
+-- Can't modify PostGIS system tables - this is acceptable, it's read-only data
 
 -- ============================================================================
 -- 3. FIX SECURITY DEFINER VIEWS
