@@ -45,22 +45,18 @@ export async function POST(request: NextRequest) {
     // Get Supabase client
     const supabase = getSupabaseClient()
 
-    // Get user ID from auth.users by email
-    const { data: authUser, error: userError } = await supabase
-      .from('auth.users')
-      .select('id')
-      .eq('email', session.user.email)
-      .single()
-
-    if (userError || !authUser) {
-      console.error('[API] User lookup failed:', userError)
+    // Use NextAuth user ID from session
+    const userId = (session.user as any).id
+    
+    if (!userId) {
+      console.error('[API] No user ID in session')
       return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
+        { error: 'Invalid session - no user ID' },
+        { status: 400 }
       )
     }
 
-    const userId = authUser.id
+    console.log('[API] Processing tracking batch for user:', userId, session.user.email)
 
     // Check if tracking session exists
     let { data: trackingSession, error: sessionError } = await supabase

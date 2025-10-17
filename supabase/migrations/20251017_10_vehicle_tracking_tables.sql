@@ -7,7 +7,7 @@
 CREATE TABLE IF NOT EXISTS tracking_sessions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   session_id TEXT NOT NULL UNIQUE, -- Client-generated session ID
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL, -- NextAuth user ID (not a foreign key)
   vehicle_id UUID REFERENCES vehicles(id) ON DELETE SET NULL,
   
   -- Session metadata
