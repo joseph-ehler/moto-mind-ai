@@ -15,6 +15,7 @@ import { ControlPanel } from '@/components/tracking/ControlPanel'
 import { TripStats } from '@/components/tracking/TripStats'
 import { Speedometer } from '@/components/tracking/Speedometer'
 import { CarPlayBanner } from '@/components/tracking/CarPlayBanner'
+import { ParkingMemoryWidget } from '@/components/parking/ParkingMemoryWidget'
 import { SmartVehicleTracker } from '@/lib/tracking'
 import type { TrackingState, LocationPoint, CrashDetection } from '@/lib/tracking/types'
 import { AlertTriangle, CheckCircle2, XCircle } from 'lucide-react'
@@ -246,6 +247,22 @@ export default function TrackPage() {
           {trackingState && trackingState.status !== 'idle' && (
             <TripStats state={trackingState} />
           )}
+
+          {/* Parking Memory */}
+          <ParkingMemoryWidget
+            currentLocation={
+              trackingState?.currentLocation
+                ? {
+                    latitude: trackingState.currentLocation.lat,
+                    longitude: trackingState.currentLocation.lng
+                  }
+                : undefined
+            }
+            lastSessionId={trackingState?.sessionId || undefined}
+            onSpotSaved={() => {
+              console.log('[Track] Parking spot saved')
+            }}
+          />
 
           {/* Instructions */}
           {trackingState?.status === 'idle' && (
