@@ -9,7 +9,7 @@
  * - Credentials (username/password)
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { 
   Button, 
@@ -24,8 +24,11 @@ import {
 } from '@/components/ui'
 import { Mail, Loader2 } from 'lucide-react'
 import { PasswordInput } from './PasswordInput'
+import { WelcomeBack } from './ui/WelcomeBack'
 import { registerUser } from '@/lib/auth/services/user-registration'
 import { validatePassword } from '@/lib/auth/services/password-service'
+import { useLastLogin, saveLastLoginMethod } from '@/lib/auth/hooks/useLastLogin'
+import type { LoginMethod } from '@/lib/auth/services/login-preferences'
 
 type AuthMode = 'signin' | 'signup' | 'magic-link'
 
@@ -43,10 +46,17 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
   const [error, setError] = useState('')
   const [magicLinkSent, setMagicLinkSent] = useState(false)
 
+  // Track last login method
+  const { lastMethod, loading: loadingLastMethod } = useLastLogin(email)
+
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     setError('')
     try {
+      // Save method before redirect
+      if (email) {
+        saveLastLoginMethod(email, 'google')
+      }
       await signIn('google', { callbackUrl: callbackUrl || '/dashboard' })
     } catch (err) {
       setError('Failed to sign in with Google')
@@ -69,6 +79,7 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
       if (result?.error) {
         setError('Failed to send magic link')
       } else {
+        saveLastLoginMethod(email, 'email')
         setMagicLinkSent(true)
       }
     } catch (err) {
@@ -94,6 +105,7 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
       if (result?.error) {
         setError('Invalid email or password')
       } else if (result?.url) {
+        saveLastLoginMethod(email, 'credentials')
         window.location.href = result.url
       }
     } catch (err) {
@@ -134,6 +146,7 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
       if (signInResult?.error) {
         setError('Account created but sign in failed. Please try signing in.')
       } else if (signInResult?.url) {
+        saveLastLoginMethod(email, 'credentials')
         window.location.href = signInResult.url
       }
     } catch (err) {
@@ -177,13 +190,19 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
 
   return (
     <div className="space-y-4">
+      {/* Welcome Back Message */}
+      {email && lastMethod && !loadingLastMethod && (
+        <WelcomeBack email={email} lastMethod={lastMethod} className="mb-4" />
+      )}
+
       {/* Google OAuth Button */}
       <Button
-        variant="outline"
+        variant={lastMethod === 'google' ? 'default' : 'outline'}
         className="w-full"
         onClick={handleGoogleSignIn}
         disabled={isLoading}
       >
+        {lastMethod === 'google' && <span className="mr-2">✓</span>}
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path
             fill="currentColor"

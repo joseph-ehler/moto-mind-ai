@@ -18,6 +18,7 @@ import { createClient } from '@supabase/supabase-js'
 import { sendMagicLinkEmail } from './services/email-service'
 import { getUserCredentials } from './services/user-registration'
 import { verifyPassword } from './services/password-service'
+import { trackLogin, type LoginMethod } from './services/login-preferences'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -151,6 +152,18 @@ export const authOptions: NextAuthOptions = {
           }
           
           console.log('✅ Existing user signed in:', user.email)
+          
+          // Track login method for returning users
+          if (account?.provider) {
+            const method: LoginMethod = 
+              account.provider === 'google' ? 'google' :
+              account.provider === 'email' ? 'email' :
+              'credentials'
+            await trackLogin(user.email, method).catch(err => 
+              console.warn('[AUTH] Failed to track login:', err)
+            )
+          }
+          
           return true
         }
 
@@ -187,6 +200,18 @@ export const authOptions: NextAuthOptions = {
         }
 
         console.log('✅ New tenant created:', newTenant.id)
+        
+        // Track login method
+        if (account?.provider) {
+          const method: LoginMethod = 
+            account.provider === 'google' ? 'google' :
+            account.provider === 'email' ? 'email' :
+            'credentials'
+          await trackLogin(user.email, method).catch(err => 
+            console.warn('[AUTH] Failed to track login:', err)
+          )
+        }
+        
         return true
         
       } catch (error) {
