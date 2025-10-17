@@ -132,7 +132,7 @@ RETURNS TABLE (
   longitude NUMERIC,
   address TEXT,
   place_name TEXT,
-  timestamp TIMESTAMPTZ,
+  "timestamp" TIMESTAMPTZ,
   notes TEXT,
   floor TEXT,
   section TEXT,
