@@ -9,6 +9,9 @@ import { getSupabaseClient } from '@/lib/supabase/client'
 
 const supabase = getSupabaseClient()
 
+// Note: User agent and IP will be captured by middleware on first request
+// This ensures sessions are tracked automatically
+
 // Log env vars (without exposing secrets)
 console.log('[NextAuth] Config check:', {
   hasClientId: !!process.env.GOOGLE_CLIENT_ID,
