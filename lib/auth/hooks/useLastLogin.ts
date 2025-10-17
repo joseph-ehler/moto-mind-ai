@@ -33,24 +33,34 @@ export function useLastLogin(email?: string | null): UseLastLoginReturn {
 
     async function fetchLastMethod() {
       try {
+        console.log('[useLastLogin] Fetching for email:', email)
+        
         // Try localStorage first (fast)
         const cached = localStorage.getItem(`last_login_method_${email}`)
+        console.log('[useLastLogin] localStorage cache:', cached)
+        
         if (cached) {
           setLastMethod(cached as LoginMethod)
           setLoading(false)
+          console.log('[useLastLogin] Using cached method:', cached)
           return
         }
 
         // Fall back to API (email is guaranteed to be defined here)
+        console.log('[useLastLogin] Fetching from API...')
         const response = await fetch(`/api/auth/preferences?email=${encodeURIComponent(email!)}`)
+        console.log('[useLastLogin] API response status:', response.status)
+        
         if (!response.ok) {
           throw new Error('Failed to fetch login preferences')
         }
 
         const data = await response.json()
+        console.log('[useLastLogin] API data:', data)
         const method = data.lastMethod as LoginMethod | null
         
         setLastMethod(method)
+        console.log('[useLastLogin] Set lastMethod:', method)
         
         // Cache for next time
         if (method && email) {

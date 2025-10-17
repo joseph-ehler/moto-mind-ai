@@ -29,6 +29,7 @@ import { RateLimitMessage } from './ui/RateLimitMessage'
 import { registerUser } from '@/lib/auth/services/user-registration'
 import { validatePassword } from '@/lib/auth/services/password-service'
 import { useLastLogin, saveLastLoginMethod } from '@/lib/auth/hooks/useLastLogin'
+import { useLastUser, saveLastUserEmail } from '@/lib/auth/hooks/useLastUser'
 import type { LoginMethod } from '@/lib/auth/services/login-preferences'
 
 type AuthMode = 'signin' | 'signup' | 'magic-link'
@@ -52,16 +53,43 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
     type: 'login' | 'reset' | 'verify' | 'magic_link'
   } | null>(null)
 
-  // Track last login method
+  // Track last user (instant - no email needed)
+  const { email: lastEmail, lastMethod: lastUserMethod } = useLastUser()
+  
+  // Track last login method for current email
   const { lastMethod, loading: loadingLastMethod } = useLastLogin(email)
+  
+  // Pre-fill email if we have a last user
+  useEffect(() => {
+    if (lastEmail && !email) {
+      setEmail(lastEmail)
+    }
+  }, [lastEmail]) // Only run once on mount
+
+  // Use last user's method if no email entered yet, otherwise use current
+  const displayMethod = email ? lastMethod : lastUserMethod
+
+  // Debug logging
+  useEffect(() => {
+    console.log('[AuthForm Debug]', {
+      email,
+      lastEmail,
+      lastMethod,
+      lastUserMethod,
+      displayMethod,
+      loadingLastMethod,
+      hasEmail: !!email
+    })
+  }, [email, lastEmail, lastMethod, lastUserMethod, displayMethod, loadingLastMethod])
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     setError('')
     try {
-      // Save method before redirect
+      // Save method and email before redirect
       if (email) {
         saveLastLoginMethod(email, 'google')
+        saveLastUserEmail(email)
       }
       await signIn('google', { callbackUrl: callbackUrl || '/dashboard' })
     } catch (err) {
@@ -86,6 +114,7 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
         setError('Failed to send magic link')
       } else {
         saveLastLoginMethod(email, 'email')
+        saveLastUserEmail(email)
         setMagicLinkSent(true)
       }
     } catch (err) {
@@ -124,6 +153,7 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
         }
       } else if (result?.url) {
         saveLastLoginMethod(email, 'credentials')
+        saveLastUserEmail(email)
         window.location.href = result.url
       }
     } catch (err) {
@@ -165,6 +195,7 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
         setError('Account created but sign in failed. Please try signing in.')
       } else if (signInResult?.url) {
         saveLastLoginMethod(email, 'credentials')
+        saveLastUserEmail(email)
         window.location.href = signInResult.url
       }
     } catch (err) {
@@ -209,18 +240,22 @@ export function AuthForm({ mode: initialMode = 'signin', callbackUrl }: AuthForm
   return (
     <div className="space-y-4">
       {/* Welcome Back Message */}
-      {email && lastMethod && !loadingLastMethod && (
-        <WelcomeBack email={email} lastMethod={lastMethod} className="mb-4" />
+      {displayMethod && !loadingLastMethod && (
+        <WelcomeBack 
+          email={email || lastEmail!} 
+          lastMethod={displayMethod} 
+          className="mb-4" 
+        />
       )}
 
       {/* Google OAuth Button */}
       <Button
-        variant={lastMethod === 'google' ? 'default' : 'outline'}
+        variant={displayMethod === 'google' ? 'default' : 'outline'}
         className="w-full"
         onClick={handleGoogleSignIn}
         disabled={isLoading}
       >
-        {lastMethod === 'google' && <span className="mr-2">✓</span>}
+        {displayMethod === 'google' && <span className="mr-2">✓</span>}
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path
             fill="currentColor"
