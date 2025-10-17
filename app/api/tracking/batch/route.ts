@@ -15,6 +15,11 @@ export async function POST(request: NextRequest) {
   try {
     // Check authentication
     const session = await getServerSession(authOptions)
+    
+    console.log('[API] Session:', JSON.stringify(session, null, 2))
+    console.log('[API] Session user:', session?.user)
+    console.log('[API] Session user id:', (session?.user as any)?.id)
+    
     if (!session?.user?.email) {
       return NextResponse.json(
         { error: 'Unauthorized' },
