@@ -25,7 +25,7 @@ const baseUrl = SUPABASE_URL.replace(/\/$/, '')
 
 async function executeSQL(sql: string): Promise<any> {
   // Use Supabase's SQL endpoint via PostgREST
-  const response = await fetch(`${baseUrl}/rest/v1/rpc/exec`, {
+  const response = await fetch(`${baseUrl}/rest/v1/rpc/exec_sql`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
