@@ -141,8 +141,10 @@ const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       // Add user ID to session
-      if (session.user && token.sub) {
-        (session.user as any).id = token.sub
+      if (session.user) {
+        const userId = token.id || token.sub || token.email
+        ;(session.user as any).id = userId
+        console.log('[NextAuth] Session callback - User ID:', userId)
       }
       return session
     },
@@ -151,6 +153,7 @@ const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id
         token.email = user.email
+        console.log('[NextAuth] JWT callback - Storing user ID:', user.id)
       }
       return token
     },
