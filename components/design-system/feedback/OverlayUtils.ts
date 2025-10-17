@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Overlay Utilities
  * Reusable hooks and utilities for overlay components

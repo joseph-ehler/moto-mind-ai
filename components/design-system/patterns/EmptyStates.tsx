@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Empty States
  * 
@@ -872,4 +874,3 @@ export function EnhancedErrorEmptyState({ title = 'Something went wrong', descri
     </div>
   )
 }
-

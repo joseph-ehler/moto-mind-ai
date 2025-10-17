@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Stats/Metrics Cards
  * 
@@ -1500,7 +1502,8 @@ export const exportData = {
     const csv = [
       headers.join(','),
       ...data.map(row => headers.map(h => row[h]).join(','))
-    ].join('\n')
+    ].join('
+')
     
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)

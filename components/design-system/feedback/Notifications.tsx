@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Notifications & Alerts Design System
  * 

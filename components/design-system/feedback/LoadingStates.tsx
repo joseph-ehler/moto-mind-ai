@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Loading States & Skeletons
  * 
@@ -837,4 +839,3 @@ export function TrackedSkeleton({ onLoadStart, onLoadEnd, ...props }: TrackedSke
 
   return <Skeleton {...props} />
 }
-

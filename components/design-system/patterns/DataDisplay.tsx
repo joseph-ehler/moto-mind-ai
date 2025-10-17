@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Data Display Design System
  * 
@@ -204,7 +206,8 @@ export function DataTable<T = any>({
           return `"${String(value).replace(/"/g, '""')}"`
         }).join(',')
       )
-    ].join('\n')
+    ].join('
+')
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')

@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Overlay Design System - Elite Edition
  * 

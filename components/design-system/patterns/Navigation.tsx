@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Navigation Components
  * 
@@ -2561,5 +2563,3 @@ export function ResponsiveNav({
     </>
   )
 }
-
-
