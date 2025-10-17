@@ -106,7 +106,11 @@ export async function trackSession(
         location_city: location?.city,
         location_flag: location?.flag,
         last_active: new Date().toISOString(),
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        // NextAuth columns (set to NULL for device tracking sessions)
+        session_token: null,
+        expires: null,
+        session_type: 'device'
       })
       .select('id')
       .single()
@@ -202,18 +206,18 @@ export async function terminateSession(sessionId: string, userId: string): Promi
 }
 
 /**
- * Terminate all sessions except current
+ * Terminate all sessions except current device
  */
 export async function terminateAllOtherSessions(
   userId: string,
-  currentSessionId: string
+  currentDeviceId: string
 ): Promise<{ terminated: number }> {
   try {
     const { error, count } = await supabase
       .from('sessions')
       .delete()
       .eq('user_id', userId)
-      .neq('id', currentSessionId)
+      .neq('device_id', currentDeviceId)
 
     if (error) {
       console.error('[SESSION] Failed to terminate sessions:', error)

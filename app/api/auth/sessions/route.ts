@@ -20,10 +20,19 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Get current device ID from cookie
+    const currentDeviceId = request.cookies.get('device_id')?.value
+
     // Get all sessions
     const sessions = await getUserSessions(userId)
+    
+    // Mark current device
+    const sessionsWithCurrent = sessions.map(s => ({
+      ...s,
+      isCurrent: s.deviceId === currentDeviceId
+    }))
 
-    return NextResponse.json({ sessions })
+    return NextResponse.json({ sessions: sessionsWithCurrent })
 
   } catch (error) {
     console.error('[API] Get sessions failed:', error)
@@ -36,17 +45,27 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const { userId, currentSessionId } = await request.json()
+    const { userId } = await request.json()
 
-    if (!userId || !currentSessionId) {
+    if (!userId) {
       return NextResponse.json(
-        { error: 'userId and currentSessionId are required' },
+        { error: 'userId is required' },
         { status: 400 }
       )
     }
 
-    // Terminate all other sessions
-    const result = await terminateAllOtherSessions(userId, currentSessionId)
+    // Get current device ID from cookie
+    const currentDeviceId = request.cookies.get('device_id')?.value
+
+    if (!currentDeviceId) {
+      return NextResponse.json(
+        { error: 'No device ID found - cannot identify current session' },
+        { status: 400 }
+      )
+    }
+
+    // Terminate all sessions except current device
+    const result = await terminateAllOtherSessions(userId, currentDeviceId)
 
     return NextResponse.json({
       success: true,

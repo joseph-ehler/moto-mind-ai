@@ -41,11 +41,23 @@ export default function ActiveSessionsPage() {
   const [error, setError] = useState<string>('')
   const [isTerminating, setIsTerminating] = useState(false)
   const [terminatingId, setTerminatingId] = useState<string | null>(null)
+  const [currentDeviceId, setCurrentDeviceId] = useState<string>('')
 
   // Get user ID from session
   const { data: session } = useSession()
   const userId = session?.user?.email || ''
-  const currentSessionId = 'current-session-id' // TODO: Get from session
+
+  useEffect(() => {
+    // Get device ID from cookie
+    const deviceId = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('device_id='))
+      ?.split('=')[1]
+    
+    if (deviceId) {
+      setCurrentDeviceId(deviceId)
+    }
+  }, [])
 
   useEffect(() => {
     if (userId) {
@@ -65,10 +77,12 @@ export default function ActiveSessionsPage() {
 
       const data = await response.json()
 
-      // Mark current session
+      // Mark current session by device_id
       const sessionsWithCurrent = data.sessions.map((s: Session) => ({
         ...s,
-        isCurrent: s.id === currentSessionId
+        isCurrent: s.deviceInfo.deviceName && currentDeviceId ? 
+          s.id.includes(currentDeviceId) || s.deviceInfo.deviceName === 'Current Device' :
+          false
       }))
 
       setSessions(sessionsWithCurrent)
@@ -107,11 +121,12 @@ export default function ActiveSessionsPage() {
       const response = await fetch('/api/auth/sessions', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, currentSessionId })
+        body: JSON.stringify({ userId })
       })
 
       if (response.ok) {
-        setSessions(sessions.filter(s => s.isCurrent))
+        // Refresh sessions to show updated list
+        await fetchSessions()
       }
     } catch (error) {
       console.error('Failed to terminate sessions:', error)
