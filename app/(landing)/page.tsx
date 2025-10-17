@@ -7,7 +7,7 @@ import { Container, Section, Stack, Heading, Text } from '@/components/design-sy
 import { Button } from '@/components/ui'
 import { Car, MapPin, Smartphone } from 'lucide-react'
 
-export default function Home() {
+export default function LandingPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
 

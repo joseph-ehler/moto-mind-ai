@@ -25,7 +25,7 @@ const nextConfig = {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   // Disable file watching to avoid watchpack errors
-  webpack: (config, { dev }) => {
+  webpack: (config, { dev, isServer }) => {
     if (dev) {
       config.watchOptions = {
         poll: 1000,
@@ -33,6 +33,11 @@ const nextConfig = {
         ignored: ['**/node_modules/**', '**/.git/**', '**/.next/**']
       }
     }
+    
+    // Ignore Capacitor native modules (they only work in native app)
+    config.externals = config.externals || {}
+    config.externals['@capacitor-community/background-geolocation'] = 'commonjs @capacitor-community/background-geolocation'
+    
     return config
   },
   async redirects() {

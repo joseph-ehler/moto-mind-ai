@@ -22,7 +22,8 @@ export default function TestNativePage() {
       }
 
       // Import the plugin dynamically (only works in native)
-      const { BackgroundGeolocation } = await import('@capacitor-community/background-geolocation')
+      // @ts-ignore - dynamic import for native only
+      const BackgroundGeolocation = (await import('@capacitor-community/background-geolocation')).BackgroundGeolocation
 
       // Request permission and start watching
       const watcher = await BackgroundGeolocation.addWatcher(
@@ -68,7 +69,8 @@ export default function TestNativePage() {
     try {
       if (!watcherId) return
 
-      const { BackgroundGeolocation } = await import('@capacitor-community/background-geolocation')
+      // @ts-ignore - dynamic import for native only
+      const BackgroundGeolocation = (await import('@capacitor-community/background-geolocation')).BackgroundGeolocation
       await BackgroundGeolocation.removeWatcher({ id: watcherId })
       
       setIsTracking(false)

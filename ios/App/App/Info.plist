@@ -45,15 +45,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>MotoMind tracks your trips automatically when you drive, even when the app is in the background</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>MotoMind needs your location to track your driving trips</string>
-	<key>NSMotionUsageDescription</key>
-	<string>MotoMind uses motion sensors to detect when you're driving and improve tracking accuracy</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>location</string>
-	</array>
 </dict>
 </plist>
