@@ -106,10 +106,11 @@ export class ParkingMemory {
    * Automatically deactivates any existing active parking spots.
    * Performs reverse geocoding to get address and place name.
    * 
+   * @param userId User ID (from NextAuth session)
    * @param options Parking spot details
    * @returns Saved parking spot with geocoded address
    */
-  async saveSpot(options: SaveParkingSpotOptions): Promise<ParkingSpot> {
+  async saveSpot(userId: string, options: SaveParkingSpotOptions): Promise<ParkingSpot> {
     const {
       latitude,
       longitude,
@@ -122,6 +123,11 @@ export class ParkingMemory {
       photoUrl,
       skipGeocoding = false
     } = options
+    
+    // Validate user ID
+    if (!userId) {
+      throw new Error('User ID is required')
+    }
     
     // Validate coordinates
     if (latitude < -90 || latitude > 90) {
@@ -142,17 +148,11 @@ export class ParkingMemory {
       }
     }
     
-    // Get current user
-    const { data: { user }, error: userError } = await this.supabase.auth.getUser()
-    if (userError || !user) {
-      throw new Error('User not authenticated')
-    }
-    
     // Insert parking spot
     const { data, error } = await this.supabase
       .from('parking_spots')
       .insert({
-        user_id: user.id,
+        user_id: userId,
         session_id: sessionId || null,
         latitude,
         longitude,
@@ -181,18 +181,18 @@ export class ParkingMemory {
   /**
    * Get the user's active parking spot
    * 
+   * @param userId User ID (from NextAuth session)
    * @returns Active parking spot or null if none exists
    */
-  async getActiveSpot(): Promise<ParkingSpot | null> {
-    const { data: { user }, error: userError } = await this.supabase.auth.getUser()
-    if (userError || !user) {
+  async getActiveSpot(userId: string): Promise<ParkingSpot | null> {
+    if (!userId) {
       return null
     }
     
     const { data, error } = await this.supabase
       .from('parking_spots')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .eq('is_active', true)
       .order('timestamp', { ascending: false })
       .limit(1)
@@ -277,19 +277,19 @@ export class ParkingMemory {
   /**
    * Get parking spot history
    * 
+   * @param userId User ID (from NextAuth session)
    * @param limit Maximum number of spots to return
    * @returns Array of parking spots, most recent first
    */
-  async getHistory(limit: number = 10): Promise<ParkingSpot[]> {
-    const { data: { user }, error: userError } = await this.supabase.auth.getUser()
-    if (userError || !user) {
+  async getHistory(userId: string, limit: number = 10): Promise<ParkingSpot[]> {
+    if (!userId) {
       return []
     }
     
     const { data, error } = await this.supabase
       .from('parking_spots')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .order('timestamp', { ascending: false })
       .limit(limit)
     

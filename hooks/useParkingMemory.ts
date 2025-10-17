@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useSession } from 'next-auth/react'
 import { ParkingMemory, type ParkingSpot, type SaveParkingSpotOptions } from '@/lib/tracking/parking-memory'
 
 /**
@@ -28,32 +29,38 @@ import { ParkingMemory, type ParkingSpot, type SaveParkingSpotOptions } from '@/
  * ```
  */
 export function useParkingMemory() {
+  const { data: session } = useSession()
   const [activeSpot, setActiveSpot] = useState<ParkingSpot | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const parkingMemoryRef = useRef<ParkingMemory | null>(null)
+  
+  // Get user ID from NextAuth session
+  const userId = (session?.user as any)?.id
   
   // Initialize ParkingMemory instance
   useEffect(() => {
     parkingMemoryRef.current = new ParkingMemory()
   }, [])
   
-  // Load active spot on mount
+  // Load active spot when user ID is available
   useEffect(() => {
-    loadActiveSpot()
-  }, [])
+    if (userId) {
+      loadActiveSpot()
+    }
+  }, [userId])
   
   /**
    * Load the active parking spot
    */
   const loadActiveSpot = useCallback(async () => {
-    if (!parkingMemoryRef.current) return
+    if (!parkingMemoryRef.current || !userId) return
     
     setIsLoading(true)
     setError(null)
     
     try {
-      const spot = await parkingMemoryRef.current.getActiveSpot()
+      const spot = await parkingMemoryRef.current.getActiveSpot(userId)
       setActiveSpot(spot)
     } catch (err) {
       console.error('[useParkingMemory] Failed to load active spot:', err)
@@ -61,7 +68,7 @@ export function useParkingMemory() {
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [userId])
   
   /**
    * Save a new parking spot
@@ -71,11 +78,15 @@ export function useParkingMemory() {
       throw new Error('ParkingMemory not initialized')
     }
     
+    if (!userId) {
+      throw new Error('User not authenticated')
+    }
+    
     setIsLoading(true)
     setError(null)
     
     try {
-      const spot = await parkingMemoryRef.current.saveSpot(options)
+      const spot = await parkingMemoryRef.current.saveSpot(userId, options)
       setActiveSpot(spot)
       return spot
     } catch (err) {
@@ -86,7 +97,7 @@ export function useParkingMemory() {
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [userId])
   
   /**
    * Update parking spot metadata
@@ -239,29 +250,35 @@ export function useParkingMemory() {
  * ```
  */
 export function useParkingHistory(limit: number = 10) {
+  const { data: session } = useSession()
   const [history, setHistory] = useState<ParkingSpot[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const parkingMemoryRef = useRef<ParkingMemory | null>(null)
+  
+  // Get user ID from NextAuth session
+  const userId = (session?.user as any)?.id
   
   // Initialize ParkingMemory instance
   useEffect(() => {
     parkingMemoryRef.current = new ParkingMemory()
   }, [])
   
-  // Load history on mount and when limit changes
+  // Load history when user ID is available or limit changes
   useEffect(() => {
-    loadHistory()
-  }, [limit])
+    if (userId) {
+      loadHistory()
+    }
+  }, [userId, limit])
   
   const loadHistory = useCallback(async () => {
-    if (!parkingMemoryRef.current) return
+    if (!parkingMemoryRef.current || !userId) return
     
     setIsLoading(true)
     setError(null)
     
     try {
-      const spots = await parkingMemoryRef.current.getHistory(limit)
+      const spots = await parkingMemoryRef.current.getHistory(userId, limit)
       setHistory(spots)
     } catch (err) {
       console.error('[useParkingHistory] Failed to load history:', err)
@@ -269,7 +286,7 @@ export function useParkingHistory(limit: number = 10) {
     } finally {
       setIsLoading(false)
     }
-  }, [limit])
+  }, [userId, limit])
   
   return {
     history,
