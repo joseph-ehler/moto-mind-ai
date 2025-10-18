@@ -4,37 +4,21 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui'
 import { Car, Loader2 } from 'lucide-react'
-import { createClient } from '@/lib/supabase/browser-client'
+import { useAuth } from '@/hooks/useAuth'
 import { isNativeApp, signInWithGoogleNativeSDK, initializeGoogleAuth } from '@/lib/auth/google-native-sdk'
 
 export default function Home() {
   const router = useRouter()
-  const supabase = createClient()
+  const { user, isLoading, signInWithGoogle } = useAuth()
   const [isNative, setIsNative] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+  const [isSigningIn, setIsSigningIn] = useState(false)
 
-  // Check auth status
+  // Redirect if already authenticated
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session) {
-        router.push('/track')
-      } else {
-        setIsLoading(false)
-      }
+    if (user) {
+      router.push('/track')
     }
-    checkAuth()
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        router.push('/track')
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [router, supabase])
+  }, [user, router])
 
   // Detect native app and initialize Google Auth
   useEffect(() => {
@@ -93,25 +77,19 @@ export default function Home() {
             className="w-full h-14 text-lg font-semibold"
             disabled={isLoading}
             onClick={async () => {
-              setIsLoading(true)
+              setIsSigningIn(true)
               try {
                 if (isNative) {
                   // Use native Google SDK
                   await signInWithGoogleNativeSDK()
                 } else {
-                  // Use web OAuth
-                  const { error } = await supabase.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                      redirectTo: `${window.location.origin}/track`
-                    }
-                  })
-                  if (error) throw error
+                  // Use web OAuth via god-tier facade
+                  await signInWithGoogle('/track')
                 }
               } catch (error) {
                 console.error('Sign-in error:', error)
                 alert('Failed to sign in. Please try again.')
-                setIsLoading(false)
+                setIsSigningIn(false)
               }
             }}
           >
