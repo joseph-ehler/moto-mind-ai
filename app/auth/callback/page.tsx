@@ -32,9 +32,18 @@ function AuthCallbackContent() {
       
       console.log('[AuthCallback] Saved login preferences')
       
-      // Redirect to callback URL or dashboard
-      const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
-      router.push(callbackUrl)
+      // Check if this is a native app
+      const isNative = searchParams.get('native') === 'true'
+      
+      if (isNative) {
+        console.log('[AuthCallback] 🚀 Native app detected - redirecting to custom scheme')
+        // Redirect to custom URL scheme to close browser and return to app
+        window.location.href = 'motomind://callback?success=true'
+      } else {
+        // Regular web redirect
+        const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+        router.push(callbackUrl)
+      }
     } else if (status === 'unauthenticated') {
       // Auth failed, redirect to sign-in
       router.push('/auth/signin?error=Authentication failed')

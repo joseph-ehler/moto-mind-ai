@@ -138,9 +138,9 @@ const authOptions: NextAuthOptions = {
       // Check if this is a native app (Capacitor) by looking at the callback URL
       // Native apps will have ?native=true in the callback URL
       if (url.includes('native=true') || url.includes('capacitor=true')) {
-        console.log('[NextAuth] 🚀 Native app detected - redirecting to custom scheme')
-        // Redirect to custom URL scheme to close browser and return to app
-        return 'motomind://callback?success=true'
+        console.log('[NextAuth] 🚀 Native app detected - redirecting to callback page')
+        // Redirect to custom callback page which will handle the deep link
+        return `${baseUrl}/auth/callback?native=true`
       }
       
       // Regular web redirect

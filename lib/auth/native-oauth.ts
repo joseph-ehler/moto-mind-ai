@@ -9,8 +9,9 @@ import { Browser } from '@capacitor/browser'
 import { App } from '@capacitor/app'
 
 export async function signInWithGoogleNative(): Promise<void> {
-  // Build Google OAuth URL with native flag so NextAuth knows to redirect to custom scheme
-  const authUrl = `${window.location.origin}/api/auth/signin/google?callbackUrl=${encodeURIComponent('/track?native=true')}`
+  // Build Google OAuth URL with native flag
+  // NextAuth will redirect to /auth/callback?native=true which will trigger the custom scheme
+  const authUrl = `${window.location.origin}/api/auth/signin/google?callbackUrl=${encodeURIComponent('/auth/callback?native=true')}`
   
   // Open in-app browser (SFSafariViewController on iOS)
   await Browser.open({
