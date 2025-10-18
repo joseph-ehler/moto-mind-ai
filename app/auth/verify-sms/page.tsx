@@ -7,7 +7,7 @@
  * URL: /auth/verify-sms?phone=...
  */
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Container, Stack, Heading, Text } from '@/components/design-system'
 import { Button } from '@/components/ui/button'
@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, CheckCircle2, AlertCircle, Smartphone } from 'lucide-react'
 
-export default function VerifySmsPage() {
+function VerifySmsContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const phone = searchParams.get('phone') || ''
@@ -264,5 +264,17 @@ export default function VerifySmsPage() {
         </Stack>
       </Container>
     </div>
+  )
+}
+
+export default function VerifySmsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    }>
+      <VerifySmsContent />
+    </Suspense>
   )
 }
