@@ -17,13 +17,15 @@ export async function initializeGoogleAuth() {
   }
   
   try {
+    // Use the WEB OAuth client ID (same as serverClientId)
+    // This should match what's configured in Supabase
     await GoogleAuth.initialize({
-      clientId: '642890697588-ecojj9mtif8j4n1gu7jri95a681ghgca.apps.googleusercontent.com', // iOS client ID
+      clientId: '642890697588-tpd1g2uduf51qmdkkdrue565sq40vf4s.apps.googleusercontent.com',
       scopes: ['profile', 'email'],
       grantOfflineAccess: true
     })
     initialized = true
-    console.log('[Google Native] ✅ Initialized')
+    console.log('[Google Native] ✅ Initialized with Web OAuth client ID')
   } catch (error) {
     console.error('[Google Native] ❌ Initialization failed:', error)
   }
