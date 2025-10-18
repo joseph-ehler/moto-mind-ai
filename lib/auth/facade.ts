@@ -90,7 +90,8 @@ export const auth = {
       const redirectUri = 'motomind://auth/callback'
       
       // Build the OAuth URL that Supabase expects
-      const oauthUrl = `${supabaseUrl}/auth/v1/authorize?provider=${provider}&redirect_to=${encodeURIComponent(redirectUri)}`
+      // Add prompt=select_account to always show account picker
+      const oauthUrl = `${supabaseUrl}/auth/v1/authorize?provider=${provider}&redirect_to=${encodeURIComponent(redirectUri)}&prompt=select_account`
       
       console.log('[Auth] Opening OAuth URL:', oauthUrl)
       
