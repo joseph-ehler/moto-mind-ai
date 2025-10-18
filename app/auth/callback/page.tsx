@@ -4,64 +4,40 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 /**
- * OAuth Callback Page
+ * OAuth Callback Page (WEB ONLY)
  * 
- * Handles OAuth redirects from Google/providers
- * - On web: Processes tokens and navigates to /track
- * - On native in Safari: Triggers deep link to reopen app with tokens
- * - On native in app webview: Process tokens directly (already in app)
+ * Handles Supabase OAuth redirects from Google/providers on WEB.
+ * Native apps use Google Native SDK and don't need this callback page.
+ * 
+ * Flow:
+ * 1. User signs in with Google
+ * 2. Google redirects here with tokens in URL hash
+ * 3. Supabase processes tokens
+ * 4. Redirect to /track
  */
 export default function AuthCallbackPage() {
   const router = useRouter()
 
   useEffect(() => {
     const handleCallback = async () => {
-      const isNative = typeof (window as any).Capacitor !== 'undefined'
+      console.log('[Auth Callback] Processing web OAuth callback...')
       
-      // Check if we're in Safari (external browser) vs app's webview
-      // Safari has different user agent and won't have Capacitor loaded yet
-      const isInSafari = !isNative && navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')
+      const { createClient } = await import('@/lib/supabase/browser-client')
+      const supabase = createClient()
       
-      console.log('[Auth Callback] isNative:', isNative, 'isInSafari:', isInSafari)
+      // Supabase automatically processes the hash fragment (#access_token=...)
+      // Just check if we have a session
+      const { data, error } = await supabase.auth.getSession()
       
-      if (isInSafari) {
-        // We're in Safari (external browser) - trigger deep link to reopen app
-        const hash = window.location.hash
-        const deepLink = `motomind://auth/callback${hash}`
-        
-        console.log('[Auth Callback] In Safari, triggering deep link:', deepLink)
-        
-        // Show a button instead of auto-redirecting to avoid popup blocker
-        setTimeout(() => {
-          window.location.href = deepLink
-        }, 100)
+      if (error) {
+        console.error('[Auth Callback] Error:', error)
+        router.push('/?error=' + encodeURIComponent(error.message))
+      } else if (data.session) {
+        console.log('[Auth Callback] ✅ Session established:', data.session.user.email)
+        router.push('/track')
       } else {
-        // We're on web OR already in the app's webview - process tokens directly
-        const { createClient } = await import('@/lib/supabase/browser-client')
-        const supabase = createClient()
-        
-        // Parse hash fragment if present
-        const hash = window.location.hash
-        if (hash && hash.includes('access_token')) {
-          console.log('[Auth Callback] Hash fragment found, parsing tokens...')
-          
-          // Supabase will automatically handle the hash fragment
-          const { data, error } = await supabase.auth.getSession()
-          
-          if (error) {
-            console.error('[Auth Callback] Error:', error)
-            router.push('/?error=' + encodeURIComponent(error.message))
-          } else if (data.session) {
-            console.log('[Auth Callback] ✅ Session established:', data.session.user.email)
-            router.push('/track')
-          } else {
-            console.error('[Auth Callback] No session found')
-            router.push('/?error=no_session')
-          }
-        } else {
-          console.log('[Auth Callback] No hash fragment, redirecting home')
-          router.push('/')
-        }
+        console.error('[Auth Callback] No session found')
+        router.push('/?error=no_session')
       }
     }
 
