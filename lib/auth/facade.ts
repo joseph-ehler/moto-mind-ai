@@ -73,41 +73,17 @@ export const auth = {
   },
 
   /**
-   * Sign in with OAuth provider
+   * Sign in with OAuth provider (WEB ONLY)
+   * 
+   * For native apps, use signInWithGoogleNativeSDK() directly from google-native-sdk.ts
+   * This facade is ONLY for web OAuth redirect flow
    */
   async signInWithOAuth(provider: 'google' | 'github' | 'apple', redirectTo?: string) {
     const supabase = createBrowserClient()
     
-    // Check if we're on ACTUAL native platform (not web in dev mode)
-    const Capacitor = (window as any).Capacitor
-    const isNative = Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform()
+    console.log('[Auth Facade] Starting WEB OAuth redirect flow for', provider)
     
-    if (isNative && provider === 'google') {
-      // On native iOS, use Google Native SDK (already configured)
-      // This handles the native OAuth flow properly without browser redirects
-      console.log('[Auth] Using Google Native SDK for native OAuth...')
-      
-      try {
-        const { signInWithGoogleNativeSDK } = await import('@/lib/auth/google-native-sdk')
-        const user = await signInWithGoogleNativeSDK()
-        
-        if (!user) {
-          // User cancelled - return null, don't fall through
-          return { data: null, error: { message: 'User cancelled' } }
-        }
-        
-        console.log('[Auth] ✅ Authenticated with Google Native SDK:', user.email)
-        
-        // User is already authenticated with Supabase by the helper
-        // Just return success
-        return { data: { user }, error: null }
-      } catch (error: any) {
-        console.error('[Auth] Google Native OAuth error:', error)
-        // Fall through to web flow if native fails
-      }
-    }
-    
-    // For web, use normal redirect flow
+    // Simple web OAuth redirect - no native detection, no conditionals
     return supabase.auth.signInWithOAuth({
       provider,
       options: {
