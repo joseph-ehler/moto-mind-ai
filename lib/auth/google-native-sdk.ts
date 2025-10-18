@@ -48,26 +48,42 @@ export async function signInWithGoogleNativeSDK() {
     })
     
     // Exchange Google ID token for NextAuth session
+    const payload = {
+      idToken: result.authentication?.idToken,
+      accessToken: result.authentication?.accessToken,
+      email: result.email,
+      name: result.name || result.givenName,
+      imageUrl: result.imageUrl,
+      googleId: result.id,
+      serverAuthCode: result.serverAuthCode
+    }
+    
+    console.log('[Google Native] 📤 Sending to backend:', {
+      email: payload.email,
+      hasIdToken: !!payload.idToken,
+      hasServerAuthCode: !!payload.serverAuthCode
+    })
+    
     const response = await fetch('/api/auth/google-native', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        idToken: result.authentication.idToken,
-        accessToken: result.authentication.accessToken,
-        email: result.email,
-        name: result.name || result.givenName,
-        imageUrl: result.imageUrl,
-        googleId: result.id
-      })
+      body: JSON.stringify(payload)
     })
     
     if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.message || 'Failed to authenticate with backend')
+      const errorText = await response.text()
+      console.error('[Google Native] ❌ Backend error:', errorText)
+      let error
+      try {
+        error = JSON.parse(errorText)
+      } catch {
+        error = { message: errorText }
+      }
+      throw new Error(error.message || error.error || 'Failed to authenticate with backend')
     }
     
     const session = await response.json()
-    console.log('[Google Native] ✅ Session created')
+    console.log('[Google Native] ✅ Session created:', session)
     
     // Navigate to track page
     window.location.href = '/track'
