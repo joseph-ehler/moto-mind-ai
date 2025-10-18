@@ -7,8 +7,6 @@
  * Uses: MotoMind design system + shadcn/ui
  */
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/browser-client'
 import Link from 'next/link'
 import { UserMenu } from '@/components/layout/UserMenu'
 
