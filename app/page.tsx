@@ -81,25 +81,24 @@ export default function Home() {
               setIsSigningIn(true)
               try {
                 if (isNative) {
-                  try {
-                    // Try native Google SDK first
-                    const user = await signInWithGoogleNativeSDK()
+                  // NATIVE APP: Use native SDK ONLY
+                  // If this fails, we show an error - NO browser fallback
+                  const user = await signInWithGoogleNativeSDK()
+                  
+                  if (user) {
+                    console.log('[Auth] Native auth succeeded!')
+                    console.log('[Auth] User:', user)
                     
-                    if (user) {
-                      console.log('[Auth] Native auth succeeded, navigating to /track')
-                      // Use Next.js router - stays in app
-                      router.push('/track')
-                    }
-                  } catch (nativeError: any) {
-                    console.warn('[Auth] Native SDK failed, falling back to web OAuth:', nativeError)
-                    
-                    // Fallback to web OAuth (will open in-app browser)
-                    // After auth completes, useAuth hook will detect user and navigate
-                    await signInWithGoogle()
-                    // Don't navigate here - useAuth effect will handle it
+                    // TODO: We got user data but NO Supabase session yet
+                    // For now, just show that it worked
+                    alert(`Signed in as ${user.email}!\n\nNext: We need to create a Supabase session.`)
+                    setIsSigningIn(false)
+                  } else {
+                    // User cancelled
+                    setIsSigningIn(false)
                   }
                 } else {
-                  // Use web OAuth via god-tier facade
+                  // WEB: Use web OAuth
                   await signInWithGoogle('/track')
                 }
               } catch (error) {
