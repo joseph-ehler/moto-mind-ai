@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui'
 import { Car, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/browser-client'
-import { isNativeApp } from '@/lib/auth/google-native-sdk'
+import { isNativeApp, signInWithGoogleNativeSDK, initializeGoogleAuth } from '@/lib/auth/google-native-sdk'
 
 export default function Home() {
   const router = useRouter()
@@ -36,9 +36,13 @@ export default function Home() {
     return () => subscription.unsubscribe()
   }, [router, supabase])
 
-  // Detect native app
+  // Detect native app and initialize Google Auth
   useEffect(() => {
-    setIsNative(isNativeApp())
+    const native = isNativeApp()
+    setIsNative(native)
+    if (native) {
+      initializeGoogleAuth()
+    }
   }, [])
 
   if (isLoading) {
@@ -91,13 +95,19 @@ export default function Home() {
             onClick={async () => {
               setIsLoading(true)
               try {
-                const { error } = await supabase.auth.signInWithOAuth({
-                  provider: 'google',
-                  options: {
-                    redirectTo: `${window.location.origin}/track`
-                  }
-                })
-                if (error) throw error
+                if (isNative) {
+                  // Use native Google SDK
+                  await signInWithGoogleNativeSDK()
+                } else {
+                  // Use web OAuth
+                  const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                      redirectTo: `${window.location.origin}/track`
+                    }
+                  })
+                  if (error) throw error
+                }
               } catch (error) {
                 console.error('Sign-in error:', error)
                 alert('Failed to sign in. Please try again.')
