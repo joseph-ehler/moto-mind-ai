@@ -97,6 +97,8 @@ export const auth = {
       if (error) throw error
       if (!data.url) throw new Error('No OAuth URL returned')
       
+      console.log('[Auth] Opening OAuth URL:', data.url)
+      
       // Open in Safari View Controller (in-app browser)
       await Browser.open({
         url: data.url,
