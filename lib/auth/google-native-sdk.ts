@@ -18,7 +18,7 @@ export async function initializeGoogleAuth() {
   
   try {
     await GoogleAuth.initialize({
-      clientId: '642890697588-tpd1g2uduf51qmdkkdrue565sq40vf4s.apps.googleusercontent.com',
+      clientId: '642890697588-ecojj9mtif8j4n1gu7jri95a681ghgca.apps.googleusercontent.com', // iOS client ID
       scopes: ['profile', 'email'],
       grantOfflineAccess: true
     })
