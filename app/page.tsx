@@ -80,22 +80,10 @@ export default function Home() {
             onClick={async () => {
               setIsSigningIn(true)
               try {
-                if (isNative) {
-                  // NATIVE: Use native SDK (URL scheme is now FIXED!)
-                  console.log('[Auth] 🚀 Using NATIVE SDK...')
-                  const user = await signInWithGoogleNativeSDK()
-                  
-                  if (user) {
-                    console.log('[Auth] ✅ Native sign-in complete!', user.email)
-                    router.push('/track')
-                  } else {
-                    setIsSigningIn(false)
-                  }
-                } else {
-                  // WEB: Use web OAuth
-                  console.log('[Auth] Using web OAuth...')
-                  await signInWithGoogle('/track')
-                }
+                // Use web OAuth for everything - PROVE IT WORKS
+                console.log('[Auth] Starting web OAuth...')
+                console.log('[Auth] Browser will open, then CLOSE after redirect')
+                await signInWithGoogle('/track')
               } catch (error: any) {
                 console.error('[Auth] ❌ Sign-in error:', error.message)
                 alert(`Sign-in failed: ${error.message}`)
