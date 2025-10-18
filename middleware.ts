@@ -2,9 +2,9 @@
  * Middleware
  * 
  * Handles:
- * - Session tracking for authenticated users
- * - Device and location tracking
- * - Last active timestamp updates
+ * - Route protection (redirects unauthenticated users)
+ * - Device ID management (persistent across sessions)
+ * - Auth session validation via Supabase
  */
 
 import { NextResponse } from 'next/server'
@@ -90,29 +90,9 @@ export async function middleware(request: NextRequest) {
     console.log('[Middleware] 🆕 Generated new device_id:', deviceId)
   }
 
-  // Track session for authenticated users
-  if (isAuthenticated && session?.user?.email) {
-    try {
-      const { trackSession } = await import('@/lib/auth/services/session-tracker')
-      
-      const userAgent = request.headers.get('user-agent') || ''
-      const ip = request.headers.get('x-forwarded-for') || 
-                 request.headers.get('x-real-ip') || 
-                 'unknown'
-      
-      trackSession(
-        session.user.email,
-        userAgent,
-        ip,
-        deviceId
-      ).catch(error => {
-        console.error('[Middleware] Session tracking failed:', error)
-      })
-    } catch (error) {
-      console.error('[Middleware] Session tracking error:', error)
-    }
-  }
-
+  // Session tracking handled by Supabase Auth automatically
+  // Device ID is already set above for all users
+  
   return response
 }
 

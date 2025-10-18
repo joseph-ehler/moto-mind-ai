@@ -24,9 +24,11 @@ export class NativeAuthAdapter {
     })
 
     if (error || !data.url) {
+      console.error('[Native Adapter] OAuth error:', error)
       throw new Error(error?.message || 'Failed to get OAuth URL')
     }
 
+    console.log('[Native Adapter] OAuth URL generated:', data.url)
     console.log('[Native Adapter] Opening browser...')
     
     // Open in system browser
@@ -48,31 +50,56 @@ export class NativeAuthAdapter {
       // Close the browser
       await Browser.close().catch(() => {})
       
-      // motomind://auth/callback#access_token=...&refresh_token=...
       if (event.url.includes('auth/callback')) {
         try {
           const url = new URL(event.url)
-          const hashParams = new URLSearchParams(url.hash.substring(1))
+          const supabase = getSupabaseClient()
           
+          // Check for authorization code (PKCE flow)
+          const code = url.searchParams.get('code')
+          
+          if (code) {
+            console.log('[Native Adapter] Exchanging code for session...')
+            
+            // Exchange code for session
+            const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+            
+            if (error) {
+              console.error('[Native Adapter] Code exchange failed:', error)
+              throw error
+            }
+            
+            if (!data.session) {
+              throw new Error('No session returned from code exchange')
+            }
+            
+            console.log('[Native Adapter] ✅ Success!')
+            onSuccess()
+            return
+          }
+          
+          // Fallback: Check for tokens in hash (implicit flow - deprecated but kept for compatibility)
+          const hashParams = new URLSearchParams(url.hash.substring(1))
           const accessToken = hashParams.get('access_token')
           const refreshToken = hashParams.get('refresh_token')
           
-          if (!accessToken || !refreshToken) {
-            throw new Error('Missing tokens in callback')
+          if (accessToken && refreshToken) {
+            console.log('[Native Adapter] Setting session from tokens...')
+            
+            const { error } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            })
+
+            if (error) throw error
+            
+            console.log('[Native Adapter] ✅ Success!')
+            onSuccess()
+            return
           }
-
-          console.log('[Native Adapter] Setting session...')
           
-          const supabase = getSupabaseClient()
-          const { error } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          })
-
-          if (error) throw error
-          
-          console.log('[Native Adapter] ✅ Success!')
-          onSuccess()
+          // No code or tokens found
+          throw new Error('No authorization code or tokens found in callback URL')
         } catch (error) {
           console.error('[Native Adapter] ❌ Error:', error)
           onError(error as Error)

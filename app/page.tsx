@@ -3,7 +3,7 @@
 /**
  * Root Page
  * 
- * Redirects to login page
+ * Redirects to sign-in page
  */
 
 import { useEffect } from 'react'
@@ -13,7 +13,7 @@ export default function RootPage() {
   const router = useRouter()
 
   useEffect(() => {
-    router.replace('/login')
+    router.replace('/signin')
   }, [router])
 
   return (
