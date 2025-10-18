@@ -81,20 +81,16 @@ export default function Home() {
               setIsSigningIn(true)
               try {
                 if (isNative) {
-                  // NATIVE APP: Use native SDK ONLY
-                  // If this fails, we show an error - NO browser fallback
+                  // NATIVE APP: Use native SDK with backend exchange
                   const user = await signInWithGoogleNativeSDK()
                   
                   if (user) {
-                    console.log('[Auth] Native auth succeeded!')
-                    console.log('[Auth] User:', user)
-                    
-                    // TODO: We got user data but NO Supabase session yet
-                    // For now, just show that it worked
-                    alert(`Signed in as ${user.email}!\n\nNext: We need to create a Supabase session.`)
-                    setIsSigningIn(false)
+                    console.log('[Auth] ✅ Native auth complete! Navigating to /track')
+                    // Navigate to track page - user is now authenticated
+                    router.push('/track')
                   } else {
                     // User cancelled
+                    console.log('[Auth] User cancelled sign-in')
                     setIsSigningIn(false)
                   }
                 } else {
