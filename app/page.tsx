@@ -80,8 +80,16 @@ export default function Home() {
               setIsSigningIn(true)
               try {
                 if (isNative) {
-                  // Use native Google SDK
-                  await signInWithGoogleNativeSDK()
+                  try {
+                    // Try native Google SDK first
+                    await signInWithGoogleNativeSDK()
+                  } catch (nativeError: any) {
+                    console.warn('[Auth] Native SDK failed, falling back to web OAuth:', nativeError)
+                    
+                    // Fallback to web OAuth (will open in-app browser)
+                    // This always works but is less elegant
+                    await signInWithGoogle('/track')
+                  }
                 } else {
                   // Use web OAuth via god-tier facade
                   await signInWithGoogle('/track')
