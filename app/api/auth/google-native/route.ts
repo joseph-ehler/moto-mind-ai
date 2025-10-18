@@ -70,34 +70,45 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create user' }, { status: 500 })
     }
 
-    // Generate session for this user
-    console.log('[Native Auth API] 🔑 Generating session...')
-    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
+    // Generate a magic link which includes access/refresh tokens
+    console.log('[Native Auth API] 🔑 Generating auth link...')
+    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
       email: user.email!,
     })
     
-    if (sessionError) {
-      console.error('[Native Auth API] ❌ Session error:', sessionError)
-      return NextResponse.json({ error: sessionError.message }, { status: 400 })
+    if (linkError || !linkData) {
+      console.error('[Native Auth API] ❌ Link generation error:', linkError)
+      return NextResponse.json({ error: linkError?.message || 'Failed to generate link' }, { status: 400 })
     }
 
-    console.log('[Native Auth API] ✅ Session created for:', user.email)
-
-    // Extract tokens from the magic link response
-    // The properties object contains the session tokens
-    const properties = sessionData.properties
+    console.log('[Native Auth API] ✅ Auth link generated for:', user.email)
+    
+    // Extract the hash params from the verification URL
+    // The URL contains access_token and refresh_token as hash params
+    const url = new URL(linkData.properties.action_link)
+    const hashParams = new URLSearchParams(url.hash.substring(1)) // Remove the # and parse
+    
+    const accessToken = hashParams.get('access_token')
+    const refreshToken = hashParams.get('refresh_token')
+    
+    if (!accessToken || !refreshToken) {
+      console.error('[Native Auth API] ❌ No tokens in link')
+      return NextResponse.json({ error: 'Failed to extract tokens' }, { status: 500 })
+    }
+    
+    console.log('[Native Auth API] ✅ Session tokens extracted!')
     
     // Return the session tokens
     return NextResponse.json({
       session: {
-        access_token: properties.access_token,
-        refresh_token: properties.refresh_token,
+        access_token: accessToken,
+        refresh_token: refreshToken,
       },
       user: {
         id: user.id,
         email: user.email,
-        name: user.user_metadata?.name,
+        name: user.user_metadata?.name || name,
         avatar: user.user_metadata?.avatar_url,
       }
     })

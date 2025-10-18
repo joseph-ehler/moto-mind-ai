@@ -50,25 +50,20 @@ export async function signInWithGoogleNativeSDK() {
       hasAccessToken: !!result.authentication?.accessToken
     })
     
-    const idToken = result.authentication?.idToken
-    const serverAuthCode = result.serverAuthCode
+    console.log('[Google Native] 📤 Sending user data to backend...')
     
-    if (!idToken) {
-      throw new Error('No ID token received from Google')
-    }
-    
-    console.log('[Google Native] 📤 Exchanging token with backend...')
-    
-    // Exchange with our backend endpoint
-    // Backend has service role and can handle token exchange properly
+    // Send user data to backend to create/get session
+    // Avoid sending tokens to avoid nonce issues
     const response = await fetch('/api/auth/google-native', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        idToken,
-        serverAuthCode,
+        email: result.email,
+        name: result.name || result.givenName,
+        id: result.id,
+        avatar: result.imageUrl,
       }),
     })
     
