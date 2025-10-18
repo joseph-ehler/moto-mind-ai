@@ -88,35 +88,22 @@ export const auth = {
       console.log('[Auth] Using Google Native SDK for native OAuth...')
       
       try {
-        // Use the native Google Sign In
-        const GoogleAuth = (window as any).GoogleAuth
-        if (!GoogleAuth) {
-          console.error('[Auth] GoogleAuth not available, falling back to web flow')
-          // Fall through to web flow
-        } else {
-          const result = await GoogleAuth.signIn()
-          console.log('[Auth] ✅ Google Native sign in successful:', result.email)
-          
-          // Now authenticate with Supabase using the Google ID token
-          const { createClient } = await import('@/lib/supabase/browser-client')
-          const supabase = createClient()
-          
-          const { data, error } = await supabase.auth.signInWithIdToken({
-            provider: 'google',
-            token: result.authentication.idToken,
-          })
-          
-          if (error) {
-            console.error('[Auth] Supabase sign in error:', error)
-            throw error
-          }
-          
-          console.log('[Auth] ✅ Authenticated with Supabase:', data.user?.email)
-          return { data, error: null }
+        const { signInWithGoogleNativeSDK } = await import('@/lib/auth/google-native-sdk')
+        const user = await signInWithGoogleNativeSDK()
+        
+        if (!user) {
+          // User cancelled - return null, don't fall through
+          return { data: null, error: { message: 'User cancelled' } }
         }
+        
+        console.log('[Auth] ✅ Authenticated with Google Native SDK:', user.email)
+        
+        // User is already authenticated with Supabase by the helper
+        // Just return success
+        return { data: { user }, error: null }
       } catch (error: any) {
         console.error('[Auth] Google Native OAuth error:', error)
-        // Fall through to web flow
+        // Fall through to web flow if native fails
       }
     }
     
