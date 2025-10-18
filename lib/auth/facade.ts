@@ -77,6 +77,20 @@ export const auth = {
    */
   async signInWithOAuth(provider: 'google' | 'github' | 'apple', redirectTo?: string) {
     const supabase = createBrowserClient()
+    
+    // Check if we're on native platform
+    const isNative = typeof (window as any).Capacitor !== 'undefined'
+    
+    // For native apps, skip redirectTo to avoid opening Safari
+    // The app will handle navigation after auth succeeds
+    if (isNative) {
+      return supabase.auth.signInWithOAuth({
+        provider,
+        // No redirectTo on native - handle navigation in app
+      })
+    }
+    
+    // For web, use normal redirect flow
     return supabase.auth.signInWithOAuth({
       provider,
       options: {

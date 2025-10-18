@@ -73,9 +73,8 @@ export async function signInWithGoogleNativeSDK() {
     
     console.log('[Google Native] ✅ Session created:', data.user?.email)
     
-    // Navigate to track page
-    window.location.href = '/track'
-    
+    // Return success - let the calling code handle navigation
+    // DO NOT use window.location.href - it opens Safari on native!
     return data.user
   } catch (error: any) {
     console.error('[Google Native] ❌ Sign-in failed:', error)

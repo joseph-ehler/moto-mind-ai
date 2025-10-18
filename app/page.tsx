@@ -15,10 +15,11 @@ export default function Home() {
 
   // Redirect if already authenticated
   useEffect(() => {
-    if (user) {
+    if (user && !isLoading) {
+      console.log('[Auth] User authenticated, navigating to /track')
       router.push('/track')
     }
-  }, [user, router])
+  }, [user, isLoading, router])
 
   // Detect native app and initialize Google Auth
   useEffect(() => {
@@ -82,13 +83,20 @@ export default function Home() {
                 if (isNative) {
                   try {
                     // Try native Google SDK first
-                    await signInWithGoogleNativeSDK()
+                    const user = await signInWithGoogleNativeSDK()
+                    
+                    if (user) {
+                      console.log('[Auth] Native auth succeeded, navigating to /track')
+                      // Use Next.js router - stays in app
+                      router.push('/track')
+                    }
                   } catch (nativeError: any) {
                     console.warn('[Auth] Native SDK failed, falling back to web OAuth:', nativeError)
                     
                     // Fallback to web OAuth (will open in-app browser)
-                    // This always works but is less elegant
-                    await signInWithGoogle('/track')
+                    // After auth completes, useAuth hook will detect user and navigate
+                    await signInWithGoogle()
+                    // Don't navigate here - useAuth effect will handle it
                   }
                 } else {
                   // Use web OAuth via god-tier facade
