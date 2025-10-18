@@ -2,15 +2,26 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui'
-import { Car } from 'lucide-react'
-import { signInWithGoogleNative, isNativeApp } from '@/lib/auth/native-oauth'
+import { Car, Loader2 } from 'lucide-react'
+import { signInWithGoogleNativeSDK, isNativeApp, initializeGoogleAuth } from '@/lib/auth/google-native-sdk'
 
 export default function Home() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const [isNative, setIsNative] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Initialize Google Auth for native
+  useEffect(() => {
+    const native = isNativeApp()
+    setIsNative(native)
+    if (native) {
+      initializeGoogleAuth()
+    }
+  }, [])
 
   // Redirect to dashboard if already authenticated
   useEffect(() => {
@@ -69,15 +80,27 @@ export default function Home() {
           <Button
             size="lg"
             className="w-full h-14 text-lg font-semibold"
+            disabled={isLoading}
             onClick={async () => {
-              if (isNativeApp()) {
-                await signInWithGoogleNative()
-              } else {
-                signIn('google', { callbackUrl: '/track' })
+              setIsLoading(true)
+              try {
+                if (isNative) {
+                  await signInWithGoogleNativeSDK()
+                } else {
+                  signIn('google', { callbackUrl: '/track' })
+                }
+              } catch (error) {
+                console.error('Sign-in error:', error)
+                alert('Failed to sign in. Please try again.')
+              } finally {
+                setIsLoading(false)
               }
             }}
           >
-            <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24">
+            {isLoading ? (
+              <Loader2 className="w-6 h-6 mr-3 animate-spin" />
+            ) : (
+              <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -95,7 +118,8 @@ export default function Home() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            Continue with Google
+            )}
+            {isLoading ? 'Signing in...' : 'Continue with Google'}
           </Button>
 
           <Button
