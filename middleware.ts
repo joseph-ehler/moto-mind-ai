@@ -9,16 +9,34 @@
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { getToken } from 'next-auth/jwt'
+import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
-  const token = await getToken({ 
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET
-  })
+  const response = NextResponse.next()
+  
+  // Create Supabase client
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value
+        },
+        set(name: string, value: string, options: any) {
+          response.cookies.set({ name, value, ...options })
+        },
+        remove(name: string, options: any) {
+          response.cookies.set({ name, value: '', ...options })
+        },
+      },
+    }
+  )
 
+  const { data: { session } } = await supabase.auth.getSession()
+  
   const { pathname } = request.nextUrl
-  const isAuthenticated = !!token
+  const isAuthenticated = !!session
 
   // Define public routes that don't require authentication
   const publicRoutes = [
@@ -57,9 +75,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
-  // Create response for session tracking
-  const response = NextResponse.next()
-
   // Get or create persistent device ID (for ALL requests)
   let deviceId = request.cookies.get('device_id')?.value
   
@@ -76,7 +91,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Track session for authenticated users
-  if (isAuthenticated && token.email) {
+  if (isAuthenticated && session?.user?.email) {
     try {
       const { trackSession } = await import('@/lib/auth/services/session-tracker')
       
@@ -86,7 +101,7 @@ export async function middleware(request: NextRequest) {
                  'unknown'
       
       trackSession(
-        token.email as string,
+        session.user.email,
         userAgent,
         ip,
         deviceId

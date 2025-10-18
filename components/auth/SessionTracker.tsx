@@ -8,17 +8,20 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { useSession } from 'next-auth/react'
+import { createClient } from '@/lib/supabase/browser-client'
 import { saveLastLoginMethod } from '@/lib/auth/hooks/useLastLogin'
 import { saveLastUserEmail } from '@/lib/auth/hooks/useLastUser'
 
 export function SessionTracker() {
-  const { data: session, status } = useSession()
+  const supabase = createClient()
   const hasTracked = useRef(false)
 
   useEffect(() => {
-    // Only track once per session
-    if (status === 'authenticated' && session?.user?.email && !hasTracked.current) {
+    const trackSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      // Only track once per session
+      if (session?.user?.email && !hasTracked.current) {
       console.log('[SessionTracker] New session detected:', session.user.email)
       
       // Save user email
@@ -37,15 +40,22 @@ export function SessionTracker() {
         saveLastLoginMethod(session.user.email, 'google')
       }
       
-      hasTracked.current = true
-      console.log('[SessionTracker] Saved session info to localStorage')
+        hasTracked.current = true
+        console.log('[SessionTracker] Saved session info to localStorage')
+      }
     }
     
-    // Reset when user signs out
-    if (status === 'unauthenticated') {
-      hasTracked.current = false
-    }
-  }, [status, session])
+    trackSession()
+    
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        hasTracked.current = false
+      }
+    })
+    
+    return () => subscription.unsubscribe()
+  }, [supabase])
 
   // This component renders nothing
   return null
