@@ -40,9 +40,10 @@ export async function signInWithGoogleNativeSDK() {
     await initializeGoogleAuth()
     
     // Show native Google sign-in UI
+    // DON'T pass serverClientId here - it overrides iOS client and forces browser!
+    // The iOS client ID from initialize() will be used for native picker
     const result = await GoogleAuth.signIn({
-      scopes: ['profile', 'email'],
-      serverClientId: '642890697588-tpd1g2uduf51qmdkkdrue565sq40vf4s.apps.googleusercontent.com'
+      scopes: ['profile', 'email']
     })
     
     console.log('[Google Native] ✅ Sign-in successful:', {
