@@ -36,9 +36,10 @@ export async function signInWithGoogleNativeSDK() {
     // Ensure initialized
     await initializeGoogleAuth()
     
-    // Show native Google sign-in UI with scopes
+    // Show native Google sign-in UI with scopes and server client ID
     const result = await GoogleAuth.signIn({
-      scopes: ['profile', 'email']
+      scopes: ['profile', 'email'],
+      serverClientId: '642890697588-tpd1g2uduf51qmdkkdrue565sq40vf4s.apps.googleusercontent.com'
     })
     
     console.log('[Google Native] ✅ Sign-in successful:', {
