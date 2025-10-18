@@ -1,81 +1,54 @@
 /**
  * useAuth Hook
  * 
- * 🎯 THE HOOK EVERYONE USES
- * 
- * Simple, clean API for authentication in components.
- * 
- * Usage:
- *   const { user, signOut, isLoading } = useAuth()
+ * Auth state ONLY - NO platform detection, NO routing logic
+ * Just manages Supabase session state
  */
 
 'use client'
 
-import { useState, useEffect } from 'react'
-import { auth, type User } from '@/lib/auth/facade'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { getSupabaseClient } from '@/lib/auth/supabase'
+import type { User, Session } from '@supabase/supabase-js'
 
-export interface UseAuthReturn {
-  /** Current authenticated user (null if not authenticated) */
-  user: User | null
-  
-  /** Loading state */
-  isLoading: boolean
-  
-  /** Is user authenticated? */
-  isAuthenticated: boolean
-  
-  /** Sign out current user */
-  signOut: typeof auth.signOut
-  
-  /** Sign in with Google */
-  signInWithGoogle: typeof auth.signInWithGoogle
-}
-
-/**
- * Hook to access current authentication state
- * 
- * @example
- * ```tsx
- * function MyComponent() {
- *   const { user, isLoading, signOut } = useAuth()
- *   
- *   if (isLoading) return <Loading />
- *   if (!user) return <SignIn />
- *   
- *   return <div>Hello {user.email}</div>
- * }
- * ```
- */
-export function useAuth(): UseAuthReturn {
+export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
+  const [session, setSession] = useState<Session | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
+  const supabase = getSupabaseClient()
 
   useEffect(() => {
     // Get initial session
-    auth.getUser().then((currentUser) => {
-      setUser(currentUser)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setUser(session?.user ?? null)
       setIsLoading(false)
     })
 
     // Listen for auth changes
-    const unsubscribe = auth.onAuthChange((user: User | null) => {
-      setUser(user)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+      setUser(session?.user ?? null)
+      setIsLoading(false)
     })
 
-    // NOTE: OAuth callback handling removed - not needed with separate flows
-    // - Web: Uses Supabase OAuth redirect (handled by /auth/callback/page.tsx)
-    // - Native: Uses Google Native SDK (no callback URL needed)
+    return () => subscription.unsubscribe()
+  }, [supabase])
 
-    return () => {
-      unsubscribe()
-    }
-  }, [])
+  const signOut = async () => {
+    await supabase.auth.signOut()
+    router.push('/')
+  }
 
   return {
     user,
+    session,
     isLoading,
     isAuthenticated: !!user,
-    signOut: auth.signOut,
-    signInWithGoogle: auth.signInWithGoogle
+    signOut,
   }
 }

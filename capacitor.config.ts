@@ -20,14 +20,8 @@ const config: CapacitorConfig = {
       launchShowDuration: 0
     },
     Browser: {
-      // Use in-app browser for OAuth
+      // For OAuth flows on native
       androidBrowserToolbarColor: '#000000'
-    },
-    GoogleAuth: {
-      scopes: ['profile', 'email'],
-      serverClientId: '642890697588-tpd1g2uduf51qmdkkdrue565sq40vf4s.apps.googleusercontent.com',
-      clientId: '642890697588-ecojj9mtif8j4n1gu7jri95a681ghgca.apps.googleusercontent.com',
-      forceCodeForRefreshToken: true
     }
   }
 };

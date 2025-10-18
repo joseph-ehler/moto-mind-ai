@@ -1,133 +1,47 @@
 'use client'
 
 /**
- * Web Login Page
+ * Loading & Router Page
  * 
- * Pure web OAuth - NO native SDK, NO Capacitor detection
- * Simple Google OAuth redirect flow
+ * ONLY job: Detect platform and route to correct auth page
+ * NO auth logic here - just routing!
  */
 
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui'
-import { Car, Loader2 } from 'lucide-react'
-import { useAuth } from '@/hooks/useAuth'
 
-export default function Home() {
+export default function LoadingPage() {
   const router = useRouter()
-  const { user, isLoading, signInWithGoogle } = useAuth()
-  const [isSigningIn, setIsSigningIn] = useState(false)
 
-  // Redirect if already authenticated
   useEffect(() => {
-    if (user && !isLoading) {
-      console.log('[Web Login] User authenticated, navigating to /track')
-      router.push('/track')
-    }
-  }, [user, isLoading, router])
-
-  // Show loading state while checking auth OR if user is authenticated (about to redirect)
-  if (isLoading || user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
-          {user && <p className="mt-4 text-muted-foreground">Redirecting...</p>}
-        </div>
-      </div>
-    )
-  }
-
-  // Only show login UI if NOT authenticated
-  return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-primary/5 to-background">
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col justify-center items-center px-6 py-12">
+    const route = async () => {
+      try {
+        // Dynamic import to avoid SSR issues
+        const { Capacitor } = await import('@capacitor/core')
         
-        {/* Illustration/Icon */}
-        <div className="mb-12">
-          <div className="relative">
-            {/* Decorative circles */}
-            <div className="absolute -top-8 -left-8 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
-            <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl" />
-            
-            {/* Main icon */}
-            <div className="relative bg-primary/10 p-12 rounded-full">
-              <Car className="h-24 w-24 text-primary" />
-            </div>
-          </div>
-        </div>
+        if (Capacitor.isNativePlatform()) {
+          console.log('[Router] 📱 Native platform detected → /native/auth')
+          router.replace('/native/auth')
+        } else {
+          console.log('[Router] 🌐 Web platform detected → /auth/web')
+          router.replace('/auth/web')
+        }
+      } catch (error) {
+        // Fallback to web if Capacitor import fails
+        console.log('[Router] ⚠️  Capacitor not available → /auth/web')
+        router.replace('/auth/web')
+      }
+    }
 
-        {/* Brand & Tagline */}
-        <div className="text-center mb-16 max-w-sm">
-          <h1 className="text-4xl font-bold mb-4 text-foreground">
-            MotoMind
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Track your trips automatically.
-            <br />
-            Never forget where you parked.
-          </p>
-        </div>
+    route()
+  }, [router])
 
-        {/* Auth Buttons */}
-        <div className="w-full max-w-sm space-y-4">
-          <Button
-            size="lg"
-            className="w-full h-14 text-lg font-semibold"
-            disabled={isSigningIn}
-            onClick={async () => {
-              setIsSigningIn(true)
-              try {
-                console.log('[Web Login] Starting Google OAuth...')
-                // Simple web OAuth redirect - will redirect to Google and back
-                await signInWithGoogle('/track')
-              } catch (error: any) {
-                console.error('[Web Login] Sign-in error:', error.message)
-                alert(`Sign-in failed: ${error.message}`)
-                setIsSigningIn(false)
-              }
-            }}
-          >
-            {isSigningIn ? (
-              <Loader2 className="w-6 h-6 mr-3 animate-spin" />
-            ) : (
-              <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24">
-              <path
-                fill="currentColor"
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-              />
-              <path
-                fill="currentColor"
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-              />
-              <path
-                fill="currentColor"
-                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-              />
-              <path
-                fill="currentColor"
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-              />
-            </svg>
-            )}
-            {isSigningIn ? 'Signing in...' : 'Continue with Google'}
-          </Button>
-
-          <Button
-            size="lg"
-            variant="outline"
-            className="w-full h-14 text-lg font-semibold"
-            onClick={() => router.push('/auth/signin')}
-          >
-            Sign in another way
-          </Button>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="pb-8 text-center text-sm text-muted-foreground px-6">
-        <p>By continuing, you agree to our Terms & Privacy Policy</p>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mx-auto mb-4"></div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">MotoMind</h2>
+        <p className="text-muted-foreground">Loading...</p>
       </div>
     </div>
   )
