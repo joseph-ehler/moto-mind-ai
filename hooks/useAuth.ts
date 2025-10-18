@@ -77,23 +77,39 @@ export function useAuth(): UseAuthReturn {
               const { Browser } = await import('@capacitor/browser')
               await Browser.close()
               
-              // Extract the OAuth code from the URL
-              const url = new URL(event.url)
-              const code = url.searchParams.get('code')
+              // Parse hash fragment (tokens are in #access_token=...&refresh_token=...)
+              const hashFragment = event.url.split('#')[1]
+              if (!hashFragment) {
+                console.error('[Auth] No hash fragment in callback URL')
+                return
+              }
               
-              if (code) {
-                // Exchange the code with Supabase
-                console.log('[Auth] Exchanging OAuth code...')
+              // Parse the hash fragment as URL params
+              const params = new URLSearchParams(hashFragment)
+              const accessToken = params.get('access_token')
+              const refreshToken = params.get('refresh_token')
+              
+              if (accessToken && refreshToken) {
+                console.log('[Auth] ✅ Got tokens from callback, setting session...')
                 const { createClient } = await import('@/lib/supabase/browser-client')
                 const supabase = createClient()
                 
-                const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+                // Set the session with the tokens
+                const { data, error } = await supabase.auth.setSession({
+                  access_token: accessToken,
+                  refresh_token: refreshToken,
+                })
                 
                 if (error) {
-                  console.error('[Auth] Exchange error:', error)
+                  console.error('[Auth] ❌ Set session error:', error)
                 } else {
-                  console.log('[Auth] OAuth complete!', data.user?.email)
+                  console.log('[Auth] ✅ Session set! User:', data.user?.email)
                   setUser(data.user as any)
+                  
+                  // Navigate to track page
+                  if (typeof window !== 'undefined') {
+                    window.location.href = '/track'
+                  }
                 }
               }
             } catch (error) {
