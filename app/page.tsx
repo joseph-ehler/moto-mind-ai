@@ -5,10 +5,12 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui'
 import { Car, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
+import { isNativeApp, signInWithGoogleNativeSDK, initializeGoogleAuth } from '@/lib/auth/google-native-sdk'
 
 export default function Home() {
   const router = useRouter()
   const { user, isLoading, signInWithGoogle } = useAuth()
+  const [isNative, setIsNative] = useState(false)
   const [isSigningIn, setIsSigningIn] = useState(false)
 
   // Redirect if already authenticated
@@ -18,6 +20,15 @@ export default function Home() {
       router.push('/track')
     }
   }, [user, isLoading, router])
+
+  // Detect native app and initialize
+  useEffect(() => {
+    const native = isNativeApp()
+    setIsNative(native)
+    if (native) {
+      initializeGoogleAuth()
+    }
+  }, [])
 
   if (isLoading) {
     return (
@@ -69,12 +80,22 @@ export default function Home() {
             onClick={async () => {
               setIsSigningIn(true)
               try {
-                // Use web OAuth for BOTH platforms
-                // Native: Opens Safari View Controller (in-app browser)
-                // Web: Opens browser
-                // BOTH auto-redirect back and work reliably!
-                console.log('[Auth] Starting OAuth sign-in...')
-                await signInWithGoogle('/track')
+                if (isNative) {
+                  // NATIVE: Use native SDK (URL scheme is now FIXED!)
+                  console.log('[Auth] 🚀 Using NATIVE SDK...')
+                  const user = await signInWithGoogleNativeSDK()
+                  
+                  if (user) {
+                    console.log('[Auth] ✅ Native sign-in complete!', user.email)
+                    router.push('/track')
+                  } else {
+                    setIsSigningIn(false)
+                  }
+                } else {
+                  // WEB: Use web OAuth
+                  console.log('[Auth] Using web OAuth...')
+                  await signInWithGoogle('/track')
+                }
               } catch (error: any) {
                 console.error('[Auth] ❌ Sign-in error:', error.message)
                 alert(`Sign-in failed: ${error.message}`)
