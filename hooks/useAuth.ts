@@ -51,19 +51,66 @@ export function useAuth(): UseAuthReturn {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial user
-    auth.getUser()
-      .then(setUser)
-      .catch(console.error)
-      .finally(() => setIsLoading(false))
-
-    // Listen for auth changes
-    const unsubscribe = auth.onAuthChange((newUser) => {
-      setUser(newUser)
+    // Get initial session
+    auth.getUser().then((currentUser) => {
+      setUser(currentUser)
       setIsLoading(false)
     })
 
-    return unsubscribe
+    // Listen for auth changes
+    const unsubscribe = auth.onAuthChange((user: User | null) => {
+      setUser(user)
+    })
+
+    // Handle OAuth callback on native apps
+    const handleOAuthCallback = async () => {
+      try {
+        const { App } = await import('@capacitor/app')
+        
+        App.addListener('appUrlOpen', async (event) => {
+          console.log('[Auth] App URL opened:', event.url)
+          
+          // Check if this is an OAuth callback
+          if (event.url.startsWith('motomind://auth/callback')) {
+            try {
+              // Close the browser
+              const { Browser } = await import('@capacitor/browser')
+              await Browser.close()
+              
+              // Extract the OAuth code from the URL
+              const url = new URL(event.url)
+              const code = url.searchParams.get('code')
+              
+              if (code) {
+                // Exchange the code with Supabase
+                console.log('[Auth] Exchanging OAuth code...')
+                const { createClient } = await import('@/lib/supabase/browser-client')
+                const supabase = createClient()
+                
+                const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+                
+                if (error) {
+                  console.error('[Auth] Exchange error:', error)
+                } else {
+                  console.log('[Auth] OAuth complete!', data.user?.email)
+                  setUser(data.user as any)
+                }
+              }
+            } catch (error) {
+              console.error('[Auth] OAuth callback error:', error)
+            }
+          }
+        })
+      } catch (error) {
+        // Not on native platform, ignore
+      }
+    }
+    
+    handleOAuthCallback()
+
+    return () => {
+      unsubscribe()
+    }
   }, [])
 
   return {

@@ -81,13 +81,30 @@ export const auth = {
     // Check if we're on native platform
     const isNative = typeof (window as any).Capacitor !== 'undefined'
     
-    // For native apps, skip redirectTo to avoid opening Safari
-    // The app will handle navigation after auth succeeds
     if (isNative) {
-      return supabase.auth.signInWithOAuth({
+      // On native, use Capacitor Browser plugin to open in Safari View Controller
+      const { Browser } = await import('@capacitor/browser')
+      
+      // Get the OAuth URL from Supabase
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
-        // No redirectTo on native - handle navigation in app
+        options: {
+          redirectTo: 'motomind://auth/callback',
+          skipBrowserRedirect: true, // Don't auto-redirect, we'll handle it
+        }
       })
+      
+      if (error) throw error
+      if (!data.url) throw new Error('No OAuth URL returned')
+      
+      // Open in Safari View Controller (in-app browser)
+      await Browser.open({
+        url: data.url,
+        presentationStyle: 'popover', // iOS style
+      })
+      
+      // Browser will close automatically when redirecting to motomind:// scheme
+      return { data, error: null }
     }
     
     // For web, use normal redirect flow
