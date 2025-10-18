@@ -47,48 +47,28 @@ export async function signInWithGoogleNativeSDK() {
       name: result.name || result.givenName
     })
     
-    // Exchange Google ID token for NextAuth session
-    const payload = {
-      idToken: result.authentication?.idToken,
-      accessToken: result.authentication?.accessToken,
-      email: result.email,
-      name: result.name || result.givenName,
-      imageUrl: result.imageUrl,
-      googleId: result.id,
-      serverAuthCode: result.serverAuthCode
-    }
+    // Exchange Google ID token with Supabase Auth
+    const { createClient } = await import('@/lib/supabase/browser-client')
+    const supabase = createClient()
     
-    console.log('[Google Native] 📤 Sending to backend:', {
-      email: payload.email,
-      hasIdToken: !!payload.idToken,
-      hasServerAuthCode: !!payload.serverAuthCode
+    console.log('[Google Native] 📤 Exchanging token with Supabase...')
+    
+    const { data, error } = await supabase.auth.signInWithIdToken({
+      provider: 'google',
+      token: result.authentication.idToken,
     })
     
-    const response = await fetch('/api/auth/google-native', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('[Google Native] ❌ Backend error:', errorText)
-      let error
-      try {
-        error = JSON.parse(errorText)
-      } catch {
-        error = { message: errorText }
-      }
-      throw new Error(error.message || error.error || 'Failed to authenticate with backend')
+    if (error) {
+      console.error('[Google Native] ❌ Supabase error:', error)
+      throw new Error(error.message || 'Failed to authenticate with Supabase')
     }
     
-    const session = await response.json()
-    console.log('[Google Native] ✅ Session created:', session)
+    console.log('[Google Native] ✅ Session created:', data.user?.email)
     
     // Navigate to track page
     window.location.href = '/track'
     
-    return session
+    return data.user
   } catch (error: any) {
     console.error('[Google Native] ❌ Sign-in failed:', error)
     
