@@ -45,56 +45,42 @@ export async function signInWithGoogleNativeSDK() {
     console.log('[Google Native] ✅ Sign-in successful:', {
       email: result.email,
       name: result.name || result.givenName,
-      hasServerAuthCode: !!result.serverAuthCode,
       hasIdToken: !!result.authentication?.idToken,
-      hasAccessToken: !!result.authentication?.accessToken
+      hasNonce: !!(result.authentication as any)?.nonce,
     })
     
-    console.log('[Google Native] 📤 Sending user data to backend...')
+    const idToken = result.authentication?.idToken
+    const nonce = (result.authentication as any)?.nonce // Get the nonce!
     
-    // Send user data to backend to create/get session
-    // Avoid sending tokens to avoid nonce issues
-    const response = await fetch('/api/auth/google-native', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: result.email,
-        name: result.name || result.givenName,
-        id: result.id,
-        avatar: result.imageUrl,
-      }),
-    })
-    
-    if (!response.ok) {
-      const error = await response.json()
-      console.error('[Google Native] ❌ Backend error:', error)
-      throw new Error(error.error || 'Backend exchange failed')
+    if (!idToken) {
+      throw new Error('No ID token from Google')
     }
     
-    const { session, user } = await response.json()
-    console.log('[Google Native] ✅ Backend returned session for:', user.email)
+    console.log('[Google Native] 📤 Exchanging with Supabase (with nonce)...')
     
-    // Store session in Supabase client
+    // Use Supabase directly - pass the nonce!
     const { createClient } = await import('@/lib/supabase/browser-client')
     const supabase = createClient()
     
-    console.log('[Google Native] 💾 Storing session in client...')
-    
-    const { error: setSessionError } = await supabase.auth.setSession({
-      access_token: session.access_token,
-      refresh_token: session.refresh_token,
+    const { data, error } = await supabase.auth.signInWithIdToken({
+      provider: 'google',
+      token: idToken,
+      nonce: nonce || undefined, // PASS THE NONCE!
     })
     
-    if (setSessionError) {
-      console.error('[Google Native] ❌ Failed to set session:', setSessionError)
-      throw setSessionError
+    if (error) {
+      console.error('[Google Native] ❌ Supabase error:', error.message)
+      throw error
     }
     
-    console.log('[Google Native] ✅ Session stored! User is authenticated!')
+    console.log('[Google Native] ✅ Session created!', data.user?.email)
     
-    return user
+    return {
+      id: data.user?.id,
+      email: data.user?.email,
+      name: data.user?.user_metadata?.name || data.user?.user_metadata?.full_name,
+      avatar: data.user?.user_metadata?.avatar_url || data.user?.user_metadata?.picture,
+    }
   } catch (error: any) {
     console.error('[Google Native] ❌ Sign-in failed:', error.message)
     
