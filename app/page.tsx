@@ -3,9 +3,9 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { Container, Section, Stack, Heading, Text } from '@/components/design-system'
+import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui'
-import { Car, MapPin, Smartphone } from 'lucide-react'
+import { Car } from 'lucide-react'
 
 export default function Home() {
   const { data: session, status } = useSession()
@@ -20,13 +20,11 @@ export default function Home() {
 
   if (status === 'loading') {
     return (
-      <Container size="md" useCase="articles">
-        <Section spacing="lg">
-          <div className="flex items-center justify-center min-h-screen">
-            <Text>Loading...</Text>
-          </div>
-        </Section>
-      </Container>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
+        </div>
+      </div>
     )
   }
 
@@ -35,91 +33,79 @@ export default function Home() {
   }
 
   return (
-    <Container size="md" useCase="articles">
-      <Section spacing="lg">
-        <div className="min-h-screen flex flex-col justify-center py-12">
-          <Stack spacing="xl">
-            {/* Hero Section */}
-            <div className="text-center">
-              <div className="flex justify-center mb-6">
-                <div className="p-4 bg-primary/10 rounded-full">
-                  <Car className="h-16 w-16 text-primary" />
-                </div>
-              </div>
-              
-              <Heading level="hero" className="mb-4">
-                Welcome to MotoMind
-              </Heading>
-              
-              <Text className="text-xl text-muted-foreground mb-8">
-                Automatic vehicle tracking that just works.
-                <br />
-                Never forget where you parked again.
-              </Text>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-primary/5 to-background">
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col justify-center items-center px-6 py-12">
+        
+        {/* Illustration/Icon */}
+        <div className="mb-12">
+          <div className="relative">
+            {/* Decorative circles */}
+            <div className="absolute -top-8 -left-8 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
+            <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl" />
+            
+            {/* Main icon */}
+            <div className="relative bg-primary/10 p-12 rounded-full">
+              <Car className="h-24 w-24 text-primary" />
             </div>
-
-            {/* Features */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-              <div className="text-center p-6 bg-card rounded-lg border">
-                <MapPin className="h-10 w-10 mx-auto mb-4 text-primary" />
-                <Heading level="subtitle" className="mb-2">
-                  Auto-Track Trips
-                </Heading>
-                <Text size="sm" className="text-muted-foreground">
-                  Automatically tracks your drives when connected to CarPlay
-                </Text>
-              </div>
-
-              <div className="text-center p-6 bg-card rounded-lg border">
-                <Car className="h-10 w-10 mx-auto mb-4 text-primary" />
-                <Heading level="subtitle" className="mb-2">
-                  Find Your Car
-                </Heading>
-                <Text size="sm" className="text-muted-foreground">
-                  Never forget where you parked with automatic location saving
-                </Text>
-              </div>
-
-              <div className="text-center p-6 bg-card rounded-lg border">
-                <Smartphone className="h-10 w-10 mx-auto mb-4 text-primary" />
-                <Heading level="subtitle" className="mb-2">
-                  Works Everywhere
-                </Heading>
-                <Text size="sm" className="text-muted-foreground">
-                  Web, iOS, and Android. One app, all platforms
-                </Text>
-              </div>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button
-                size="lg"
-                onClick={() => router.push('/auth/signin')}
-                className="w-full sm:w-auto px-8"
-              >
-                Sign In
-              </Button>
-              
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => router.push('/auth/signin')}
-                className="w-full sm:w-auto px-8"
-              >
-                Create Account
-              </Button>
-            </div>
-
-            {/* Additional Info */}
-            <div className="text-center mt-8">
-              <Text size="sm" className="text-muted-foreground">
-                Sign in with your Google account to get started
-              </Text>
-            </div>
-          </Stack>
+          </div>
         </div>
-      </Section>
-    </Container>
+
+        {/* Brand & Tagline */}
+        <div className="text-center mb-16 max-w-sm">
+          <h1 className="text-4xl font-bold mb-4 text-foreground">
+            MotoMind
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Track your trips automatically.
+            <br />
+            Never forget where you parked.
+          </p>
+        </div>
+
+        {/* Auth Buttons */}
+        <div className="w-full max-w-sm space-y-4">
+          <Button
+            size="lg"
+            className="w-full h-14 text-lg font-semibold"
+            onClick={() => signIn('google', { callbackUrl: '/track' })}
+          >
+            <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              />
+              <path
+                fill="currentColor"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              />
+              <path
+                fill="currentColor"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+              />
+              <path
+                fill="currentColor"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              />
+            </svg>
+            Continue with Google
+          </Button>
+
+          <Button
+            size="lg"
+            variant="outline"
+            className="w-full h-14 text-lg font-semibold"
+            onClick={() => router.push('/auth/signin')}
+          >
+            Sign in another way
+          </Button>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="pb-8 text-center text-sm text-muted-foreground px-6">
+        <p>By continuing, you agree to our Terms & Privacy Policy</p>
+      </div>
+    </div>
   )
 }
