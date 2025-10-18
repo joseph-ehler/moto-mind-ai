@@ -7,12 +7,7 @@
 
 import { NextResponse } from 'next/server'
 import { requireUserServer } from '@/lib/auth/server'
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { createServiceClient } from '@/lib/supabase/service-client'
 
 interface AddVehicleRequest {
   make: string
@@ -25,6 +20,9 @@ export async function POST(request: Request) {
   try {
     // Authenticate user
     const { user } = await requireUserServer()
+    
+    // Create Supabase client
+    const supabase = createServiceClient()
     
     // Parse request body
     const body: AddVehicleRequest = await request.json()
