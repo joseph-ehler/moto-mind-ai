@@ -1,56 +1,85 @@
 'use client'
 
-/**
- * Sign In Page
- * 
- * Uses MotoMind design system for layout + shadcn/ui for components
- */
-
-import { Container, Section, Stack, Heading } from '@/components/design-system'
-import { Card, CardContent } from '@/components/ui'
+import { useState } from 'react'
 import { AuthForm } from '@/components/auth/AuthForm'
-import Link from 'next/link'
+import { Button } from '@/components/ui'
+import { X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export default function SignInPage() {
+  const [mode, setMode] = useState<'signin' | 'signup'>('signin')
+  const router = useRouter()
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900">
-      <Container size="sm" useCase="forms">
-        <Section spacing="xl">
-          <div className="py-20">
-            <Stack spacing="xl">
-              {/* Header */}
-              <div className="text-center space-y-4">
-                <div className="text-5xl mb-2">🏍️</div>
-                <Heading level="hero" className="text-white text-3xl">
-                  Welcome to MotoMind
-                </Heading>
-                <p className="text-purple-100 text-base">
-                  Your intelligent vehicle companion
-                </p>
-              </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b">
+        <h1 className="text-xl font-semibold">
+          {mode === 'signin' ? 'Log in' : 'Sign up'}
+        </h1>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.back()}
+          className="rounded-full"
+        >
+          <X className="h-5 w-5" />
+        </Button>
+      </div>
 
-              {/* Auth Card */}
-              <Card className="border-0 shadow-2xl">
-                <CardContent className="p-8">
-                  <AuthForm mode="signin" callbackUrl="/dashboard" />
-                </CardContent>
-              </Card>
+      {/* Tab Switcher */}
+      <div className="flex border-b">
+        <button
+          onClick={() => setMode('signin')}
+          className={`flex-1 py-4 text-center font-medium transition-colors relative ${
+            mode === 'signin'
+              ? 'text-foreground'
+              : 'text-muted-foreground'
+          }`}
+        >
+          Sign In
+          {mode === 'signin' && (
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+          )}
+        </button>
+        <button
+          onClick={() => setMode('signup')}
+          className={`flex-1 py-4 text-center font-medium transition-colors relative ${
+            mode === 'signup'
+              ? 'text-foreground'
+              : 'text-muted-foreground'
+          }`}
+        >
+          Sign Up
+          {mode === 'signup' && (
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+          )}
+        </button>
+      </div>
 
-              {/* Footer */}
-              <p className="text-center text-sm text-purple-100">
-                By signing in, you agree to our{' '}
-                <Link href="/terms" className="text-white underline hover:no-underline">
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link href="/privacy" className="text-white underline hover:no-underline">
-                  Privacy Policy
-                </Link>
-              </p>
-            </Stack>
-          </div>
-        </Section>
-      </Container>
+      {/* Form Content */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-md mx-auto p-6">
+          <AuthForm 
+            mode={mode} 
+            callbackUrl="/track" 
+          />
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="p-6 text-center text-sm text-muted-foreground border-t">
+        <p>
+          By continuing, you agree to our{' '}
+          <a href="/terms" className="underline hover:text-foreground">
+            Terms
+          </a>
+          {' & '}
+          <a href="/privacy" className="underline hover:text-foreground">
+            Privacy Policy
+          </a>
+        </p>
+      </div>
     </div>
   )
 }
