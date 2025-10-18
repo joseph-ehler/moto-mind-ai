@@ -17,16 +17,11 @@ export async function initializeGoogleAuth() {
   }
   
   try {
-    // IMPORTANT: Use iOS client ID for native sign-in!
-    // clientId = iOS OAuth client (shows native picker)
-    // serverClientId = Web OAuth client (for Supabase ID token exchange)
-    await GoogleAuth.initialize({
-      clientId: '642890697588-ecojj9mtif8j4n1gu7jri95a681ghgca.apps.googleusercontent.com', // iOS client
-      scopes: ['profile', 'email'],
-      grantOfflineAccess: true
-    })
+    // Initialize - will use config from capacitor.config.ts
+    // iosClientId and serverClientId are already configured there!
+    await GoogleAuth.initialize()
     initialized = true
-    console.log('[Google Native] ✅ Initialized with iOS OAuth client ID')
+    console.log('[Google Native] ✅ Initialized from capacitor.config.ts')
   } catch (error) {
     console.error('[Google Native] ❌ Initialization failed:', error)
   }
@@ -40,8 +35,8 @@ export async function signInWithGoogleNativeSDK() {
     await initializeGoogleAuth()
     
     // Show native Google sign-in UI
-    // DON'T pass serverClientId here - it overrides iOS client and forces browser!
-    // The iOS client ID from initialize() will be used for native picker
+    // Will use iosClientId from config = native picker
+    // Will get ID token for serverClientId from config = Supabase auth
     const result = await GoogleAuth.signIn({
       scopes: ['profile', 'email']
     })
