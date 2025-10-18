@@ -82,31 +82,26 @@ export const auth = {
     const isNative = typeof (window as any).Capacitor !== 'undefined'
     
     if (isNative) {
-      // On native, use Capacitor Browser plugin to open in Safari View Controller
+      // On native, construct the OAuth URL manually
       const { Browser } = await import('@capacitor/browser')
       
-      // Get the OAuth URL from Supabase
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: 'motomind://auth/callback',
-          skipBrowserRedirect: true, // Don't auto-redirect, we'll handle it
-        }
-      })
+      // Construct Google OAuth URL directly
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+      const redirectUri = 'motomind://auth/callback'
       
-      if (error) throw error
-      if (!data.url) throw new Error('No OAuth URL returned')
+      // Build the OAuth URL that Supabase expects
+      const oauthUrl = `${supabaseUrl}/auth/v1/authorize?provider=${provider}&redirect_to=${encodeURIComponent(redirectUri)}`
       
-      console.log('[Auth] Opening OAuth URL:', data.url)
+      console.log('[Auth] Opening OAuth URL:', oauthUrl)
       
       // Open in Safari View Controller (in-app browser)
       await Browser.open({
-        url: data.url,
+        url: oauthUrl,
         presentationStyle: 'popover', // iOS style
       })
       
       // Browser will close automatically when redirecting to motomind:// scheme
-      return { data, error: null }
+      return { data: { provider, url: oauthUrl }, error: null }
     }
     
     // For web, use normal redirect flow
