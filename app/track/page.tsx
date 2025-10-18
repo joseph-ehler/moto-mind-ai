@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { Container, Section, Stack, Heading, Text } from '@/components/design-system'
 import { Button, Alert, AlertDescription } from '@/components/ui'
 import { MapPin, Play, Square } from 'lucide-react'
+import { TopNav } from '@/components/nav/TopNav'
 
 export default function TrackPageIOSSafe() {
   const [isTracking, setIsTracking] = useState(false)
@@ -56,15 +57,17 @@ export default function TrackPageIOSSafe() {
   }
 
   return (
-    <Container size="md" useCase="articles">
-      <Section spacing="lg">
-        <Stack spacing="xl">
-          <div>
-            <Heading level="hero">Vehicle Tracking (iOS Safe)</Heading>
-            <Text className="text-muted-foreground">
-              Minimal GPS tracking - testing iOS compatibility
-            </Text>
-          </div>
+    <>
+      <TopNav />
+      <Container size="md" useCase="articles">
+        <Section spacing="lg">
+          <Stack spacing="xl">
+            <div>
+              <Heading level="hero">Vehicle Tracking</Heading>
+              <Text className="text-muted-foreground">
+                Minimal GPS tracking - testing iOS compatibility
+              </Text>
+            </div>
 
           {error && (
             <Alert variant="destructive">
@@ -109,5 +112,6 @@ export default function TrackPageIOSSafe() {
         </Stack>
       </Section>
     </Container>
+    </>
   )
 }

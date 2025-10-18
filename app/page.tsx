@@ -30,16 +30,19 @@ export default function Home() {
     }
   }, [])
 
-  if (isLoading) {
+  // Show loading state while checking auth OR if user is authenticated (about to redirect)
+  if (isLoading || user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
+          {user && <p className="mt-4 text-muted-foreground">Redirecting...</p>}
         </div>
       </div>
     )
   }
 
+  // Only show login UI if NOT authenticated
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-primary/5 to-background">
       {/* Main Content */}
