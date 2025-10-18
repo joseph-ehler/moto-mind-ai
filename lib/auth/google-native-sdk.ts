@@ -39,11 +39,10 @@ export async function signInWithGoogleNativeSDK() {
     await initializeGoogleAuth()
     
     // Show native Google sign-in UI
-    // iOS client ID from initialize() = native picker
-    // serverClientId here = gets ID token for Supabase auth (web client)
+    // IMPORTANT: DON'T pass serverClientId - it forces web-based auth!
+    // Just use the iOS client ID from initialize() for pure native picker
     const result = await GoogleAuth.signIn({
-      scopes: ['profile', 'email'],
-      serverClientId: '642890697588-tpd1g2uduf51qmdkkdrue565sq40vf4s.apps.googleusercontent.com' // Web client for Supabase
+      scopes: ['profile', 'email']
     })
     
     console.log('[Google Native] ✅ Sign-in successful:', {
