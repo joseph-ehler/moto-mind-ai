@@ -3,18 +3,17 @@
  * Determines if user needs onboarding and where to redirect
  */
 
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { createServiceClient } from '@/lib/supabase/service-client'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 export async function checkOnboardingStatus(userId: string): Promise<{
   needsOnboarding: boolean
   redirectTo: string
 }> {
   try {
+    // Create Supabase client
+    const supabase = createServiceClient()
+    
     // Check if user has onboarding record
     const { data: onboarding, error } = await supabase
       .from('user_onboarding')
