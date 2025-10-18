@@ -9,8 +9,8 @@ import { Browser } from '@capacitor/browser'
 import { App } from '@capacitor/app'
 
 export async function signInWithGoogleNative(): Promise<void> {
-  // Build Google OAuth URL
-  const authUrl = `${window.location.origin}/api/auth/signin/google`
+  // Build Google OAuth URL with native flag so NextAuth knows to redirect to custom scheme
+  const authUrl = `${window.location.origin}/api/auth/signin/google?callbackUrl=${encodeURIComponent('/track?native=true')}`
   
   // Open in-app browser (SFSafariViewController on iOS)
   await Browser.open({
@@ -22,12 +22,19 @@ export async function signInWithGoogleNative(): Promise<void> {
   
   // Listen for app URL open (deep link callback)
   const listener = await App.addListener('appUrlOpen', async (event) => {
-    // Callback will be: motomind://callback?...
-    if (event.url.includes('callback')) {
+    console.log('[Native OAuth] Deep link received:', event.url)
+    
+    // Callback will be: motomind://callback?success=true
+    if (event.url.includes('callback') || event.url.includes('success')) {
+      console.log('[Native OAuth] ✅ Auth successful - closing browser')
+      
       // Close the browser
       await Browser.close()
       
-      // Navigate to dashboard
+      // Wait a moment for browser to close
+      await new Promise(resolve => setTimeout(resolve, 300))
+      
+      // Navigate to track page
       window.location.href = '/track'
       
       // Clean up listener

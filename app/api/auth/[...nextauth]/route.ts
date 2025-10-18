@@ -134,7 +134,16 @@ const authOptions: NextAuthOptions = {
     },
     async redirect({ url, baseUrl }) {
       console.log('[NextAuth] Redirect:', { url, baseUrl })
-      // Redirect to home after signin
+      
+      // Check if this is a native app (Capacitor) by looking at the callback URL
+      // Native apps will have ?native=true in the callback URL
+      if (url.includes('native=true') || url.includes('capacitor=true')) {
+        console.log('[NextAuth] 🚀 Native app detected - redirecting to custom scheme')
+        // Redirect to custom URL scheme to close browser and return to app
+        return 'motomind://callback?success=true'
+      }
+      
+      // Regular web redirect
       if (url.startsWith('/')) return `${baseUrl}${url}`
       if (url.startsWith(baseUrl)) return url
       return baseUrl
