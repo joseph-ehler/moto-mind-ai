@@ -37,19 +37,21 @@ export async function POST(request: NextRequest) {
     
     console.log('[Google Native API] ✅ Token verified:', payload.email)
     
-    // Upsert user in database (using only columns that exist)
+    // Upsert user in app_users table
     const { data: user, error: upsertError } = await supabase
-      .from('user_tenants')
+      .from('app_users')
       .upsert({
+        id: payload.sub, // Google user ID
         email: payload.email,
         name: name || payload.name || payload.email?.split('@')[0],
-        email_verified: payload.email_verified || true, // Google emails are verified
+        image: imageUrl || payload.picture,
+        email_verified: true, // Google emails are verified
         updated_at: new Date().toISOString()
       }, {
         onConflict: 'email',
         ignoreDuplicates: false
       })
-      .select('id, email, name')
+      .select('id, email, name, image')
       .single()
     
     if (upsertError) {
