@@ -1,36 +1,47 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui'
 import { Car, Loader2 } from 'lucide-react'
-import { signInWithGoogleNativeSDK, isNativeApp, initializeGoogleAuth } from '@/lib/auth/google-native-sdk'
+import { createClient } from '@/lib/supabase/browser-client'
+import { isNativeApp } from '@/lib/auth/google-native-sdk'
 
 export default function Home() {
-  const { data: session, status } = useSession()
   const router = useRouter()
+  const supabase = createClient()
   const [isNative, setIsNative] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
 
-  // Initialize Google Auth for native
+  // Check auth status
   useEffect(() => {
-    const native = isNativeApp()
-    setIsNative(native)
-    if (native) {
-      initializeGoogleAuth()
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        router.push('/track')
+      } else {
+        setIsLoading(false)
+      }
     }
+    checkAuth()
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        router.push('/track')
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [router, supabase])
+
+  // Detect native app
+  useEffect(() => {
+    setIsNative(isNativeApp())
   }, [])
 
-  // Redirect to dashboard if already authenticated
-  useEffect(() => {
-    if (status === 'authenticated') {
-      router.push('/track')
-    }
-  }, [status, router])
-
-  if (status === 'loading') {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -38,10 +49,6 @@ export default function Home() {
         </div>
       </div>
     )
-  }
-
-  if (status === 'authenticated') {
-    return null // Will redirect
   }
 
   return (
@@ -84,15 +91,16 @@ export default function Home() {
             onClick={async () => {
               setIsLoading(true)
               try {
-                if (isNative) {
-                  await signInWithGoogleNativeSDK()
-                } else {
-                  signIn('google', { callbackUrl: '/track' })
-                }
+                const { error } = await supabase.auth.signInWithOAuth({
+                  provider: 'google',
+                  options: {
+                    redirectTo: `${window.location.origin}/track`
+                  }
+                })
+                if (error) throw error
               } catch (error) {
                 console.error('Sign-in error:', error)
                 alert('Failed to sign in. Please try again.')
-              } finally {
                 setIsLoading(false)
               }
             }}
