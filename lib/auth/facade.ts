@@ -87,7 +87,8 @@ export const auth = {
       
       // Construct Google OAuth URL directly
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-      const redirectUri = 'motomind://auth/callback'
+      // Redirect to localhost callback page first, which will trigger deep link
+      const redirectUri = 'http://localhost:3005/auth/callback'
       
       // Build the OAuth URL that Supabase expects
       // Add prompt=select_account to always show account picker
