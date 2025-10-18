@@ -7,12 +7,12 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Container, Stack, Heading, Text } from '@/components/design-system'
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
 
-export default function VerifyMagicLinkPage() {
+function VerifyMagicLinkContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying')
@@ -119,5 +119,17 @@ export default function VerifyMagicLinkPage() {
         </Stack>
       </Container>
     </div>
+  )
+}
+
+export default function VerifyMagicLinkPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <Loader2 className="w-16 h-16 animate-spin text-blue-600" />
+      </div>
+    }>
+      <VerifyMagicLinkContent />
+    </Suspense>
   )
 }

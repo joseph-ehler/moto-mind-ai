@@ -11,7 +11,7 @@
  * - Progressive disclosure (clean UI)
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn, setupDeepLinkListener } from '@/lib/auth'
 import { Capacitor } from '@capacitor/core'
@@ -36,7 +36,7 @@ interface AuthResponse {
   message?: string
 }
 
-export default function SignInPage() {
+function SignInContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -501,5 +501,17 @@ export default function SignInPage() {
         </Section>
       </Container>
     </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
+      </div>
+    }>
+      <SignInContent />
+    </Suspense>
   )
 }
