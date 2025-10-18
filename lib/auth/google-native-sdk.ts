@@ -17,15 +17,18 @@ export async function initializeGoogleAuth() {
   }
   
   try {
-    // Initialize with explicit config
-    // The plugin doesn't reliably read from capacitor.config.ts
+    // Initialize with BOTH client IDs
+    // clientId = iOS client (native picker UI)
+    // serverClientId = Web client (get ID token for Supabase)
     await GoogleAuth.initialize({
       clientId: '642890697588-ecojj9mtif8j4n1gu7jri95a681ghgca.apps.googleusercontent.com', // iOS client
       scopes: ['profile', 'email'],
       grantOfflineAccess: true,
+      // @ts-ignore - serverClientId is valid but TypeScript types are wrong
+      serverClientId: '642890697588-tpd1g2uduf51qmdkkdrue565sq40vf4s.apps.googleusercontent.com' // Web client
     })
     initialized = true
-    console.log('[Google Native] ✅ Initialized with explicit iOS client ID')
+    console.log('[Google Native] ✅ Initialized with iOS client + Web serverClientId')
   } catch (error) {
     console.error('[Google Native] ❌ Initialization failed:', error)
   }
