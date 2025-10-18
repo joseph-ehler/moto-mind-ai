@@ -1,34 +1,30 @@
 'use client'
 
+/**
+ * Web Login Page
+ * 
+ * Pure web OAuth - NO native SDK, NO Capacitor detection
+ * Simple Google OAuth redirect flow
+ */
+
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui'
 import { Car, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import { isNativeApp, signInWithGoogleNativeSDK, initializeGoogleAuth } from '@/lib/auth/google-native-sdk'
 
 export default function Home() {
   const router = useRouter()
   const { user, isLoading, signInWithGoogle } = useAuth()
-  const [isNative, setIsNative] = useState(false)
   const [isSigningIn, setIsSigningIn] = useState(false)
 
   // Redirect if already authenticated
   useEffect(() => {
     if (user && !isLoading) {
-      console.log('[Auth] User authenticated, navigating to /track')
+      console.log('[Web Login] User authenticated, navigating to /track')
       router.push('/track')
     }
   }, [user, isLoading, router])
-
-  // Detect native app and initialize
-  useEffect(() => {
-    const native = isNativeApp()
-    setIsNative(native)
-    if (native) {
-      initializeGoogleAuth()
-    }
-  }, [])
 
   // Show loading state while checking auth OR if user is authenticated (about to redirect)
   if (isLoading || user) {
@@ -79,22 +75,21 @@ export default function Home() {
           <Button
             size="lg"
             className="w-full h-14 text-lg font-semibold"
-            disabled={isLoading}
+            disabled={isSigningIn}
             onClick={async () => {
               setIsSigningIn(true)
               try {
-                // Use web OAuth for everything - PROVE IT WORKS
-                console.log('[Auth] Starting web OAuth...')
-                console.log('[Auth] Browser will open, then CLOSE after redirect')
+                console.log('[Web Login] Starting Google OAuth...')
+                // Simple web OAuth redirect - will redirect to Google and back
                 await signInWithGoogle('/track')
               } catch (error: any) {
-                console.error('[Auth] ❌ Sign-in error:', error.message)
+                console.error('[Web Login] Sign-in error:', error.message)
                 alert(`Sign-in failed: ${error.message}`)
                 setIsSigningIn(false)
               }
             }}
           >
-            {isLoading ? (
+            {isSigningIn ? (
               <Loader2 className="w-6 h-6 mr-3 animate-spin" />
             ) : (
               <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24">
@@ -116,7 +111,7 @@ export default function Home() {
               />
             </svg>
             )}
-            {isLoading ? 'Signing in...' : 'Continue with Google'}
+            {isSigningIn ? 'Signing in...' : 'Continue with Google'}
           </Button>
 
           <Button
