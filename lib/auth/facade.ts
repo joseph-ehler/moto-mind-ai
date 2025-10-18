@@ -95,10 +95,11 @@ export const auth = {
       
       console.log('[Auth] Opening OAuth URL:', oauthUrl)
       
-      // Open in Safari View Controller (in-app browser)
+      // Open in SYSTEM browser (full Safari) - required for custom URL scheme redirects
+      // SFSafariViewController won't redirect to custom schemes
       await Browser.open({
         url: oauthUrl,
-        presentationStyle: 'popover', // iOS style
+        windowName: '_system', // Opens in full Safari, not in-app
       })
       
       // Browser will close automatically when redirecting to motomind:// scheme

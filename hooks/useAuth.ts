@@ -73,9 +73,8 @@ export function useAuth(): UseAuthReturn {
           // Check if this is an OAuth callback
           if (event.url.startsWith('motomind://auth/callback')) {
             try {
-              // Close the browser
-              const { Browser } = await import('@capacitor/browser')
-              await Browser.close()
+              // System browser will automatically switch back to app on custom URL scheme
+              // No need to close it programmatically
               
               // Parse hash fragment (tokens are in #access_token=...&refresh_token=...)
               const hashFragment = event.url.split('#')[1]
