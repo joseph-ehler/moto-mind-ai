@@ -10,9 +10,9 @@
 
 'use client'
 
-import { useState } from 'react'
-import { signOut, useSession } from 'next-auth/react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/browser-client'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,21 +26,37 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { User, Settings, Key, LogOut, Loader2 } from 'lucide-react'
 
 export function UserMenu() {
-  const { data: session } = useSession()
+  const supabase = createClient()
   const router = useRouter()
   const [isSigningOut, setIsSigningOut] = useState(false)
+  const [user, setUser] = useState<any>(null)
 
-  if (!session?.user) {
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setUser(session?.user || null)
+    }
+    getUser()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user || null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [supabase])
+
+  if (!user) {
     return null
   }
 
-  const userEmail = session.user.email || ''
-  const userName = session.user.name || userEmail.split('@')[0]
+  const userEmail = user.email || ''
+  const userName = user.user_metadata?.name || userEmail.split('@')[0]
   const userInitials = userName.slice(0, 2).toUpperCase()
 
   const handleSignOut = async () => {
     setIsSigningOut(true)
-    await signOut({ redirect: true, callbackUrl: '/auth/signin' })
+    await supabase.auth.signOut()
+    router.push('/')
   }
 
   return (
@@ -48,7 +64,7 @@ export function UserMenu() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-full">
           <Avatar className="h-10 w-10">
-            <AvatarImage src={session.user.image || undefined} alt={userName} />
+            <AvatarImage src={user.user_metadata?.avatar_url || undefined} alt={userName} />
             <AvatarFallback>{userInitials}</AvatarFallback>
           </Avatar>
         </Button>

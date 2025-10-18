@@ -7,13 +7,13 @@
  * Uses: MotoMind design system + shadcn/ui
  */
 
-import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/browser-client'
 import Link from 'next/link'
 import { UserMenu } from '@/components/layout/UserMenu'
 
 export function TopNav() {
-  const { data: session } = useSession()
-
+  // UserMenu handles its own auth state
   return (
     <nav className="border-b bg-white sticky top-0 z-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -48,15 +48,7 @@ export function TopNav() {
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">
-            {session?.user ? (
-              <UserMenu />
-            ) : (
-              <Link href="/auth/signin">
-                <button className="text-sm font-medium text-gray-700 hover:text-gray-900">
-                  Sign In
-                </button>
-              </Link>
-            )}
+            <UserMenu />
           </div>
         </div>
       </div>
