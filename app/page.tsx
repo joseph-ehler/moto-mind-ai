@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui'
 import { Car } from 'lucide-react'
+import { signInWithGoogleNative, isNativeApp } from '@/lib/auth/native-oauth'
 
 export default function Home() {
   const { data: session, status } = useSession()
@@ -68,7 +69,13 @@ export default function Home() {
           <Button
             size="lg"
             className="w-full h-14 text-lg font-semibold"
-            onClick={() => signIn('google', { callbackUrl: '/track' })}
+            onClick={async () => {
+              if (isNativeApp()) {
+                await signInWithGoogleNative()
+              } else {
+                signIn('google', { callbackUrl: '/track' })
+              }
+            }}
           >
             <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24">
               <path

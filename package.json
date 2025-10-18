@@ -143,6 +143,8 @@
     "@ai-sdk/openai": "^2.0.40",
     "@capacitor-community/background-geolocation": "^1.2.26",
     "@capacitor/android": "^7.4.3",
+    "@capacitor/app": "^7.1.0",
+    "@capacitor/browser": "^7.0.2",
     "@capacitor/cli": "^7.4.3",
     "@capacitor/core": "^7.4.3",
     "@capacitor/ios": "^7.4.3",

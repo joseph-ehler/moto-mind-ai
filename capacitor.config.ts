@@ -12,10 +12,16 @@ const config: CapacitorConfig = {
   },
   ios: {
     contentInset: 'automatic',
+    // Custom URL scheme for OAuth callbacks
+    scheme: 'motomind'
   },
   plugins: {
     SplashScreen: {
       launchShowDuration: 0
+    },
+    Browser: {
+      // Use in-app browser for OAuth
+      androidBrowserToolbarColor: '#000000'
     }
   }
 };
