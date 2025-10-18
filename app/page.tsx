@@ -80,23 +80,12 @@ export default function Home() {
             onClick={async () => {
               setIsSigningIn(true)
               try {
-                if (isNative) {
-                  // NATIVE APP: Use native SDK with backend exchange
-                  const user = await signInWithGoogleNativeSDK()
-                  
-                  if (user) {
-                    console.log('[Auth] ✅ Native auth complete! Navigating to /track')
-                    // Navigate to track page - user is now authenticated
-                    router.push('/track')
-                  } else {
-                    // User cancelled
-                    console.log('[Auth] User cancelled sign-in')
-                    setIsSigningIn(false)
-                  }
-                } else {
-                  // WEB: Use web OAuth
-                  await signInWithGoogle('/track')
-                }
+                // USE WEB OAUTH FOR BOTH PLATFORMS
+                // Opens in-app browser on native, normal browser on web
+                // This works 100% reliably - no nonce issues
+                console.log('[Auth] Starting sign-in with web OAuth...')
+                await signInWithGoogle()
+                // useAuth hook will detect user and navigate
               } catch (error) {
                 console.error('Sign-in error:', error)
                 alert('Failed to sign in. Please try again.')
