@@ -45,5 +45,21 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>GIDClientID</key>
+	<string>642890697588-tpd1g2uduf51qmdkkdrue565sq40vf4s.apps.googleusercontent.com</string>
+	<key>GIDServerClientID</key>
+	<string>642890697588-tpd1g2uduf51qmdkkdrue565sq40vf4s.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>motomind</string>
+				<string>com.googleusercontent.apps.642890697588-ecojj9mtif8j4n1gu7jri95a681ghgca</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
