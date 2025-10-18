@@ -82,29 +82,40 @@ export const auth = {
     const isNative = typeof (window as any).Capacitor !== 'undefined'
     
     if (isNative) {
-      // On native, construct the OAuth URL manually
-      const { Browser } = await import('@capacitor/browser')
+      // On native iOS, use Google Native SDK (already configured)
+      // This handles the native OAuth flow properly without browser redirects
+      console.log('[Auth] Using Google Native SDK for native OAuth...')
       
-      // Construct Google OAuth URL directly
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-      // Redirect to localhost callback page first, which will trigger deep link
-      const redirectUri = 'http://localhost:3005/auth/callback'
-      
-      // Build the OAuth URL that Supabase expects
-      // Add prompt=select_account to always show account picker
-      const oauthUrl = `${supabaseUrl}/auth/v1/authorize?provider=${provider}&redirect_to=${encodeURIComponent(redirectUri)}&prompt=select_account`
-      
-      console.log('[Auth] Opening OAuth URL:', oauthUrl)
-      
-      // Open in SYSTEM browser (full Safari) - required for custom URL scheme redirects
-      // SFSafariViewController won't redirect to custom schemes
-      await Browser.open({
-        url: oauthUrl,
-        windowName: '_system', // Opens in full Safari, not in-app
-      })
-      
-      // Browser will close automatically when redirecting to motomind:// scheme
-      return { data: { provider, url: oauthUrl }, error: null }
+      try {
+        // Use the native Google Sign In
+        const GoogleAuth = (window as any).GoogleAuth
+        if (!GoogleAuth) {
+          throw new Error('Google Native SDK not initialized')
+        }
+        
+        const result = await GoogleAuth.signIn()
+        console.log('[Auth] ✅ Google Native sign in successful:', result.email)
+        
+        // Now authenticate with Supabase using the Google ID token
+        const { createClient } = await import('@/lib/supabase/browser-client')
+        const supabase = createClient()
+        
+        const { data, error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: result.authentication.idToken,
+        })
+        
+        if (error) {
+          console.error('[Auth] Supabase sign in error:', error)
+          throw error
+        }
+        
+        console.log('[Auth] ✅ Authenticated with Supabase:', data.user?.email)
+        return { data, error: null }
+      } catch (error: any) {
+        console.error('[Auth] Google Native OAuth error:', error)
+        return { data: null, error }
+      }
     }
     
     // For web, use normal redirect flow
