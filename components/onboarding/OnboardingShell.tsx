@@ -11,7 +11,7 @@ import { type ReactNode } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useValidation } from '@/wizard/validation-context'
-import { ProgressDots } from './ProgressDots'
+import { ChapterProgress, type Chapter } from './ChapterProgress'
 import { WizardOverflowMenu } from './WizardOverflowMenu'
 
 type OnboardingShellProps = {
@@ -20,10 +20,15 @@ type OnboardingShellProps = {
   title?: string
   subtitle?: string
   
-  // Progress
-  currentStep: number
-  totalSteps: number
-  progress: number
+  // Progress (chapter-based)
+  chapters?: Chapter[]
+  currentChapterId?: string
+  showChapterName?: boolean
+  
+  // Legacy progress (fallback for simple wizards)
+  currentStep?: number
+  totalSteps?: number
+  progress?: number
   
   // Navigation
   onBack?: () => void
@@ -53,6 +58,9 @@ export function OnboardingShell({
   children,
   title,
   subtitle,
+  chapters,
+  currentChapterId,
+  showChapterName = false,
   currentStep,
   totalSteps,
   progress,
@@ -74,6 +82,8 @@ export function OnboardingShell({
   continueLabel = 'Continue',
   mode = 'fullscreen'
 }: OnboardingShellProps) {
+  // Use chapter-based progress if available, otherwise legacy
+  const useChapters = chapters && currentChapterId
   const { isValid, onSubmit } = useValidation()
   
   const handleContinue = () => {
@@ -124,15 +134,19 @@ export function OnboardingShell({
               )}
             </div>
             
-            {/* Center: Title + Progress Dots */}
+            {/* Center: Title + Progress */}
             <div className="flex-1 flex flex-col items-center text-center px-4 gap-1.5">
               {title && (
                 <h1 className="text-base font-semibold text-gray-900 truncate max-w-md">
                   {title}
                 </h1>
               )}
-              {!hideProgress && (
-                <ProgressDots current={currentStep} total={totalSteps} />
+              {!hideProgress && useChapters && (
+                <ChapterProgress
+                  chapters={chapters!}
+                  currentChapterId={currentChapterId!}
+                  showChapterName={showChapterName}
+                />
               )}
               {subtitle && (
                 <p className="text-xs text-gray-500 truncate max-w-md">

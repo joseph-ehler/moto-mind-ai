@@ -7,8 +7,9 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { OnboardingShell } from '@/components/onboarding/OnboardingShell'
+import { type Chapter } from '@/components/onboarding/ChapterProgress'
 import { ValidationProvider, useValidation } from '@/wizard/validation-context'
 import { useOnboardingWizard } from '@/wizard/useOnboardingWizard'
 import { buildPredicateRegistry, normalizeRegistry } from '@/wizard/flow-registry'
@@ -103,11 +104,11 @@ function IntroStep() {
         </li>
         <li className="flex items-start">
           <span className="text-green-500 mr-3 text-lg">✓</span>
-          <span className="text-gray-700">Progress calculation</span>
+          <span className="text-gray-700">Chapter-based progress bars</span>
         </li>
         <li className="flex items-start">
           <span className="text-green-500 mr-3 text-lg">✓</span>
-          <span className="text-gray-700">God-tier header + footer</span>
+          <span className="text-gray-700">Overflow menu + autosave</span>
         </li>
       </ul>
     </div>
@@ -183,7 +184,8 @@ function CompleteStep() {
         </h2>
         <ul className="space-y-2 text-left text-green-800">
           <li>✓ Shell with title in header</li>
-          <li>✓ Progress in footer with percentage</li>
+          <li>✓ Chapter-based progress bars</li>
+          <li>✓ Overflow menu with autosave</li>
           <li>✓ Conditional buttons per step</li>
           <li>✓ Back button worked</li>
           <li>✓ Continue disabled until valid</li>
@@ -224,6 +226,34 @@ function TestWizardContent() {
       setLastSaved(new Date())
     }
   }, [wizard.data])
+  
+  // Define chapters (for progress bars)
+  const chapters = useMemo<Chapter[]>(() => {
+    const stepId = wizard.currentStep?.id
+    
+    return [
+      {
+        id: 'intro',
+        name: 'Getting Started',
+        stepCount: 1,
+        currentStep: stepId === 'intro' ? 1 : undefined
+      },
+      {
+        id: 'name',
+        name: 'Your Information',
+        stepCount: 1,
+        currentStep: stepId === 'name' ? 1 : undefined
+      },
+      {
+        id: 'complete',
+        name: 'Completion',
+        stepCount: 1,
+        currentStep: stepId === 'complete' ? 1 : undefined
+      }
+    ]
+  }, [wizard.currentStep?.id])
+  
+  const currentChapterId = wizard.currentStep?.id || 'intro'
   
   const renderStep = () => {
     switch (wizard.currentStep?.id) {
@@ -270,9 +300,9 @@ function TestWizardContent() {
   return (
     <OnboardingShell
       {...getStepProps()}
-      currentStep={wizard.currentIndex + 1}
-      totalSteps={wizard.totalSteps}
-      progress={wizard.progress}
+      chapters={chapters}
+      currentChapterId={currentChapterId}
+      showChapterName={false}
       onBack={wizard.back}
       onNext={wizard.next}
       onExit={wizard.exit}
