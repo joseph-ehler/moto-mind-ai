@@ -11,7 +11,7 @@ import {
   validateExpression,
   getDependencies,
   type ExpressionContext,
-} from './expression-engine'
+} from '../../../lib/wizard/expression-engine'
 
 describe('Expression Engine', () => {
   // ========================================================================

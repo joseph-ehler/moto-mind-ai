@@ -191,6 +191,22 @@ function parseExpression(expr: string): ASTNode {
       return node
     }
     
+    // Boolean literal (MUST be before identifier check!)
+    if (token === 'true') {
+      consume()
+      return { type: 'literal', value: true }
+    }
+    if (token === 'false') {
+      consume()
+      return { type: 'literal', value: false }
+    }
+    
+    // null literal (MUST be before identifier check!)
+    if (token === 'null') {
+      consume()
+      return { type: 'literal', value: null }
+    }
+    
     // Function call
     if (token.match(/^[a-z_][a-z0-9_]*$/i) && tokens[pos + 1] === '(') {
       const name = consume()
@@ -237,22 +253,6 @@ function parseExpression(expr: string): ASTNode {
     if (token.startsWith('"') || token.startsWith("'")) {
       const str = consume()
       return { type: 'literal', value: str.slice(1, -1) }
-    }
-    
-    // Boolean literal
-    if (token === 'true') {
-      consume()
-      return { type: 'literal', value: true }
-    }
-    if (token === 'false') {
-      consume()
-      return { type: 'literal', value: false }
-    }
-    
-    // null literal
-    if (token === 'null') {
-      consume()
-      return { type: 'literal', value: null }
     }
     
     throw new Error(`Unexpected token: ${token}`)
@@ -305,23 +305,24 @@ function tokenize(expr: string): string[] {
       continue
     }
     
-    // Multi-char operators
+    // Multi-char operators (check triple BEFORE two!)
+    // Triple char FIRST (===, !==)
+    if (i + 2 < expr.length) {
+      const threeChar = expr.slice(i, i + 3)
+      if (['===', '!=='].includes(threeChar)) {
+        tokens.push(threeChar)
+        i += 3
+        continue
+      }
+    }
+    
+    // Two char SECOND (==, !=, <=, >=, &&, ||)
     if (i + 1 < expr.length) {
       const twoChar = expr.slice(i, i + 2)
       if (['==', '!=', '<=', '>=', '&&', '||'].includes(twoChar)) {
         tokens.push(twoChar)
         i += 2
         continue
-      }
-      
-      // Triple char
-      if (i + 2 < expr.length) {
-        const threeChar = expr.slice(i, i + 3)
-        if (['===', '!=='].includes(threeChar)) {
-          tokens.push(threeChar)
-          i += 3
-          continue
-        }
       }
     }
     
@@ -337,7 +338,7 @@ function tokenize(expr: string): string[] {
       let token = char
       i++
       
-      while (i < expr.length && expr[i].match(/[a-z_0-9.]/i)) {
+      while (i < expr.length && expr[i].match(/[a-z_0-9]/i)) {
         token += expr[i]
         i++
       }
