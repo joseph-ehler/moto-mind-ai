@@ -22,7 +22,7 @@
 
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 import { Loader2, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -31,6 +31,9 @@ export type LoadingSceneState = 'loading' | 'slow' | 'timeout' | 'error' | 'succ
 export interface LoadingSceneProps {
   // Ticker messages (cycle through these)
   ticker: string[]
+  
+  // Optional: AI-enriched tickers (will merge with base)
+  aiTickers?: string[]
   
   // Timers
   slowHintMs?: number
@@ -54,6 +57,7 @@ export interface LoadingSceneProps {
 
 export function LoadingScene({
   ticker,
+  aiTickers,
   slowHintMs = 12000,
   timeoutMs = 20000,
   onTimeout,
@@ -70,6 +74,28 @@ export function LoadingScene({
   const timeoutTimerRef = useRef<NodeJS.Timeout | null>(null)
   const tickerTimerRef = useRef<NodeJS.Timeout | null>(null)
   
+  // Merge AI tickers with base (keep first/last deterministic, AI in middle)
+  const activeTickers = useMemo(() => {
+    if (!aiTickers || aiTickers.length === 0) {
+      return ticker
+    }
+    
+    // Keep first and last deterministic, replace middle with AI
+    if (ticker.length >= 3 && aiTickers.length >= 1) {
+      const merged = [...ticker]
+      const middleStart = 1
+      const middleCount = Math.min(aiTickers.length, ticker.length - 2)
+      
+      for (let i = 0; i < middleCount; i++) {
+        merged[middleStart + i] = aiTickers[i]
+      }
+      
+      return merged
+    }
+    
+    return ticker
+  }, [ticker, aiTickers])
+  
   // Use controlled state if provided, otherwise internal
   const state = controlledState || internalState
   
@@ -79,7 +105,7 @@ export function LoadingScene({
     
     // Ticker: cycle through messages every 1.8s
     tickerTimerRef.current = setInterval(() => {
-      setTickerIndex(prev => (prev + 1) % ticker.length)
+      setTickerIndex(prev => (prev + 1) % activeTickers.length)
     }, 1800)
     
     // Slow hint: show after slowHintMs
@@ -109,7 +135,7 @@ export function LoadingScene({
       if (timeoutTimerRef.current) clearTimeout(timeoutTimerRef.current)
       if (tickerTimerRef.current) clearInterval(tickerTimerRef.current)
     }
-  }, [state, ticker.length, slowHintMs, timeoutMs, onTimeout])
+  }, [state, activeTickers.length, slowHintMs, timeoutMs, onTimeout])
   
   // Error state
   if (error || state === 'error' || state === 'timeout') {
@@ -173,7 +199,7 @@ export function LoadingScene({
           role="status"
           aria-live="polite"
         >
-          {ticker[tickerIndex]}
+          {activeTickers[tickerIndex]}
         </p>
       </div>
       

@@ -14,8 +14,9 @@ import { useEffect, useState, useRef } from 'react'
 import { useVehicleOnboarding, type VehicleData, type VehicleRollup } from '@/flows/vehicle/store'
 import { useWizardAnalytics } from '@/hooks/useWizardAnalytics'
 import { LoadingScene } from '@/components/onboarding/LoadingScene'
+import { prefetchAITickers } from '@/lib/ai/ticker-service'
 
-const tickerMessages = [
+const baseTickers = [
   'Contacting VIN database...',
   'Validating checksum...',
   'Preparing confirmation...'
@@ -38,11 +39,33 @@ export function VinDecoding({
   stepIndex = 1,
   chapterId = 'default'
 }: VinDecodingProps = {}) {
-  const { vin, setVehicle } = useVehicleOnboarding()
+  const { vin, vehicle, setVehicle } = useVehicleOnboarding()
   const analytics = useWizardAnalytics('vehicle')
   
   const [error, setError] = useState<ErrorState>(null)
+  const [aiTickers, setAiTickers] = useState<string[]>([])
   const abortControllerRef = useRef<AbortController | null>(null)
+  
+  // Prefetch AI tickers on mount
+  useEffect(() => {
+    if (!vehicle) return
+    
+    prefetchAITickers(
+      {
+        flow: 'vehicle',
+        chapter: 'vin-decode',
+        vehicle: {
+          year: vehicle.year,
+          make: vehicle.make,
+          model: vehicle.model,
+        },
+        locale: 'en-US',
+        tone: 'calm',
+      },
+      baseTickers
+    ).then(setAiTickers)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   
   // Track step view (once on mount)
   useEffect(() => {
@@ -146,7 +169,8 @@ export function VinDecoding({
   
   return (
     <LoadingScene
-      ticker={tickerMessages}
+      ticker={baseTickers}
+      aiTickers={aiTickers}
       slowHintMs={12000}
       timeoutMs={20000}
       onTimeout={handleTimeout}
