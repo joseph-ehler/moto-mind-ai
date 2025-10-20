@@ -37,6 +37,8 @@ export function WizardOverflowMenu({
   lastSaved
 }: WizardOverflowMenuProps) {
   const [showSaved, setShowSaved] = useState(false)
+  const [confirmStartOver, setConfirmStartOver] = useState(false)
+  const [, setTick] = useState(0) // Force re-render for time updates
   
   // Show "Saved" indicator briefly when lastSaved changes
   useEffect(() => {
@@ -45,6 +47,20 @@ export function WizardOverflowMenu({
       const timeout = setTimeout(() => setShowSaved(false), 2000)
       return () => clearTimeout(timeout)
     }
+  }, [lastSaved])
+  
+  // Update time display every 30 seconds (when tab is visible)
+  useEffect(() => {
+    if (!lastSaved) return
+    
+    const updateInterval = setInterval(() => {
+      // Only update if tab is visible
+      if (!document.hidden) {
+        setTick(prev => prev + 1)
+      }
+    }, 30000) // 30 seconds
+    
+    return () => clearInterval(updateInterval)
   }, [lastSaved])
   
   // Format last saved time
@@ -117,16 +133,53 @@ export function WizardOverflowMenu({
           </DropdownMenuItem>
         )}
         
-        {/* Start over */}
+        {/* Start over with confirmation */}
         {!hideStartOver && onStartOver && (
-          <DropdownMenuItem
-            onClick={onStartOver}
-            disabled={disabled}
-            className="py-3 text-base cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
-          >
-            <RotateCcw className="w-5 h-5 mr-3 flex-shrink-0" />
-            <span>Start over</span>
-          </DropdownMenuItem>
+          <>
+            {!confirmStartOver ? (
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.preventDefault()
+                  setConfirmStartOver(true)
+                }}
+                disabled={disabled}
+                className="py-3 text-base cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+              >
+                <RotateCcw className="w-5 h-5 mr-3 flex-shrink-0" />
+                <span>Start over</span>
+              </DropdownMenuItem>
+            ) : (
+              <div className="p-3 space-y-2">
+                <p className="text-sm font-medium text-red-600">
+                  Clear all progress?
+                </p>
+                <p className="text-xs text-gray-600">
+                  This will reset only this wizard flow.
+                </p>
+                <div className="flex gap-2 mt-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setConfirmStartOver(false)}
+                    className="flex-1 text-xs"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => {
+                      setConfirmStartOver(false)
+                      onStartOver()
+                    }}
+                    className="flex-1 text-xs"
+                  >
+                    Reset
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
