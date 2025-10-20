@@ -70,19 +70,19 @@ export async function getEmbeddingPriority(make: string, model?: string): Promis
   
   // Check complaint count for this make
   const supabase = getSupabaseClient()
-  const { data, error } = await supabase
+  const { count, error } = await supabase
     .from('nhtsa_complaints')
-    .select('id', { count: 'exact', head: true })
+    .select('*', { count: 'exact', head: true })
     .eq('make', make.toUpperCase())
   
-  if (error || !data) {
+  if (error) {
     return 'low'
   }
   
-  const count = (data as any).count || 0
+  const complaintCount = count || 0
   
   // > 5,000 complaints = MEDIUM priority
-  if (count > 5000) {
+  if (complaintCount > 5000) {
     return 'medium'
   }
   
@@ -154,43 +154,35 @@ export async function getEmbeddingStats():Promise<{
   const supabase = getSupabaseClient()
   
   // Total stats
-  const { data: totalData } = await supabase
+  const { count: total } = await supabase
     .from('nhtsa_complaints')
-    .select('id, embedding', { count: 'exact', head: true })
+    .select('*', { count: 'exact', head: true })
   
-  const total = (totalData as any)?.count || 0
-  
-  const { data: embeddedData } = await supabase
+  const { count: embedded } = await supabase
     .from('nhtsa_complaints')
-    .select('id', { count: 'exact', head: true })
+    .select('*', { count: 'exact', head: true })
     .not('embedding', 'is', null)
-  
-  const embedded = (embeddedData as any)?.count || 0
   
   // High priority (top 16 makes)
-  const { data: highTotalData } = await supabase
+  const { count: highTotal } = await supabase
     .from('nhtsa_complaints')
-    .select('id', { count: 'exact', head: true })
+    .select('*', { count: 'exact', head: true })
     .in('make', TOP_VEHICLE_MAKES)
   
-  const highTotal = (highTotalData as any)?.count || 0
-  
-  const { data: highEmbeddedData } = await supabase
+  const { count: highEmbedded } = await supabase
     .from('nhtsa_complaints')
-    .select('id', { count: 'exact', head: true })
+    .select('*', { count: 'exact', head: true })
     .in('make', TOP_VEHICLE_MAKES)
     .not('embedding', 'is', null)
   
-  const highEmbedded = (highEmbeddedData as any)?.count || 0
-  
   return {
-    total,
-    embedded,
-    needEmbedding: total - embedded,
+    total: total || 0,
+    embedded: embedded || 0,
+    needEmbedding: (total || 0) - (embedded || 0),
     highPriority: {
-      total: highTotal,
-      embedded: highEmbedded,
-      percentComplete: highTotal > 0 ? Math.round((highEmbedded / highTotal) * 100) : 0
+      total: highTotal || 0,
+      embedded: highEmbedded || 0,
+      percentComplete: (highTotal || 0) > 0 ? Math.round(((highEmbedded || 0) / (highTotal || 0)) * 100) : 0
     },
     mediumPriority: {
       total: 0, // TODO: Calculate medium priority
@@ -198,8 +190,8 @@ export async function getEmbeddingStats():Promise<{
       percentComplete: 0
     },
     lowPriority: {
-      total: total - highTotal,
-      embedded: embedded - highEmbedded,
+      total: (total || 0) - (highTotal || 0),
+      embedded: (embedded || 0) - (highEmbedded || 0),
       percentComplete: 0
     }
   }
@@ -223,14 +215,14 @@ export async function shouldEmbedOnDemand(make: string, model: string): Promise<
   const supabase = getSupabaseClient()
   
   // Check if we have ANY embeddings for this make/model
-  const { data } = await supabase
+  const { count } = await supabase
     .from('nhtsa_complaints')
-    .select('id', { count: 'exact', head: true })
+    .select('*', { count: 'exact', head: true })
     .eq('make', make.toUpperCase())
     .eq('model', model.toUpperCase())
     .not('embedding', 'is', null)
   
-  const embeddedCount = (data as any)?.count || 0
+  const embeddedCount = count || 0
   
   // If we have < 10 embeddings for this vehicle, embed on-demand
   return embeddedCount < 10
