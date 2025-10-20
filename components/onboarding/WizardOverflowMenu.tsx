@@ -78,32 +78,42 @@ export function WizardOverflowMenu({
           size="sm"
           disabled={disabled}
           className={cn(
-            'text-gray-600 hover:text-gray-900 h-9 w-9 p-0',
+            'text-gray-600 hover:text-gray-900',
+            'h-11 w-11 p-0', // 44px touch target (mobile-friendly)
+            'active:scale-95 transition-transform', // Touch feedback
             showSaved && 'text-green-600'
           )}
           aria-label="More options"
         >
           {showSaved ? (
-            <Check className="w-4 h-4" />
+            <Check className="w-5 h-5" />
           ) : (
-            <MoreVertical className="w-4 h-4" />
+            <MoreVertical className="w-5 h-5" />
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent 
+        align="end" 
+        className="w-56 min-w-[14rem]"
+        sideOffset={8}
+      >
         {/* Autosave status */}
-        <div className="px-2 py-1.5 text-xs text-gray-500 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          {getLastSavedText()}
+        <div className="px-3 py-2.5 text-sm text-gray-500 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
+          <span className="truncate">{getLastSavedText()}</span>
         </div>
         
         {hasActions && <DropdownMenuSeparator />}
         
         {/* Save & exit */}
         {!hideExit && onExit && (
-          <DropdownMenuItem onClick={onExit} disabled={disabled}>
-            <Save className="w-4 h-4 mr-2" />
-            Save & exit
+          <DropdownMenuItem 
+            onClick={onExit} 
+            disabled={disabled}
+            className="py-3 text-base cursor-pointer"
+          >
+            <Save className="w-5 h-5 mr-3 flex-shrink-0" />
+            <span>Save & exit</span>
           </DropdownMenuItem>
         )}
         
@@ -112,10 +122,10 @@ export function WizardOverflowMenu({
           <DropdownMenuItem
             onClick={onStartOver}
             disabled={disabled}
-            className="text-red-600 focus:text-red-600"
+            className="py-3 text-base cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
           >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Start over
+            <RotateCcw className="w-5 h-5 mr-3 flex-shrink-0" />
+            <span>Start over</span>
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
