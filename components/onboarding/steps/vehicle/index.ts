@@ -5,5 +5,6 @@
  */
 
 export { VinCapture } from './VinCapture'
+export { VinCaptureV2 } from './VinCaptureV2'
 export { VinDecoding } from './VinDecoding'
 export { VehicleConfirm } from './VehicleConfirm'

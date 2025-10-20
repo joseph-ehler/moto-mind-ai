@@ -1,12 +1,14 @@
 /**
- * Vehicle Onboarding Flow - Phase 1
+ * Vehicle Onboarding Flow - Phase 1 + Mobile-First Updates
  * 
- * First production wizard using the god-tier infrastructure.
+ * Complete flow with welcome + chapter intro + new form components.
  * 
- * Chapter: Vehicle Basics (3 steps)
- * 1. VIN Capture - Input + validation
- * 2. VIN Decoding - API call with timeout
- * 3. Vehicle Confirm - Display + micro-insight
+ * Steps:
+ * 1. Welcome - First impression, set context
+ * 2. Chapter Intro - Introduce Vehicle Basics chapter
+ * 3. VIN Capture - Input + validation (NEW: FormSection + mobile-first)
+ * 4. VIN Decoding - API call with timeout
+ * 5. Vehicle Confirm - Display + micro-insight
  */
 
 'use client'
@@ -14,23 +16,26 @@
 import { useEffect, useState } from 'react'
 import { OnboardingShell } from '@/components/onboarding/OnboardingShell'
 import { ValidationProvider } from '@/wizard/validation-context'
-import { VinCapture, VinDecoding, VehicleConfirm } from '@/components/onboarding/steps/vehicle'
+import { VinCaptureV2, VinDecoding, VehicleConfirm } from '@/components/onboarding/steps/vehicle'
+import { WelcomeScreen, ChapterIntro } from '@/components/onboarding/WelcomeScreen'
 import { useVehicleOnboarding } from '@/flows/vehicle/store'
 import type { Chapter } from '@/components/onboarding/ChapterProgress'
+import { Car } from 'lucide-react'
 
-type StepId = 'vin' | 'decoding' | 'confirm'
+type StepId = 'welcome' | 'chapter-intro' | 'vin' | 'decoding' | 'confirm'
 
 export default function VehicleOnboardingPage() {
   const { vehicle, reset } = useVehicleOnboarding()
-  const [currentStep, setCurrentStep] = useState<StepId>('vin')
+  const [currentStep, setCurrentStep] = useState<StepId>('welcome')
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
   // Define chapters (Phase 1: just vehicle-basics)
+  // Note: Welcome + Chapter Intro don't count in chapter steps
   const chapters: Chapter[] = [
     {
       id: 'vehicle-basics',
       name: 'Vehicle',
-      stepCount: 3,
+      stepCount: 3, // vin, decoding, confirm
       currentStep: getCurrentStepNumber(currentStep)
     }
   ]
@@ -45,7 +50,7 @@ export default function VehicleOnboardingPage() {
    * 
    * Pattern: Always skip loading/auto-advance steps
    * - Decoding is a loading step (auto-advances) → skip it
-   * - Go back to last user-interactive step (VIN)
+   * - Welcome/ChapterIntro are linear (can't go back from them)
    * 
    * This prevents infinite loops where:
    * Confirm → Back → Decoding → Auto-advance → Confirm
@@ -56,9 +61,11 @@ export default function VehicleOnboardingPage() {
     
     // Map each step to its previous user-interactive step
     const backDestinations: Record<StepId, StepId> = {
-      vin: 'vin',        // First step, nowhere to go
-      decoding: 'vin',   // Skip back to VIN (user-interactive)
-      confirm: 'vin',    // Skip decoding, go to VIN (user-interactive)
+      welcome: 'welcome',          // First step, nowhere to go
+      'chapter-intro': 'welcome',  // Go back to welcome
+      vin: 'chapter-intro',        // Go back to chapter intro
+      decoding: 'vin',             // Skip back to VIN (user-interactive)
+      confirm: 'vin',              // Skip decoding, go to VIN (user-interactive)
     }
     
     const destination = backDestinations[currentStep]
@@ -68,7 +75,11 @@ export default function VehicleOnboardingPage() {
   }
 
   const handleNext = () => {
-    if (currentStep === 'vin') {
+    if (currentStep === 'welcome') {
+      setCurrentStep('chapter-intro')
+    } else if (currentStep === 'chapter-intro') {
+      setCurrentStep('vin')
+    } else if (currentStep === 'vin') {
       setCurrentStep('decoding')
     } else if (currentStep === 'decoding') {
       setCurrentStep('confirm')
@@ -86,7 +97,7 @@ export default function VehicleOnboardingPage() {
   const handleStartOver = () => {
     if (confirm('Are you sure you want to start over? All progress will be lost.')) {
       reset()
-      setCurrentStep('vin')
+      setCurrentStep('welcome')
     }
   }
 
@@ -102,20 +113,26 @@ export default function VehicleOnboardingPage() {
   }, [currentStep, vehicle])
 
   // Step-based logic for footer controls
+  const isWelcome = currentStep === 'welcome'
+  const isChapterIntro = currentStep === 'chapter-intro'
   const isVin = currentStep === 'vin'
   const isDecoding = currentStep === 'decoding'
   const isConfirm = currentStep === 'confirm'
 
+  // Welcome and chapter-intro use their own buttons (not footer)
+  const useOwnButtons = isWelcome || isChapterIntro
+
   // Determine if back button should be shown
-  const canGoBack = currentStep !== 'vin'
-  const showFooterBack = !isVin // Footer back on all steps except VIN
+  const canGoBack = !isWelcome && !isChapterIntro
+  const showFooterBack = canGoBack && !isWelcome && !isChapterIntro
 
   // Determine if continue can be pressed
-  // For VIN step: handled by validation context (isValid)
-  // For decoding step: should not show continue (auto-advances)
-  // For confirm step: always allow continue
-  const canGoNext = isVin || isConfirm
-  const hideContinueButton = isDecoding // Hide continue on decoding (auto-advances)
+  // Welcome/ChapterIntro: use their own buttons
+  // VIN step: handled by validation context (isValid)
+  // Decoding step: should not show continue (auto-advances)
+  // Confirm step: always allow continue
+  const canGoNext = !useOwnButtons && (isVin || isConfirm)
+  const hideContinueButton = useOwnButtons || isDecoding // Hide on welcome, intro, and decoding
   
   // Dynamic continue label
   const continueLabel = isConfirm ? 'Looks right' : 'Continue'
@@ -143,13 +160,41 @@ export default function VehicleOnboardingPage() {
         lastSaved={lastSaved}
         mode="fullscreen"
       >
+        {currentStep === 'welcome' && (
+          <WelcomeScreen
+            title="Welcome to MotoMind"
+            subtitle="Your vehicle's digital home"
+            description="Let's add your first vehicle. It takes about 2 minutes and we'll pull accurate specs automatically."
+            steps={[
+              'Enter your VIN (17 characters)',
+              'Confirm vehicle details',
+              'You\'re all set!'
+            ]}
+            illustration={<Car className="w-24 h-24 text-blue-600" />}
+            onContinue={handleNext}
+            continueLabel="Get Started"
+          />
+        )}
+        
+        {currentStep === 'chapter-intro' && (
+          <ChapterIntro
+            chapterNumber={1}
+            title="Vehicle Basics"
+            description="Let's start with your vehicle's VIN to pull accurate specs, recall information, and service history."
+            icon={<Car className="w-16 h-16" />}
+            onContinue={handleNext}
+            continueLabel="Continue"
+          />
+        )}
+        
         {currentStep === 'vin' && (
-          <VinCapture
+          <VinCaptureV2
             stepId="vin"
             stepIndex={0}
             chapterId="vehicle-basics"
           />
         )}
+        
         {currentStep === 'decoding' && (
           <VinDecoding
             stepId="vin_decoding"
@@ -157,6 +202,7 @@ export default function VehicleOnboardingPage() {
             chapterId="vehicle-basics"
           />
         )}
+        
         {currentStep === 'confirm' && (
           <VehicleConfirm
             stepId="vehicle_confirm"
@@ -171,13 +217,16 @@ export default function VehicleOnboardingPage() {
 
 /**
  * Get current step number for chapter progress
+ * Note: Welcome and chapter-intro don't count as chapter steps
  */
 function getCurrentStepNumber(step: StepId): number {
   switch (step) {
+    case 'welcome': return 0      // Not in chapter
+    case 'chapter-intro': return 0 // Not in chapter
     case 'vin': return 1
     case 'decoding': return 2
     case 'confirm': return 3
-    default: return 1
+    default: return 0
   }
 }
 
@@ -186,6 +235,8 @@ function getCurrentStepNumber(step: StepId): number {
  */
 function getStepTitle(step: StepId): string {
   switch (step) {
+    case 'welcome': return 'Welcome'
+    case 'chapter-intro': return 'Vehicle Basics'
     case 'vin': return 'Enter your VIN'
     case 'decoding': return 'Decoding your VIN'
     case 'confirm': return 'Confirm your vehicle'
@@ -198,6 +249,8 @@ function getStepTitle(step: StepId): string {
  */
 function getStepSubtitle(step: StepId): string | undefined {
   switch (step) {
+    case 'welcome': return undefined
+    case 'chapter-intro': return undefined
     case 'vin': return 'We\'ll use this to get your vehicle details'
     case 'decoding': return 'Please wait...'
     case 'confirm': return 'Does this look right?'
