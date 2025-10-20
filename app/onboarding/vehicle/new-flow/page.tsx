@@ -20,7 +20,7 @@ import { VinCaptureV2, VinDecoding, VehicleConfirm } from '@/components/onboardi
 import { WelcomeScreen, ChapterIntro } from '@/components/onboarding/WelcomeScreen'
 import { useVehicleOnboarding } from '@/flows/vehicle/store'
 import type { Chapter } from '@/components/onboarding/ChapterProgress'
-import { Car } from 'lucide-react'
+import { Car, Clock, Shield } from 'lucide-react'
 
 type StepId = 'welcome' | 'chapter-intro' | 'vin' | 'decoding' | 'confirm'
 
@@ -119,23 +119,25 @@ export default function VehicleOnboardingPage() {
   const isDecoding = currentStep === 'decoding'
   const isConfirm = currentStep === 'confirm'
 
-  // Welcome and chapter-intro use their own buttons (not footer)
-  const useOwnButtons = isWelcome || isChapterIntro
-
   // Determine if back button should be shown
-  const canGoBack = !isWelcome && !isChapterIntro
-  const showFooterBack = canGoBack && !isWelcome && !isChapterIntro
+  const canGoBack = !isWelcome  // Can't go back from welcome
+  const showFooterBack = canGoBack
 
   // Determine if continue can be pressed
-  // Welcome/ChapterIntro: use their own buttons
+  // Welcome: Always allow (intro step)
+  // ChapterIntro: Always allow (intro step)
   // VIN step: handled by validation context (isValid)
   // Decoding step: should not show continue (auto-advances)
   // Confirm step: always allow continue
-  const canGoNext = !useOwnButtons && (isVin || isConfirm)
-  const hideContinueButton = useOwnButtons || isDecoding // Hide on welcome, intro, and decoding
+  const canGoNext = isWelcome || isChapterIntro || isVin || isConfirm
+  const hideContinueButton = isDecoding // Hide only on decoding (auto-advances)
   
   // Dynamic continue label
-  const continueLabel = isConfirm ? 'Looks right' : 'Continue'
+  const continueLabel = 
+    isWelcome ? 'Get Started' :
+    isChapterIntro ? 'Continue' :
+    isConfirm ? 'Looks right' :
+    'Continue'
   
   // Skip not needed for this flow
   const canSkip = false
@@ -164,15 +166,18 @@ export default function VehicleOnboardingPage() {
           <WelcomeScreen
             title="Welcome to MotoMind"
             subtitle="Your vehicle's digital home"
-            description="Let's add your first vehicle. It takes about 2 minutes and we'll pull accurate specs automatically."
+            description="Let's add your first vehicle. It takes about 2 minutes and we'll pull accurate specs, recall info, and service history automatically."
             steps={[
               'Enter your VIN (17 characters)',
               'Confirm vehicle details',
               'You\'re all set!'
             ]}
+            benefits={[
+              { icon: <Car className="w-6 h-6" />, label: 'Accurate specs' },
+              { icon: <Clock className="w-6 h-6" />, label: '2 minutes' },
+              { icon: <Shield className="w-6 h-6" />, label: 'Privacy first' },
+            ]}
             illustration={<Car className="w-24 h-24 text-blue-600" />}
-            onContinue={handleNext}
-            continueLabel="Get Started"
           />
         )}
         
@@ -180,10 +185,13 @@ export default function VehicleOnboardingPage() {
           <ChapterIntro
             chapterNumber={1}
             title="Vehicle Basics"
-            description="Let's start with your vehicle's VIN to pull accurate specs, recall information, and service history."
+            description="Let's start with your vehicle's VIN. We'll use this 17-character code to pull everything we need."
             icon={<Car className="w-16 h-16" />}
-            onContinue={handleNext}
-            continueLabel="Continue"
+            highlights={[
+              'Accurate vehicle specs',
+              'Recall information',
+              'Service history',
+            ]}
           />
         )}
         
