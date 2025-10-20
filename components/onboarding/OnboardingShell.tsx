@@ -134,22 +134,15 @@ export function OnboardingShell({
               )}
             </div>
             
-            {/* Center: Title + Progress */}
-            <div className="flex-1 flex flex-col items-center text-center px-4 gap-1.5">
+            {/* Center: Title */}
+            <div className="flex-1 flex flex-col items-center text-center px-4">
               {title && (
                 <h1 className="text-base font-semibold text-gray-900 truncate max-w-md">
                   {title}
                 </h1>
               )}
-              {!hideProgress && useChapters && (
-                <ChapterProgress
-                  chapters={chapters!}
-                  currentChapterId={currentChapterId!}
-                  showChapterName={showChapterName}
-                />
-              )}
               {subtitle && (
-                <p className="text-xs text-gray-500 truncate max-w-md">
+                <p className="text-xs text-gray-500 mt-0.5 truncate max-w-md">
                   {subtitle}
                 </p>
               )}
@@ -169,6 +162,19 @@ export function OnboardingShell({
           </div>
         </div>
       </header>
+      
+      {/* Progress Bar (separate section) */}
+      {!hideProgress && useChapters && (
+        <div className="sticky top-16 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <ChapterProgress
+              chapters={chapters!}
+              currentChapterId={currentChapterId!}
+              showChapterName={showChapterName}
+            />
+          </div>
+        </div>
+      )}
       
       {/* Content */}
       <main className="flex-1 flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
