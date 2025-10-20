@@ -345,6 +345,16 @@ export const DataSourceSchema = z.object({
   // Chain (for type: 'chain')
   steps: z.array(z.string()).optional(), // ["vinDecode", "userProfile"]
   
+  // Idempotency (for POST requests with retry)
+  idempotent: z.boolean().optional(), // Mark POST as safe to retry
+  dedupeKey: z.string().optional(), // Template for Idempotency-Key header: "{{ctx.requestId}}"
+  
+  // Response validation (Zod schema - runtime only, not in JSON)
+  // responseSchema: z.any().optional(), // Not in JSON schema
+  
+  // Stale-While-Revalidate
+  staleWhileRevalidate: z.boolean().optional(),
+  
   // Privacy & Analytics
   privacy: PrivacySchema.optional(),
   analytics: z.object({

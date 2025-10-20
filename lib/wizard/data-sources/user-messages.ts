@@ -149,7 +149,7 @@ export const SAFE_MODE_MESSAGES = {
   
   staleData: {
     title: 'Showing cached data',
-    message: 'We couldn't refresh the data, but here's what we have.',
+    message: 'We could not refresh the data, but here is what we have.',
     level: 'info' as const,
   },
 }
