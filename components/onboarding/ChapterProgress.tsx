@@ -33,20 +33,16 @@ export function ChapterProgress({
   const currentChapterIndex = chapters.findIndex((c) => c.id === currentChapterId)
   const currentChapter = chapters[currentChapterIndex]
   
-  // Calculate bar widths: active is expanded, others are collapsed
+  // Calculate bar widths: active expands to fill, others are collapsed
   const getBarWidth = (isActive: boolean) => {
     const count = chapters.length
     
     if (isActive) {
-      // Active chapter gets more space
-      if (count === 1) return 'w-32' // Single chapter
-      if (count === 2) return 'w-32' // 128px
-      if (count === 3) return 'w-28' // 112px
-      if (count === 4) return 'w-24' // 96px
-      return 'w-20' // 80px for 5+ chapters
+      // Active chapter expands to fill available space
+      return 'flex-1'
     } else {
       // Completed/future chapters are very compact
-      if (count === 1) return 'w-32' // Single chapter
+      if (count === 1) return 'w-32' // Single chapter (won't be used with flex-1)
       if (count === 2) return 'w-10' // 40px
       if (count === 3) return 'w-8' // 32px
       if (count === 4) return 'w-6' // 24px
