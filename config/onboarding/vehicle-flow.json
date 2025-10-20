@@ -1,0 +1,111 @@
+{
+  "metadata": {
+    "name": "Vehicle Onboarding Flow",
+    "version": "2.0",
+    "totalSteps": 5,
+    "estimatedTime": "2 minutes"
+  },
+  
+  "steps": [
+    {
+      "id": "welcome",
+      "type": "informational",
+      "title": "Welcome to MotoMind",
+      "subtitle": "Your vehicle's digital home",
+      "description": "Let's add your first vehicle. It takes about 2 minutes and we'll pull accurate specs, recall info, and service history automatically.",
+      "steps": [
+        "Enter your VIN (17 characters)",
+        "Confirm vehicle details",
+        "You're all set!"
+      ],
+      "benefits": [
+        { "icon": "car", "label": "Accurate specs" },
+        { "icon": "clock", "label": "2 minutes" },
+        { "icon": "shield", "label": "Privacy first" }
+      ]
+    },
+    
+    {
+      "id": "chapter-intro",
+      "type": "chapter",
+      "chapterNumber": 1,
+      "title": "Vehicle Basics",
+      "description": "Let's start with your vehicle's VIN. We'll use this 17-character code to pull everything we need.",
+      "icon": "car",
+      "highlights": [
+        "Accurate vehicle specs",
+        "Recall information",
+        "Service history"
+      ]
+    },
+    
+    {
+      "id": "vin",
+      "type": "form",
+      "title": "What's your vehicle's VIN?",
+      "description": "We'll use this 17-character code to pull accurate specs, recall information, and service history.",
+      "icon": "car",
+      "fields": [
+        {
+          "id": "vin",
+          "type": "text",
+          "label": "Vehicle Identification Number (VIN)",
+          "placeholder": "Enter 17-character VIN",
+          "validation": {
+            "required": true,
+            "length": 17,
+            "pattern": "^[A-HJ-NPR-Z0-9]{17}$",
+            "format": "uppercase",
+            "excludeChars": ["I", "O", "Q"]
+          },
+          "inputMode": "text",
+          "enterKeyHint": "done",
+          "autoComplete": "off"
+        }
+      ],
+      "help": {
+        "title": "Where to find your VIN",
+        "items": [
+          "Dashboard (driver side, visible through windshield)",
+          "Driver's door jamb (sticker)",
+          "Vehicle registration",
+          "Insurance card",
+          "Owner's manual"
+        ]
+      },
+      "helpers": [
+        {
+          "type": "info",
+          "content": "Paste or type your 17-character VIN. Letters I, O, and Q are not used."
+        }
+      ]
+    },
+    
+    {
+      "id": "vin-decoding",
+      "type": "processing",
+      "title": "Decoding your VIN",
+      "description": "Please wait while we fetch your vehicle details...",
+      "process": {
+        "endpoint": "/api/vin/decode",
+        "method": "POST",
+        "timeoutMs": 20000,
+        "slowHintMs": 12000,
+        "ticker": [
+          "Contacting VIN database...",
+          "Validating checksum...",
+          "Preparing confirmation..."
+        ]
+      },
+      "autoAdvance": true
+    },
+    
+    {
+      "id": "confirm",
+      "type": "confirmation",
+      "title": "Confirm your vehicle",
+      "description": "Does this look right?",
+      "continueLabel": "Looks right"
+    }
+  ]
+}

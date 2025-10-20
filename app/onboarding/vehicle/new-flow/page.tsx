@@ -1,14 +1,15 @@
 /**
- * Vehicle Onboarding Flow - Phase 1 + Mobile-First Updates
+ * Vehicle Onboarding Flow - JSON-Driven
  * 
- * Complete flow with welcome + chapter intro + new form components.
+ * 100% driven by JSON configuration + StepRenderer.
+ * No custom screen components needed!
  * 
- * Steps:
- * 1. Welcome - First impression, set context
- * 2. Chapter Intro - Introduce Vehicle Basics chapter
- * 3. VIN Capture - Input + validation (NEW: FormSection + mobile-first)
- * 4. VIN Decoding - API call with timeout
- * 5. Vehicle Confirm - Display + micro-insight
+ * Architecture:
+ * - JSON config defines all steps
+ * - StepRenderer generates UI
+ * - OnboardingShell provides navigation
+ * 
+ * This is the pattern for ALL future flows.
  */
 
 'use client'
@@ -16,18 +17,56 @@
 import { useEffect, useState } from 'react'
 import { OnboardingShell } from '@/components/onboarding/OnboardingShell'
 import { ValidationProvider } from '@/wizard/validation-context'
-import { VinCaptureV2, VinDecoding, VehicleConfirm } from '@/components/onboarding/steps/vehicle'
-import { WelcomeScreen, ChapterIntro } from '@/components/onboarding/WelcomeScreen'
+import { StepRenderer, type StepConfig } from '@/components/onboarding/StepRenderer'
+import { validateField } from '@/components/onboarding/layouts/FormScreen'
+import { VehicleConfirm } from '@/components/onboarding/steps/vehicle'
 import { useVehicleOnboarding } from '@/flows/vehicle/store'
 import type { Chapter } from '@/components/onboarding/ChapterProgress'
-import { Car, Clock, Shield } from 'lucide-react'
+import flowConfig from '@/config/onboarding/vehicle-flow.json'
 
 type StepId = 'welcome' | 'chapter-intro' | 'vin' | 'decoding' | 'confirm'
 
 export default function VehicleOnboardingPage() {
-  const { vehicle, reset } = useVehicleOnboarding()
+  const { vehicle, vin, setVin, setVehicle, reset } = useVehicleOnboarding()
   const [currentStep, setCurrentStep] = useState<StepId>('welcome')
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
+  
+  // Form values (for form steps)
+  const [values, setValues] = useState<Record<string, string>>({ vin: vin || '' })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  
+  // Update store when VIN changes
+  useEffect(() => {
+    if (values.vin && values.vin.length === 17) {
+      setVin(values.vin)
+    }
+  }, [values.vin, setVin])
+  
+  // Get current step config from JSON
+  const getCurrentStepConfig = (): StepConfig => {
+    const stepMap: Record<StepId, StepConfig> = {
+      'welcome': flowConfig.steps[0] as StepConfig,
+      'chapter-intro': flowConfig.steps[1] as StepConfig,
+      'vin': flowConfig.steps[2] as StepConfig,
+      'decoding': flowConfig.steps[3] as StepConfig,
+      'confirm': flowConfig.steps[4] as StepConfig,
+    }
+    return stepMap[currentStep]
+  }
+  
+  // Handle form field changes
+  const handleFieldChange = (fieldId: string, value: string) => {
+    setValues(prev => ({ ...prev, [fieldId]: value }))
+    
+    // Clear error for this field
+    if (errors[fieldId]) {
+      setErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors[fieldId]
+        return newErrors
+      })
+    }
+  }
 
   // Define chapters (Phase 1: just vehicle-basics)
   // Note: Welcome + Chapter Intro don't count in chapter steps
@@ -80,6 +119,24 @@ export default function VehicleOnboardingPage() {
     } else if (currentStep === 'chapter-intro') {
       setCurrentStep('vin')
     } else if (currentStep === 'vin') {
+      // Validate VIN before proceeding
+      const stepConfig = getCurrentStepConfig()
+      if (stepConfig.type === 'form') {
+        const newErrors: Record<string, string> = {}
+        
+        stepConfig.fields.forEach(field => {
+          const error = validateField(field, values[field.id] || '')
+          if (error) {
+            newErrors[field.id] = error
+          }
+        })
+        
+        if (Object.keys(newErrors).length > 0) {
+          setErrors(newErrors)
+          return  // Don't advance if validation fails
+        }
+      }
+      
       setCurrentStep('decoding')
     } else if (currentStep === 'decoding') {
       setCurrentStep('confirm')
@@ -162,60 +219,21 @@ export default function VehicleOnboardingPage() {
         lastSaved={lastSaved}
         mode="fullscreen"
       >
-        {currentStep === 'welcome' && (
-          <WelcomeScreen
-            title="Welcome to MotoMind"
-            subtitle="Your vehicle's digital home"
-            description="Let's add your first vehicle. It takes about 2 minutes and we'll pull accurate specs, recall info, and service history automatically."
-            steps={[
-              'Enter your VIN (17 characters)',
-              'Confirm vehicle details',
-              'You\'re all set!'
-            ]}
-            benefits={[
-              { icon: <Car className="w-6 h-6" />, label: 'Accurate specs' },
-              { icon: <Clock className="w-6 h-6" />, label: '2 minutes' },
-              { icon: <Shield className="w-6 h-6" />, label: 'Privacy first' },
-            ]}
-            illustration={<Car className="w-24 h-24 text-blue-600" />}
-          />
-        )}
-        
-        {currentStep === 'chapter-intro' && (
-          <ChapterIntro
-            chapterNumber={1}
-            title="Vehicle Basics"
-            description="Let's start with your vehicle's VIN. We'll use this 17-character code to pull everything we need."
-            icon={<Car className="w-16 h-16" />}
-            highlights={[
-              'Accurate vehicle specs',
-              'Recall information',
-              'Service history',
-            ]}
-          />
-        )}
-        
-        {currentStep === 'vin' && (
-          <VinCaptureV2
-            stepId="vin"
-            stepIndex={0}
-            chapterId="vehicle-basics"
-          />
-        )}
-        
-        {currentStep === 'decoding' && (
-          <VinDecoding
-            stepId="vin_decoding"
-            stepIndex={1}
-            chapterId="vehicle-basics"
-          />
-        )}
-        
-        {currentStep === 'confirm' && (
+        {/* JSON-Driven Rendering */}
+        {currentStep === 'confirm' ? (
+          // Confirmation still uses custom component (for now)
           <VehicleConfirm
             stepId="vehicle_confirm"
             stepIndex={2}
             chapterId="vehicle-basics"
+          />
+        ) : (
+          // All other steps use StepRenderer with JSON config
+          <StepRenderer
+            step={getCurrentStepConfig()}
+            values={values}
+            onChange={handleFieldChange}
+            errors={errors}
           />
         )}
       </OnboardingShell>
