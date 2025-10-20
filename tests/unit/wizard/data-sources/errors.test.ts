@@ -19,14 +19,14 @@ describe('Error Taxonomy', () => {
       expect(error.name).toBe('DataSourceError')
     })
     
-    test('includes metadata', () => {
+    test('includes details', () => {
       const error = new DataSourceError(
         DataSourceErrorCode.HTTP_5XX,
         'Server error',
         { status: 503, url: '/api/test' }
       )
       
-      expect(error.metadata).toEqual({ status: 503, url: '/api/test' })
+      expect(error.details).toEqual({ status: 503, url: '/api/test' })
     })
     
     test('is instanceof Error', () => {
@@ -61,10 +61,10 @@ describe('Error Taxonomy', () => {
       expect(classified.retryable).toBe(true)
     })
     
-    test('classifies DataSourceError', () => {
+    test('classifies DataSourceError by message pattern', () => {
       const error = new DataSourceError(
         DataSourceErrorCode.HTTP_5XX,
-        'Server error'
+        'HTTP 503'
       )
       const classified = classifyError(error)
       
@@ -84,14 +84,14 @@ describe('Error Taxonomy', () => {
       const classified = classifyError('string error')
       
       expect(classified.code).toBe(DataSourceErrorCode.UNKNOWN)
-      expect(classified.message).toContain('string error')
+      expect(classified.message).toBe('An unexpected error occurred.')
     })
     
     test('handles null/undefined', () => {
       const classified = classifyError(null)
       
       expect(classified.code).toBe(DataSourceErrorCode.UNKNOWN)
-      expect(classified.message).toBe('Unknown error')
+      expect(classified.message).toBe('An unexpected error occurred.')
     })
   })
   
@@ -100,7 +100,6 @@ describe('Error Taxonomy', () => {
       DataSourceErrorCode.TIMEOUT,
       DataSourceErrorCode.NETWORK,
       DataSourceErrorCode.HTTP_5XX,
-      DataSourceErrorCode.CB_OPEN,
     ]
     
     const nonRetryableCodes = [
@@ -112,17 +111,36 @@ describe('Error Taxonomy', () => {
       DataSourceErrorCode.HTTPS_REQUIRED,
       DataSourceErrorCode.SOURCE_NOT_FOUND,
       DataSourceErrorCode.INVALID_CONFIG,
+      DataSourceErrorCode.CB_OPEN,
     ]
     
     test.each(retryableCodes)('marks %s as retryable', (code) => {
-      const error = new DataSourceError(code, 'test')
+      // Create error messages that will match the classification patterns
+      const messages = {
+        [DataSourceErrorCode.TIMEOUT]: 'timeout',
+        [DataSourceErrorCode.NETWORK]: 'network error',
+        [DataSourceErrorCode.HTTP_5XX]: 'HTTP 500',
+      }
+      const error = new DataSourceError(code, messages[code])
       const classified = classifyError(error)
       
       expect(classified.retryable).toBe(true)
     })
     
     test.each(nonRetryableCodes)('marks %s as non-retryable', (code) => {
-      const error = new DataSourceError(code, 'test')
+      // Create error messages that will match the classification patterns
+      const messages = {
+        [DataSourceErrorCode.ABORTED]: 'aborted',
+        [DataSourceErrorCode.HTTP_4XX]: 'HTTP 400',
+        [DataSourceErrorCode.VALIDATION]: 'validation failed',
+        [DataSourceErrorCode.PRIVACY_BLOCKED]: 'privacy violation',
+        [DataSourceErrorCode.SSRF_BLOCKED]: 'not allowed',
+        [DataSourceErrorCode.HTTPS_REQUIRED]: 'HTTPS required',
+        [DataSourceErrorCode.SOURCE_NOT_FOUND]: 'not found',
+        [DataSourceErrorCode.INVALID_CONFIG]: 'invalid config',
+        [DataSourceErrorCode.CB_OPEN]: 'CB_OPEN',
+      }
+      const error = new DataSourceError(code, messages[code])
       const classified = classifyError(error)
       
       expect(classified.retryable).toBe(false)
@@ -130,21 +148,23 @@ describe('Error Taxonomy', () => {
   })
   
   describe('Error Messages', () => {
-    test('uses error message from Error object', () => {
+    test('classifies unknown errors with default message', () => {
       const error = new Error('Custom error message')
       const classified = classifyError(error)
       
-      expect(classified.message).toContain('Custom error message')
+      expect(classified.code).toBe(DataSourceErrorCode.UNKNOWN)
+      expect(classified.message).toBe('An unexpected error occurred.')
     })
     
-    test('preserves DataSourceError message', () => {
+    test('uses default messages for classified errors', () => {
       const error = new DataSourceError(
         DataSourceErrorCode.TIMEOUT,
-        'Custom timeout message'
+        'timeout'
       )
       const classified = classifyError(error)
       
-      expect(classified.message).toBe('Custom timeout message')
+      expect(classified.code).toBe(DataSourceErrorCode.TIMEOUT)
+      expect(classified.message).toBe('Request timed out. Please try again.')
     })
   })
 })

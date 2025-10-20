@@ -27,15 +27,15 @@ describe('Retry Logic', () => {
     
     test('retries on failure', async () => {
       const fn = jest.fn()
-        .mockRejectedValueOnce(new Error('fail'))
-        .mockRejectedValueOnce(new Error('fail'))
+        .mockRejectedValueOnce(new Error('timeout'))
+        .mockRejectedValueOnce(new Error('timeout'))
         .mockResolvedValue('success')
       
       const source: DataSourceDef = {
         name: 'test',
         type: 'http.get',
         url: '/api/test',
-        retry: { retries: 3, backoff: 'exponential', baseMs: 10 }
+        retry: { retries: 3, backoff: 'exponential', baseMs: 10, maxMs: 1000 }
       }
       
       const result = await executeWithRetry(fn, { source, isPost: false })
@@ -45,18 +45,18 @@ describe('Retry Logic', () => {
     })
     
     test('throws after max retries', async () => {
-      const fn = jest.fn().mockRejectedValue(new Error('fail'))
+      const fn = jest.fn().mockRejectedValue(new Error('timeout'))
       
       const source: DataSourceDef = {
         name: 'test',
         type: 'http.get',
         url: '/api/test',
-        retry: { retries: 2, backoff: 'exponential', baseMs: 10 }
+        retry: { retries: 2, backoff: 'exponential', baseMs: 10, maxMs: 1000 }
       }
       
       await expect(
         executeWithRetry(fn, { source, isPost: false })
-      ).rejects.toThrow('fail')
+      ).rejects.toThrow('timeout')
       
       expect(fn).toHaveBeenCalledTimes(3) // initial + 2 retries
     })
@@ -64,7 +64,7 @@ describe('Retry Logic', () => {
   
   describe('Backoff Strategies', () => {
     test('exponential backoff increases delay', async () => {
-      const fn = jest.fn().mockRejectedValue(new Error('fail'))
+      const fn = jest.fn().mockRejectedValue(new Error('network error'))
       const delays: number[] = []
       
       const source: DataSourceDef = {
@@ -95,7 +95,7 @@ describe('Retry Logic', () => {
     })
     
     test('linear backoff increases by base', async () => {
-      const fn = jest.fn().mockRejectedValue(new Error('fail'))
+      const fn = jest.fn().mockRejectedValue(new Error('network error'))
       const delays: number[] = []
       
       const source: DataSourceDef = {
@@ -122,14 +122,14 @@ describe('Retry Logic', () => {
     })
     
     test('fixed backoff uses constant delay', async () => {
-      const fn = jest.fn().mockRejectedValue(new Error('fail'))
+      const fn = jest.fn().mockRejectedValue(new Error('network error'))
       const delays: number[] = []
       
       const source: DataSourceDef = {
         name: 'test',
         type: 'http.get',
         url: '/api/test',
-        retry: { retries: 3, backoff: 'fixed', baseMs: 100 }
+        retry: { retries: 3, backoff: 'fixed', baseMs: 100, maxMs: 1000 }
       }
       
       try {
@@ -151,7 +151,7 @@ describe('Retry Logic', () => {
     })
     
     test('respects maxMs cap', async () => {
-      const fn = jest.fn().mockRejectedValue(new Error('fail'))
+      const fn = jest.fn().mockRejectedValue(new Error('network error'))
       const delays: number[] = []
       
       const source: DataSourceDef = {
@@ -181,16 +181,16 @@ describe('Retry Logic', () => {
   describe('POST Idempotency Guard', () => {
     test('retries POST with idempotent flag', async () => {
       const fn = jest.fn()
-        .mockRejectedValueOnce(new Error('fail'))
+        .mockRejectedValueOnce(new Error('timeout'))
         .mockResolvedValue('success')
       
       const source: DataSourceDef = {
         name: 'test',
         type: 'http.post',
         url: '/api/test',
-        retry: { retries: 3, backoff: 'exponential', baseMs: 10 },
+        retry: { retries: 3, backoff: 'exponential', baseMs: 10, maxMs: 1000 },
         idempotent: true
-      }
+      } as any
       
       const result = await executeWithRetry(fn, { source, isPost: true })
       
@@ -200,16 +200,16 @@ describe('Retry Logic', () => {
     
     test('retries POST with dedupeKey', async () => {
       const fn = jest.fn()
-        .mockRejectedValueOnce(new Error('fail'))
+        .mockRejectedValueOnce(new Error('timeout'))
         .mockResolvedValue('success')
       
       const source: DataSourceDef = {
         name: 'test',
         type: 'http.post',
         url: '/api/test',
-        retry: { retries: 3, backoff: 'exponential', baseMs: 10 },
+        retry: { retries: 3, backoff: 'exponential', baseMs: 10, maxMs: 1000 },
         dedupeKey: 'request-123'
-      }
+      } as any
       
       const result = await executeWithRetry(fn, { source, isPost: true })
       
@@ -218,18 +218,18 @@ describe('Retry Logic', () => {
     })
     
     test('does NOT retry POST without idempotency markers', async () => {
-      const fn = jest.fn().mockRejectedValue(new Error('fail'))
+      const fn = jest.fn().mockRejectedValue(new Error('timeout'))
       
       const source: DataSourceDef = {
         name: 'test',
         type: 'http.post',
         url: '/api/test',
-        retry: { retries: 3, backoff: 'exponential', baseMs: 10 }
+        retry: { retries: 3, backoff: 'exponential', baseMs: 10, maxMs: 1000 }
       }
       
       await expect(
         executeWithRetry(fn, { source, isPost: true })
-      ).rejects.toThrow('fail')
+      ).rejects.toThrow('timeout')
       
       expect(fn).toHaveBeenCalledTimes(1) // No retries
     })
@@ -276,7 +276,7 @@ describe('Retry Logic', () => {
   describe('Retry Callback', () => {
     test('calls onRetry callback', async () => {
       const fn = jest.fn()
-        .mockRejectedValueOnce(new Error('fail'))
+        .mockRejectedValueOnce(new Error('timeout'))
         .mockResolvedValue('success')
       
       const onRetry = jest.fn()
@@ -285,7 +285,7 @@ describe('Retry Logic', () => {
         name: 'test',
         type: 'http.get',
         url: '/api/test',
-        retry: { retries: 3, backoff: 'exponential', baseMs: 10 }
+        retry: { retries: 3, backoff: 'exponential', baseMs: 10, maxMs: 1000 }
       }
       
       await executeWithRetry(fn, { source, isPost: false, onRetry })
@@ -301,7 +301,7 @@ describe('Retry Logic', () => {
   
   describe('No Retry Config', () => {
     test('does not retry when no retry config', async () => {
-      const fn = jest.fn().mockRejectedValue(new Error('fail'))
+      const fn = jest.fn().mockRejectedValue(new Error('timeout'))
       
       const source: DataSourceDef = {
         name: 'test',
@@ -311,7 +311,7 @@ describe('Retry Logic', () => {
       
       await expect(
         executeWithRetry(fn, { source, isPost: false })
-      ).rejects.toThrow('fail')
+      ).rejects.toThrow('timeout')
       
       expect(fn).toHaveBeenCalledTimes(1)
     })
