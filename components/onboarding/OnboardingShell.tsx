@@ -51,6 +51,8 @@ type OnboardingShellProps = {
   hideSkip?: boolean
   hideExit?: boolean
   hideStartOver?: boolean
+  showFooterBack?: boolean
+  hideContinueButton?: boolean
   continueLabel?: string
   mode?: 'fullscreen' | 'modal'
 }
@@ -80,6 +82,8 @@ export function OnboardingShell({
   hideSkip = false,
   hideExit = false,
   hideStartOver = false,
+  showFooterBack = false,
+  hideContinueButton = false,
   continueLabel = 'Continue',
   mode = 'fullscreen'
 }: OnboardingShellProps) {
@@ -246,9 +250,25 @@ export function OnboardingShell({
       {/* Footer */}
       <footer className="sticky bottom-0 bg-white/80 backdrop-blur-md border-t border-white/20 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Left: Skip */}
+          <div className="flex items-center justify-between gap-4 h-16">
+            {/* Left: Back */}
             <div className="flex-1">
+              {showFooterBack && canGoBack && onBack && (
+                <Button
+                  variant="outline"
+                  onClick={onBack}
+                  className="text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isProcessing}
+                  aria-disabled={isProcessing}
+                  aria-label="Go back to previous step"
+                >
+                  ← Back
+                </Button>
+              )}
+            </div>
+            
+            {/* Middle: Skip (optional) */}
+            <div className="flex-shrink-0">
               {!hideSkip && canSkip && onSkip && (
                 <Button
                   variant="ghost"
@@ -257,29 +277,31 @@ export function OnboardingShell({
                   disabled={isProcessing}
                   aria-disabled={isProcessing}
                 >
-                  Skip for now
+                  Skip
                 </Button>
               )}
             </div>
             
             {/* Right: Continue */}
             <div className="flex-1 flex justify-end">
-              <Button
-                onClick={handleContinue}
-                disabled={!canGoNext || !isValid || isProcessing}
-                aria-disabled={!canGoNext || !isValid || isProcessing}
-                size="lg"
-                className="min-w-[140px] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isProcessing ? (
-                  <>
-                    <span className="animate-spin mr-2">⏳</span>
-                    Processing...
-                  </>
-                ) : (
-                  continueLabel
-                )}
-              </Button>
+              {!hideContinueButton && (
+                <Button
+                  onClick={handleContinue}
+                  disabled={!canGoNext || !isValid || isProcessing}
+                  aria-disabled={!canGoNext || !isValid || isProcessing}
+                  size="lg"
+                  className="min-w-[140px] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isProcessing ? (
+                    <>
+                      <span className="animate-spin mr-2">⏳</span>
+                      Processing...
+                    </>
+                  ) : (
+                    continueLabel
+                  )}
+                </Button>
+              )}
             </div>
           </div>
         </div>

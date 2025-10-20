@@ -155,23 +155,15 @@ export function VehicleConfirm({
         </div>
       )}
       
-      {/* Actions */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      {/* Actions: Secondary only (primary "Looks right" is in footer) */}
+      <div className="flex justify-center">
         <Button
           variant="outline"
           onClick={handleEditVin}
-          className="flex items-center gap-2 sm:order-2"
+          className="flex items-center gap-2"
         >
           <Edit className="w-4 h-4" />
           Edit VIN
-        </Button>
-        
-        <Button
-          onClick={() => analytics.trackStepComplete(`${stepId}_accept`, stepIndex, chapterId)}
-          className="flex-1 sm:order-1"
-          size="lg"
-        >
-          Looks right
         </Button>
       </div>
       

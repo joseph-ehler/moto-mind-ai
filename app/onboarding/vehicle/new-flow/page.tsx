@@ -82,14 +82,24 @@ export default function VehicleOnboardingPage() {
     }
   }, [currentStep, vehicle])
 
+  // Step-based logic for footer controls
+  const isVin = currentStep === 'vin'
+  const isDecoding = currentStep === 'decoding'
+  const isConfirm = currentStep === 'confirm'
+
   // Determine if back button should be shown
   const canGoBack = currentStep !== 'vin'
+  const showFooterBack = !isVin // Footer back on all steps except VIN
 
   // Determine if continue can be pressed
   // For VIN step: handled by validation context (isValid)
   // For decoding step: should not show continue (auto-advances)
   // For confirm step: always allow continue
-  const canGoNext = currentStep === 'vin' || currentStep === 'confirm'
+  const canGoNext = isVin || isConfirm
+  const hideContinueButton = isDecoding // Hide continue on decoding (auto-advances)
+  
+  // Dynamic continue label
+  const continueLabel = isConfirm ? 'Looks right' : 'Continue'
   
   // Skip not needed for this flow
   const canSkip = false
@@ -104,6 +114,9 @@ export default function VehicleOnboardingPage() {
         canGoBack={canGoBack}
         canGoNext={canGoNext}
         canSkip={canSkip}
+        showFooterBack={showFooterBack}
+        hideContinueButton={hideContinueButton}
+        continueLabel={continueLabel}
         onBack={handleBack}
         onNext={handleNext}
         onExit={handleExit}
