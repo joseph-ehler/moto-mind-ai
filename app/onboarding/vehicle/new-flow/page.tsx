@@ -40,11 +40,30 @@ export default function VehicleOnboardingPage() {
     setLastSaved(new Date())
   }, [vehicle])
 
+  /**
+   * Smart Back Navigation
+   * 
+   * Pattern: Always skip loading/auto-advance steps
+   * - Decoding is a loading step (auto-advances) → skip it
+   * - Go back to last user-interactive step (VIN)
+   * 
+   * This prevents infinite loops where:
+   * Confirm → Back → Decoding → Auto-advance → Confirm
+   */
   const handleBack = () => {
-    if (currentStep === 'decoding') {
-      setCurrentStep('vin')
-    } else if (currentStep === 'confirm') {
-      setCurrentStep('vin')
+    // Define loading/auto-advance steps to skip
+    const loadingSteps: StepId[] = ['decoding']
+    
+    // Map each step to its previous user-interactive step
+    const backDestinations: Record<StepId, StepId> = {
+      vin: 'vin',        // First step, nowhere to go
+      decoding: 'vin',   // Skip back to VIN (user-interactive)
+      confirm: 'vin',    // Skip decoding, go to VIN (user-interactive)
+    }
+    
+    const destination = backDestinations[currentStep]
+    if (destination && destination !== currentStep) {
+      setCurrentStep(destination)
     }
   }
 
