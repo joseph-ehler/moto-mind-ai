@@ -172,21 +172,9 @@ export function OnboardingShell({
       <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Left: Back */}
+            {/* Left: Empty (footer handles back) */}
             <div className="flex items-center gap-3 flex-1">
-              {!hideBack && canGoBack && onBack && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onBack}
-                  className="text-gray-600 hover:text-gray-900 -ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={isProcessing}
-                  aria-disabled={isProcessing}
-                >
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Back
-                </Button>
-              )}
+              {/* Back button moved to footer for consistent navigation */}
             </div>
             
             {/* Center: Title */}
@@ -247,17 +235,17 @@ export function OnboardingShell({
         </div>
       </main>
       
-      {/* Footer */}
-      <footer className="sticky bottom-0 bg-white/80 backdrop-blur-md border-t border-white/20 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
+      {/* Footer - Mobile/Native Optimized */}
+      <footer className="sticky bottom-0 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0_-2px_16px_rgba(0,0,0,0.08)] safe-area-inset-bottom">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4 h-16">
+          <div className="flex items-center justify-between gap-3 sm:gap-4 min-h-[60px] sm:h-16 py-2 sm:py-0">
             {/* Left: Back */}
             <div className="flex-1">
               {showFooterBack && canGoBack && onBack && (
                 <Button
                   variant="outline"
                   onClick={onBack}
-                  className="text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="h-11 px-4 text-base font-medium text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform touch-manipulation"
                   disabled={isProcessing}
                   aria-disabled={isProcessing}
                   aria-label="Go back to previous step"
@@ -273,7 +261,7 @@ export function OnboardingShell({
                 <Button
                   variant="ghost"
                   onClick={onSkip}
-                  className="text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="h-11 px-3 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform touch-manipulation"
                   disabled={isProcessing}
                   aria-disabled={isProcessing}
                 >
@@ -289,13 +277,13 @@ export function OnboardingShell({
                   onClick={handleContinue}
                   disabled={!canGoNext || !isValid || isProcessing}
                   aria-disabled={!canGoNext || !isValid || isProcessing}
-                  size="lg"
-                  className="min-w-[140px] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="h-11 px-6 min-w-[120px] sm:min-w-[140px] text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform touch-manipulation"
                 >
                   {isProcessing ? (
                     <>
                       <span className="animate-spin mr-2">⏳</span>
-                      Processing...
+                      <span className="hidden sm:inline">Processing...</span>
+                      <span className="sm:hidden">...</span>
                     </>
                   ) : (
                     continueLabel
