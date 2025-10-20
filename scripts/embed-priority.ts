@@ -34,7 +34,7 @@ function getSupabaseClient() {
 }
 
 const EMBEDDING_MODEL = 'text-embedding-3-small'
-const BATCH_SIZE = 100
+const BATCH_SIZE = 50 // Reduced from 100 to avoid Supabase timeout
 const RATE_LIMIT_DELAY = 20 // ms between batches
 
 type Priority = 'high' | 'medium' | 'low'
