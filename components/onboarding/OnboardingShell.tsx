@@ -238,46 +238,18 @@ export function OnboardingShell({
       {/* Footer - Mobile/Native Optimized */}
       <footer className="sticky bottom-0 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0_-2px_16px_rgba(0,0,0,0.08)] safe-area-inset-bottom">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-3 sm:gap-4 min-h-[60px] sm:h-16 py-2 sm:py-0">
-            {/* Left: Back */}
-            <div className="flex-1">
-              {showFooterBack && canGoBack && onBack && (
-                <Button
-                  variant="outline"
-                  onClick={onBack}
-                  className="h-11 px-4 text-base font-medium text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform touch-manipulation"
-                  disabled={isProcessing}
-                  aria-disabled={isProcessing}
-                  aria-label="Go back to previous step"
-                >
-                  ← Back
-                </Button>
-              )}
-            </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 py-3 sm:py-0 sm:h-16">
+            {/* Mobile: Stack buttons vertically */}
+            {/* Desktop: Horizontal layout */}
             
-            {/* Middle: Skip (optional) */}
-            <div className="flex-shrink-0">
-              {!hideSkip && canSkip && onSkip && (
-                <Button
-                  variant="ghost"
-                  onClick={onSkip}
-                  className="h-11 px-3 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform touch-manipulation"
-                  disabled={isProcessing}
-                  aria-disabled={isProcessing}
-                >
-                  Skip
-                </Button>
-              )}
-            </div>
-            
-            {/* Right: Continue */}
-            <div className="flex-1 flex justify-end">
+            {/* Primary: Continue (mobile first, desktop last) */}
+            <div className="order-1 sm:order-3 sm:flex-1 sm:flex sm:justify-end">
               {!hideContinueButton && (
                 <Button
                   onClick={handleContinue}
                   disabled={!canGoNext || !isValid || isProcessing}
                   aria-disabled={!canGoNext || !isValid || isProcessing}
-                  className="h-11 px-6 min-w-[120px] sm:min-w-[140px] text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform touch-manipulation"
+                  className="w-full sm:w-auto h-11 px-6 sm:min-w-[140px] text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform touch-manipulation"
                 >
                   {isProcessing ? (
                     <>
@@ -288,6 +260,38 @@ export function OnboardingShell({
                   ) : (
                     continueLabel
                   )}
+                </Button>
+              )}
+            </div>
+            
+            {/* Secondary row on mobile: Back + Skip */}
+            <div className="order-2 sm:order-1 flex items-center justify-between gap-3 sm:flex-1">
+              {/* Back */}
+              <div className="flex-1 sm:flex-initial">
+                {showFooterBack && canGoBack && onBack && (
+                  <Button
+                    variant="outline"
+                    onClick={onBack}
+                    className="w-full sm:w-auto h-11 px-4 text-base font-medium text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform touch-manipulation"
+                    disabled={isProcessing}
+                    aria-disabled={isProcessing}
+                    aria-label="Go back to previous step"
+                  >
+                    ← Back
+                  </Button>
+                )}
+              </div>
+              
+              {/* Skip (middle on desktop, right on mobile) */}
+              {!hideSkip && canSkip && onSkip && (
+                <Button
+                  variant="ghost"
+                  onClick={onSkip}
+                  className="h-11 px-3 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform touch-manipulation sm:order-2"
+                  disabled={isProcessing}
+                  aria-disabled={isProcessing}
+                >
+                  Skip
                 </Button>
               )}
             </div>
