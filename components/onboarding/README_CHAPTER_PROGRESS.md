@@ -113,12 +113,24 @@ type Chapter = {
 
 ## Visual Behavior
 
-### Bar Sizing (Adaptive)
-- **1 chapter:** 128px wide (w-32)
-- **2 chapters:** 96px wide (w-24)
-- **3 chapters:** 80px wide (w-20)
-- **4 chapters:** 64px wide (w-16)
-- **5+ chapters:** 48px wide (w-12)
+### Bar Sizing (Adaptive & Dynamic)
+
+**Active chapter is expanded, others are collapsed for visual emphasis:**
+
+| Chapters | Active Bar | Collapsed Bars |
+|----------|-----------|----------------|
+| 1 chapter | 128px | - |
+| 2 chapters | 128px | 64px |
+| 3 chapters | 112px | 48px |
+| 4 chapters | 96px | 40px |
+| 5+ chapters | 80px | 32px |
+
+**Example (3 chapters):**
+```
+Intro (done):     ▓▓▓▓ (48px, collapsed)
+Personal (active): ▓▓▓▓▓▓▓ (112px, expanded!)
+Complete (future): ░░░░ (48px, collapsed)
+```
 
 ### Colors
 - **Completed:** Blue background (#dbeafe), blue fill (#2563eb)
@@ -127,8 +139,10 @@ type Chapter = {
 
 ### Animations
 - Smooth transitions (300ms) on progress changes
+- **Width transitions:** Bars expand/collapse when chapter becomes active/inactive
 - Bar fills left-to-right
 - Ring appears on active chapter
+- All transitions use `ease-in-out` for natural feel
 
 ---
 

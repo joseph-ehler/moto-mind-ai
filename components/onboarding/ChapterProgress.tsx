@@ -33,17 +33,26 @@ export function ChapterProgress({
   const currentChapterIndex = chapters.findIndex((c) => c.id === currentChapterId)
   const currentChapter = chapters[currentChapterIndex]
   
-  // Calculate bar width based on number of chapters
-  const getBarWidth = () => {
+  // Calculate bar widths: active is expanded, others are collapsed
+  const getBarWidth = (isActive: boolean) => {
     const count = chapters.length
-    if (count === 1) return 'w-32' // Single chapter, wider
-    if (count === 2) return 'w-24'
-    if (count === 3) return 'w-20'
-    if (count === 4) return 'w-16'
-    return 'w-12' // 5+ chapters, compact
+    
+    if (isActive) {
+      // Active chapter gets more space
+      if (count === 1) return 'w-32' // Single chapter
+      if (count === 2) return 'w-32' // 128px
+      if (count === 3) return 'w-28' // 112px
+      if (count === 4) return 'w-24' // 96px
+      return 'w-20' // 80px for 5+ chapters
+    } else {
+      // Completed/future chapters are compact
+      if (count === 1) return 'w-32' // Single chapter
+      if (count === 2) return 'w-16' // 64px
+      if (count === 3) return 'w-12' // 48px
+      if (count === 4) return 'w-10' // 40px
+      return 'w-8' // 32px for 5+ chapters
+    }
   }
-  
-  const barWidth = getBarWidth()
   
   return (
     <div className={cn('flex flex-col items-center gap-1.5', className)}>
@@ -73,8 +82,9 @@ export function ChapterProgress({
             <div
               key={chapter.id}
               className={cn(
-                'h-1.5 rounded-full transition-all duration-300 overflow-hidden',
-                barWidth,
+                'h-1.5 rounded-full overflow-hidden',
+                'transition-all duration-300 ease-in-out', // Smooth width transition
+                getBarWidth(isCurrent),
                 isCurrent && 'ring-1 ring-blue-200'
               )}
               style={{
