@@ -10,7 +10,6 @@
 import { FlowSchema, type FlowConfig } from './flow-schema'
 import { validateExpression } from './expression-engine'
 import { ZodError } from 'zod'
-import chalk from 'chalk'
 
 export interface ValidationResult {
   valid: boolean
@@ -247,24 +246,24 @@ function getSuggestionForZodError(err: any): string | undefined {
 }
 
 /**
- * Pretty print validation results
+ * Pretty print validation results (plain text, no colors)
  */
 export function printValidationResults(result: ValidationResult, flowPath: string) {
-  console.log('\n' + chalk.bold('Flow Validation Results'))
-  console.log(chalk.gray('─'.repeat(60)))
-  console.log(chalk.gray(`File: ${flowPath}\n`))
+  console.log('\nFlow Validation Results')
+  console.log('─'.repeat(60))
+  console.log(`File: ${flowPath}\n`)
   
   if (result.valid) {
-    console.log(chalk.green('✓ Flow is valid!\n'))
+    console.log('✓ Flow is valid!\n')
     
     if (result.warnings && result.warnings.length > 0) {
-      console.log(chalk.yellow(`⚠ ${result.warnings.length} warnings:\n`))
+      console.log(`⚠ ${result.warnings.length} warnings:\n`)
       
       for (const warning of result.warnings) {
-        console.log(chalk.yellow('  ⚠ ' + warning.message))
-        console.log(chalk.gray('    at: ' + warning.path))
+        console.log('  ⚠ ' + warning.message)
+        console.log('    at: ' + warning.path)
         if (warning.suggestion) {
-          console.log(chalk.gray('    💡 ' + warning.suggestion))
+          console.log('    💡 ' + warning.suggestion)
         }
         console.log()
       }
@@ -272,8 +271,8 @@ export function printValidationResults(result: ValidationResult, flowPath: strin
     
     // Print summary
     if (result.flow) {
-      console.log(chalk.bold('Flow Summary:'))
-      console.log(chalk.gray('─'.repeat(60)))
+      console.log('Flow Summary:')
+      console.log('─'.repeat(60))
       console.log(`  ID: ${result.flow.id}`)
       console.log(`  Version: ${result.flow.version}`)
       console.log(`  Chapters: ${result.flow.chapters.length}`)
@@ -287,20 +286,20 @@ export function printValidationResults(result: ValidationResult, flowPath: strin
     }
     
   } else {
-    console.log(chalk.red(`✗ Flow validation failed with ${result.errors!.length} errors:\n`))
+    console.log(`✗ Flow validation failed with ${result.errors!.length} errors:\n`)
     
     for (const error of result.errors!) {
-      console.log(chalk.red('  ✗ ' + error.message))
-      console.log(chalk.gray('    at: ' + error.path))
-      console.log(chalk.gray('    code: ' + error.code))
+      console.log('  ✗ ' + error.message)
+      console.log('    at: ' + error.path)
+      console.log('    code: ' + error.code)
       if (error.suggestion) {
-        console.log(chalk.cyan('    💡 ' + error.suggestion))
+        console.log('    💡 ' + error.suggestion)
       }
       console.log()
     }
   }
   
-  console.log(chalk.gray('─'.repeat(60)))
+  console.log('─'.repeat(60))
 }
 
 /**
