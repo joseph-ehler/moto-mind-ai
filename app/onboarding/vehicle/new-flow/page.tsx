@@ -111,9 +111,27 @@ export default function VehicleOnboardingPage() {
         lastSaved={lastSaved}
         mode="fullscreen"
       >
-        {currentStep === 'vin' && <VinCapture />}
-        {currentStep === 'decoding' && <VinDecoding />}
-        {currentStep === 'confirm' && <VehicleConfirm />}
+        {currentStep === 'vin' && (
+          <VinCapture
+            stepId="vin"
+            stepIndex={0}
+            chapterId="vehicle-basics"
+          />
+        )}
+        {currentStep === 'decoding' && (
+          <VinDecoding
+            stepId="vin_decoding"
+            stepIndex={1}
+            chapterId="vehicle-basics"
+          />
+        )}
+        {currentStep === 'confirm' && (
+          <VehicleConfirm
+            stepId="vehicle_confirm"
+            stepIndex={2}
+            chapterId="vehicle-basics"
+          />
+        )}
       </OnboardingShell>
     </ValidationProvider>
   )

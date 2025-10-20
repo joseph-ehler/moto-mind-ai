@@ -18,14 +18,24 @@ import { useVehicleOnboarding } from '@/flows/vehicle/store'
 import { useWizardAnalytics } from '@/hooks/useWizardAnalytics'
 import { useValidation } from '@/wizard/validation-context'
 
-export function VehicleConfirm() {
+type VehicleConfirmProps = {
+  stepId?: string
+  stepIndex?: number
+  chapterId?: string
+}
+
+export function VehicleConfirm({
+  stepId = 'vehicle_confirm',
+  stepIndex = 2,
+  chapterId = 'default'
+}: VehicleConfirmProps = {}) {
   const { vehicle, rollup } = useVehicleOnboarding()
   const analytics = useWizardAnalytics('vehicle')
   const { setValid } = useValidation()
   
   // Track step view (once on mount)
   useEffect(() => {
-    analytics.trackStepView('vehicle_confirm', 2, 'vehicle-basics')
+    analytics.trackStepView(stepId, stepIndex, chapterId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
@@ -36,7 +46,7 @@ export function VehicleConfirm() {
   }, [])
   
   const handleEditVin = () => {
-    analytics.trackStepView('vehicle_confirm_edit_vin', 2, 'vehicle-basics')
+    analytics.trackStepView(`${stepId}_edit_vin`, stepIndex, chapterId)
     // This will be wired to wizard.jumpTo('vin') in parent
     window.history.back()
   }
@@ -157,7 +167,7 @@ export function VehicleConfirm() {
         </Button>
         
         <Button
-          onClick={() => analytics.trackStepComplete('vehicle_confirm_accept', 2, 'vehicle-basics')}
+          onClick={() => analytics.trackStepComplete(`${stepId}_accept`, stepIndex, chapterId)}
           className="flex-1 sm:order-1"
           size="lg"
         >

@@ -30,7 +30,17 @@ const tickerMessages = [
   'Preparing confirmation'
 ]
 
-export function VinDecoding() {
+type VinDecodingProps = {
+  stepId?: string
+  stepIndex?: number
+  chapterId?: string
+}
+
+export function VinDecoding({
+  stepId = 'vin_decoding',
+  stepIndex = 1,
+  chapterId = 'default'
+}: VinDecodingProps = {}) {
   const { vin, setVehicle } = useVehicleOnboarding()
   const analytics = useWizardAnalytics('vehicle')
   
@@ -45,7 +55,7 @@ export function VinDecoding() {
   
   // Track step view (once on mount)
   useEffect(() => {
-    analytics.trackStepView('vin_decoding', 1, 'vehicle-basics')
+    analytics.trackStepView(stepId, stepIndex, chapterId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
@@ -83,7 +93,7 @@ export function VinDecoding() {
     abortControllerRef.current = new AbortController()
     
     // Track start
-    analytics.trackStepView('vin_decode_start', 1, 'vehicle-basics')
+    analytics.trackStepView(`${stepId}_start`, stepIndex, chapterId)
     
     // Start ticker (cycle through messages every 4s)
     tickerTimerRef.current = setInterval(() => {
@@ -93,7 +103,7 @@ export function VinDecoding() {
     // Show slow hint after 12s
     slowHintTimerRef.current = setTimeout(() => {
       setShowSlowHint(true)
-      analytics.trackStepView('vin_decode_slow', 1, 'vehicle-basics')
+      analytics.trackStepView(`${stepId}_slow`, stepIndex, chapterId)
       
       // Announce for screen readers
       const announcement = document.createElement('div')
@@ -110,7 +120,7 @@ export function VinDecoding() {
       abortControllerRef.current?.abort()
       if (tickerTimerRef.current) clearInterval(tickerTimerRef.current)
       
-      analytics.trackStepView('vin_decode_timeout', 1, 'vehicle-basics')
+      analytics.trackStepView(`${stepId}_timeout`, stepIndex, chapterId)
       
       setState({
         status: 'error',
@@ -136,7 +146,7 @@ export function VinDecoding() {
       if (!response.ok) {
         const error = await response.json()
         
-        analytics.trackStepView('vin_decode_error', 1, 'vehicle-basics')
+        analytics.trackStepView(`${stepId}_error`, stepIndex, chapterId)
         
         setState({
           status: 'error',
@@ -153,7 +163,7 @@ export function VinDecoding() {
       setVehicle(data.vehicle, data.rollup)
       
       // Track success
-      analytics.trackStepComplete('vin_decode_success', 1, 'vehicle-basics')
+      analytics.trackStepComplete(`${stepId}_success`, stepIndex, chapterId)
       
       setState({ status: 'success' })
       
@@ -166,7 +176,7 @@ export function VinDecoding() {
       // Ignore abort errors (we handle timeout separately)
       if (error.name === 'AbortError') return
       
-      analytics.trackStepView('vin_decode_error', 1, 'vehicle-basics')
+      analytics.trackStepView(`${stepId}_error`, stepIndex, chapterId)
       
       setState({
         status: 'error',

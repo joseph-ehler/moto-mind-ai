@@ -48,7 +48,17 @@ function cleanVin(raw: string): string {
     .slice(0, VIN_LENGTH) // Max 17 chars
 }
 
-export function VinCapture() {
+type VinCaptureProps = {
+  stepId?: string
+  stepIndex?: number
+  chapterId?: string
+}
+
+export function VinCapture({
+  stepId = 'vin',
+  stepIndex = 0,
+  chapterId = 'default'
+}: VinCaptureProps = {}) {
   const { setValid } = useValidation()
   const { vin: storedVin, setVin } = useVehicleOnboarding()
   const analytics = useWizardAnalytics('vehicle')
@@ -58,7 +68,7 @@ export function VinCapture() {
   
   // Track step view (once on mount)
   useEffect(() => {
-    analytics.trackStepView('vin', 0, 'vehicle-basics')
+    analytics.trackStepView(stepId, stepIndex, chapterId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
@@ -76,7 +86,7 @@ export function VinCapture() {
     // Save to store when valid
     if (valid) {
       setVin(value)
-      analytics.trackStepComplete('vin', 0, 'vehicle-basics')
+      analytics.trackStepComplete(stepId, stepIndex, chapterId)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
@@ -88,7 +98,7 @@ export function VinCapture() {
     
     // Track typing
     if (cleaned.length > 0 && cleaned.length <= VIN_LENGTH) {
-      analytics.trackStepView('vin_typed', 0, 'vehicle-basics')
+      analytics.trackStepView(`${stepId}_typed`, stepIndex, chapterId)
     }
   }
   
@@ -99,11 +109,11 @@ export function VinCapture() {
     setValue(cleaned)
     
     // Track paste
-    analytics.trackStepView('vin_pasted', 0, 'vehicle-basics')
+    analytics.trackStepView(`${stepId}_pasted`, stepIndex, chapterId)
     
     // If valid after paste, mark validated
     if (isValidVin(cleaned)) {
-      analytics.trackStepComplete('vin_validated', 0, 'vehicle-basics')
+      analytics.trackStepComplete(`${stepId}_validated`, stepIndex, chapterId)
     }
   }
   
