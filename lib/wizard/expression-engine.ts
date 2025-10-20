@@ -508,6 +508,79 @@ export function validateExpression(expression: string): {
 }
 
 // ============================================================================
+// DEPENDENCY TRACKING (God-Tier Enhancement)
+// ============================================================================
+
+/**
+ * Walk AST and collect all identifier dependencies
+ */
+function collectDependencies(node: ASTNode, deps: Set<string>): void {
+  switch (node.type) {
+    case 'identifier':
+      deps.add(node.path.join('.'))
+      break
+      
+    case 'unary':
+      collectDependencies(node.operand, deps)
+      break
+      
+    case 'binary':
+      collectDependencies(node.left, deps)
+      collectDependencies(node.right, deps)
+      break
+      
+    case 'function':
+      for (const arg of node.args) {
+        collectDependencies(arg, deps)
+      }
+      break
+      
+    case 'literal':
+      // No dependencies
+      break
+  }
+}
+
+/**
+ * Extract all context dependencies from an expression
+ * 
+ * Used for:
+ * - Fine-grained React memoization
+ * - Dev playground visualization
+ * - Performance optimization
+ * 
+ * @example
+ * getDependencies("ctx.vehicle.mileage > 100000 && ctx.state.level == 'active'")
+ * → ['ctx.vehicle.mileage', 'ctx.state.level']
+ */
+export function getDependencies(expression: string): string[] {
+  try {
+    const ast = parseExpression(expression)
+    const deps = new Set<string>()
+    
+    collectDependencies(ast, deps)
+    return Array.from(deps).sort()
+    
+  } catch (error) {
+    console.warn(`Could not extract dependencies from: ${expression}`, error)
+    return []
+  }
+}
+
+// ============================================================================
+// HELPER ALIASES (God-Tier Enhancement)
+// ============================================================================
+
+// Add readable aliases for common patterns
+BUILT_IN_FUNCTIONS['present'] = (args) => {
+  return !BUILT_IN_FUNCTIONS['empty'](args)
+}
+
+BUILT_IN_FUNCTIONS['oneOf'] = (args) => {
+  return BUILT_IN_FUNCTIONS['in'](args)
+}
+
+// ============================================================================
 // EXPORTS
 // ============================================================================
 

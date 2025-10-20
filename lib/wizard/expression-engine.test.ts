@@ -9,6 +9,7 @@
 import {
   evaluateExpression,
   validateExpression,
+  getDependencies,
   type ExpressionContext,
 } from './expression-engine'
 
@@ -494,6 +495,106 @@ describe('Expression Engine', () => {
         context
       )
       expect(result.value).toBe(true) // Can proceed with data collection
+    })
+  })
+  
+  // ========================================================================
+  // GOD-TIER ENHANCEMENTS
+  // ========================================================================
+  
+  describe('Dependency Tracking', () => {
+    test('extracts simple dependency', () => {
+      const deps = getDependencies('ctx.vehicle.mileage > 100000')
+      expect(deps).toEqual(['ctx.vehicle.mileage'])
+    })
+    
+    test('extracts multiple dependencies', () => {
+      const deps = getDependencies('ctx.vehicle.mileage > 100000 && ctx.state.level == "active"')
+      expect(deps).toEqual(['ctx.state.level', 'ctx.vehicle.mileage'])
+    })
+    
+    test('extracts field dependencies', () => {
+      const deps = getDependencies('fields.vin.valid && !empty(fields.vin.value)')
+      expect(deps).toEqual(['fields.vin.valid', 'fields.vin.value'])
+    })
+    
+    test('deduplicates dependencies', () => {
+      const deps = getDependencies('ctx.vehicle.mileage > 100000 && ctx.vehicle.mileage < 200000')
+      expect(deps).toEqual(['ctx.vehicle.mileage'])
+    })
+    
+    test('extracts from function arguments', () => {
+      const deps = getDependencies('empty(ctx.user.name) && in(ctx.state.level, ctx.allowedLevels)')
+      expect(deps).toEqual(['ctx.allowedLevels', 'ctx.state.level', 'ctx.user.name'])
+    })
+    
+    test('handles nested expressions', () => {
+      const deps = getDependencies('(fields.vin.valid && ctx.state.ready) || ctx.flags.skipValidation')
+      expect(deps).toEqual(['ctx.flags.skipValidation', 'ctx.state.ready', 'fields.vin.valid'])
+    })
+    
+    test('returns empty array for literals only', () => {
+      const deps = getDependencies('true && false')
+      expect(deps).toEqual([])
+    })
+    
+    test('returns empty array for invalid expressions', () => {
+      const deps = getDependencies('ctx.value &&& ctx.other')
+      expect(deps).toEqual([])
+    })
+  })
+  
+  describe('Helper Aliases', () => {
+    test('present() helper', () => {
+      const context: ExpressionContext = {
+        ctx: {},
+        fields: { vin: { value: 'ABC123', valid: true } },
+      }
+      
+      const result = evaluateExpression('present(fields.vin.value)', context)
+      expect(result.success).toBe(true)
+      expect(result.value).toBe(true)
+    })
+    
+    test('present() is opposite of empty()', () => {
+      const context: ExpressionContext = {
+        ctx: {},
+        fields: { vin: { value: '', valid: false } },
+      }
+      
+      const emptyResult = evaluateExpression('empty(fields.vin.value)', context)
+      const presentResult = evaluateExpression('present(fields.vin.value)', context)
+      
+      expect(emptyResult.value).toBe(true)
+      expect(presentResult.value).toBe(false)
+    })
+    
+    test('oneOf() helper', () => {
+      const context: ExpressionContext = {
+        ctx: { options: ['a', 'b', 'c'] },
+        fields: {},
+      }
+      
+      const result = evaluateExpression('oneOf("b", ctx.options)', context)
+      expect(result.success).toBe(true)
+      expect(result.value).toBe(true)
+    })
+    
+    test('readable form validation with aliases', () => {
+      const context: ExpressionContext = {
+        ctx: {},
+        fields: {
+          vin: { value: 'ABC123', valid: true },
+          make: { value: 'Toyota', valid: true },
+        },
+      }
+      
+      const result = evaluateExpression(
+        'present(fields.vin.value) && present(fields.make.value)',
+        context
+      )
+      expect(result.success).toBe(true)
+      expect(result.value).toBe(true)
     })
   })
 })
