@@ -60,7 +60,7 @@ export function ChapterProgress({
       )}
       
       {/* Progress bars */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full">
         {chapters.map((chapter, index) => {
           const isCompleted = index < currentChapterIndex
           const isCurrent = index === currentChapterIndex
