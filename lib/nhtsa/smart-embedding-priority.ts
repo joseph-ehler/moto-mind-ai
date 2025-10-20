@@ -14,10 +14,17 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Create Supabase client (lazy - only when functions are called)
+function getSupabaseClient() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Missing Supabase environment variables. Check .env.local')
+  }
+  
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  )
+}
 
 /**
  * Top 16 vehicle makes (80% of all complaints)
@@ -62,6 +69,7 @@ export async function getEmbeddingPriority(make: string, model?: string): Promis
   }
   
   // Check complaint count for this make
+  const supabase = getSupabaseClient()
   const { data, error } = await supabase
     .from('nhtsa_complaints')
     .select('id', { count: 'exact', head: true })
@@ -91,6 +99,7 @@ export async function getComplaintsNeedingEmbeddings(options: {
   limit?: number
 }): Promise<any[]> {
   const { priority, make, limit = 1000 } = options
+  const supabase = getSupabaseClient()
   
   let query = supabase
     .from('nhtsa_complaints')
@@ -122,7 +131,7 @@ export async function getComplaintsNeedingEmbeddings(options: {
 /**
  * Get embedding statistics
  */
-export async function getEmbeddingStats(): Promise<{
+export async function getEmbeddingStats():Promise<{
   total: number
   embedded: number
   needEmbedding: number
@@ -142,6 +151,8 @@ export async function getEmbeddingStats(): Promise<{
     percentComplete: number
   }
 }> {
+  const supabase = getSupabaseClient()
+  
   // Total stats
   const { data: totalData } = await supabase
     .from('nhtsa_complaints')
@@ -208,6 +219,8 @@ export async function shouldEmbedOnDemand(make: string, model: string): Promise<
   if (priority !== 'low') {
     return false
   }
+  
+  const supabase = getSupabaseClient()
   
   // Check if we have ANY embeddings for this make/model
   const { data } = await supabase

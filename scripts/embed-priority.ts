@@ -7,6 +7,12 @@
  * Phase 3: Low priority (on-demand only)
  */
 
+import { config } from 'dotenv'
+import { resolve } from 'path'
+
+// Load environment variables
+config({ path: resolve(process.cwd(), '.env.local') })
+
 import OpenAI from 'openai'
 import { createClient } from '@supabase/supabase-js'
 import {
@@ -20,10 +26,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 })
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 const EMBEDDING_MODEL = 'text-embedding-3-small'
 const BATCH_SIZE = 100
@@ -49,6 +57,8 @@ async function embedBatch(complaints: ComplaintRecord[]): Promise<{
   success: number
   failed: number
 }> {
+  const supabase = getSupabaseClient()
+  
   try {
     // Create text for embedding (optimized for semantic search)
     const texts = complaints.map(c => 
