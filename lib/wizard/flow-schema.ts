@@ -93,12 +93,12 @@ export const ValidationSchema = z.object({
   max: z.number().optional(),
   pattern: z.string().optional(),
   excludeChars: z.array(z.string()).optional(),
-  
-  // Async validation
-  async: z.object({
-    source: z.string(),
-    debounceMs: z.number().optional(),
-  }).optional(),
+})
+
+// B-3: Async validation via data sources
+export const ValidationAsyncSchema = z.object({
+  source: z.string(), // Data source name
+  debounceMs: z.number().min(100).max(5000).optional(), // 100ms to 5s
 })
 
 export const AdornmentSchema = z.object({
@@ -126,6 +126,7 @@ export const FieldSchema = z.object({
   
   // Validation
   validation: ValidationSchema.optional(),
+  validationAsync: ValidationAsyncSchema.optional(), // B-3: Async validation via data sources
   
   // Mobile optimization
   inputMode: z.enum(['text', 'numeric', 'tel', 'email', 'url', 'search']).optional(),
@@ -211,6 +212,12 @@ export const LoadingSchema = z.object({
 // STEP SCHEMAS (Different types)
 // ============================================================================
 
+// B-3: Data Source Hooks
+export const OnEnterHookSchema = z.object({
+  fetch: z.array(z.string()).optional(), // Data source names to fetch
+  continueWhen: z.string().optional(), // Expression: when to auto-advance
+})
+
 const BaseStepSchema = z.object({
   id: z.string(),
   type: z.string(),
@@ -234,6 +241,9 @@ const BaseStepSchema = z.object({
   
   // Navigation
   navigation: NavigationSchema.optional(),
+  
+  // B-3: Data Fetching
+  onEnter: OnEnterHookSchema.optional(),
 })
 
 export const InformationalStepSchema = BaseStepSchema.extend({
@@ -294,14 +304,52 @@ export const ChapterSchema = z.object({
 })
 
 // ============================================================================
-// DATA SOURCE SCHEMA
+// DATA SOURCE SCHEMA (B-3: Declarative Fetch)
 // ============================================================================
 
+export const RetryConfigSchema = z.object({
+  retries: z.number().min(0).max(5),
+  backoff: z.enum(['exponential', 'linear', 'fixed']),
+  baseMs: z.number().min(100),
+  maxMs: z.number().min(1000),
+})
+
+export const CacheConfigSchema = z.object({
+  ttlMs: z.number().min(1000).max(604800000), // 1s to 7 days
+  key: z.string().optional(), // Template: "vin:{{fields.vin.value}}"
+  staleWhileRevalidate: z.boolean().optional(),
+})
+
 export const DataSourceSchema = z.object({
-  type: z.enum(['http.get', 'http.post', 'localCache', 'computed', 'memoized']),
+  // Core
+  type: z.enum(['http.get', 'http.post', 'computed', 'cache', 'chain']),
+  
+  // HTTP
   url: z.string().optional(),
-  cacheTtl: z.string().optional(), // e.g., "24h"
+  headers: z.record(z.string(), z.string()).optional(), // Template support: {{ctx.tenantId}}
+  timeoutMs: z.number().min(1000).max(30000).optional(), // 1s to 30s
+  
+  // Resilience
+  retry: RetryConfigSchema.optional(),
+  
+  // Caching
+  cache: CacheConfigSchema.optional(),
+  
+  // Request/Response mapping
+  mapRequest: z.record(z.string(), z.string()).optional(), // { "vin": "{{fields.vin.value}}" }
+  mapResponse: z.record(z.string(), z.string()).optional(), // { "vehicle.make": "{{data.make}}" }
+  
+  // Computed (for type: 'computed')
+  compute: z.string().optional(), // Expression: "ctx.form.vehicle.mileage > 100000"
+  
+  // Chain (for type: 'chain')
+  steps: z.array(z.string()).optional(), // ["vinDecode", "userProfile"]
+  
+  // Privacy & Analytics
   privacy: PrivacySchema.optional(),
+  analytics: z.object({
+    event: z.string(),
+  }).optional(),
 })
 
 // ============================================================================
