@@ -80,37 +80,36 @@ function IntroStep() {
   }, [setValid])
   
   return (
-    <div className="space-y-6 text-center">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Welcome to the Test Wizard
-        </h1>
-        <p className="text-lg text-gray-600">
-          This tests the Phase 0 wizard core:
-        </p>
-        <ul className="mt-4 space-y-2 text-left max-w-md mx-auto">
-          <li className="flex items-start">
-            <span className="text-green-500 mr-2">✓</span>
-            <span>OnboardingShell with header/footer</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-green-500 mr-2">✓</span>
-            <span>useOnboardingWizard controller</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-green-500 mr-2">✓</span>
-            <span>ValidationContext</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-green-500 mr-2">✓</span>
-            <span>Navigation (back/continue)</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-green-500 mr-2">✓</span>
-            <span>Progress calculation</span>
-          </li>
-        </ul>
-      </div>
+    <div className="space-y-6">
+      <p className="text-lg text-gray-600 text-center">
+        This tests the Phase 0 wizard core:
+      </p>
+      <ul className="mt-6 space-y-3 max-w-md mx-auto">
+        <li className="flex items-start">
+          <span className="text-green-500 mr-3 text-lg">✓</span>
+          <span className="text-gray-700">OnboardingShell with header/footer</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-green-500 mr-3 text-lg">✓</span>
+          <span className="text-gray-700">useOnboardingWizard controller</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-green-500 mr-3 text-lg">✓</span>
+          <span className="text-gray-700">ValidationContext</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-green-500 mr-3 text-lg">✓</span>
+          <span className="text-gray-700">Navigation (back/continue)</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-green-500 mr-3 text-lg">✓</span>
+          <span className="text-gray-700">Progress calculation</span>
+        </li>
+        <li className="flex items-start">
+          <span className="text-green-500 mr-3 text-lg">✓</span>
+          <span className="text-gray-700">God-tier header + footer</span>
+        </li>
+      </ul>
     </div>
   )
 }
@@ -135,18 +134,9 @@ function NameStep() {
   }
   
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Your name
-        </h1>
-        <p className="text-lg text-gray-600">
-          What should we call you?
-        </p>
-      </div>
-      
+    <div className="space-y-6 max-w-md mx-auto">
       <div className="space-y-2">
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="name" className="text-base">Name</Label>
         <Input
           id="name"
           type="text"
@@ -154,7 +144,7 @@ function NameStep() {
           onChange={handleChange}
           placeholder="Enter your name"
           autoFocus
-          className="text-lg"
+          className="text-lg h-12"
         />
         {name.length > 0 && name.length < 2 && (
           <p className="text-sm text-red-600">
@@ -183,36 +173,34 @@ function CompleteStep() {
   
   return (
     <div className="space-y-6 text-center">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          All done, {name}! 🎉
-        </h1>
-        <p className="text-lg text-gray-600 mb-6">
-          Phase 0 wizard core is working!
-        </p>
-        
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 max-w-md mx-auto">
-          <h2 className="font-semibold text-green-900 mb-3">
-            What we tested:
-          </h2>
-          <ul className="space-y-2 text-left text-green-800">
-            <li>✓ Shell rendered correctly</li>
-            <li>✓ Progress bar updated</li>
-            <li>✓ Back button worked</li>
-            <li>✓ Continue disabled until valid</li>
-            <li>✓ Validation context synced</li>
-            <li>✓ Data persisted to store</li>
-          </ul>
-        </div>
-        
-        <div className="mt-8">
-          <Button
-            onClick={() => wizard.reset()}
-            variant="outline"
-          >
-            Start over
-          </Button>
-        </div>
+      <p className="text-xl text-gray-700 mb-6">
+        Great job, <strong>{name}</strong>! The wizard core is working perfectly.
+      </p>
+      
+      <div className="bg-green-50 border border-green-200 rounded-lg p-6 max-w-md mx-auto">
+        <h2 className="font-semibold text-green-900 mb-4">
+          What we tested:
+        </h2>
+        <ul className="space-y-2 text-left text-green-800">
+          <li>✓ Shell with title in header</li>
+          <li>✓ Progress in footer with percentage</li>
+          <li>✓ Conditional buttons per step</li>
+          <li>✓ Back button worked</li>
+          <li>✓ Continue disabled until valid</li>
+          <li>✓ Validation context synced</li>
+          <li>✓ Data persisted to store</li>
+          <li>✓ Custom continue labels</li>
+        </ul>
+      </div>
+      
+      <div className="mt-8">
+        <Button
+          onClick={() => wizard.reset()}
+          variant="outline"
+          size="lg"
+        >
+          Test again
+        </Button>
       </div>
     </div>
   )
@@ -241,8 +229,38 @@ function TestWizardContent() {
     }
   }
   
+  // Get step-specific props
+  const getStepProps = () => {
+    switch (wizard.currentStep?.id) {
+      case 'intro':
+        return {
+          title: 'Welcome to Test Wizard',
+          subtitle: 'Phase 0 - Wizard Core Test',
+          hideBack: true,
+          hideSkip: true
+        }
+      case 'name':
+        return {
+          title: 'Your name',
+          subtitle: 'What should we call you?',
+          hideSkip: false
+        }
+      case 'complete':
+        return {
+          title: 'All done! 🎉',
+          subtitle: 'Phase 0 wizard core is working',
+          hideBack: false,
+          hideSkip: true,
+          continueLabel: 'Finish'
+        }
+      default:
+        return {}
+    }
+  }
+  
   return (
     <OnboardingShell
+      {...getStepProps()}
       currentStep={wizard.currentIndex + 1}
       totalSteps={wizard.totalSteps}
       progress={wizard.progress}
@@ -253,7 +271,6 @@ function TestWizardContent() {
       canGoBack={wizard.canGoBack}
       canGoNext={wizard.canGoNext}
       canSkip={wizard.canSkip}
-      hideSkip
       mode="fullscreen"
     >
       {renderStep()}

@@ -16,6 +16,8 @@ import { useValidation } from '@/wizard/validation-context'
 type OnboardingShellProps = {
   // Content
   children: ReactNode
+  title?: string
+  subtitle?: string
   
   // Progress
   currentStep: number
@@ -33,16 +35,22 @@ type OnboardingShellProps = {
   canGoBack: boolean
   canGoNext: boolean
   canSkip: boolean
+  isProcessing?: boolean
   
   // Display
   hideProgress?: boolean
   hideBack?: boolean
   hideSkip?: boolean
+  hideExit?: boolean
+  hideStartOver?: boolean
+  continueLabel?: string
   mode?: 'fullscreen' | 'modal'
 }
 
 export function OnboardingShell({
   children,
+  title,
+  subtitle,
   currentStep,
   totalSteps,
   progress,
@@ -54,9 +62,13 @@ export function OnboardingShell({
   canGoBack,
   canGoNext,
   canSkip,
+  isProcessing = false,
   hideProgress = false,
   hideBack = false,
   hideSkip = false,
+  hideExit = false,
+  hideStartOver = false,
+  continueLabel = 'Continue',
   mode = 'fullscreen'
 }: OnboardingShellProps) {
   const { isValid, onSubmit } = useValidation()
@@ -94,53 +106,56 @@ export function OnboardingShell({
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Left: Back */}
-            <div className="flex-1">
+            <div className="flex items-center gap-3 flex-1">
               {!hideBack && canGoBack && onBack && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={onBack}
-                  className="text-gray-600 hover:text-gray-900"
+                  className="text-gray-600 hover:text-gray-900 -ml-2"
+                  disabled={isProcessing}
                 >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  <ArrowLeft className="w-4 h-4 mr-1" />
                   Back
                 </Button>
               )}
             </div>
             
-            {/* Center: Progress */}
-            <div className="flex-1 flex flex-col items-center">
-              {!hideProgress && (
-                <>
-                  <span className="text-sm font-medium text-gray-600 mb-1">
-                    Step {currentStep} of {totalSteps}
-                  </span>
-                  <div className="w-32 h-1">
-                    <Progress value={progress} className="h-1" />
-                  </div>
-                </>
+            {/* Center: Title */}
+            <div className="flex-1 flex flex-col items-center text-center px-4">
+              {title && (
+                <h1 className="text-base font-semibold text-gray-900 truncate max-w-md">
+                  {title}
+                </h1>
+              )}
+              {subtitle && (
+                <p className="text-xs text-gray-500 mt-0.5 truncate max-w-md">
+                  {subtitle}
+                </p>
               )}
             </div>
             
             {/* Right: Actions */}
-            <div className="flex-1 flex items-center justify-end gap-2">
-              {onExit && (
+            <div className="flex items-center justify-end gap-2 flex-1">
+              {!hideExit && onExit && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={onExit}
                   className="text-gray-600 hover:text-gray-900"
                   title="Progress is saved automatically"
+                  disabled={isProcessing}
                 >
                   {isModal ? <X className="w-4 h-4" /> : 'Save & exit'}
                 </Button>
               )}
-              {onStartOver && !isModal && (
+              {!hideStartOver && onStartOver && !isModal && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={onStartOver}
                   className="text-gray-600 hover:text-gray-900"
+                  disabled={isProcessing}
                 >
                   Start over
                 </Button>
@@ -157,13 +172,31 @@ export function OnboardingShell({
         </div>
       </main>
       
-      {/* Footer */}
+      {/* Footer / Action Bar */}
       <footer className="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Progress indicator */}
+          {!hideProgress && (
+            <div className="flex items-center justify-center py-3 border-b border-gray-100">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-medium text-gray-500">
+                  Step {currentStep} of {totalSteps}
+                </span>
+                <div className="w-48 h-1.5">
+                  <Progress value={progress} className="h-1.5" />
+                </div>
+                <span className="text-xs font-medium text-gray-500">
+                  {progress}%
+                </span>
+              </div>
+            </div>
+          )}
+          
+          {/* Action buttons */}
           <div className="flex items-center justify-between h-20">
             {/* Left: Skip */}
             <div className="flex-1">
-              {!hideSkip && canSkip && onSkip && (
+              {!hideSkip && canSkip && onSkip && !isProcessing && (
                 <Button
                   variant="ghost"
                   onClick={onSkip}
@@ -178,11 +211,18 @@ export function OnboardingShell({
             <div className="flex-1 flex justify-end">
               <Button
                 onClick={handleContinue}
-                disabled={!canGoNext || !isValid}
+                disabled={!canGoNext || !isValid || isProcessing}
                 size="lg"
                 className="min-w-[140px]"
               >
-                Continue
+                {isProcessing ? (
+                  <>
+                    <span className="animate-spin mr-2">⏳</span>
+                    Processing...
+                  </>
+                ) : (
+                  continueLabel
+                )}
               </Button>
             </div>
           </div>
