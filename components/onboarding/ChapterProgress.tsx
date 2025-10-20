@@ -75,9 +75,9 @@ const ChapterProgressComponent = ({
         </p>
       )}
       
-      {/* Progress bars */}
+      {/* Progress bars - 40-48px tap area */}
       <div 
-        className="flex items-center gap-2 w-full"
+        className="flex items-center gap-2 w-full py-2"
         role="group"
         aria-label="Chapter progress"
       >

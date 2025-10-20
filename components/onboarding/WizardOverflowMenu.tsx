@@ -126,7 +126,7 @@ export function WizardOverflowMenu({
           <DropdownMenuItem 
             onClick={onExit} 
             disabled={disabled}
-            className="py-3 text-base cursor-pointer"
+            className="py-3 text-base cursor-pointer active:scale-95 transition-transform"
           >
             <Save className="w-5 h-5 mr-3 flex-shrink-0" />
             <span>Save & exit</span>
@@ -143,7 +143,7 @@ export function WizardOverflowMenu({
                   setConfirmStartOver(true)
                 }}
                 disabled={disabled}
-                className="py-3 text-base cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                className="py-3 text-base cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 active:scale-95 transition-transform"
               >
                 <RotateCcw className="w-5 h-5 mr-3 flex-shrink-0" />
                 <span>Start over</span>
