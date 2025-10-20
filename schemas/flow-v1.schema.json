@@ -1,0 +1,502 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://motomind.ai/schemas/flow-v1.json",
+  "title": "MotoMind Wizard Flow",
+  "description": "Ultra God-Tier Wizard Platform - Flow Definition Schema",
+  "type": "object",
+  "required": ["id", "version", "schemaVersion", "i18nNS", "theming", "privacy", "analytics", "chapters"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique flow identifier",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "version": {
+      "type": "string",
+      "description": "Flow version (semver)",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version this flow conforms to",
+      "default": "1.0.0"
+    },
+    "i18nNS": {
+      "type": "string",
+      "description": "i18n namespace for translations"
+    },
+    "defaultLocale": {
+      "type": "string",
+      "description": "Default locale (e.g., en-US)"
+    },
+    "theming": {
+      "type": "object",
+      "description": "Theme configuration",
+      "required": ["brand", "tone"],
+      "properties": {
+        "brand": {
+          "type": "string",
+          "description": "Brand identifier"
+        },
+        "tone": {
+          "type": "string",
+          "enum": ["calm", "energetic", "professional", "friendly"],
+          "description": "Tone of voice"
+        },
+        "surface": {
+          "type": "string",
+          "description": "Surface color"
+        },
+        "radius": {
+          "type": "string",
+          "enum": ["none", "sm", "md", "lg", "xl"],
+          "description": "Border radius"
+        },
+        "shadow": {
+          "type": "string",
+          "enum": ["none", "sm", "md", "lg"],
+          "description": "Shadow intensity"
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "description": "Privacy defaults",
+      "required": ["defaultRetention"],
+      "properties": {
+        "defaultRetention": {
+          "type": "string",
+          "enum": ["session", "30d", "180d", "until-delete", "legal-minimum"]
+        },
+        "strictMode": {
+          "type": "boolean",
+          "description": "Enforce strict privacy validation"
+        }
+      }
+    },
+    "analytics": {
+      "type": "object",
+      "description": "Analytics configuration",
+      "required": ["namespace", "flow"],
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "flow": {
+          "type": "string"
+        },
+        "enableTiming": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dataSources": {
+      "type": "object",
+      "description": "Reusable data sources",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["http.get", "http.post", "localCache", "computed", "memoized"]
+          },
+          "url": {
+            "type": "string"
+          },
+          "cacheTtl": {
+            "type": "string",
+            "description": "Cache TTL (e.g., 24h)"
+          },
+          "privacy": {
+            "$ref": "#/definitions/privacy"
+          }
+        }
+      }
+    },
+    "chapters": {
+      "type": "array",
+      "description": "Flow chapters",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/chapter"
+      }
+    }
+  },
+  "definitions": {
+    "privacy": {
+      "type": "object",
+      "required": ["classification", "purpose", "retention", "allowInAI"],
+      "properties": {
+        "classification": {
+          "type": "string",
+          "enum": ["PUBLIC", "OPERATIONAL", "PSEUDONYMIZED", "SENSITIVE"]
+        },
+        "purpose": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["onboarding", "safety", "analytics", "support", "features", "legal"]
+          },
+          "minItems": 1
+        },
+        "retention": {
+          "type": "string",
+          "enum": ["session", "30d", "180d", "until-delete", "legal-minimum"]
+        },
+        "allowInAI": {
+          "type": "boolean"
+        },
+        "doNotTrain": {
+          "type": "boolean"
+        },
+        "maskInLogs": {
+          "type": "boolean"
+        },
+        "needsConsent": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "chapter": {
+      "type": "object",
+      "required": ["id", "name", "steps"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "nameKey": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "number",
+          "default": 1.0,
+          "minimum": 0,
+          "maximum": 1
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/step"
+          }
+        },
+        "onEnter": {
+          "type": "string",
+          "description": "Expression or function name"
+        },
+        "onExit": {
+          "type": "string",
+          "description": "Expression or function name"
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "informational",
+            "chapter",
+            "form.singleQuestion",
+            "form.cardGrid",
+            "form.twoColumn",
+            "processing.scene",
+            "confirm.card"
+          ]
+        },
+        "shouldExistWhen": {
+          "type": "string",
+          "description": "Expression for conditional rendering"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "titleKey": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "subtitleKey": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "descriptionKey": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "privacy": {
+          "$ref": "#/definitions/privacy"
+        },
+        "navigation": {
+          "$ref": "#/definitions/navigation"
+        }
+      },
+      "oneOf": [
+        { "$ref": "#/definitions/informationalStep" },
+        { "$ref": "#/definitions/chapterStep" },
+        { "$ref": "#/definitions/formStep" },
+        { "$ref": "#/definitions/processingStep" },
+        { "$ref": "#/definitions/confirmStep" }
+      ]
+    },
+    "informationalStep": {
+      "properties": {
+        "type": { "const": "informational" },
+        "steps": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "benefits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "icon": { "type": "string" },
+              "label": { "type": "string" },
+              "labelKey": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "chapterStep": {
+      "properties": {
+        "type": { "const": "chapter" },
+        "chapterNumber": { "type": "number" },
+        "highlights": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "formStep": {
+      "properties": {
+        "type": {
+          "enum": ["form.singleQuestion", "form.cardGrid", "form.twoColumn"]
+        },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/field" }
+        },
+        "help": { "$ref": "#/definitions/help" },
+        "helpers": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/helper" }
+        },
+        "validationLogic": {
+          "type": "object",
+          "properties": {
+            "continueEnabledWhen": { "type": "string" }
+          }
+        }
+      },
+      "required": ["fields"]
+    },
+    "processingStep": {
+      "properties": {
+        "type": { "const": "processing.scene" },
+        "loading": {
+          "type": "object",
+          "required": ["baseTickers", "slowHintMs", "timeoutMs"],
+          "properties": {
+            "baseTickers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "aiTickers": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "timeoutMs": { "type": "number" }
+              }
+            },
+            "slowHintMs": { "type": "number" },
+            "timeoutMs": { "type": "number" }
+          }
+        }
+      },
+      "required": ["loading"]
+    },
+    "confirmStep": {
+      "properties": {
+        "type": { "const": "confirm.card" }
+      }
+    },
+    "field": {
+      "type": "object",
+      "required": ["id", "type", "bind", "privacy"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-zA-Z0-9]*$"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["text", "number", "textarea", "select", "chips", "singleChoice", "multiChoice", "date", "time", "toggle"]
+        },
+        "preset": {
+          "type": "string",
+          "enum": ["vinUppercase", "email", "phone", "currency", "percentage"]
+        },
+        "bind": {
+          "type": "string",
+          "description": "Data binding path (e.g., vehicle.vin)"
+        },
+        "label": { "type": "string" },
+        "labelKey": { "type": "string" },
+        "placeholder": { "type": "string" },
+        "placeholderKey": { "type": "string" },
+        "helper": { "type": "string" },
+        "helperKey": { "type": "string" },
+        "transform": {
+          "type": "object",
+          "properties": {
+            "uppercase": { "type": "boolean" },
+            "lowercase": { "type": "boolean" },
+            "strip": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "trim": { "type": "boolean" }
+          }
+        },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "required": { "type": "boolean" },
+            "length": { "type": "number" },
+            "minLength": { "type": "number" },
+            "maxLength": { "type": "number" },
+            "min": { "type": "number" },
+            "max": { "type": "number" },
+            "pattern": { "type": "string" },
+            "excludeChars": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "async": {
+              "type": "object",
+              "properties": {
+                "source": { "type": "string" },
+                "debounceMs": { "type": "number" }
+              }
+            }
+          }
+        },
+        "inputMode": {
+          "type": "string",
+          "enum": ["text", "numeric", "tel", "email", "url", "search"]
+        },
+        "enterKeyHint": {
+          "type": "string",
+          "enum": ["enter", "done", "go", "next", "previous", "search", "send"]
+        },
+        "autoComplete": { "type": "string" },
+        "adornments": {
+          "type": "object",
+          "properties": {
+            "left": { "$ref": "#/definitions/adornment" },
+            "right": { "$ref": "#/definitions/adornment" }
+          }
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "object",
+                "required": ["value", "label"],
+                "properties": {
+                  "value": { "type": "string" },
+                  "label": { "type": "string" },
+                  "labelKey": { "type": "string" }
+                }
+              }
+            ]
+          }
+        },
+        "privacy": { "$ref": "#/definitions/privacy" },
+        "a11y": {
+          "type": "object",
+          "properties": {
+            "describedBy": { "type": "string" },
+            "labelledBy": { "type": "string" }
+          }
+        }
+      }
+    },
+    "adornment": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["icon", "unit", "prefix", "suffix", "counter"]
+        },
+        "text": { "type": "string" },
+        "icon": { "type": "string" }
+      }
+    },
+    "help": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "titleKey": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      },
+      "required": ["items"]
+    },
+    "helper": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["info", "tip", "warning", "success"]
+        },
+        "content": { "type": "string" },
+        "contentKey": { "type": "string" }
+      }
+    },
+    "navigation": {
+      "type": "object",
+      "properties": {
+        "continueLabel": { "type": "string" },
+        "continueLabelKey": { "type": "string" },
+        "showFooterBack": { "type": "boolean" },
+        "hideContinueButton": { "type": "boolean" }
+      }
+    }
+  }
+}

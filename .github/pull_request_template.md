@@ -27,6 +27,34 @@
 
 ---
 
+## Wizard Flow Changes
+
+<!-- ⚠️ If this PR includes wizard flow JSON changes, complete this checklist: -->
+
+**Definition of Ready (per flow):**
+- [ ] `flow.version` and `schemaVersion` match validator
+- [ ] All steps have `navigation` + `privacy` (strict mode)
+- [ ] At least one chapter with non-zero weight
+- [ ] All fields: `bind` is present and resolvable
+- [ ] No TODO strings (lint)
+- [ ] Ran `npm run flows:validate "config/**/*.json"`
+
+**Definition of Ready (per step):**
+- [ ] `type` maps to a known template
+- [ ] `title` OR `titleKey` present
+- [ ] All fields have `bind`, `validation`, `privacy`
+- [ ] `navigation` present (back/continue rules)
+- [ ] `privacy.allowInAI` explicit for every field
+- [ ] `shouldExistWhen` compiles (if present)
+
+**Definition of Done (runtime):**
+- [ ] Renderer snapshot tests pass
+- [ ] A11y smoke check (axe) passes
+- [ ] Analytics events verified in dev
+- [ ] No blank screens on error cases
+
+---
+
 ## Type of Change
 
 - [ ] 🐛 Bug fix (non-breaking change that fixes an issue)
@@ -34,6 +62,7 @@
 - [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] 📝 Documentation update
 - [ ] 🗄️ Database migration
+- [ ] 🧙 Wizard flow changes
 
 ---
 
