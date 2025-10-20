@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { useValidation } from '@/wizard/validation-context'
 import { ChapterProgress, type Chapter } from './ChapterProgress'
 import { WizardOverflowMenu } from './WizardOverflowMenu'
+import { StepErrorBoundary } from './StepErrorBoundary'
 
 type OnboardingShellProps = {
   // Content
@@ -174,8 +175,9 @@ export function OnboardingShell({
                   variant="ghost"
                   size="sm"
                   onClick={onBack}
-                  className="text-gray-600 hover:text-gray-900 -ml-2"
+                  className="text-gray-600 hover:text-gray-900 -ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isProcessing}
+                  aria-disabled={isProcessing}
                 >
                   <ArrowLeft className="w-4 h-4 mr-1" />
                   Back
@@ -232,7 +234,12 @@ export function OnboardingShell({
       {/* Content */}
       <main className="flex-1 flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-2xl">
-          {children}
+          <StepErrorBoundary
+            onRetry={() => window.location.reload()}
+            onBack={canGoBack && onBack ? onBack : undefined}
+          >
+            {children}
+          </StepErrorBoundary>
         </div>
       </main>
       
@@ -242,11 +249,13 @@ export function OnboardingShell({
           <div className="flex items-center justify-between h-16">
             {/* Left: Skip */}
             <div className="flex-1">
-              {!hideSkip && canSkip && onSkip && !isProcessing && (
+              {!hideSkip && canSkip && onSkip && (
                 <Button
                   variant="ghost"
                   onClick={onSkip}
-                  className="text-gray-600 hover:text-gray-900"
+                  className="text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isProcessing}
+                  aria-disabled={isProcessing}
                 >
                   Skip for now
                 </Button>
@@ -258,8 +267,9 @@ export function OnboardingShell({
               <Button
                 onClick={handleContinue}
                 disabled={!canGoNext || !isValid || isProcessing}
+                aria-disabled={!canGoNext || !isValid || isProcessing}
                 size="lg"
-                className="min-w-[140px]"
+                className="min-w-[140px] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isProcessing ? (
                   <>
