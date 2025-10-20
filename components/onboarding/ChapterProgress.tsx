@@ -45,12 +45,12 @@ export function ChapterProgress({
       if (count === 4) return 'w-24' // 96px
       return 'w-20' // 80px for 5+ chapters
     } else {
-      // Completed/future chapters are compact
+      // Completed/future chapters are very compact
       if (count === 1) return 'w-32' // Single chapter
-      if (count === 2) return 'w-16' // 64px
-      if (count === 3) return 'w-12' // 48px
-      if (count === 4) return 'w-10' // 40px
-      return 'w-8' // 32px for 5+ chapters
+      if (count === 2) return 'w-10' // 40px
+      if (count === 3) return 'w-8' // 32px
+      if (count === 4) return 'w-6' // 24px
+      return 'w-5' // 20px for 5+ chapters
     }
   }
   

@@ -117,19 +117,19 @@ type Chapter = {
 
 **Active chapter is expanded, others are collapsed for visual emphasis:**
 
-| Chapters | Active Bar | Collapsed Bars |
-|----------|-----------|----------------|
-| 1 chapter | 128px | - |
-| 2 chapters | 128px | 64px |
-| 3 chapters | 112px | 48px |
-| 4 chapters | 96px | 40px |
-| 5+ chapters | 80px | 32px |
+| Chapters | Active Bar | Collapsed Bars | Ratio |
+|----------|-----------|----------------|-------|
+| 1 chapter | 128px | - | - |
+| 2 chapters | 128px | 40px | 3.2:1 |
+| 3 chapters | 112px | 32px | 3.5:1 |
+| 4 chapters | 96px | 24px | 4:1 |
+| 5+ chapters | 80px | 20px | 4:1 |
 
 **Example (3 chapters):**
 ```
-Intro (done):     ▓▓▓▓ (48px, collapsed)
+Intro (done):     ▓▓ (32px, collapsed)
 Personal (active): ▓▓▓▓▓▓▓ (112px, expanded!)
-Complete (future): ░░░░ (48px, collapsed)
+Complete (future): ░░ (32px, collapsed)
 ```
 
 ### Colors
