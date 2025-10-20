@@ -60,6 +60,7 @@ export interface FetchOptions {
   traceId?: string
   silent?: boolean // Suppress logs/toasts
   force?: boolean // Bypass cache
+  signal?: AbortSignal // Abort signal for cancellation
 }
 
 // ============================================================================
