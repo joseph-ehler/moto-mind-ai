@@ -40,6 +40,18 @@ export function useOnboardingWizard(config: WizardConfig): WizardController {
     }))
   })
   
+  // Autosave on data change
+  useEffect(() => {
+    if (registry.persistence?.autoSave === 'after each step submit') {
+      // Data is already persisted via Zustand middleware
+      // This effect just ensures we're tracking it
+      const hasData = Object.keys(data).length > 0
+      if (hasData && !store.getState().startedAt) {
+        store.setState({ startedAt: new Date().toISOString() })
+      }
+    }
+  }, [data, registry.persistence, store])
+  
   // Current step
   const currentStep = useMemo(() => {
     return itinerary[currentIndex]?.config || null
@@ -207,6 +219,19 @@ export function useOnboardingWizard(config: WizardConfig): WizardController {
   }, [registry, weights])
   
   /**
+   * Exit wizard (save progress and return)
+   */
+  const exit = useCallback(() => {
+    // Progress is already auto-saved via Zustand persistence
+    // This is just a signal to parent component to close/navigate away
+    if (typeof window !== 'undefined') {
+      // If modal mode, parent should handle this via onExit callback
+      // If fullscreen mode, navigate to previous page or dashboard
+      window.history.back()
+    }
+  }, [])
+  
+  /**
    * Reset wizard
    */
   const reset = useCallback(() => {
@@ -225,6 +250,7 @@ export function useOnboardingWizard(config: WizardConfig): WizardController {
     back,
     skip,
     jumpTo,
+    exit,
     
     // State
     currentStep,

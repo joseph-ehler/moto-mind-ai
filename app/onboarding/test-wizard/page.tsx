@@ -248,11 +248,13 @@ function TestWizardContent() {
       progress={wizard.progress}
       onBack={wizard.back}
       onNext={wizard.next}
+      onExit={wizard.exit}
       onStartOver={wizard.reset}
       canGoBack={wizard.canGoBack}
       canGoNext={wizard.canGoNext}
       canSkip={wizard.canSkip}
       hideSkip
+      mode="fullscreen"
     >
       {renderStep()}
     </OnboardingShell>

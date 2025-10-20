@@ -26,7 +26,7 @@ type OnboardingShellProps = {
   onBack?: () => void
   onNext?: () => void
   onSkip?: () => void
-  onSaveExit?: () => void
+  onExit?: () => void
   onStartOver?: () => void
   
   // State
@@ -38,6 +38,7 @@ type OnboardingShellProps = {
   hideProgress?: boolean
   hideBack?: boolean
   hideSkip?: boolean
+  mode?: 'fullscreen' | 'modal'
 }
 
 export function OnboardingShell({
@@ -48,14 +49,15 @@ export function OnboardingShell({
   onBack,
   onNext,
   onSkip,
-  onSaveExit,
+  onExit,
   onStartOver,
   canGoBack,
   canGoNext,
   canSkip,
   hideProgress = false,
   hideBack = false,
-  hideSkip = false
+  hideSkip = false,
+  mode = 'fullscreen'
 }: OnboardingShellProps) {
   const { isValid, onSubmit } = useValidation()
   
@@ -83,8 +85,10 @@ export function OnboardingShell({
     }
   }
   
+  const isModal = mode === 'modal'
+  
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50">
+    <div className={isModal ? 'flex flex-col h-full bg-white' : 'min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50'}>
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -120,24 +124,24 @@ export function OnboardingShell({
             
             {/* Right: Actions */}
             <div className="flex-1 flex items-center justify-end gap-2">
-              {onSaveExit && (
+              {onExit && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={onSaveExit}
+                  onClick={onExit}
                   className="text-gray-600 hover:text-gray-900"
+                  title="Progress is saved automatically"
                 >
-                  Save & exit
+                  {isModal ? <X className="w-4 h-4" /> : 'Save & exit'}
                 </Button>
               )}
-              {onStartOver && (
+              {onStartOver && !isModal && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={onStartOver}
                   className="text-gray-600 hover:text-gray-900"
                 >
-                  <X className="w-4 h-4 mr-2" />
                   Start over
                 </Button>
               )}

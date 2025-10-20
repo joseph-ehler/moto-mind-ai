@@ -173,6 +173,7 @@ export type WizardController = {
   back: () => void
   skip: () => void
   jumpTo: (stepId: string) => void
+  exit: () => void
   
   // State
   currentStep: StepConfig | null
