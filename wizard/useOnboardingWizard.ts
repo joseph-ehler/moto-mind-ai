@@ -17,6 +17,7 @@ import type {
   WizardController
 } from './types'
 import { getBranchTemplatesFor } from './flow-registry'
+import { dataSourceManager } from '@/lib/wizard/data-sources'
 
 export function useOnboardingWizard(config: WizardConfig): WizardController {
   const { steps: registry, store, predicates, weights = { parent: 1, mini: 0.5 }, persistenceKey } = config
@@ -40,6 +41,18 @@ export function useOnboardingWizard(config: WizardConfig): WizardController {
     }))
   })
   
+  // Data source state
+  const [dataSourceLoading, setDataSourceLoading] = useState(false)
+  const [dataSourceError, setDataSourceError] = useState<any>(null)
+  
+  // Register data sources on mount
+  useEffect(() => {
+    if ((registry as any).dataSources) {
+      const flowId = (registry as any).id || 'onboarding'
+      dataSourceManager.register(flowId, (registry as any).dataSources)
+    }
+  }, [registry])
+  
   // Autosave on data change
   useEffect(() => {
     if (registry.persistence?.autoSave === 'after each step submit') {
@@ -56,6 +69,62 @@ export function useOnboardingWizard(config: WizardConfig): WizardController {
   const currentStep = useMemo(() => {
     return itinerary[currentIndex]?.config || null
   }, [itinerary, currentIndex])
+  
+  // Handle onEnter.fetch for current step
+  useEffect(() => {
+    const step = currentStep as any
+    if (!step || !step.onEnter?.fetch) return
+    
+    const abortController = new AbortController()
+    setDataSourceLoading(true)
+    setDataSourceError(null)
+    
+    async function fetchOnEnter() {
+      try {
+        const flowId = (registry as any).id || 'onboarding'
+        const context = { ctx: data, fields: data, data: {} }
+        
+        const results = await Promise.allSettled(
+          step.onEnter.fetch.map((sourceName: string) =>
+            dataSourceManager.fetch(flowId, sourceName, context, {
+              signal: abortController.signal,
+              traceId: `${flowId}:${step.id}:${Date.now()}`
+            })
+          )
+        )
+        
+        // Check for failures
+        const failures = results.filter(
+          (r: any) => r.status === 'rejected' || !r.value.success
+        )
+        
+        if (failures.length > 0) {
+          const firstFailure = failures[0] as any
+          const error = firstFailure.status === 'rejected'
+            ? firstFailure.reason
+            : firstFailure.value.error
+          
+          setDataSourceError({
+            code: error?.code || 'UNKNOWN',
+            message: error?.message || 'Failed to load data'
+          })
+        }
+      } catch (error: any) {
+        if (error.name !== 'AbortError') {
+          setDataSourceError({
+            code: 'UNKNOWN',
+            message: error instanceof Error ? error.message : 'Unknown error'
+          })
+        }
+      } finally {
+        setDataSourceLoading(false)
+      }
+    }
+    
+    fetchOnEnter()
+    
+    return () => abortController.abort()
+  }, [currentStep?.id, data, registry])
   
   // Progress calculation
   const { totalSteps, progress } = useMemo(() => {
@@ -268,6 +337,10 @@ export function useOnboardingWizard(config: WizardConfig): WizardController {
     // Data
     data,
     setData,
+    
+    // Data source state
+    dataSourceLoading,
+    dataSourceError,
     
     // Persistence
     resume,

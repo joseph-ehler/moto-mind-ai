@@ -192,6 +192,10 @@ export type WizardController = {
   data: Record<string, any>
   setData: (key: string, value: any) => void
   
+  // Data source state
+  dataSourceLoading: boolean
+  dataSourceError: any
+  
   // Persistence
   resume: () => void
   reset: () => void
