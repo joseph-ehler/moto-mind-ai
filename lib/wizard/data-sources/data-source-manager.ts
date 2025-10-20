@@ -29,6 +29,8 @@ import { DataSourceError, DataSourceErrorCode, classifyError } from './errors'
 import { validateURL } from './url-validator'
 import { executeWithRetry } from './retry'
 import { globalInFlightRegistry, getInFlightKey } from './in-flight'
+import { getDataSourceConfig } from './config'
+import { validateResponse } from './response-validator'
 
 // ============================================================================
 // DATA SOURCE MANAGER
@@ -39,6 +41,8 @@ export class DataSourceManager {
   private cache: DataSourceCache
   private analyticsCallback?: (event: DataSourceEvent) => void
   private mocks: Map<string, any> = new Map()
+  private config = getDataSourceConfig()
+  private inFlight = globalInFlightRegistry
   
   constructor(cache?: DataSourceCache) {
     this.cache = cache || globalCache
@@ -270,11 +274,14 @@ export class DataSourceManager {
     options: FetchOptions
   ): Promise<any> {
     if (!source.url) {
-      throw new Error('URL required for HTTP source')
+      throw new DataSourceError(DataSourceErrorCode.INVALID_CONFIG, 'URL required for HTTP source')
     }
     
     // Resolve URL template
     const url = resolveTemplate(source.url, context)
+    
+    // VALIDATE URL (SSRF protection)
+    validateURL(url, this.config.urlPolicy)
     
     // Get circuit breaker for host
     const hostname = new URL(url, 'http://localhost').hostname
@@ -284,6 +291,12 @@ export class DataSourceManager {
     let headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'X-Trace-Id': options.traceId || crypto.randomUUID(),
+    }
+    
+    // Add idempotency key for POST with retry
+    if (source.type === 'http.post' && (source as any).dedupeKey) {
+      const idempotencyKey = resolveTemplate((source as any).dedupeKey, context)
+      headers['Idempotency-Key'] = idempotencyKey
     }
     
     if (source.headers) {
@@ -297,38 +310,70 @@ export class DataSourceManager {
       body = JSON.stringify(resolveTemplateObject(source.mapRequest, context))
     }
     
-    // Execute with circuit breaker and retry
-    return breaker.execute(async () => {
-      const timeoutMs = source.timeoutMs || 10000
-      const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), timeoutMs)
-      
-      try {
-        const response = await fetch(url, {
-          method: source.type === 'http.get' ? 'GET' : 'POST',
-          headers,
-          body,
-          signal: controller.signal,
+    // Execute with circuit breaker AND retry
+    return await executeWithRetry(
+      async () => {
+        return await breaker.execute(async () => {
+          const timeoutMs = source.timeoutMs || 10000
+          const controller = new AbortController()
+          const timeout = setTimeout(() => controller.abort(), timeoutMs)
+          
+          // Support abort signal from options
+          if (options.signal) {
+            options.signal.addEventListener('abort', () => controller.abort())
+          }
+          
+          try {
+            const response = await fetch(url, {
+              method: source.type === 'http.get' ? 'GET' : 'POST',
+              headers,
+              body,
+              signal: controller.signal,
+            })
+            
+            clearTimeout(timeout)
+            
+            if (!response.ok) {
+              const errorCode = response.status >= 500 
+                ? DataSourceErrorCode.HTTP_5XX 
+                : DataSourceErrorCode.HTTP_4XX
+              throw new DataSourceError(errorCode, `HTTP ${response.status}`)
+            }
+            
+            let data = await response.json()
+            
+            // Validate response if schema provided (runtime only)
+            if ((source as any).responseSchema) {
+              data = validateResponse(data, (source as any).responseSchema, source.name)
+            }
+            
+            return data
+            
+          } catch (error) {
+            clearTimeout(timeout)
+            
+            if (error instanceof Error && error.name === 'AbortError') {
+              throw new DataSourceError(DataSourceErrorCode.ABORTED, 'Request aborted')
+            }
+            
+            throw error
+          }
         })
-        
-        clearTimeout(timeout)
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      },
+      {
+        source,
+        isPost: source.type === 'http.post',
+        onRetry: (attempt, delayMs) => {
+          this.emitAnalytics({
+            type: 'ds_retry',
+            flowId,
+            source: source.name,
+            attempt,
+            delayMs,
+          })
         }
-        
-        return await response.json()
-        
-      } catch (error) {
-        clearTimeout(timeout)
-        
-        if (error instanceof Error && error.name === 'AbortError') {
-          throw new Error('TIMEOUT')
-        }
-        
-        throw error
       }
-    })
+    )
   }
   
   private async fetchComputed(
