@@ -115,7 +115,7 @@ export function OnboardingShell({
   return (
     <div className={isModal ? 'flex flex-col h-full bg-white' : 'min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50'}>
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Left: Back */}
@@ -165,7 +165,7 @@ export function OnboardingShell({
       
       {/* Progress Bar (separate section) */}
       {!hideProgress && useChapters && (
-        <div className="sticky top-16 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+        <div className="sticky top-16 z-10 bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <ChapterProgress
               chapters={chapters!}
@@ -184,7 +184,7 @@ export function OnboardingShell({
       </main>
       
       {/* Footer */}
-      <footer className="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200">
+      <footer className="sticky bottom-0 bg-white/80 backdrop-blur-md border-t border-white/20 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Left: Skip */}
