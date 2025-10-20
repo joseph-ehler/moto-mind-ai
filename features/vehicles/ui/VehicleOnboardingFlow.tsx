@@ -27,27 +27,56 @@ interface VehicleSpecs {
   make: string
   model: string
   trim?: string
-  body_class: string
+  bodyClass: string
   engine: {
     model?: string
     cylinders?: number
+    displacement?: number
+    displacementCC?: number
     horsepower?: number
-    fuel_type: string
+    fuelType?: string
+    turbo?: boolean | null
   }
-  drivetrain: string
-  transmission: string
-  manufactured: {
-    country: string
+  drivetrain?: string
+  transmission?: string
+  transmissionSpeeds?: number
+  safety?: {
+    adaptiveCruise?: string
+    backupCamera?: string
+    blindSpot?: string
+    abs?: string
+    esc?: string
+    tpms?: string
+    airbagsfront?: string
+    airbagsSide?: string
+    airbagsCurtain?: string
+  }
+  doors?: number
+  seats?: number
+  manufactured?: {
+    country?: string
     state?: string
+    city?: string
+    manufacturer?: string
   }
-  recalls: any[]
-  epa_mpg?: {
+  epaData?: {
     city?: number
     highway?: number
     combined?: number
+    fuelType?: string
+    annualCost?: number
+    co2Emissions?: number
+    matchQuality?: 'exact' | 'partial' | 'fallback'
   }
-  decoded_at: string
-  source: 'nhtsa'
+  electric?: {
+    isEV: boolean
+    range?: number
+  } | null
+  validation?: {
+    confidence?: number
+    metadata?: any
+  }
+  dataQuality?: number
 }
 
 interface SmartDefaults {
@@ -161,18 +190,19 @@ export function VehicleOnboardingFlow({ onComplete, onCancel }: VehicleOnboardin
           make: data.make,
           model: data.model,
           trim: data.trim || undefined,
-          body_class: data.bodyClass || 'Unknown',
-          engine: {
-            fuel_type: 'Unknown'
-          },
-          drivetrain: 'Unknown',
-          transmission: 'Unknown',
-          manufactured: {
-            country: 'Unknown'
-          },
-          recalls: [],
-          decoded_at: new Date().toISOString(),
-          source: 'nhtsa'
+          bodyClass: data.bodyClass || 'Unknown',
+          engine: data.engine || {},
+          drivetrain: data.drivetrain,
+          transmission: data.transmission,
+          transmissionSpeeds: data.transmissionSpeeds,
+          safety: data.safety,
+          doors: data.doors,
+          seats: data.seats,
+          manufactured: data.manufacturing,
+          epaData: data.epaData,
+          electric: data.electric,
+          validation: data.validation,
+          dataQuality: data.dataQuality
         }
 
         // Set the vehicle specs for the final confirmation
@@ -309,7 +339,7 @@ export function VehicleOnboardingFlow({ onComplete, onCancel }: VehicleOnboardin
         make: vehicleSpecs.make,
         model: vehicleSpecs.model,
         trim: vehicleSpecs.trim,
-        body_class: vehicleSpecs.body_class,
+        body_class: vehicleSpecs.bodyClass,
         engine: vehicleSpecs.engine,
         drivetrain: vehicleSpecs.drivetrain,
         transmission: vehicleSpecs.transmission,
@@ -420,62 +450,78 @@ export function VehicleOnboardingFlow({ onComplete, onCancel }: VehicleOnboardin
         specs.push({ label: 'Trim', value: vehicleSpecs.trim })
       }
       
-      specs.push({ label: 'Body Style', value: vehicleSpecs.body_class })
+      specs.push({ label: 'Body Style', value: vehicleSpecs.bodyClass })
       specs.push({ label: 'VIN', value: vehicleSpecs.vin })
       
       // Engine specifications
-      if (vehicleSpecs.engine.fuel_type !== 'Unknown') {
-        specs.push({ label: 'Fuel Type', value: vehicleSpecs.engine.fuel_type })
+      if (vehicleSpecs.engine?.fuelType) {
+        specs.push({ label: 'Fuel Type', value: vehicleSpecs.engine.fuelType })
       }
       
-      if (vehicleSpecs.engine.cylinders) {
+      if (vehicleSpecs.engine?.cylinders) {
         specs.push({ label: 'Cylinders', value: `${vehicleSpecs.engine.cylinders}-cylinder` })
       }
       
-      if (vehicleSpecs.engine.horsepower) {
+      if (vehicleSpecs.engine?.displacement) {
+        specs.push({ label: 'Displacement', value: `${vehicleSpecs.engine.displacement}L` })
+      }
+      
+      if (vehicleSpecs.engine?.horsepower) {
         specs.push({ label: 'Horsepower', value: `${vehicleSpecs.engine.horsepower} HP` })
       }
       
-      if (vehicleSpecs.engine.model && vehicleSpecs.engine.model !== 'Unknown') {
+      if (vehicleSpecs.engine?.model) {
         specs.push({ label: 'Engine', value: vehicleSpecs.engine.model })
       }
       
       // Drivetrain specifications
-      if (vehicleSpecs.drivetrain !== 'Unknown') {
+      if (vehicleSpecs.drivetrain) {
         specs.push({ label: 'Drivetrain', value: vehicleSpecs.drivetrain })
       }
       
-      if (vehicleSpecs.transmission !== 'Unknown') {
-        specs.push({ label: 'Transmission', value: vehicleSpecs.transmission })
+      if (vehicleSpecs.transmission) {
+        const transmissionText = vehicleSpecs.transmissionSpeeds 
+          ? `${vehicleSpecs.transmissionSpeeds}-speed ${vehicleSpecs.transmission}`
+          : vehicleSpecs.transmission
+        specs.push({ label: 'Transmission', value: transmissionText })
       }
       
       // EPA ratings
-      if (vehicleSpecs.epa_mpg) {
-        if (vehicleSpecs.epa_mpg.city) {
-          specs.push({ label: 'City MPG', value: `${vehicleSpecs.epa_mpg.city} mpg` })
+      if (vehicleSpecs.epaData) {
+        if (vehicleSpecs.epaData.city) {
+          specs.push({ label: 'City MPG', value: `${vehicleSpecs.epaData.city} mpg` })
         }
-        if (vehicleSpecs.epa_mpg.highway) {
-          specs.push({ label: 'Highway MPG', value: `${vehicleSpecs.epa_mpg.highway} mpg` })
+        if (vehicleSpecs.epaData.highway) {
+          specs.push({ label: 'Highway MPG', value: `${vehicleSpecs.epaData.highway} mpg` })
         }
-        if (vehicleSpecs.epa_mpg.combined) {
-          specs.push({ label: 'Combined MPG', value: `${vehicleSpecs.epa_mpg.combined} mpg` })
+        if (vehicleSpecs.epaData.combined) {
+          specs.push({ label: 'Combined MPG', value: `${vehicleSpecs.epaData.combined} mpg` })
+        }
+        if (vehicleSpecs.epaData.annualCost) {
+          specs.push({ label: 'Annual Fuel Cost', value: `$${vehicleSpecs.epaData.annualCost}` })
         }
       }
       
       // Manufacturing info
-      if (vehicleSpecs.manufactured.country !== 'Unknown') {
+      if (vehicleSpecs.manufactured?.country) {
         const location = vehicleSpecs.manufactured.state 
           ? `${vehicleSpecs.manufactured.country}, ${vehicleSpecs.manufactured.state}`
           : vehicleSpecs.manufactured.country
         specs.push({ label: 'Manufactured', value: location })
       }
       
-      // Data source
-      specs.push({ 
-        label: 'Data Source', 
-        value: vehicleSpecs.source.toUpperCase(),
-        isSource: true 
-      })
+      if (vehicleSpecs.manufactured?.city) {
+        specs.push({ label: 'Plant Location', value: vehicleSpecs.manufactured.city })
+      }
+      
+      // Data quality
+      if (vehicleSpecs.dataQuality) {
+        specs.push({ 
+          label: 'Data Quality', 
+          value: `${vehicleSpecs.dataQuality}%`,
+          isSource: true 
+        })
+      }
       
       return specs
     }
@@ -511,16 +557,21 @@ export function VehicleOnboardingFlow({ onComplete, onCancel }: VehicleOnboardin
             <div className="mt-6 overflow-hidden">
               <div className="flex items-center gap-3 overflow-x-auto pb-1">
                 <span className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 text-sm font-medium whitespace-nowrap">
-                  {vehicleSpecs.body_class}
+                  {vehicleSpecs.bodyClass}
                 </span>
-                {vehicleSpecs.engine.fuel_type !== 'Unknown' && (
+                {vehicleSpecs.engine?.fuelType && (
                   <span className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 text-sm font-medium whitespace-nowrap">
-                    {vehicleSpecs.engine.fuel_type}
+                    {vehicleSpecs.engine.fuelType}
                   </span>
                 )}
-                {vehicleSpecs.drivetrain !== 'Unknown' && (
+                {vehicleSpecs.drivetrain && (
                   <span className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 text-sm font-medium whitespace-nowrap">
                     {vehicleSpecs.drivetrain}
+                  </span>
+                )}
+                {vehicleSpecs.dataQuality && vehicleSpecs.dataQuality >= 90 && (
+                  <span className="inline-flex items-center px-4 py-2 rounded-full bg-amber-500/30 text-sm font-bold whitespace-nowrap">
+                    🏆 GOD TIER
                   </span>
                 )}
                 <span className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 text-sm font-medium whitespace-nowrap">

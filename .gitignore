@@ -82,3 +82,12 @@ AFTER-CODE-CHECKLIST.md
 
 # Generated migration SQL files
 .migrations-output/
+
+# NHTSA Data Files (too large for GitHub)
+data/nhtsa/complaints/*.txt
+data/nhtsa/complaints/*.zip
+data/nhtsa/investigations/*.txt
+data/nhtsa/investigations/*.zip
+data/nhtsa/recalls/*.txt
+data/nhtsa/recalls/*.zip
+data/nhtsa/downloads/

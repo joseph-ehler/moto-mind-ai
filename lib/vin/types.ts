@@ -19,6 +19,18 @@ export interface VINDecodeResult {
     driveType?: string
     fuelType?: string
   }
+  // NEW: Complete NHTSA raw data (100% preservation!)
+  nhtsaComplete: Record<string, string>
+  // NEW: Extraction quality metadata
+  extractionMetadata: {
+    totalFields: number
+    fieldsWithData: number
+    fieldsExtracted: number
+    extractionRate: number
+    missingFields: string[]
+  }
+  // NEW: Normalized data (clean, typed, queryable!)
+  normalized: import('./normalized-types').NormalizedVehicleData
   extendedSpecs?: {
     // Engine details
     engineCylinders?: string
@@ -36,6 +48,21 @@ export interface VINDecodeResult {
     laneDepartureWarning?: string
     parkAssist?: string
     rearVisibilitySystem?: string
+    // NEW: Additional high-value safety features (Oct 19, 2025)
+    backupCamera?: string
+    adaptiveCruiseControl?: string
+    brakeSystemType?: string
+    tpmsType?: string
+    autoReverseSystem?: string
+    keylessIgnition?: string
+    laneCenteringAssistance?: string
+    blindSpotIntervention?: string
+    rearCrossTrafficAlert?: string
+    pedestrianAEB?: string
+    dynamicBrakeSupport?: string
+    crashImminentBraking?: string
+    // Convenience features
+    entertainmentSystem?: string
     // Vehicle specs
     doors?: string
     seats?: string
@@ -54,6 +81,18 @@ export interface VINDecodeResult {
     maintenanceInterval: number // miles
     annualCost: number // dollars
   }
+  epaData?: {
+    isRealData: true
+    annualFuelCost: number
+    combinedMPG: number
+    co2Emissions: number
+  } | null
+  recalls?: Array<{
+    Component: string
+    Summary: string
+    Consequence?: string
+    Remedy?: string
+  }> | null
   aiInsights: {
     summary: string // 2 sentences
     reliabilityScore: number // 0-1

@@ -116,13 +116,15 @@ For EVERY task, verify:
 ```bash
 npm run windsurf:guide "<task>"      # Get context
 npm run repo:analyze                 # Understand state
-npm run db:introspect               # See database
+npm run db schema:inspect            # See database
+npm run db health                    # Check DB health
 ```
 
 ### During Development:
 ```bash
-npm run db:generate-migration       # Create migrations
-npm run db:test-migration           # Test migrations
+npm run db migrate:generate <name>  # Create migrations
+npm run db migrate:run --dry-run    # Test migrations
+npm run db seed:count <table>       # Check data
 npm test                            # Run tests
 ```
 
@@ -131,7 +133,8 @@ npm test                            # Run tests
 npm run repo:analyze                # Check patterns
 npm run repo:clean                  # Find issues
 npm run repo:clean --fix            # Auto-fix
-npm run db:validate                 # Validate DB
+npm run db rls:validate             # Validate RLS
+npm run db perf:metrics             # Performance check
 npm run test:security               # Security check
 npm run windsurf:validate           # Full validation
 ```

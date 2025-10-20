@@ -1,0 +1,94 @@
+{
+  "status": "blocked",
+  "timestamp": "2025-10-19T14:17:17.883Z",
+  "domain": "vehicles",
+  "duplicates": {
+    "found": true,
+    "count": 5,
+    "matches": [
+      {
+        "table": "user_vehicles",
+        "schema": "public",
+        "similarity": 0.482505635991194,
+        "reason": "User-specific vehicle instances. Links to canonical_vehicles. Private data.",
+        "domain": "vehicles"
+      },
+      {
+        "table": "vehicles",
+        "schema": "public",
+        "similarity": 0.472169742817599,
+        "reason": "RLS enabled with tenant isolation via app.current_tenant_id",
+        "domain": "vehicles"
+      },
+      {
+        "table": "vehicle_spec_enhancements",
+        "schema": "public",
+        "similarity": 0.453538068496335,
+        "reason": "Tracks progressive background enhancement of vehicle specifications using NHTSA API and AI web search",
+        "domain": "vehicles"
+      },
+      {
+        "table": "canonical_vehicles",
+        "schema": "public",
+        "similarity": 0.448854823512903,
+        "reason": "One record per VIN. Shared by all users. Contains VIN decode data and aggregated insights.",
+        "domain": "vehicles"
+      },
+      {
+        "table": "stale_vehicles_summary",
+        "schema": "public",
+        "similarity": 0.446583873440761,
+        "reason": "Similar purpose detected",
+        "domain": "vehicles"
+      }
+    ]
+  },
+  "recommendation": "BLOCKED",
+  "actions": [
+    {
+      "priority": "critical",
+      "type": "auto_fix_available",
+      "message": "2 issue(s) can be auto-fixed ✨",
+      "command": "npm run db schema:fix --table vehicles --apply"
+    },
+    {
+      "priority": "medium",
+      "type": "review_similar",
+      "message": "Review similar tables before creating new one",
+      "command": "npm run db registry:similar -- --text \"vehicles\""
+    },
+    {
+      "priority": "critical",
+      "type": "fix_lint",
+      "message": "Fix 2 schema linting blocker(s)",
+      "command": "npm run db schema:lint --table vehicles"
+    }
+  ],
+  "summary": "❌ BLOCKED: 2 critical issue(s) must be fixed, 1 suggestion(s)",
+  "lint_results": {
+    "passed": false,
+    "blockers": 2,
+    "warnings": 0,
+    "suggestions": 1,
+    "issues": [
+      {
+        "category": "keys.updated_at.missing",
+        "severity": "info",
+        "message": "Table \"vehicles\" missing updated_at column: Consider adding updated_at timestamptz for audit trail",
+        "fix": "ALTER TABLE vehicles ADD COLUMN updated_at timestamptz"
+      },
+      {
+        "category": "user_id.missing",
+        "severity": "error",
+        "message": "Table \"vehicles\" in domain \"vehicles\" missing user_id: User-facing tables must have user_id TEXT (NextAuth uses TEXT IDs)",
+        "fix": "ALTER TABLE vehicles ADD COLUMN user_id text NOT NULL"
+      },
+      {
+        "category": "anti_patterns.auth_uid",
+        "severity": "error",
+        "message": "Policy \"api_vehicles_user_tenants\" on \"vehicles\" uses auth.uid(): Do NOT use auth.uid() with NextAuth - it returns NULL. Use permissive policies + API auth.",
+        "fix": "Update policy to use USING (true) and handle auth in API"
+      }
+    ]
+  }
+}

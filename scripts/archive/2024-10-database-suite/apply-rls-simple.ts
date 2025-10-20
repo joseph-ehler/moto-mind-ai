@@ -2,7 +2,21 @@
 /**
  * Apply RLS Migration - Simple Version
  * Uses pg client to execute SQL directly
+ * 
+ * ⚠️  DEPRECATED - Use the unified CLI instead:
+ *    npm run db rls:enable <table>
+ *    npm run db rls:apply-nextauth <table>
+ *    npm run db rls:validate
+ * 
+ * Migration Guide: docs/PHASE_4_MIGRATION_PLAN.md
+ * This script will be removed in v4.0.0
  */
+
+console.warn('\n⚠️  DEPRECATED: This script is deprecated!')
+console.warn('   Use: npm run db rls:enable <table>')
+console.warn('   Or:  npm run db rls:apply-nextauth <table>')
+console.warn('   Migration guide: docs/PHASE_4_MIGRATION_PLAN.md')
+console.warn('   This script will be removed in v4.0.0\n')
 
 import { Client } from 'pg'
 import * as dotenv from 'dotenv'

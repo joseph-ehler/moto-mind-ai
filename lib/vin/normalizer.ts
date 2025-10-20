@@ -133,17 +133,41 @@ export function normalizeTransmission(transmission?: string): string | undefined
 }
 
 /**
+ * Normalize engine string
+ */
+export function normalizeEngine(engine?: string): string | undefined {
+  if (!engine) return undefined
+  
+  return engine
+    .replace(/LL/g, 'L')           // Fix double L (3.6LL → 3.6L)
+    .replace(/\s{2,}/g, ' ')        // Multiple spaces → single
+    .replace(/L\s+/g, 'L ')         // Normalize space after L
+    .trim()
+}
+
+/**
  * Normalize safety feature values
  */
 export function normalizeSafetyFeature(value?: string): string | undefined {
   if (!value) return undefined
   
-  const normalized = value.trim()
+  const trimmed = value.trim()
   
-  // Convert "Not Applicable" to undefined
-  if (normalized.toLowerCase() === 'not applicable') {
+  // Remove if "Not Applicable", "(not equipped)", or empty
+  const lowerValue = trimmed.toLowerCase()
+  if (
+    trimmed === '' ||
+    lowerValue === 'not applicable' ||
+    lowerValue === '(not equipped)' ||
+    lowerValue === 'not equipped' ||
+    lowerValue === '(n/a)' ||
+    lowerValue === 'n/a'
+  ) {
     return undefined
   }
+  
+  // Remove parentheses from valid values
+  const cleaned = trimmed.replace(/[()]/g, '').trim()
   
   // Normalize common values
   const safetyMap: Record<string, string> = {
@@ -156,8 +180,10 @@ export function normalizeSafetyFeature(value?: string): string | undefined {
     '1ST AND 2ND ROWS': 'Front & Rear'
   }
   
-  const upper = normalized.toUpperCase()
-  return safetyMap[upper] || titleCase(normalized)
+  const upper = cleaned.toUpperCase()
+  const mapped = safetyMap[upper]
+  
+  return mapped !== undefined ? mapped : titleCase(cleaned)
 }
 
 /**
@@ -316,5 +342,375 @@ export function normalizeVINData(data: Record<string, any>): Record<string, any>
     
     // Format location
     location: formatLocation(data.plantCity, data.plantState, data.plantCountry)
+  }
+}
+
+// ============================================================================
+// COMPREHENSIVE NORMALIZER CLASS
+// ============================================================================
+
+import type {
+  NormalizedVehicleData,
+  NormalizedSafetyFeatures,
+  NormalizedPerformance,
+  NormalizedElectricVehicle,
+  NormalizedTruckFeatures,
+  NormalizedManufacturing,
+  FeatureAvailability,
+  YesNo
+} from './normalized-types'
+
+/**
+ * Comprehensive Vehicle Data Normalizer
+ * Transforms raw NHTSA data into clean, typed structure
+ */
+export class VehicleDataNormalizer {
+  /**
+   * Main normalization entry point
+   */
+  static normalize(raw: Record<string, string>): NormalizedVehicleData {
+    const fieldsNormalized = Object.keys(raw).filter(k => raw[k] && raw[k].trim()).length
+    
+    const safety = this.normalizeSafety(raw)
+    const performance = this.normalizePerformance(raw)
+    const electric = this.normalizeElectric(raw)
+    const truck = this.normalizeTruck(raw)
+    const manufacturing = this.normalizeManufacturing(raw)
+    
+    // Calculate data quality
+    const safetyPopulated = Object.values(safety).filter(v => 
+      v !== 'unknown' && v !== 'not_available' && v !== null
+    ).length
+    
+    const perfPopulated = [
+      performance.engine.cylinders,
+      performance.engine.displacement.liters,
+      performance.engine.horsepower,
+      performance.drivetrain.type !== 'unknown' ? 1 : 0,
+      performance.dimensions.doors
+    ].filter(Boolean).length
+    
+    const completeness = Math.round((fieldsNormalized / 154) * 100)
+    
+    return {
+      vin: raw.VIN || '',
+      year: parseInt(raw.ModelYear) || 0,
+      make: raw.Make || '',
+      model: raw.Model || '',
+      trim: raw.Trim || null,
+      trim2: raw.Trim2 || null,
+      series: raw.Series || null,
+      series2: raw.Series2 || null,
+      bodyClass: raw.BodyClass || null,
+      vehicleType: raw.VehicleType || null,
+      
+      safety,
+      performance,
+      electric,
+      truck,
+      manufacturing,
+      
+      normalization: {
+        normalizedAt: new Date(),
+        version: '1.0.0',
+        fieldsNormalized,
+        dataQuality: {
+          safetyFeaturesPopulated: safetyPopulated,
+          performanceFieldsPopulated: perfPopulated,
+          completeness
+        }
+      }
+    }
+  }
+  
+  /**
+   * Normalize safety features
+   */
+  private static normalizeSafety(raw: Record<string, string>): NormalizedSafetyFeatures {
+    return {
+      // ADAS
+      adaptiveCruiseControl: this.normalizeAvailability(raw.AdaptiveCruiseControl),
+      blindSpotMonitoring: this.normalizeAvailability(raw.BlindSpotMon),
+      laneKeepingAssist: this.normalizeAvailability(raw.LaneKeepSystem),
+      laneCenteringAssist: this.normalizeAvailability(raw.LaneCenteringAssistance),
+      laneDepartureWarning: this.normalizeAvailability(raw.LaneDepartureWarning),
+      
+      // Collision
+      forwardCollisionWarning: this.normalizeAvailability(raw.ForwardCollisionWarning),
+      automaticEmergencyBraking: this.normalizeAvailability(raw.CIB),
+      pedestrianDetection: this.normalizeAvailability(raw.PedestrianAutomaticEmergencyBraking),
+      rearCrossTrafficAlert: this.normalizeAvailability(raw.RearCrossTrafficAlert),
+      dynamicBrakeSupport: this.normalizeAvailability(raw.DynamicBrakeSupport),
+      crashImminentBraking: this.normalizeAvailability(raw.CIB),
+      
+      // Cameras
+      backupCamera: this.normalizeAvailability(raw.BackupCamera || raw.RearVisibilitySystem),
+      parkingAssist: this.normalizeAvailability(raw.ParkAssist),
+      rearAutoEmergencyBraking: this.normalizeAvailability(raw.RearAutomaticEmergencyBraking),
+      
+      // Core
+      abs: this.normalizeAvailability(raw.ABS),
+      electronicStabilityControl: this.normalizeAvailability(raw.ESC),
+      tractionControl: this.normalizeAvailability(raw.TractionControl),
+      
+      // Air Bags
+      airBags: {
+        front: this.normalizeYesNoAirBag(raw.AirBagLocFront),
+        side: this.normalizeYesNoAirBag(raw.AirBagLocSide),
+        curtain: this.normalizeYesNoAirBag(raw.AirBagLocCurtain),
+        knee: this.normalizeYesNoAirBag(raw.AirBagLocKnee)
+      },
+      
+      // Monitoring
+      tpms: this.normalizeTPMSType(raw.TPMS),
+      eventDataRecorder: this.normalizeYesNoValue(raw.EDR),
+      automaticCrashNotification: this.normalizeYesNoValue(raw.CAN_AACN),
+      
+      // Lights
+      daytimeRunningLights: this.normalizeAvailability(raw.DaytimeRunningLight),
+      headlampLightSource: raw.LowerBeamHeadlampLightSource || null,
+      adaptiveDrivingBeam: this.normalizeAvailability(raw.AdaptiveDrivingBeam),
+      
+      // Other
+      keylessIgnition: this.normalizeAvailability(raw.KeylessIgnition),
+      autoReverseWindows: this.normalizeAvailability(raw.AutoReverseSystem),
+      seatBeltPretensioner: this.normalizeYesNoValue(raw.Pretensioner),
+      
+      // Automation
+      saeAutomationLevel: raw.SAEAutomationLevel || null
+    }
+  }
+  
+  /**
+   * Normalize performance data
+   */
+  private static normalizePerformance(raw: Record<string, string>): NormalizedPerformance {
+    return {
+      engine: {
+        cylinders: this.parseNumber(raw.EngineCylinders),
+        displacement: {
+          liters: this.parseNumber(raw.DisplacementL),
+          cubicInches: this.parseNumber(raw.DisplacementCI),
+          cc: this.parseNumber(raw.DisplacementCC)
+        },
+        configuration: raw.EngineConfiguration || null,
+        model: raw.EngineModel || null,
+        manufacturer: raw.EngineManufacturer || null,
+        valveTrain: raw.ValveTrainDesign || null,
+        coolingType: raw.CoolingType || null,
+        fuelInjectionType: raw.FuelInjectionType || null,
+        turbo: this.normalizeYesNoValue(raw.Turbo),
+        horsepower: this.parseNumber(raw.EngineHP),
+        horsepowerTo: this.parseNumber(raw.EngineHP_to),
+        kilowatts: this.parseNumber(raw.EngineKW),
+        topSpeedMph: this.parseNumber(raw.TopSpeedMPH)
+      },
+      
+      drivetrain: {
+        type: this.normalizeDriveTypeValue(raw.DriveType),
+        transmission: raw.TransmissionStyle || null,
+        transmissionSpeeds: this.parseNumber(raw.TransmissionSpeeds)
+      },
+      
+      dimensions: {
+        doors: this.parseNumber(raw.Doors),
+        seats: this.parseNumber(raw.Seats),
+        seatRows: this.parseNumber(raw.SeatRows),
+        curbWeightLbs: this.parseNumber(raw.CurbWeightLB),
+        gvwrLbs: this.parseGVWR(raw.GVWR),
+        gvwrToLbs: this.parseNumber(raw.GVWR_to),
+        gcwrLbs: this.parseNumber(raw.GCWR),
+        wheelbaseInches: this.parseNumber(raw.WheelBaseShort || raw.WheelBaseLong),
+        wheelbaseType: raw.WheelBaseType || null,
+        trackWidthInches: this.parseNumber(raw.TrackWidth),
+        wheelSizeFrontInches: this.parseNumber(raw.WheelSizeFront),
+        wheelSizeRearInches: this.parseNumber(raw.WheelSizeRear),
+        numberOfWheels: this.parseNumber(raw.Wheels)
+      },
+      
+      fuel: {
+        primaryType: raw.FuelTypePrimary || null,
+        secondaryType: raw.FuelTypeSecondary || null
+      }
+    }
+  }
+  
+  /**
+   * Normalize EV data
+   */
+  private static normalizeElectric(raw: Record<string, string>): NormalizedElectricVehicle {
+    const electLevel = (raw.ElectrificationLevel || '').toLowerCase()
+    
+    return {
+      electrificationLevel: raw.ElectrificationLevel || null,
+      isEV: electLevel.includes('bev') || electLevel.includes('battery electric'),
+      isHybrid: electLevel.includes('hev') || electLevel.includes('hybrid'),
+      isPluginHybrid: electLevel.includes('phev') || electLevel.includes('plug-in'),
+      
+      battery: {
+        type: raw.BatteryType || null,
+        kwhFrom: this.parseNumber(raw.BatteryKWh),
+        kwhTo: this.parseNumber(raw.BatteryKWh_to),
+        voltageFrom: this.parseNumber(raw.BatteryV),
+        voltageTo: this.parseNumber(raw.BatteryV_to),
+        currentFrom: this.parseNumber(raw.BatteryA),
+        currentTo: this.parseNumber(raw.BatteryA_to),
+        modules: this.parseNumber(raw.BatteryModules),
+        packs: this.parseNumber(raw.BatteryPacks)
+      },
+      
+      charging: {
+        level: raw.ChargerLevel || null,
+        powerKw: this.parseNumber(raw.ChargerPowerKW)
+      },
+      
+      driveUnit: raw.EVDriveUnit || null
+    }
+  }
+  
+  /**
+   * Normalize truck features
+   */
+  private static normalizeTruck(raw: Record<string, string>): NormalizedTruckFeatures {
+    const bodyClass = (raw.BodyClass || '').toLowerCase()
+    
+    return {
+      isTruck: bodyClass.includes('pickup') || bodyClass.includes('truck'),
+      
+      bed: {
+        type: raw.BedType || null,
+        lengthInches: this.parseNumber(raw.BedLengthIN)
+      },
+      
+      cab: {
+        type: raw.BodyCabType || null
+      },
+      
+      axles: {
+        count: this.parseNumber(raw.Axles),
+        configuration: raw.AxleConfiguration || null
+      }
+    }
+  }
+  
+  /**
+   * Normalize manufacturing data
+   */
+  private static normalizeManufacturing(raw: Record<string, string>): NormalizedManufacturing {
+    return {
+      manufacturer: raw.Manufacturer || null,
+      manufacturerId: raw.ManufacturerId || null,
+      
+      plant: {
+        city: raw.PlantCity || null,
+        state: raw.PlantState || null,
+        country: raw.PlantCountry || null,
+        companyName: raw.PlantCompanyName || null,
+        location: formatLocation(raw.PlantCity, raw.PlantState, raw.PlantCountry) || null
+      },
+      
+      basePrice: this.parseNumber(raw.BasePrice)
+    }
+  }
+  
+  // ============================================================================
+  // UTILITY METHODS
+  // ============================================================================
+  
+  /**
+   * Normalize availability values
+   */
+  private static normalizeAvailability(value: string | undefined): FeatureAvailability {
+    if (!value || value.trim() === '') return 'unknown'
+    
+    const v = value.toLowerCase().trim()
+    
+    if (v === 'standard' || v === 'yes') return 'standard'
+    if (v === 'optional') return 'optional'
+    if (v === 'not available' || v === 'no' || v === 'not applicable') return 'not_available'
+    
+    return 'unknown'
+  }
+  
+  /**
+   * Normalize yes/no values
+   */
+  private static normalizeYesNoValue(value: string | undefined): YesNo {
+    if (!value || value.trim() === '') return 'unknown'
+    
+    const v = value.toLowerCase().trim()
+    
+    if (v === 'yes' || v === 'standard' || v === 'true') return 'yes'
+    if (v === 'no' || v === 'not applicable' || v === 'false') return 'no'
+    
+    return 'unknown'
+  }
+  
+  /**
+   * Normalize air bag yes/no (handles "1st Row" format)
+   */
+  private static normalizeYesNoAirBag(value: string | undefined): YesNo {
+    if (!value || value.trim() === '') return 'unknown'
+    
+    const v = value.toLowerCase().trim()
+    
+    if (v.includes('row') || v.includes('driver') || v.includes('passenger')) return 'yes'
+    if (v === 'no' || v === 'not applicable') return 'no'
+    
+    return 'unknown'
+  }
+  
+  /**
+   * Normalize TPMS type
+   */
+  private static normalizeTPMSType(value: string | undefined): 'direct' | 'indirect' | 'none' | 'unknown' {
+    if (!value || value.trim() === '') return 'unknown'
+    
+    const v = value.toLowerCase().trim()
+    
+    if (v.includes('direct')) return 'direct'
+    if (v.includes('indirect')) return 'indirect'
+    if (v === 'none' || v === 'not applicable') return 'none'
+    
+    return 'unknown'
+  }
+  
+  /**
+   * Normalize drive type
+   */
+  private static normalizeDriveTypeValue(value: string | undefined): 'fwd' | 'rwd' | 'awd' | '4wd' | 'unknown' {
+    if (!value) return 'unknown'
+    
+    const v = value.toLowerCase().trim()
+    
+    if (v.includes('fwd') || v.includes('front')) return 'fwd'
+    if (v.includes('rwd') || v.includes('rear')) return 'rwd'
+    if (v.includes('awd') || v.includes('all wheel')) return 'awd'
+    if (v.includes('4wd') || v.includes('4x4') || v.includes('four wheel')) return '4wd'
+    
+    return 'unknown'
+  }
+  
+  /**
+   * Parse number from string
+   */
+  private static parseNumber(value: string | undefined): number | null {
+    if (!value || value.trim() === '') return null
+    
+    const parsed = parseFloat(value.replace(/[^0-9.-]/g, ''))
+    return isNaN(parsed) ? null : parsed
+  }
+  
+  /**
+   * Parse GVWR (handles ranges like "7,001 - 8,000 lb")
+   */
+  private static parseGVWR(value: string | undefined): number | null {
+    if (!value) return null
+    
+    // Extract first number from range
+    const match = value.match(/[\d,]+/)
+    if (!match) return null
+    
+    return this.parseNumber(match[0])
   }
 }

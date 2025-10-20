@@ -11,11 +11,13 @@ import { useRouter } from 'next/navigation'
 import { Stack, Heading, Text } from '@/components/design-system'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { ArrowRight, Wrench, Bell, TrendingDown, Sparkles } from 'lucide-react'
+import { ArrowRight, Wrench, Bell, TrendingDown, Sparkles, Camera, Type, Info } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function WelcomePage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [isSkipping, setIsSkipping] = useState(false)
 
   const handleGetStarted = async () => {
     setIsLoading(true)
@@ -31,6 +33,12 @@ export default function WelcomePage() {
     
     // Navigate to VIN entry (primary flow)
     router.push('/onboarding/vin')
+  }
+
+  const handleSkip = async () => {
+    setIsSkipping(true)
+    // Skip onboarding - user can add vehicle later from dashboard
+    router.push('/dashboard?skippedOnboarding=true')
   }
 
   return (
@@ -107,22 +115,55 @@ export default function WelcomePage() {
         </Card>
       </div>
 
-      {/* CTA */}
-      <div className="flex flex-col items-center gap-3 mt-8">
-        <Button
-          size="lg"
-          onClick={handleGetStarted}
-          className="min-w-[280px]"
-        >
-          Scan VIN to Get Started
-          <ArrowRight className="ml-2 w-5 h-5" />
-        </Button>
+      {/* CTA - VIN-Only Approach */}
+      <div className="flex flex-col items-center gap-4 mt-8">
+        <div className="w-full max-w-md space-y-3">
+          {/* PRIMARY: Scan VIN */}
+          <Button
+            size="lg"
+            onClick={handleGetStarted}
+            disabled={isLoading || isSkipping}
+            className="w-full"
+          >
+            <Camera className="mr-2 h-5 w-5" />
+            {isLoading ? 'Starting...' : 'Scan VIN Barcode'}
+          </Button>
+          
+          {/* SECONDARY: Type VIN */}
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => router.push('/onboarding/vin?manualEntry=true')}
+            disabled={isLoading || isSkipping}
+            className="w-full"
+          >
+            <Type className="mr-2 h-5 w-5" />
+            Enter VIN Manually
+          </Button>
+          
+          {/* Why VIN Required */}
+          <Alert className="mt-4">
+            <Info className="h-4 w-4" />
+            <AlertDescription className="text-xs">
+              <strong>Why we need your VIN:</strong>
+              <br />
+              Ensures accurate vehicle specs, maintenance tracking, recall notifications,
+              and fuel economy data.
+              <br />
+              <span className="text-muted-foreground mt-1 block">
+                Find your VIN on your dashboard or driver's door jamb.
+              </span>
+            </AlertDescription>
+          </Alert>
+        </div>
         
+        {/* Skip Option */}
         <button
-          onClick={() => router.push('/onboarding/vehicle')}
-          className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+          onClick={handleSkip}
+          disabled={isLoading || isSkipping}
+          className="text-xs text-gray-500 hover:text-gray-700 transition-colors disabled:opacity-50 mt-2"
         >
-          Or enter details manually
+          {isSkipping ? 'Skipping...' : "I'll add a vehicle later"}
         </button>
       </div>
 

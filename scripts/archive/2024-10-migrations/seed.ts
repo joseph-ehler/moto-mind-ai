@@ -1,5 +1,19 @@
 // MotoMindAI: Seed Data Script
 // Creates test tenants, vehicles, and metrics for development
+//
+// ⚠️  DEPRECATED - Use the unified CLI instead:
+//    npm run db seed <file>           # Load seed file
+//    npm run db seed:truncate <table> # Clear table
+//    npm run db seed:reset --confirm  # Reset database
+//
+// Migration Guide: docs/PHASE_4_MIGRATION_PLAN.md
+// This script will be removed in v4.0.0
+
+console.warn('\n⚠️  DEPRECATED: This script is deprecated!')
+console.warn('   Use: npm run db seed <file>')
+console.warn('   Or:  npm run db seed:reset --confirm')
+console.warn('   Migration guide: docs/PHASE_4_MIGRATION_PLAN.md')
+console.warn('   This script will be removed in v4.0.0\n')
 
 import { config } from 'dotenv'
 import { Pool } from 'pg'

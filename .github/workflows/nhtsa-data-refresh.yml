@@ -1,0 +1,67 @@
+name: NHTSA Data Refresh
+
+on:
+  # Auto-refresh schedules
+  schedule:
+    - cron: '0 2 1 * *'      # Monthly: 1st at 2 AM UTC
+    # - cron: '0 2 * * 0'    # Weekly: Sundays at 2 AM UTC (uncomment if desired)
+    # - cron: '0 2 1,15 * *' # Bi-weekly: 1st & 15th (uncomment if desired)
+  
+  # Allow manual trigger anytime
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force refresh even if no changes'
+        required: false
+        default: 'false'
+
+jobs:
+  refresh-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60 # Max 1 hour
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run NHTSA data refresh
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm run safety:refresh-data
+
+      - name: Check data health
+        if: success()
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run db query "SELECT * FROM get_data_freshness()"
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ NHTSA Data Refresh Failed',
+              body: `The automated NHTSA data refresh failed.
+              
+              **Workflow:** ${context.workflow}
+              **Run:** ${context.runNumber}
+              **URL:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
+              
+              Please investigate and fix.`,
+              labels: ['automated', 'data-refresh', 'bug']
+            })

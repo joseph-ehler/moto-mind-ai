@@ -1,0 +1,46 @@
+name: Database Types Validation
+
+on:
+  pull_request:
+    paths:
+      - 'database/migrations/**'
+      - 'database/supabase/migrations/**'
+      - 'types/supabase.ts'
+
+jobs:
+  validate-types:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Generate fresh types
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run db types:generate -- --helpers
+      
+      - name: Check if types changed
+        run: |
+          if ! git diff --exit-code -- types/supabase.ts; then
+            echo "❌ Database types are stale"
+            echo ""
+            echo "The database schema has changed but types/supabase.ts was not updated."
+            echo ""
+            echo "Please run locally:"
+            echo "  npm run db types:generate"
+            echo ""
+            echo "Then commit the updated types file."
+            exit 1
+          fi
+          echo "✅ Database types are up-to-date"

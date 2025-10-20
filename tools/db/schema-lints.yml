@@ -1,0 +1,159 @@
+# MotoMind Schema Linting Rules
+# Auto-validated before any schema changes
+# Severity levels: error (blocks), warning (review), info (suggestion)
+
+naming:
+  tables:
+    pattern: '^[a-z][a-z0-9_]*$'
+    plural: true
+    message: 'Tables must be plural snake_case (e.g., "vehicles" not "vehicle")'
+    severity: error
+    exceptions:
+      - 'auth'  # Supabase auth schema
+      - 'storage'  # Supabase storage schema
+  
+  columns:
+    pattern: '^[a-z][a-z0-9_]*$'
+    message: 'Columns must be snake_case (e.g., "created_at" not "createdAt")'
+    severity: warning
+    exceptions:
+      - 'id'
+      - 'user_id'
+      - 'tenant_id'
+  
+  enums:
+    prefix_with_domain: true
+    message: 'Enums should be prefixed by domain (e.g., "vehicles_status" not "status")'
+    severity: warning
+
+keys:
+  primary_key:
+    required: true
+    name: 'id'
+    type: 'uuid'
+    default: 'gen_random_uuid()'
+    message: 'Every table must have id uuid PRIMARY KEY DEFAULT gen_random_uuid()'
+    severity: error
+  
+  created_at:
+    required: true
+    type: 'timestamptz'
+    default: 'NOW()'
+    message: 'Every table should have created_at timestamptz NOT NULL DEFAULT NOW()'
+    severity: warning
+  
+  updated_at:
+    recommended: true
+    type: 'timestamptz'
+    message: 'Consider adding updated_at timestamptz for audit trail'
+    severity: info
+
+rls:
+  # NextAuth-specific rules
+  nextauth_mode: true  # Don't use auth.uid()
+  
+  enabled:
+    required_for_domains: ['vehicles', 'trips', 'maintenance', 'expenses']
+    message: 'User-facing tables must have RLS enabled'
+    severity: error
+  
+  policies:
+    required: true
+    message: 'Tables with RLS must have at least one policy'
+    severity: error
+    
+  nextauth_policy:
+    recommended: true
+    pattern: 'USING (true)'
+    message: 'With NextAuth, use permissive policies + API auth (no auth.uid())'
+    severity: info
+
+user_id:
+  # NextAuth uses TEXT user_id, not UUID
+  type: 'text'
+  required_for_domains: ['vehicles', 'trips', 'maintenance', 'expenses']
+  message: 'User-facing tables must have user_id TEXT (NextAuth uses TEXT IDs)'
+  severity: error
+  
+indexes:
+  foreign_keys:
+    required: true
+    message: 'Foreign key columns should have indexes for join performance'
+    severity: warning
+  
+  user_id:
+    required: true
+    message: 'user_id columns should have indexes for filtering'
+    severity: warning
+  
+  unique_constraints:
+    recommended: true
+    message: 'Consider unique constraints for business keys (e.g., email, vin)'
+    severity: info
+
+documentation:
+  table_comments:
+    recommended: true
+    message: 'Tables should have COMMENT describing their purpose'
+    severity: info
+  
+  rls_policy_comments:
+    required: true
+    message: 'RLS policies should have COMMENT explaining auth strategy'
+    severity: warning
+  
+  complex_columns:
+    recommended: true
+    types: ['jsonb', 'text[]', 'hstore']
+    message: 'Complex columns should have COMMENT explaining structure'
+    severity: info
+
+# Domain-specific rules
+domains:
+  vehicles:
+    tables: ['vehicles', 'user_vehicles', 'canonical_vehicles', 'vehicle_images']
+    required_columns:
+      - name: 'user_id'
+        type: 'text'
+      - name: 'created_at'
+        type: 'timestamptz'
+    rls_required: true
+  
+  trips:
+    tables: ['trips', 'trip_waypoints']
+    required_columns:
+      - name: 'user_id'
+        type: 'text'
+      - name: 'vehicle_id'
+        type: 'uuid'
+    rls_required: true
+
+# Reserved words to avoid
+reserved_words:
+  avoid:
+    - 'user'  # Use 'users' (plural)
+    - 'group'  # SQL keyword
+    - 'order'  # SQL keyword
+    - 'table'  # SQL keyword
+    - 'column'  # SQL keyword
+  message: 'Avoid SQL reserved words as table/column names'
+  severity: error
+
+# Anti-patterns
+anti_patterns:
+  # No auth.uid() with NextAuth
+  auth_uid_in_policies:
+    pattern: 'auth\.uid\(\)'
+    message: 'Do NOT use auth.uid() with NextAuth - it returns NULL. Use permissive policies + API auth.'
+    severity: error
+    
+  # No UUID user_id with NextAuth  
+  uuid_user_id:
+    check_tables: ['vehicles', 'trips', 'expenses', 'maintenance']
+    message: 'Do NOT use UUID for user_id - NextAuth uses TEXT IDs like "104135..."'
+    severity: error
+  
+  # No foreign key to auth.users with NextAuth
+  foreign_key_to_auth_users:
+    message: 'Do NOT add foreign key to auth.users - NextAuth users are not in that table'
+    severity: error

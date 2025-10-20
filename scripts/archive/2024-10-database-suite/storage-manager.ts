@@ -10,8 +10,22 @@
  * - Migrate files between buckets
  * - Cleanup orphaned files
  * 
- * Usage: npm run db:storage <command>
+ * ⚠️  DEPRECATED - Use the unified CLI instead:
+ *    npm run db storage:list          # List buckets
+ *    npm run db storage:create <name> # Create bucket
+ *    npm run db storage:stats <bucket> # Get stats
+ *    npm run db storage:cleanup <bucket> # Cleanup old files
+ * 
+ * Migration Guide: docs/PHASE_4_MIGRATION_PLAN.md
+ * This script will be removed in v4.0.0
  */
+
+console.warn('\n⚠️  DEPRECATED: This script is deprecated!')
+console.warn('   Use: npm run db storage:list')
+console.warn('   Or:  npm run db storage:create <name>')
+console.warn('   Or:  npm run db storage:cleanup <bucket>')
+console.warn('   Migration guide: docs/PHASE_4_MIGRATION_PLAN.md')
+console.warn('   This script will be removed in v4.0.0\n')
 
 import { createClient } from '@supabase/supabase-js'
 import * as path from 'path'

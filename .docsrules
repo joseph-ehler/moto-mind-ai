@@ -1,0 +1,118 @@
+# Documentation Organization Rules
+
+## ❌ NEVER ALLOWED IN ROOT
+- No .md files except README.md and CONTRIBUTING.md
+- No status/completion docs
+- No phase summaries
+- No audit files
+
+## ✅ PROPER LOCATIONS
+
+### Project Status & Summaries:
+`docs/project-management/`
+- Phase completions
+- Sprint summaries
+- Milestone tracking
+- Status updates
+
+### Feature Documentation:
+`docs/features/[feature-name]/`
+- Feature specs
+- Implementation guides
+- API documentation
+
+### Architecture & Decisions:
+`docs/architecture/`
+- System design
+- ADRs (Architecture Decision Records)
+- Technical patterns
+
+### Operations & Deployment:
+`docs/operations/`
+- Deployment guides
+- Checklists
+- Runbooks
+
+### Development Guides:
+`docs/development/`
+- Setup guides
+- Workflows
+- Testing guides
+
+### Audits & Analysis:
+`docs/audits/`
+- Code audits
+- Security reviews
+- Performance analysis
+
+## 📁 DIRECTORY STRUCTURE
+
+```
+docs/
+├── project-management/     # Phases, sprints, status
+│   ├── phases/
+│   ├── sprints/
+│   └── status/
+├── features/              # Feature-specific docs
+│   ├── onboarding/
+│   ├── vehicles/
+│   └── tracking/
+├── architecture/          # System design
+│   ├── decisions/
+│   └── patterns/
+├── operations/            # Deploy & ops
+│   ├── deployment/
+│   └── runbooks/
+├── development/           # Dev guides
+│   ├── setup/
+│   ├── workflows/
+│   └── testing/
+└── audits/               # Reviews & analysis
+    ├── code/
+    ├── security/
+    └── performance/
+```
+
+## 🔧 ENFORCEMENT
+
+### Git Pre-commit Hook:
+`.git/hooks/pre-commit` checks for root .md files
+
+### Linting:
+`.markdownlint.json` enforces structure
+
+### CI/CD:
+GitHub Actions fails if root .md detected
+
+## 🎯 QUICK REFERENCE
+
+**Creating new doc?**
+1. Determine category (feature, architecture, operations, etc.)
+2. Place in appropriate `docs/` subdirectory
+3. NEVER put in root (except README.md)
+
+**Phase/Status updates?**
+→ `docs/project-management/phases/`
+
+**Feature documentation?**
+→ `docs/features/[feature-name]/`
+
+**Onboarding audit?**
+→ `docs/audits/onboarding/`
+
+**Deployment checklist?**
+→ `docs/operations/deployment/`
+
+## 💡 WHY THIS MATTERS
+
+**Clean Root:**
+- Professional appearance
+- Easy to navigate
+- Clear project structure
+- Standard convention
+
+**Organized Docs:**
+- Easy to find
+- Easy to maintain
+- Easy to search
+- Easy to onboard new devs

@@ -1,8 +1,22 @@
 #!/usr/bin/env tsx
 /**
- * Apply MASTER RLS Fix
- * Bypasses migration runner to apply critical security fix
+ * Apply Master RLS Fix
+ * Replaces auth.uid() with tenant-based RLS using current_setting
+ * 
+ * ⚠️  DEPRECATED - Use the unified CLI instead:
+ *    npm run db rls:validate          # Detect auth.uid() issues
+ *    npm run db rls:apply-nextauth <table>  # Fix NextAuth RLS
+ *    npm run db rls:list              # List all RLS status
+ * 
+ * Migration Guide: docs/PHASE_4_MIGRATION_PLAN.md
+ * This script will be removed in v4.0.0
  */
+
+console.warn('\n⚠️  DEPRECATED: This script is deprecated!')
+console.warn('   Use: npm run db rls:validate')
+console.warn('   Then: npm run db rls:apply-nextauth <table>')
+console.warn('   Migration guide: docs/PHASE_4_MIGRATION_PLAN.md')
+console.warn('   This script will be removed in v4.0.0\n')
 
 import { createClient } from '@supabase/supabase-js'
 import * as fs from 'fs'

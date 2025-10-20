@@ -10,6 +10,8 @@
 ```
 □ Run: npm run windsurf:guide "build [feature]"
 □ Read: .windsurf-context.md (if it exists)
+□ Check: npm run db health (if DB involved)
+□ Check: npm run db schema:inspect (if DB changes)
 □ Follow the patterns in that file
 □ Suggest validation after building
 ```
@@ -18,6 +20,8 @@
 ```
 □ Suggest: npm run ai-platform:enforce -- --check-staged
 □ Suggest: npm run ai-platform:guardian -- --check
+□ Suggest: npm run db rls:validate (if DB changes)
+□ Suggest: npm run db perf:metrics (if DB changes)
 □ Suggest: npm run ai-platform:quality (if major changes)
 □ Remind: Pre-commit hook will validate automatically
 ```
@@ -26,7 +30,8 @@
 ```
 □ Suggest: npm run windsurf:graph (refresh knowledge)
 □ Suggest: npm run ai-platform:quality (track trends)
-□ Suggest: npm run db:doctor:ai (database health)
+□ Suggest: npm run db health (database health)
+□ Suggest: npm run db perf:metrics (database performance)
 ```
 
 ---
@@ -43,7 +48,9 @@
 | **Architecture Validator** | `npm run arch:validate` | After creating features |
 | **Feature Migration** | `npm run migrate:ai [feature]` | When migrating features |
 | **Repo Analyzer** | `npm run repo:analyze` | Check feature completeness |
-| **DB Health Check** | `npm run db:doctor:ai` | Monthly or when issues |
+| **DB Health** | `npm run db health` | Before DB work or when issues |
+| **DB RLS Validate** | `npm run db rls:validate` | After DB changes (CRITICAL!) |
+| **DB Performance** | `npm run db perf:metrics` | Weekly or when slow |
 | **Record Decision** | `npm run windsurf:context decision` | After important decisions |
 | **Batch Operations** | `npm run windsurf:batch replace` | Multi-file changes |
 
@@ -85,5 +92,7 @@ Use the tools we built!
 
 ---
 
-*Last Updated: October 16, 2025*
-*Version: 1.0 - God-Tier System*
+*Last Updated: October 19, 2025*
+*Version: 2.0 - God-Tier System + Database Toolkit*
+
+**NEW: See `.cascade/DB_QUICK_REF.md` for all 41 database commands!**

@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label'
 import { 
   CheckCircle2, XCircle, AlertCircle, Sparkles, 
   Gauge, Fuel, Wrench, DollarSign, Shield, Factory,
-  Edit, Loader2, Share2, Check, Car
+  Edit, Loader2, Share2, Check, Car, AlertTriangle
 } from 'lucide-react'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
 import { addVehicleByVIN } from '@/lib/vehicles'
@@ -171,7 +171,7 @@ export default function ConfirmPage() {
     )
   }
 
-  const { vehicle, specs, extendedSpecs, mockData, aiInsights } = vehicleData
+  const { vehicle, specs, extendedSpecs, mockData, epaData, recalls, aiInsights } = vehicleData
 
   return (
     <Stack spacing="xl" className="py-12 max-w-3xl mx-auto px-4">
@@ -189,6 +189,47 @@ export default function ConfirmPage() {
           </Text>
         </CardContent>
       </Card>
+
+      {/* Recalls Alert (if any) */}
+      {recalls && recalls.length > 0 && (
+        <Card className="bg-gradient-to-br from-red-50 to-orange-50 border-red-300">
+          <CardContent className="pt-6">
+            <div className="flex gap-3">
+              <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0" />
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <Text className="font-semibold text-red-900 text-lg">
+                    🚨 SAFETY ALERT: {recalls.length} Open Recall{recalls.length > 1 ? 's' : ''}
+                  </Text>
+                </div>
+                {recalls.map((recall, idx) => (
+                  <div key={idx} className="mb-3 last:mb-0">
+                    <Text className="text-sm font-semibold text-red-800 mb-1">
+                      {recall.Component}
+                    </Text>
+                    <Text className="text-sm text-red-700 mb-1">
+                      {recall.Summary}
+                    </Text>
+                    {recall.Remedy && (
+                      <Text className="text-xs text-red-600">
+                        <strong>Remedy:</strong> {recall.Remedy}
+                      </Text>
+                    )}
+                  </div>
+                ))}
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="mt-3 border-red-600 text-red-700 hover:bg-red-100"
+                  onClick={() => window.open(`https://www.nhtsa.gov/recalls?vin=${vehicleData.vin}`, '_blank')}
+                >
+                  View on NHTSA.gov
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* AI Reliability Score */}
       <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
@@ -349,14 +390,31 @@ export default function ConfirmPage() {
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                 <Fuel className="w-5 h-5 text-blue-600" />
               </div>
-              <div>
-                <Text className="text-sm text-gray-600 mb-1">Fuel Economy</Text>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <Text className="text-sm text-gray-600">Fuel Economy</Text>
+                  {epaData?.isRealData ? (
+                    <Badge className="text-xs bg-green-600">EPA Certified ✓</Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-xs">Estimated</Badge>
+                  )}
+                </div>
                 <Text className="font-semibold">
                   {mockData.mpgCity > 0 
                     ? `${mockData.mpgCity}/${mockData.mpgHighway} MPG`
                     : 'Electric'
                   }
                 </Text>
+                {epaData?.isRealData && (
+                  <div className="mt-1 space-y-1">
+                    <Text className="text-xs text-gray-600">
+                      Combined: {epaData.combinedMPG} MPG
+                    </Text>
+                    <Text className="text-xs text-gray-600">
+                      Annual Fuel Cost: ${epaData.annualFuelCost.toLocaleString()}
+                    </Text>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -365,8 +423,11 @@ export default function ConfirmPage() {
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
                 <Gauge className="w-5 h-5 text-purple-600" />
               </div>
-              <div>
-                <Text className="text-sm text-gray-600 mb-1">Service Interval</Text>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <Text className="text-sm text-gray-600">Service Interval</Text>
+                  <Badge variant="outline" className="text-xs">Estimated</Badge>
+                </div>
                 <Text className="font-semibold">
                   Every {mockData.maintenanceInterval.toLocaleString()} mi
                 </Text>
@@ -378,8 +439,11 @@ export default function ConfirmPage() {
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                 <DollarSign className="w-5 h-5 text-green-600" />
               </div>
-              <div>
-                <Text className="text-sm text-gray-600 mb-1">Annual Cost</Text>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <Text className="text-sm text-gray-600">Annual Cost</Text>
+                  <Badge variant="outline" className="text-xs">Estimated</Badge>
+                </div>
                 <Text className="font-semibold">
                   ${mockData.annualCost.toLocaleString()}/year
                 </Text>
@@ -389,41 +453,47 @@ export default function ConfirmPage() {
         </CardContent>
       </Card>
 
-      {/* AI Tips */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Maintenance Tip */}
-        <Card className="bg-blue-50 border-blue-200">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-3">
-              <Wrench className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <Text className="font-semibold text-blue-900 mb-2">
-                  Maintenance Tip
-                </Text>
-                <Text className="text-sm text-blue-700">
-                  {aiInsights.maintenanceTip}
-                </Text>
+      {/* AI Tips - Split cards, show by default for now */}
+      <div className="space-y-3">
+        <Text className="font-semibold text-gray-900">
+          💡 Smart Insights
+        </Text>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Maintenance Insight */}
+          <Card className="bg-blue-50 border-blue-200">
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-3">
+                <Wrench className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <Text className="font-semibold text-blue-900 mb-2 text-sm">
+                    Maintenance
+                  </Text>
+                  <Text className="text-sm text-blue-700">
+                    {aiInsights.maintenanceTip}
+                  </Text>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        {/* Cost Tip */}
-        <Card className="bg-green-50 border-green-200">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-3">
-              <DollarSign className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <Text className="font-semibold text-green-900 mb-2">
-                  Money-Saving Tip
-                </Text>
-                <Text className="text-sm text-green-700">
-                  {aiInsights.costTip}
-                </Text>
+          {/* Cost Insight */}
+          <Card className="bg-green-50 border-green-200">
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-3">
+                <DollarSign className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <Text className="font-semibold text-green-900 mb-2 text-sm">
+                    Cost Savings
+                  </Text>
+                  <Text className="text-sm text-green-700">
+                    {aiInsights.costTip}
+                  </Text>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Vehicle Details Input */}
