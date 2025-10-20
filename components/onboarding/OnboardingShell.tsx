@@ -8,10 +8,11 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { ArrowLeft, X } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
 import { useValidation } from '@/wizard/validation-context'
+import { ProgressDots } from './ProgressDots'
+import { WizardOverflowMenu } from './WizardOverflowMenu'
 
 type OnboardingShellProps = {
   // Content
@@ -36,6 +37,7 @@ type OnboardingShellProps = {
   canGoNext: boolean
   canSkip: boolean
   isProcessing?: boolean
+  lastSaved?: Date | null
   
   // Display
   hideProgress?: boolean
@@ -63,6 +65,7 @@ export function OnboardingShell({
   canGoNext,
   canSkip,
   isProcessing = false,
+  lastSaved,
   hideProgress = false,
   hideBack = false,
   hideSkip = false,
@@ -121,45 +124,33 @@ export function OnboardingShell({
               )}
             </div>
             
-            {/* Center: Title */}
-            <div className="flex-1 flex flex-col items-center text-center px-4">
+            {/* Center: Title + Progress Dots */}
+            <div className="flex-1 flex flex-col items-center text-center px-4 gap-1.5">
               {title && (
                 <h1 className="text-base font-semibold text-gray-900 truncate max-w-md">
                   {title}
                 </h1>
               )}
+              {!hideProgress && (
+                <ProgressDots current={currentStep} total={totalSteps} />
+              )}
               {subtitle && (
-                <p className="text-xs text-gray-500 mt-0.5 truncate max-w-md">
+                <p className="text-xs text-gray-500 truncate max-w-md">
                   {subtitle}
                 </p>
               )}
             </div>
             
-            {/* Right: Actions */}
-            <div className="flex items-center justify-end gap-2 flex-1">
-              {!hideExit && onExit && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onExit}
-                  className="text-gray-600 hover:text-gray-900"
-                  title="Progress is saved automatically"
-                  disabled={isProcessing}
-                >
-                  {isModal ? <X className="w-4 h-4" /> : 'Save & exit'}
-                </Button>
-              )}
-              {!hideStartOver && onStartOver && !isModal && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onStartOver}
-                  className="text-gray-600 hover:text-gray-900"
-                  disabled={isProcessing}
-                >
-                  Start over
-                </Button>
-              )}
+            {/* Right: Overflow Menu */}
+            <div className="flex items-center justify-end flex-1">
+              <WizardOverflowMenu
+                onExit={onExit}
+                onStartOver={onStartOver}
+                disabled={isProcessing}
+                hideExit={hideExit || isModal}
+                hideStartOver={hideStartOver || isModal}
+                lastSaved={lastSaved}
+              />
             </div>
           </div>
         </div>
@@ -172,28 +163,10 @@ export function OnboardingShell({
         </div>
       </main>
       
-      {/* Footer / Action Bar */}
+      {/* Footer */}
       <footer className="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Progress indicator */}
-          {!hideProgress && (
-            <div className="flex items-center justify-center py-3 border-b border-gray-100">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-medium text-gray-500">
-                  Step {currentStep} of {totalSteps}
-                </span>
-                <div className="w-48 h-1.5">
-                  <Progress value={progress} className="h-1.5" />
-                </div>
-                <span className="text-xs font-medium text-gray-500">
-                  {progress}%
-                </span>
-              </div>
-            </div>
-          )}
-          
-          {/* Action buttons */}
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-16">
             {/* Left: Skip */}
             <div className="flex-1">
               {!hideSkip && canSkip && onSkip && !isProcessing && (

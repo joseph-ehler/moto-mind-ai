@@ -7,7 +7,7 @@
 
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { OnboardingShell } from '@/components/onboarding/OnboardingShell'
 import { ValidationProvider, useValidation } from '@/wizard/validation-context'
 import { useOnboardingWizard } from '@/wizard/useOnboardingWizard'
@@ -208,6 +208,8 @@ function CompleteStep() {
 
 // Main wizard component
 function TestWizardContent() {
+  const [lastSaved, setLastSaved] = useState<Date | null>(null)
+  
   const wizard = useOnboardingWizard({
     steps: normalizeRegistry(testRegistry),
     store: testStore,
@@ -215,6 +217,13 @@ function TestWizardContent() {
     weights: { parent: 1, mini: 0.5 },
     persistenceKey: 'test:wizard:v1'
   })
+  
+  // Simulate autosave when data changes
+  useEffect(() => {
+    if (Object.keys(wizard.data).length > 0) {
+      setLastSaved(new Date())
+    }
+  }, [wizard.data])
   
   const renderStep = () => {
     switch (wizard.currentStep?.id) {
@@ -271,6 +280,7 @@ function TestWizardContent() {
       canGoBack={wizard.canGoBack}
       canGoNext={wizard.canGoNext}
       canSkip={wizard.canSkip}
+      lastSaved={lastSaved}
       mode="fullscreen"
     >
       {renderStep()}
