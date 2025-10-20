@@ -8,6 +8,7 @@
  */
 
 import { FlowSchema, type FlowConfig } from './flow-schema'
+import { validateExpression } from './expression-engine'
 import { ZodError } from 'zod'
 import chalk from 'chalk'
 
@@ -123,6 +124,37 @@ function runStrictModeChecks(flow: FlowConfig): ValidationError[] {
           code: 'MISSING_I18N_KEY',
           suggestion: 'Replace "title" with "titleKey" for i18n support',
         })
+      }
+    }
+  }
+  
+  // Check 4: Validate all expressions
+  for (const chapter of flow.chapters) {
+    for (const step of chapter.steps) {
+      // Validate shouldExistWhen
+      if (step.shouldExistWhen) {
+        const result = validateExpression(step.shouldExistWhen)
+        if (!result.valid) {
+          errors.push({
+            path: `chapters.${chapter.id}.steps.${step.id}.shouldExistWhen`,
+            message: `Invalid expression: ${result.error}`,
+            code: 'INVALID_EXPRESSION',
+            suggestion: 'Check expression syntax and use only allowed operations',
+          })
+        }
+      }
+      
+      // Validate continueEnabledWhen (for form steps)
+      if (step.type.startsWith('form.') && 'validationLogic' in step && step.validationLogic?.continueEnabledWhen) {
+        const result = validateExpression(step.validationLogic.continueEnabledWhen)
+        if (!result.valid) {
+          errors.push({
+            path: `chapters.${chapter.id}.steps.${step.id}.validationLogic.continueEnabledWhen`,
+            message: `Invalid expression: ${result.error}`,
+            code: 'INVALID_EXPRESSION',
+            suggestion: 'Check expression syntax and use only allowed operations',
+          })
+        }
       }
     }
   }
