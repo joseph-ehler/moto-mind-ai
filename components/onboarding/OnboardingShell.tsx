@@ -7,7 +7,7 @@
 
 'use client'
 
-import { type ReactNode } from 'react'
+import { type ReactNode, useRef, useEffect } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useValidation } from '@/wizard/validation-context'
@@ -86,6 +86,55 @@ export function OnboardingShell({
   const useChapters = chapters && currentChapterId
   const { isValid, onSubmit } = useValidation()
   
+  // Focus management: move focus to title on step change
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const currentChapter = useChapters ? chapters?.find(c => c.id === currentChapterId) : null
+  
+  useEffect(() => {
+    if (title && titleRef.current) {
+      // Small delay to allow content to render
+      setTimeout(() => {
+        titleRef.current?.focus()
+      }, 100)
+    }
+  }, [title, currentChapterId])
+  
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyboard = (e: KeyboardEvent) => {
+      // Skip if user is typing in an input
+      const target = e.target as HTMLElement
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        // Allow Enter in inputs to trigger continue
+        if (e.key === 'Enter' && isValid && canGoNext && !isProcessing) {
+          e.preventDefault()
+          handleContinue()
+        }
+        return
+      }
+      
+      // Global shortcuts (when not in input)
+      if (e.key === 'Enter' && isValid && canGoNext && !isProcessing) {
+        e.preventDefault()
+        handleContinue()
+      } else if (e.key === 'Escape') {
+        // Remove focus from any element
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur()
+        }
+      } else if (e.altKey && e.key === 'ArrowLeft' && canGoBack && onBack && !isProcessing) {
+        e.preventDefault()
+        onBack()
+      } else if (e.altKey && e.key === 'ArrowRight' && canGoNext && isValid && onNext && !isProcessing) {
+        e.preventDefault()
+        onNext()
+      }
+    }
+    
+    window.addEventListener('keydown', handleKeyboard)
+    return () => window.removeEventListener('keydown', handleKeyboard)
+  }, [isValid, canGoNext, canGoBack, isProcessing, onBack, onNext])
+  
   const handleContinue = () => {
     // If step has custom submit handler, call it
     if (onSubmit) {
@@ -137,7 +186,11 @@ export function OnboardingShell({
             {/* Center: Title */}
             <div className="flex-1 flex flex-col items-center text-center px-4">
               {title && (
-                <h1 className="text-base font-semibold text-gray-900 truncate max-w-md">
+                <h1 
+                  ref={titleRef}
+                  tabIndex={-1}
+                  className="text-base font-semibold text-gray-900 truncate max-w-md outline-none"
+                >
                   {title}
                 </h1>
               )}
@@ -222,8 +275,15 @@ export function OnboardingShell({
         </div>
       </footer>
       
+      {/* ARIA live region for progress announcements */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {useChapters && currentChapter && currentChapter.currentStep && (
+          `${currentChapter.name}, step ${currentChapter.currentStep} of ${currentChapter.stepCount}`
+        )}
+      </div>
+      
       {/* Keyboard shortcuts hint */}
-      <div className="sr-only" aria-live="polite">
+      <div className="sr-only" role="status">
         Press Enter to continue, Escape to blur input
       </div>
     </div>

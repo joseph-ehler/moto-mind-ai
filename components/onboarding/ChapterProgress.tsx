@@ -9,6 +9,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
+import { useEffect, useState } from 'react'
 
 export type Chapter = {
   id: string
@@ -32,6 +33,21 @@ export function ChapterProgress({
 }: ChapterProgressProps) {
   const currentChapterIndex = chapters.findIndex((c) => c.id === currentChapterId)
   const currentChapter = chapters[currentChapterIndex]
+  
+  // Detect prefers-reduced-motion
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReducedMotion(mediaQuery.matches)
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches)
+    }
+    
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
   
   // Calculate bar widths: active expands to fill, others are collapsed
   const getBarWidth = (isActive: boolean) => {
@@ -60,7 +76,11 @@ export function ChapterProgress({
       )}
       
       {/* Progress bars */}
-      <div className="flex items-center gap-2 w-full">
+      <div 
+        className="flex items-center gap-2 w-full"
+        role="group"
+        aria-label="Chapter progress"
+      >
         {chapters.map((chapter, index) => {
           const isCompleted = index < currentChapterIndex
           const isCurrent = index === currentChapterIndex
@@ -79,22 +99,26 @@ export function ChapterProgress({
               key={chapter.id}
               className={cn(
                 'h-1.5 rounded-full overflow-hidden',
-                'transition-all duration-300 ease-in-out', // Smooth width transition
+                // Disable transitions if user prefers reduced motion
+                !prefersReducedMotion && 'transition-all duration-300 ease-in-out',
                 getBarWidth(isCurrent),
                 isCurrent && 'ring-1 ring-blue-200'
               )}
               style={{
                 backgroundColor: isFuture ? '#e5e7eb' : '#dbeafe', // gray or blue-light
               }}
-              aria-label={`${chapter.name}: ${Math.round(fillPercent)}% complete`}
+              aria-label={`${chapter.name}, ${isCurrent ? 'current' : isCompleted ? 'completed' : 'upcoming'}, ${chapter.currentStep || 0} of ${chapter.stepCount} steps`}
               role="progressbar"
-              aria-valuenow={fillPercent}
+              aria-valuenow={chapter.currentStep || 0}
               aria-valuemin={0}
-              aria-valuemax={100}
+              aria-valuemax={chapter.stepCount}
             >
               {/* Fill indicator */}
               <div
-                className="h-full bg-blue-600 transition-all duration-300"
+                className={cn(
+                  'h-full bg-blue-600',
+                  !prefersReducedMotion && 'transition-all duration-300'
+                )}
                 style={{ width: `${fillPercent}%` }}
               />
             </div>
