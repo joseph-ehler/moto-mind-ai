@@ -86,7 +86,13 @@ export default function VehicleOnboardingPage() {
   const canGoBack = currentStep !== 'vin'
 
   // Determine if continue can be pressed
-  const canGoNext = currentStep === 'confirm'
+  // For VIN step: handled by validation context (isValid)
+  // For decoding step: should not show continue (auto-advances)
+  // For confirm step: always allow continue
+  const canGoNext = currentStep === 'vin' || currentStep === 'confirm'
+  
+  // Skip not needed for this flow
+  const canSkip = false
 
   return (
     <ValidationProvider>
@@ -97,6 +103,7 @@ export default function VehicleOnboardingPage() {
         currentChapterId="vehicle-basics"
         canGoBack={canGoBack}
         canGoNext={canGoNext}
+        canSkip={canSkip}
         onBack={handleBack}
         onNext={handleNext}
         onExit={handleExit}
