@@ -25,6 +25,8 @@
  */
 
 import { z } from 'zod'
+import { getAISafeFields } from '@/lib/privacy/classification'
+import { scrubPII, validateNoPII } from '@/lib/privacy/scrubber'
 
 // PII-safe context schema
 const SafeContextSchema = z.object({
