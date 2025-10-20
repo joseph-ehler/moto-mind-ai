@@ -9,7 +9,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
 
 export type Chapter = {
   id: string
@@ -25,12 +25,12 @@ type ChapterProgressProps = {
   className?: string
 }
 
-export function ChapterProgress({
+const ChapterProgressComponent = ({
   chapters,
   currentChapterId,
   showChapterName = false,
   className
-}: ChapterProgressProps) {
+}: ChapterProgressProps) => {
   const currentChapterIndex = chapters.findIndex((c) => c.id === currentChapterId)
   const currentChapter = chapters[currentChapterIndex]
   
@@ -128,6 +128,9 @@ export function ChapterProgress({
     </div>
   )
 }
+
+// Memoized export for performance
+export const ChapterProgress = memo(ChapterProgressComponent)
 
 /**
  * Utility: Calculate which chapter a step belongs to
