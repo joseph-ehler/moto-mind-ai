@@ -23,15 +23,17 @@ export function VehicleConfirm() {
   const analytics = useWizardAnalytics('vehicle')
   const { setValid } = useValidation()
   
-  // Track step view
+  // Track step view (once on mount)
   useEffect(() => {
     analytics.trackStepView('vehicle_confirm', 2, 'vehicle-basics')
-  }, [analytics])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   
   // Always valid (can continue)
   useEffect(() => {
     setValid(true)
-  }, [setValid])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   
   const handleEditVin = () => {
     analytics.trackStepView('vehicle_confirm_edit_vin', 2, 'vehicle-basics')

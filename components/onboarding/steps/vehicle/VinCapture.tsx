@@ -56,10 +56,11 @@ export function VinCapture() {
   const [value, setValue] = useState(storedVin || '')
   const [error, setError] = useState<string | null>(null)
   
-  // Track step view
+  // Track step view (once on mount)
   useEffect(() => {
     analytics.trackStepView('vin', 0, 'vehicle-basics')
-  }, [analytics])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   
   // Validate on change
   useEffect(() => {
@@ -77,7 +78,8 @@ export function VinCapture() {
       setVin(value)
       analytics.trackStepComplete('vin', 0, 'vehicle-basics')
     }
-  }, [value, setValid, setVin, analytics])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value])
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value

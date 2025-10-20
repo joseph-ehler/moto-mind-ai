@@ -43,10 +43,11 @@ export function VinDecoding() {
   const timeoutTimerRef = useRef<NodeJS.Timeout | null>(null)
   const tickerTimerRef = useRef<NodeJS.Timeout | null>(null)
   
-  // Track step view
+  // Track step view (once on mount)
   useEffect(() => {
     analytics.trackStepView('vin_decoding', 1, 'vehicle-basics')
-  }, [analytics])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   
   // Decode VIN on mount
   useEffect(() => {
