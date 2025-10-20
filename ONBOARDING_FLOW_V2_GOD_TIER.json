@@ -1,0 +1,351 @@
+{
+  "metadata": {
+    "name": "MotoMind Vehicle Onboarding",
+    "version": "2.0",
+    "totalSteps": "dynamic",
+    "estimatedTime": "≈ 2 minutes",
+    "url": "/onboarding/vehicle"
+  },
+
+  "shell": {
+    "header": {
+      "left": "Back",
+      "center": { "progress": "bar+dots", "format": "Step {x} of {y}" },
+      "right": ["Save & exit", "Start over"]
+    },
+    "footer": {
+      "left": "Skip for now (when available)",
+      "right": "Continue",
+      "keyboard": { "enter": "continue", "esc": "blur" }
+    }
+  },
+
+  "baseFlow": [
+    {
+      "id": "intro",
+      "type": "informational",
+      "title": "Let's set up your car",
+      "question": "In ~2 minutes: safety, maintenance, and 2–3 actions you can take.",
+      "content": {
+        "whatWeNeed": ["VIN", "A couple quick questions", "Current mileage"],
+        "whatYouGet": ["Safety score (ODI/NCAP)", "Upcoming maintenance", "Personalized actions"],
+        "privacy": "🔒 Private by default. We'll never sell your data."
+      },
+      "estimatedSeconds": 8,
+      "skippable": false,
+      "autoAdvance": false
+    },
+
+    {
+      "id": "vin",
+      "type": "input",
+      "title": "Your VIN",
+      "question": "What's your VIN?",
+      "interaction": "text",
+      "response": { "key": "vin" },
+      "validation": {
+        "required": true,
+        "length": 17,
+        "pattern": "^[A-HJ-NPR-Z0-9]{17}$",
+        "format": "uppercase",
+        "excludeChars": ["I", "O", "Q"]
+      },
+      "help": {
+        "title": "Where to find it",
+        "locations": [
+          "Windshield (driver side)",
+          "Driver door jamb",
+          "Registration / insurance",
+          "Owner manual"
+        ]
+      },
+      "estimatedSeconds": 25,
+      "skippable": false
+    },
+
+    {
+      "id": "vin-decoding",
+      "type": "processing",
+      "title": "Decoding",
+      "question": "Decoding your VIN",
+      "process": {
+        "endpoint": "/api/vin/decode",
+        "timeoutMs": 20000,
+        "slowHintMs": 12000,
+        "slowHintCopy": "Taking longer than usual—VIN database may be slow.",
+        "onError": {
+          "message503": "The VIN database is temporarily unavailable. Please try again.",
+          "timeout": "Request timed out. Please retry or edit your VIN."
+        }
+      },
+      "animation": "sparklePulse",
+      "estimatedSeconds": 5,
+      "autoAdvance": true,
+      "skippable": false
+    },
+
+    {
+      "id": "confirm",
+      "type": "confirmation",
+      "title": "We found your vehicle",
+      "question": "Is this your vehicle?",
+      "display": "Vehicle card (year, make, model, trim, engine)",
+      "options": [
+        { "label": "Looks right", "action": "continue" },
+        { "label": "Edit VIN", "action": "backTo", "target": "vin" }
+      ],
+      "microInsight": "Safety model: {safety.riskLevel} • EPA class: {epa.class}",
+      "estimatedSeconds": 8
+    },
+
+    {
+      "id": "state",
+      "type": "text+chips",
+      "title": "How's it running?",
+      "question": "Tell me what's going on (or say 'running great').",
+      "interaction": {
+        "textArea": true,
+        "aiExtract": {
+          "entities": ["symptoms", "warningLights", "conditions", "speedBand"],
+          "chips": true
+        }
+      },
+      "response": { "key": "state" },
+      "validation": { "required": true, "minText": 0 },
+      "branchOnComplete": ["state_lights?", "state_noises?", "state_conditions?"],
+      "microInsight": "Got it. We'll prioritize {state.summary} for your {vehicle.year} {vehicle.make} {vehicle.model}.",
+      "estimatedSeconds": 25
+    },
+
+    {
+      "id": "mileage",
+      "type": "numeric",
+      "title": "Your mileage",
+      "question": "What's your odometer?",
+      "quickOptions": [10000, 25000, 50000, 75000, 100000, 150000],
+      "response": { "key": "mileage" },
+      "validation": { "required": true, "min": 0, "max": 999999, "integer": true },
+      "branchOnComplete": ["mileage_repairs?", "mileage_fluids?"],
+      "microInsight": "At {mileage|#,###} miles, we'll check maintenance windows common from {windowStart|#,###}–{windowEnd|#,###}.",
+      "estimatedSeconds": 15
+    },
+
+    {
+      "id": "ownership",
+      "type": "single-choice",
+      "title": "Ownership",
+      "question": "How long have you owned it?",
+      "options": ["0–3 months", "3–12 months", "1–2 years", "2+ years"],
+      "response": { "key": "ownership.period" },
+      "skippable": true,
+      "branchOnComplete": ["ownership_purchase?", "ownership_inspection?", "ownership_findings?"],
+      "microInsight": "{ownership.period} ownership helps us avoid repeating early-life issues you may have already passed.",
+      "estimatedSeconds": 12
+    },
+
+    {
+      "id": "maintenance",
+      "type": "multi-choice+chips",
+      "title": "Service history",
+      "question": "When was your last service & what was done?",
+      "options": ["≤1 month", "1–3 months", "3–6 months", "6–12 months", ">1 year", "Don't remember"],
+      "services": ["Oil change", "Tire rotation", "Brakes", "Filters", "Transmission service", "Battery", "Other", "Not sure"],
+      "response": { "key": "maintenance" },
+      "validation": { "required": false },
+      "microInsight": "Logged: {maintenance.services}. We'll verify if transmission/coolant are due at your mileage.",
+      "estimatedSeconds": 15
+    },
+
+    {
+      "id": "intent",
+      "type": "multi-choice",
+      "title": "What you want to know",
+      "question": "Choose what we should prioritize today",
+      "options": [
+        "Upcoming maintenance",
+        "Common problems to watch",
+        "Safety score & recalls",
+        "Estimated repair costs",
+        "Resale value guidance",
+        "Should I keep or sell?"
+      ],
+      "response": { "key": "intent" },
+      "validation": { "required": true, "minSelections": 1 },
+      "microInsight": "We'll prioritize {intent.top2} in your analysis.",
+      "estimatedSeconds": 10
+    },
+
+    {
+      "id": "analyze",
+      "type": "processing",
+      "title": "Analyzing…",
+      "question": "We're preparing your plan",
+      "progressSteps": [
+        "Checking owner reports (ODI)…",
+        "Matching mileage windows…",
+        "Building your action plan…"
+      ],
+      "process": {
+        "endpoint": "/api/ai/comprehensive-analysis",
+        "payload": "{vehicle,userContext,maintenance,safetyCorpus,intent}",
+        "timeoutMs": 15000
+      },
+      "autoAdvance": true,
+      "estimatedSeconds": 6
+    },
+
+    {
+      "id": "results",
+      "type": "results",
+      "title": "Your vehicle story",
+      "question": "Analysis for your {vehicle.year} {vehicle.make} {vehicle.model}",
+      "sections": ["Summary", "Safety", "Maintenance", "Watch-outs", "Recommended actions"],
+      "actions": [
+        { "type": "primary", "label": "Download Full Report", "icon": "Download" },
+        { "type": "secondary", "label": "Share with Mechanic", "icon": "Share2" }
+      ],
+      "nextStep": "/garage"
+    }
+  ],
+
+  "branchTemplates": [
+    {
+      "id": "state_lights",
+      "mini": true,
+      "shouldExistWhen": "state.level == 'active' && state.warningLightsDetected == true",
+      "type": "chip-grid",
+      "title": "Which lights are on?",
+      "question": "Select all that apply",
+      "options": ["Check Engine", "ABS/Brake", "Oil Pressure", "Battery/Charging", "Airbag", "TPMS", "Other"],
+      "response": { "key": "state.warningLights" },
+      "validation": { "required": true },
+      "estimatedSeconds": 8
+    },
+    {
+      "id": "state_noises",
+      "mini": true,
+      "shouldExistWhen": "state.level == 'active' && state.noisesDetected == true",
+      "type": "chip-grid+chips",
+      "title": "About the noise",
+      "question": "When does it happen?",
+      "options": ["Idle", "Acceleration", "Braking", "Highway speeds", "Turning"],
+      "secondary": ["Click", "Grind", "Whine", "Rattle", "Knock", "Squeal"],
+      "response": { "key": "state.noise" },
+      "validation": { "required": true },
+      "estimatedSeconds": 10
+    },
+    {
+      "id": "state_conditions",
+      "mini": true,
+      "shouldExistWhen": "state.level != 'great' && state.needsContext == true",
+      "type": "chip-grid",
+      "title": "When it happens",
+      "question": "Select what matches best",
+      "options": ["Wet roads", "After cold start", "AC on", "At 45–55 mph", "While turning"],
+      "response": { "key": "state.conditions" },
+      "validation": { "required": false },
+      "estimatedSeconds": 7
+    },
+    {
+      "id": "mileage_repairs",
+      "mini": true,
+      "shouldExistWhen": "mileage > 100000",
+      "type": "chip-grid",
+      "title": "Any major repairs?",
+      "question": "Pick any that apply",
+      "options": ["Engine work", "Transmission rebuild", "Suspension overhaul", "None", "Not sure"],
+      "response": { "key": "mileage.majorRepairs" },
+      "validation": { "required": true },
+      "estimatedSeconds": 8
+    },
+    {
+      "id": "mileage_fluids",
+      "mini": true,
+      "shouldExistWhen": "mileage > 100000",
+      "type": "chip-grid",
+      "title": "Fluids serviced?",
+      "question": "Recently done?",
+      "options": ["Transmission fluid", "Coolant", "Neither", "Not sure"],
+      "response": { "key": "mileage.fluids" },
+      "validation": { "required": true },
+      "estimatedSeconds": 7
+    },
+    {
+      "id": "ownership_purchase",
+      "mini": true,
+      "shouldExistWhen": "ownership.original == false",
+      "type": "numeric",
+      "title": "Mileage at purchase",
+      "question": "Approximate is fine",
+      "response": { "key": "ownership.purchaseMileage" },
+      "validation": { "required": false, "min": 0, "integer": true },
+      "estimatedSeconds": 6
+    },
+    {
+      "id": "ownership_inspection",
+      "mini": true,
+      "shouldExistWhen": "ownership.original == false || ownership.period == '0–3 months'",
+      "type": "single-choice",
+      "title": "Pre-purchase inspection?",
+      "question": "Did a mechanic inspect it?",
+      "options": ["Yes", "No", "Certified pre-owned"],
+      "response": { "key": "ownership.inspection" },
+      "estimatedSeconds": 6
+    },
+    {
+      "id": "ownership_findings",
+      "mini": true,
+      "shouldExistWhen": "ownership.inspection == 'Yes'",
+      "type": "text",
+      "title": "What did they find?",
+      "question": "A sentence or two is plenty",
+      "response": { "key": "ownership.findings" },
+      "validation": { "required": false, "minText": 0 },
+      "estimatedSeconds": 8
+    }
+  ],
+
+  "microInsights": {
+    "templates": {
+      "confirm": "Safety model: {safety.riskLevel} • EPA class: {epa.class}",
+      "state": "We'll prioritize {state.summary} in your results.",
+      "mileage": "We'll check maintenance windows common from {windowStart|#,###}–{windowEnd|#,###}.",
+      "ownership": "{ownership.period} ownership helps avoid repeating early-life issues.",
+      "maintenance": "Logged: {maintenance.services}. We'll verify due items at your mileage.",
+      "intent": "We'll prioritize {intent.top2}."
+    }
+  },
+
+  "navigation": {
+    "continue": "Continue",
+    "back": "Back (header)",
+    "skip": "Skip for now",
+    "saveExit": "Save & exit",
+    "startOver": "Start over"
+  },
+
+  "validation": {
+    "rules": {
+      "vin": "17 chars, pattern",
+      "confirm": "vehicle must exist",
+      "state": "text optional; AI chips allowed; valid if choice/chips present",
+      "mileage": "integer >= 0",
+      "ownership": "optional",
+      "maintenance": "optional",
+      "intent": ">=1 selected",
+      "analyze": "auto when complete",
+      "results": "always valid"
+    },
+    "continueEnabledWhen": "current step is valid OR autoAdvance step"
+  },
+
+  "persistence": {
+    "method": "Zustand + localStorage",
+    "autoSave": "after each step submit",
+    "resume": {
+      "enabled": true,
+      "modalOnReturn": true,
+      "options": ["Resume", "Start over"]
+    }
+  }
+}
