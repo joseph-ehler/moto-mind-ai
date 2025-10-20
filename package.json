@@ -27,6 +27,7 @@
     "protect": "node scripts/windsurf-protection.js protect",
     "protect:check": "node scripts/windsurf-protection.js check",
     "db": "npx tsx lib/database/cli/index.ts",
+    "flows:validate": "npx tsx scripts/validate-flows.ts",
     "repo:analyze": "npx tsx scripts/dev-tools/repo-analyze.ts",
     "nhtsa:explore": "npx tsx scripts/explore-nhtsa-fields.ts",
     "nhtsa:compare": "npx tsx scripts/compare-nhtsa-extraction.ts",
